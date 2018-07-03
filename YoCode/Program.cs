@@ -1,12 +1,15 @@
-﻿using System;
-
-namespace YoCode
+﻿namespace YoCode
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to YoCode!");
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+
         }
     }
 }
