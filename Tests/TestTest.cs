@@ -9,6 +9,11 @@ namespace Tests
         [Fact]
         public void Test1()
         {
+            true.Should().Be(true);
+        }
+        [Fact]
+        public void Test2()
+        {
             true.Should().Be(false);
         }
     }
