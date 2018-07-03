@@ -1,4 +1,6 @@
-﻿namespace YoCode
+﻿using System;
+
+namespace YoCode
 {
     class Program
     {
