@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace YoCode
 {
@@ -6,8 +7,10 @@ namespace YoCode
     {
         static void Main(string[] args)
         {
+            FileImport fi = new FileImport();
 
-            FileImport di = new FileImport();
+            fi.print();
+
 
         }
     }
