@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCode", "YoCode\YoCode.csproj", "{CEE256C1-7ED3-4CD4-AF08-7E606B363922}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoCode_XUnit", "Tests\YoCode_XUnit.csproj", "{4CD1AD56-DD80-4323-AFD9-C79220CEA8BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CEE256C1-7ED3-4CD4-AF08-7E606B363922}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEE256C1-7ED3-4CD4-AF08-7E606B363922}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEE256C1-7ED3-4CD4-AF08-7E606B363922}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CD1AD56-DD80-4323-AFD9-C79220CEA8BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CD1AD56-DD80-4323-AFD9-C79220CEA8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CD1AD56-DD80-4323-AFD9-C79220CEA8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CD1AD56-DD80-4323-AFD9-C79220CEA8BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
