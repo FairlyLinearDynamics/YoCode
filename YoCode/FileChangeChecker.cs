@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace YoCode
 {
-    class FileChangeChecker
+    public static class FileChangeChecker
     {
-        public static void CheckIfModified (FileStream originalFile, FileStream modifiedFile)
+        public static Boolean IsModified (FileStream originalFile, FileStream modifiedFile)
         {
+            string originalChecksum = BitConverter.ToString(System.Security.Cryptography.SHA1.Create().ComputeHash(originalFile));
 
+            string modifiedCheckSum = BitConverter.ToString(System.Security.Cryptography.SHA1.Create().ComputeHash(modifiedFile));
+
+            return originalChecksum == modifiedCheckSum ? false : true;
         }
     }
 }
