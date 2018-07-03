@@ -14,7 +14,7 @@ namespace Tests
         [Fact]
         public void Test2()
         {
-            true.Should().Be(false);
+            true.Should().Be(true);
         }
     }
 }
