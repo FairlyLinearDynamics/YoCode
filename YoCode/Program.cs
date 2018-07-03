@@ -6,11 +6,8 @@ namespace YoCode
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to YoCode!");
 
-            Console.WriteLine("");
-            Console.WriteLine("");
-
+            FileImport di = new FileImport();
 
         }
     }
