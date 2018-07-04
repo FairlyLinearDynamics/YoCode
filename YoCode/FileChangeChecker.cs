@@ -9,8 +9,6 @@ namespace YoCode
     {
         public static bool ProjectIsModified(IDirectory dir)
         {
-
-
             if (dir.OriginalPaths.Count != dir.ModifiedPaths.Count)
             {
                 return true;

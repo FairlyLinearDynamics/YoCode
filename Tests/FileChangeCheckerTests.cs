@@ -23,7 +23,6 @@ namespace YoCode_XUnit
             modified.Position = 0;
 
             FileChangeChecker.FileIsModified(original, modified).Should().Be(true);
-
         }
         [Fact]
         public void CheckIfProjectIsModifiedOutputsCorrectValue()
@@ -54,7 +53,6 @@ namespace YoCode_XUnit
                 fakeList.Add(fakeStream);
 
             }
-
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths);
 
@@ -63,7 +61,6 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
             FileChangeChecker.ProjectIsModified(fakeDirectory).Should().Be(false);
-
         }
     }
 }

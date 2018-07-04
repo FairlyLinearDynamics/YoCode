@@ -14,7 +14,6 @@ namespace YoCode
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;
         }
-
         private List<Stream> ReturnPathFileStream(List<string> paths)
         {
             List<Stream> streamList = new List<Stream>();
@@ -26,12 +25,10 @@ namespace YoCode
             }
             return streamList;
         }
-
         public List<Stream> ReturnOriginalPathFileStream()
         {
             return ReturnPathFileStream(OriginalPaths);
         }
-
         public List<Stream> ReturnModifiedPathFileStream()
         {
             return ReturnPathFileStream(ModifiedPaths);
