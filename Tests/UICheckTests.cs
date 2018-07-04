@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
 using FluentAssertions;
+using YoCode;
 
 namespace YoCode_XUnit
 {
@@ -12,7 +13,7 @@ namespace YoCode_XUnit
             new String[]{"mile", "kilometer"})]
         public void UICheck_FeatureImplementedInUI(String userFile, String[] keyWords)
         {
-            YoCode.UICheck.UIContainsFeature(userFile, keyWords).Should().Be(true);
+            UICheck.UIContainsFeature(userFile, keyWords).Should().Be(true);
         }
     }
 }
