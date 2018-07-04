@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace YoCode
 {
@@ -13,8 +12,8 @@ namespace YoCode
 
         public Directory(List<String> originalPaths, List<String> modifiedPaths)
         {
-            this.OriginalPaths = originalPaths;
-            this.ModifiedPaths = modifiedPaths;
+            OriginalPaths = originalPaths;
+            ModifiedPaths = modifiedPaths;
         }
 
     }
