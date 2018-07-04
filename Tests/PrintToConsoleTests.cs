@@ -20,9 +20,9 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintFilesChangedResult_Correct()
         {
-            results.anyFileChanged = true;
+            results.AnyFileChanged = true;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: True\nSolution file was found: False\nFeature evidence in UI: False\n";
+            String expectedOutput = "Any files changed: Yes\nSolution file was found: No\nFeature evidence in UI: No\n";
 
 
             testOutput.ToString().Should().Be(expectedOutput);
@@ -30,9 +30,9 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintFilesChangedResult_Incorrect()
         {
-            results.anyFileChanged = false;
+            results.AnyFileChanged = false;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: False\nSolution file was found: False\nFeature evidence in UI: False\n";
+            String expectedOutput = "Any files changed: No\nSolution file was found: No\nFeature evidence in UI: No\n";
 
             testOutput.ToString().Should().Be(expectedOutput);
         }
@@ -40,18 +40,18 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintSolutionFileResult_Correct()
         {
-            results.solutionExists = true;
+            results.SolutionExists = true;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: False\nSolution file was found: True\nFeature evidence in UI: False\n";
+            String expectedOutput = "Any files changed: No\nSolution file was found: Yes\nFeature evidence in UI: No\n";
 
             testOutput.ToString().Should().Be(expectedOutput);
         }
         [Fact]
         public void PrintToConsole_PrintSolutionFileResult_Incorrect()
         {
-            results.solutionExists = false;
+            results.SolutionExists = false;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: False\nSolution file was found: False\nFeature evidence in UI: False\n";
+            String expectedOutput = "Any files changed: No\nSolution file was found: No\nFeature evidence in UI: No\n";
 
             testOutput.ToString().Should().Be(expectedOutput);
         }
@@ -59,18 +59,18 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintUIEvidenceResult_Correct()
         {
-            results.uiCheck = true;
+            results.UiCheck = true;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: False\nSolution file was found: False\nFeature evidence in UI: True\n";
+            String expectedOutput = "Any files changed: No\nSolution file was found: No\nFeature evidence in UI: Yes\n";
 
             testOutput.ToString().Should().Be(expectedOutput);
         }
         [Fact]
         public void PrintToConsole_PrintUIEvidenceResult_Incorrect()
         {
-            results.uiCheck = false;
+            results.UiCheck = false;
             consolePrinter.PrintFinalResults(results);
-            String expectedOutput = "Any files changed: False\nSolution file was found: False\nFeature evidence in UI: False\n";
+            String expectedOutput = "Any files changed: No\nSolution file was found: No\nFeature evidence in UI: No\n";
 
             testOutput.ToString().Should().Be(expectedOutput);
         }

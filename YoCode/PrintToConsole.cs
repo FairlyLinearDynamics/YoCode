@@ -17,19 +17,19 @@ namespace YoCode
         private void PrintFilesChangedResult()
         {
             Console.Write("Any files changed: ");
-            Console.Write(results.anyFileChanged+"\n");
+            Console.Write(results.AnyFileChangedResult()+"\n");
         }
 
         private void PrintSolutionFileResult()
         {
             Console.Write("Solution file was found: ");
-            Console.Write(results.solutionExists+"\n");
+            Console.Write(results.SolutionExistsResult()+"\n");
         }
 
         private void PrintUIEvidenceResult()
         {
             Console.Write("Feature evidence in UI: ");
-            Console.Write(results.uiCheck+"\n");
+            Console.Write(results.UiCheckResult()+"\n");
         }
 
         // Possibly will need to add more print methods to corespond to 
