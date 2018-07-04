@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -6,27 +7,28 @@ namespace YoCode
 {
     public class FileChangeChecker
     {
-        public static bool ProjectIsModified(Directory dir)
+        public static bool ProjectIsModified(IDirectory dir)
         {
+
+
             if (dir.OriginalPaths.Count != dir.ModifiedPaths.Count)
             {
                 return true;
             }
-            else {
-                for (int i = 0; i < dir.ModifiedPaths.Count; i++)
-                {
-                    FileStream ofs = File.Create(dir.OriginalPaths[i]);
-                    FileStream mfs = File.Create(dir.ModifiedPaths[i]);
+            else
+            {
+                List<Stream> originalFileStreams = dir.ReturnOriginalPathFileStream();
+                List<Stream> modifiedFileStreams = dir.ReturnModifiedPathFileStream();
 
-                    if (FileIsModified(ofs, mfs))
+                for (int i = 0; i < modifiedFileStreams.Count; i++)
+                {
+                    if (FileIsModified(originalFileStreams[i], modifiedFileStreams[i]))
                     {
                         return true;
                     }
                 }
                 return false;
             }
-            
-
         }
         public static bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {

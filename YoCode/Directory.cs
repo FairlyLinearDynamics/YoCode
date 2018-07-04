@@ -4,8 +4,6 @@ using System.IO;
 
 namespace YoCode
 {
-
-
     public class Directory : IDirectory
     {
         public List<String> OriginalPaths { get; }
