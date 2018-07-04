@@ -3,20 +3,14 @@ using System.IO;
 
 namespace YoCode
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to YoCode!");
 
-            Console.WriteLine("Current directory: " + Directory.GetCurrentDirectory() + "\n");
-
-
-            FileImport fi = new FileImport();
-
-            fi.Print();
-
-
+            Console.WriteLine("");
+            Console.WriteLine("");
         }
     }
 }
