@@ -11,7 +11,7 @@ namespace YoCode
     // Startup.cs from junior-test/UnitConverterWebApp
     // HomeController.cs from junior-test/UnitConverterWebApp/Controllers
 
-    class FileImport
+    public class FileImport
     {
         public string ORIGINAL_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\junior-test";
         public string MODIFIED_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\original-test";
