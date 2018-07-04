@@ -22,8 +22,8 @@ namespace YoCode
         public List<string> GetAllFilesInDirectory(String PATH)
         {
             List<string> files = new List<string>();
-            DirectoryInfo di = new DirectoryInfo(PATH);
-            FileInfo[] fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
+            var di = new DirectoryInfo(PATH);
+            var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
 
             AddFileInfoToList(files, fileinfo);
 
@@ -34,9 +34,9 @@ namespace YoCode
         //Will return a list of files from a directory given a pattern
         public List<string> GetFilesInDirectory(String PATH, String pattern)
         {
-            List<string> files = new List<string>();
-            DirectoryInfo di = new DirectoryInfo(PATH);
-            FileInfo[] fileinfo = di.GetFiles(pattern, SearchOption.AllDirectories);
+            var files = new List<string>();
+            var di = new DirectoryInfo(PATH);
+            var fileinfo = di.GetFiles(pattern, SearchOption.AllDirectories);
 
             AddFileInfoToList(files, fileinfo);
 
@@ -47,16 +47,15 @@ namespace YoCode
         //Will return a list of files from a directory given a list of patterns
         public List<string> GetFilesInDirectory(String PATH, List<String> searchPatterns){
 
-            DirectoryInfo di = new DirectoryInfo(PATH);
-            int len = searchPatterns.Count;
-            List<String> files = new List<String>();
+            var di = new DirectoryInfo(PATH);
+            var len = searchPatterns.Count;
+            var files = new List<String>();
 
-            for (int i = 0; i < len; i++)
+            foreach(var pattern in searchPatterns)
             {
-                FileInfo[] fileinfo = di.GetFiles(searchPatterns[i], SearchOption.AllDirectories);
+                var fileinfo = di.GetFiles(pattern, SearchOption.AllDirectories);
 
                 AddFileInfoToList(files, fileinfo);
-
             }
 
             return files;
@@ -65,27 +64,28 @@ namespace YoCode
         //Helper method to convert FileInfo[] elements to string and add them to a list 
         private static void AddFileInfoToList(List<string> files, FileInfo[] fileinfo)
         {
-            for (int j = 0; j < fileinfo.Length; j++)
+            foreach(var fi in fileinfo)
             {
-                files.Add(fileinfo[j].ToString());
+                files.Add(fi.ToString());
             }
         }
-
 
         public FileStream GetFileStream(String PATH)
         {
-            FileStream fs = new FileStream(PATH,FileMode.Open);
+            var fs = new FileStream(PATH,FileMode.Open);
             return fs; 
         }
 
-      
+
         public void Print()
         {
-            List<String> files = GetFilesInDirectory(ORIGINAL_PATH,SearchPatterns);
-            for (int i = 0; i < files.Count; i++)
+            var files = GetFilesInDirectory(ORIGINAL_PATH, SearchPatterns);
+
+            foreach (var fi in files)
             {
-                Console.WriteLine(files[i].ToString());
+                Console.WriteLine(fi.ToString());
             }
+
             Console.ReadLine();
 
         }

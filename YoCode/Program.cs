@@ -7,6 +7,8 @@ namespace YoCode
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Welcome to YoCode!");
+
             FileImport fi = new FileImport();
 
             fi.Print();
