@@ -8,7 +8,7 @@ namespace YoCode_XUnit
     {
         // Write better testing mehod
         [Theory]
-        [InlineData("C:\\Users\\ukekar\\source\\repos\\YoCode\\YoCode\\input\\compareTo.cshtml",
+        [InlineData(@"..\..\..\TestData\MockHTML.cshtml",
             new String[]{"mile", "kilometer"})]
         public void UICheck_FeatureImplementedInUI(String userFile, String[] keyWords)
         {
