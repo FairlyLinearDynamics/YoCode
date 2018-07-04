@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -13,7 +12,21 @@ namespace YoCode
             {
                 return true;
             }
-            return false;
+            else {
+                for (int i = 0; i < dir.ModifiedPaths.Count; i++)
+                {
+                    FileStream ofs = File.Create(dir.OriginalPaths[i]);
+                    FileStream mfs = File.Create(dir.ModifiedPaths[i]);
+
+                    if (FileIsModified(ofs, mfs))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+
         }
         public static bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
