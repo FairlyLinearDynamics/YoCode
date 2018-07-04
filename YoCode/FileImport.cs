@@ -13,8 +13,13 @@ namespace YoCode
 
     public class FileImport
     {
-        public string ORIGINAL_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\junior-test";
-        public string MODIFIED_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\original-test";
+        // This shouldn't live in FileImport class
+
+        public string ORIGINAL_PATH { get; set; } = @"..\..\..\..\..\junior-test";
+
+        public string MODIFIED_PATH { get; set; } = @"..\..\..\..\..\original-test";
+
+
 
         List<String> SearchPatterns = new List<string>{ "*.cs", "*.cshtml", "*.js" };
         

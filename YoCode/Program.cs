@@ -9,6 +9,9 @@ namespace YoCode
         {
             Console.WriteLine("Welcome to YoCode!");
 
+            Console.WriteLine("Current directory: " + Directory.GetCurrentDirectory() + "\n");
+
+
             FileImport fi = new FileImport();
 
             fi.Print();
