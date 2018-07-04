@@ -26,7 +26,7 @@ namespace YoCode
         //Will return a list of all files from a directory
         public List<string> GetAllFilesInDirectory(String PATH)
         {
-            List<string> files = new List<string>();
+            var files = new List<string>();
             var di = new DirectoryInfo(PATH);
             var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
 
@@ -80,21 +80,6 @@ namespace YoCode
             var fs = new FileStream(PATH,FileMode.Open);
             return fs; 
         }
-
-
-        public void Print()
-        {
-            var files = GetFilesInDirectory(ORIGINAL_PATH, SearchPatterns);
-
-            foreach (var fi in files)
-            {
-                Console.WriteLine(fi.ToString());
-            }
-
-            Console.ReadLine();
-
-        }
-
 
     }
 }
