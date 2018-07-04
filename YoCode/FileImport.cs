@@ -11,14 +11,15 @@ namespace YoCode
     // Startup.cs from junior-test/UnitConverterWebApp
     // HomeController.cs from junior-test/UnitConverterWebApp/Controllers
 
-    class FileImport
+    public class FileImport
     {
         public string ORIGINAL_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\junior-test";
         public string MODIFIED_PATH { get; set; } = @"C:\Users\ukmzil\source\repos\original-test";
 
-        List<String> SearchPatterns = new List<string>{ "*.cs", "*.cshtml", "*.js" };
+        public List<String> SearchPatterns { get; set; } = new List<string>{ "*.cs", "*.cshtml", "*.js" };
         
         //Will return a list of all files from a directory
+
         public List<string> GetAllFilesInDirectory(String PATH)
         {
             List<string> files = new List<string>();
