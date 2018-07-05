@@ -6,32 +6,53 @@ namespace YoCode
 {
     public class Directory : IDirectory
     {
-        public List<String> OriginalPaths { get; }
-        public List<String> ModifiedPaths { get; }
+        const string HTML = "*.html";
+        const string CSS = "*.css";
+        const string CS = "*.cs";
 
-        public Directory(List<String> originalPaths, List<String> modifiedPaths)
+        public IEnumerable<String> OriginalPaths { get; }
+        public IEnumerable<String> ModifiedPaths { get; }
+        Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
+        
+        public Directory(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
         {
-            OriginalPaths = originalPaths;
-            ModifiedPaths = modifiedPaths;
+            fileExtensions.Add(FileTypes.cs, CS);
+            fileExtensions.Add(FileTypes.css, CSS);
+            fileExtensions.Add(FileTypes.html, HTML);
         }
-        private List<Stream> ReturnPathFileStream(List<string> paths)
-        {
-            List<Stream> streamList = new List<Stream>();
 
-            for (int i = 0; i < paths.Count; i++)
+        private IEnumerable<FileContent> ReturnPathFileStream(IEnumerable<string> paths)
+        {
+            var streamList = new List<FileContent>();
+
+            foreach (var path in paths)
             {
-                FileStream fs = File.Create(paths[i]);
-                streamList.Add(fs);
+                FileStream fs = File.OpenWrite(path);
+                streamList.Add(new FileContent { path = path, content = fs });
             }
+
             return streamList;
         }
-        public List<Stream> ReturnOriginalPathFileStream()
+
+        public IEnumerable<FileContent> ReturnOriginalPathFileStream()
         {
             return ReturnPathFileStream(OriginalPaths);
         }
-        public List<Stream> ReturnModifiedPathFileStream()
+
+        public IEnumerable<FileContent> ReturnModifiedPathFileStream()
         {
             return ReturnPathFileStream(ModifiedPaths);
+        }
+
+
+        //Will return a list of files from a directory given a pattern
+        public IEnumerable<string> GetFilesInDirectory(String PATH, FileTypes type)
+        {
+            var files = new List<string>();
+            var di = new DirectoryInfo(PATH);
+
+            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories));
+            return files;
         }
     }
 }

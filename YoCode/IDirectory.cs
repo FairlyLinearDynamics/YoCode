@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace YoCode
 {
     public interface IDirectory
     {
-        List<string> ModifiedPaths { get; }
-        List<string> OriginalPaths { get; }
+        IEnumerable<string> ModifiedPaths { get; }
+        IEnumerable<string> OriginalPaths { get; }
 
-        List<Stream> ReturnModifiedPathFileStream();
-        List<Stream> ReturnOriginalPathFileStream();
+        IEnumerable<FileContent> ReturnModifiedPathFileStream();
+        IEnumerable<FileContent> ReturnOriginalPathFileStream();
     }
 }

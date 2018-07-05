@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Linq;
 
 namespace YoCode
 {
@@ -9,18 +9,20 @@ namespace YoCode
     {
         public static bool ProjectIsModified(IDirectory dir)
         {
-            if (dir.OriginalPaths.Count != dir.ModifiedPaths.Count)
+            if (dir.OriginalPaths.Count() != dir.ModifiedPaths.Count())
             {
                 return true;
             }
             else
             {
-                List<Stream> originalFileStreams = dir.ReturnOriginalPathFileStream();
-                List<Stream> modifiedFileStreams = dir.ReturnModifiedPathFileStream();
+                var originalFileStreams = dir.ReturnOriginalPathFileStream().OrderBy((c => c.path));
+                var modifiedFileStreams = dir.ReturnModifiedPathFileStream().OrderBy((c => c.path));
 
-                for (int i = 0; i < modifiedFileStreams.Count; i++)
+                var streamsList = originalFileStreams.Zip(modifiedFileStreams, (o, m) => (original: o, modified: m ));
+
+                foreach (var (original, modified) in streamsList)
                 {
-                    if (FileIsModified(originalFileStreams[i], modifiedFileStreams[i]))
+                    if (FileIsModified(original.content, modified.content))
                     {
                         return true;
                     }
