@@ -16,7 +16,9 @@ namespace YoCode
         public GitCheck()
         {
             setProcessStartInfo(@"..\..\..\..\..\YoCode");
-            open();
+            openProcess();
+            //printOutput(getOutput());
+            parseOutput(getOutput());
 
         }
 
@@ -36,27 +38,30 @@ namespace YoCode
 
 
 
-        public void open()
+        public void openProcess()
         {
             process = new Process();
             process.StartInfo = psi;        
             process.Start();
+        }
+        
 
-            //string errString = process.StandardError.ReadToEnd();
-            //string stdString = process.StandardOutput.ReadToEnd();
+        public string getOutput()
+        {
+            return process.StandardOutput.ReadToEnd();
+        }
 
-            var isRunning = !process.HasExited;
+        public void printOutput(String output)
+        {
+            Console.Write(output);
+        }
 
-            //while(isRunning = true) { 
-                string line = process.StandardOutput.ReadToEnd();
-                Console.WriteLine(line);
-                //process.WaitForExit();
-            //}
-
-            // Console.WriteLine(stdString);
-            Console.ReadLine();
+    
+            
 
         }
+
+
 
 
     }
