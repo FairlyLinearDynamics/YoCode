@@ -8,11 +8,11 @@ namespace YoCode
 {
     class GitCheck
     {
-        StringReader sr;
-        public ProcessStartInfo psi { get; set; }
-        public Process process { get; set; }
+
         public string GIT_INSTALL_DIRECTORY { get; set; } = @"C:\Program Files\Git";
-        public string REPOSITORY_PATH = @"..\..\..\..\..\YoCode";
+        //public string REPOSITORY_PATH = @"..\..\..\..\..\YoCode";
+        public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\jacob-millward";
+
         public List<string> hostDomains = new List<string>();
 
 
@@ -20,51 +20,49 @@ namespace YoCode
         {
             hostDomains.Add("@nonlinear.com");
             hostDomains.Add("@waters.com");
+            hostDomains.Add("@millward.io");
+
         }
 
-        public bool executeTheCheck()
+        public bool ExecuteTheCheck()
         {
-            setProcessStartInfo(REPOSITORY_PATH);
-            openProcess();
-            string lastAuthor = getLastAuthor(getOutput());
+            var p = new Process();
+            return ExecuteTheCheck(p);
+        }
+
+        public bool ExecuteTheCheck(Process p)
+        {
+            p.StartInfo = SetProcessStartInfo(REPOSITORY_PATH);
+            p.Start();
+
+            string output = p.StandardOutput.ReadToEnd();
+            string lastAuthor = getLastAuthor(output);    
             return gitHasBeenUsed(lastAuthor,hostDomains);
         }
 
         // Refactor GIT_INSTALL_DIRECTORY / ARGUMENTS?
 
-        public void setProcessStartInfo(String PATH)
+            // Change type to ProcessStartInfo#
+
+        public ProcessStartInfo SetProcessStartInfo(String PATH)
         {
-            psi = new ProcessStartInfo();
+            var psi = new ProcessStartInfo();
             psi.CreateNoWindow = true;
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
             psi.WorkingDirectory = PATH;
             psi.FileName = GIT_INSTALL_DIRECTORY + @"\bin\git.exe";
             psi.Arguments = "log ";
-        }
 
+            return psi;
 
-        public void openProcess()
-        {
-            process = new Process();
-            process.StartInfo = psi;
-            process.Start();
         }
-
-        public string getOutput()
-        {
-            return process.StandardOutput.ReadToEnd();
-        }
-
-        public void printOutput()
-        {
-            Console.Write(getOutput());
-        }
+        
 
         // probably will delete this
         private List<String> getAuthorList(string output)
         {
-            sr = new StringReader(output);
+            var sr = new StringReader(output);
             List<String> authors = new List<String>();
             string line;
             while ((line = sr.ReadLine()) != null)
@@ -80,7 +78,7 @@ namespace YoCode
         // get name and email address of the last author
         private string getLastAuthor(string output)
         {
-            sr = new StringReader(output);
+            var sr = new StringReader(output);
             string line;
             while ((line = sr.ReadLine()) != null)
             {
