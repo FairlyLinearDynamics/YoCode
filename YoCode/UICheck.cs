@@ -1,21 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace YoCode
 {
     public class UICheck
     {
-        public static bool UIContainsFeature(String userFileURL, String[] keyWords)
+        public UICheck(List<String> userFilePaths, String[] keyWords)
         {
-            var userFile = File.ReadAllText(userFileURL);
-            var comp = StringComparison.OrdinalIgnoreCase;
+            UIContainsFeature(userFilePaths, keyWords);
+        }
 
-            foreach(String key in keyWords)
+        public UICheck(String userFilePath, String[] keyWords)
+        {
+            UIContainsFeature(userFilePath, keyWords);
+        }
+
+        private void UIContainsFeature(String userFilePath, String[] keyWords)
+        {
+            var userFile = File.ReadAllLines(userFilePath);
+
+            for(var i=0; i<userFile.Length; i++)
             {
-                if (userFile.Contains(key,comp))
+                // Output code line where this keyword was found.
+                if (ContainsKeyWord(userFile[i], keyWords)) 
+                {
+                    ListOfMatches.Add(i+1);
+                }
+            }
+        }
+
+        private void UIContainsFeature(List<string> userFilePaths, String[] keyWords)
+        {
+            foreach (string path in userFilePaths)
+            {
+                UIContainsFeature(path, keyWords);
+            }
+        }
+
+        private bool ContainsKeyWord(string line, string[] keyWords)
+        {
+            foreach (string key in keyWords)
+            {
+                if (line.ToLower().Contains(key))
                     return true;
             }
             return false;
         }
+
+        public bool ContainsFeature => ListOfMatches.Any();
+
+        public List<int> ListOfMatches { get; private set; } = new List<int>();
+        
     }
 }

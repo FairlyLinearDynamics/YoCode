@@ -6,6 +6,13 @@ namespace YoCode
     {
         TestResults results;
 
+        public void PrintIntroduction()
+        {
+            Console.WriteLine("Welcome to the YoCode, the best code checkup software on the marker!");
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
         public void PrintFinalResults(TestResults results)
         {
             this.results = results;

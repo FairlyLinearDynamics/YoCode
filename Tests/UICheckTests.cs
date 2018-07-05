@@ -13,7 +13,8 @@ namespace YoCode_XUnit
             new String[]{"mile", "kilometer"})]
         public void UICheck_FeatureImplementedInUI(String userFile, String[] keyWords)
         {
-            UICheck.UIContainsFeature(userFile, keyWords).Should().Be(true);
+            UICheck uiCheck = new UICheck(userFile, keyWords);
+            uiCheck.ContainsFeature.Should().Be(true);
         }
     }
 }
