@@ -6,9 +6,8 @@ using System.IO;
 
 namespace YoCode
 {
-    class GitCheck
+    public class GitCheck
     {
-
         public string GIT_INSTALL_DIRECTORY { get; set; } = @"C:\Program Files\Git";
         //public string REPOSITORY_PATH = @"..\..\..\..\..\YoCode";
         public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\jacob-millward";
@@ -18,10 +17,6 @@ namespace YoCode
 
         public GitCheck()
         {
-            hostDomains.Add("@nonlinear.com");
-            hostDomains.Add("@waters.com");
-            hostDomains.Add("@millward.io");
-
         }
 
         public bool ExecuteTheCheck()
@@ -36,13 +31,10 @@ namespace YoCode
             p.Start();
 
             string output = p.StandardOutput.ReadToEnd();
-            string lastAuthor = getLastAuthor(output);    
-            return gitHasBeenUsed(lastAuthor,hostDomains);
+            string lastAuthor = getLastAuthor(output);
+            Console.WriteLine(lastAuthor);
+            return GitHasBeenUsed(lastAuthor,hostDomains);
         }
-
-        // Refactor GIT_INSTALL_DIRECTORY / ARGUMENTS?
-
-            // Change type to ProcessStartInfo#
 
         public ProcessStartInfo SetProcessStartInfo(String PATH)
         {
@@ -57,32 +49,15 @@ namespace YoCode
             return psi;
 
         }
-        
-
-        // probably will delete this
-        private List<String> getAuthorList(string output)
-        {
-            var sr = new StringReader(output);
-            List<String> authors = new List<String>();
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line.Contains("Author"))
-                {
-                    authors.Add(line);
-                }
-            }
-            return authors;
-        }
 
         // get name and email address of the last author
-        private string getLastAuthor(string output)
+        public string getLastAuthor(string output)
         {
             var sr = new StringReader(output);
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                if (line.Contains("Author"))
+                if (ContainsAny(line,getKeyWords() ) )
                 {
                     return line;
                 }
@@ -90,20 +65,47 @@ namespace YoCode
             return "No commits/authors found";
         }
 
-        private bool gitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+        public bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
         {
-            foreach (string hostdomain in hostDomains)
+            if (ContainsAny(lastAuthor,hostDomains))
             {
-                if (lastAuthor.Contains(hostdomain))
-                {
-                    return false;
-                }
+                return false;
             }
             return true;
+        }
+    
+        public static bool ContainsAny( string line,List<string> keywords)
+        {
+            foreach(string keyword in keywords)
+            {
+                if (line.Contains(keyword))
+                {
+                    return true;
+                }
+            }
+            return false;
+    
+        }
 
+        public List<String> getKeyWords()
+        {
+            var keywords = new List<string>();
+            keywords.Add("<");
+            keywords.Add(">");
+            keywords.Add("@");
+            keywords.Add("Author");
+            return keywords;
 
         }
 
+        public List<String> getHostDomains()
+        {
+            var hostDomains = new List<string>();
+            hostDomains.Add("@nonlinear.com");
+            hostDomains.Add("@waters.com");
+
+            return hostDomains;
+        }
 
 
     }
