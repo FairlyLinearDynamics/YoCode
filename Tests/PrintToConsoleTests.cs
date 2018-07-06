@@ -40,7 +40,7 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintSolutionFileResult_Correct()
         {
-            results.SolutionExists = true;
+            results.GitUsed = true;
             consolePrinter.PrintFinalResults(results);
             String expectedOutput = "Any files changed: No\nSolution file was found: Yes\nFeature evidence in UI: No\n";
 
@@ -49,7 +49,7 @@ namespace YoCode_XUnit
         [Fact]
         public void PrintToConsole_PrintSolutionFileResult_Incorrect()
         {
-            results.SolutionExists = false;
+            results.GitUsed = false;
             consolePrinter.PrintFinalResults(results);
             String expectedOutput = "Any files changed: No\nSolution file was found: No\nFeature evidence in UI: No\n";
 

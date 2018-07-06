@@ -27,6 +27,7 @@ namespace YoCode
                 if (ContainsKeyWord(userFile[i], keyWords)) 
                 {
                     ListOfMatches.Add(i+1);
+                    //Console.WriteLine((i + 1)+" "+userFilePath);
                 }
             }
         }

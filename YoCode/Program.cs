@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 
 namespace YoCode
@@ -8,23 +9,40 @@ namespace YoCode
 
         static void Main(string[] args)
         {
+            var modifiedTestDirPath = args[0];
+            var originalTestDirPath = args[1];
+
             var consoleOutput = new PrintToConsole();
             var testResults = new TestResults();
+            var fileReader = new FileImport();
+
+            var modifiedTest = fileReader.GetAllFilesInDirectory(modifiedTestDirPath);
+            var originalTest = fileReader.GetAllFilesInDirectory(originalTestDirPath);
+
+            var dir = new Directory(originalTest, modifiedTest);
+
+            if (FileChangeChecker.ProjectIsModified(dir))
+            {
+                testResults.AnyFileChanged = true;
+                // UI test
+                var keyWords = new string[] { "miles", "kilometers", "km" };
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
+
+                UICheck uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
+
+                testResults.UiCheck = uiChecker.ContainsFeature;
+
+                // Solution file exists
+                testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+
+            }
+            else
+                testResults.AnyFileChanged = false;
+
+
+            // Printing calls
             consoleOutput.PrintIntroduction();
-
-            string[] keyPattern = new string[] { "Miles", "Kilometers", "Km" };
-            string html = @"C:\Users\ukekar\Downloads\no-to-interview\0A2F986A7029D8AF3D51499176F359ED06B832A25834FA29F1713D7B35FBAE19\UnitConverterWebApp\Views\Home\Index.cshtml";
-
-            // UI test
-            UICheck uiTest = new UICheck(html, keyPattern);
-            testResults.UiCheck = uiTest.ContainsFeature;
-
-
-
             consoleOutput.PrintFinalResults(testResults);
-
-
-            //Console.Write(UICheck.UIContainsFeature(htmls, keyPattern));
         }
     }
 }

@@ -16,21 +16,28 @@ namespace YoCode
         public void PrintFinalResults(TestResults results)
         {
             this.results = results;
-            PrintFilesChangedResult();
-            PrintSolutionFileResult();
-            PrintUIEvidenceResult();
+            if (!results.AnyFileChanged)
+            {
+                LazinessEvidence();
+            }
+            else
+            {
+                PrintGitResult();
+                PrintUIEvidenceResult();
+                SolutionFileFoundResult();
+            }
         }
 
-        private void PrintFilesChangedResult()
+        private void PrintGitResult()
         {
-            Console.Write("Any files changed: ");
-            Console.Write(results.AnyFileChangedResult()+"\n");
+            Console.Write("Git used: ");
+            Console.Write(results.GitUsedResult() + "\n");
         }
 
-        private void PrintSolutionFileResult()
+        private void SolutionFileFoundResult()
         {
-            Console.Write("Solution file was found: ");
-            Console.Write(results.SolutionExistsResult()+"\n");
+            Console.Write("Solution file found: ");
+            Console.Write(results.SolutionFileExistResult() + "\n");
         }
 
         private void PrintUIEvidenceResult()
@@ -39,6 +46,10 @@ namespace YoCode
             Console.Write(results.UiCheckResult()+"\n");
         }
 
+        private void LazinessEvidence()
+        {
+            Console.Write("Project unmodified\n");
+        }
         // Possibly will need to add more print methods to corespond to 
         // Performed tests.
     }
