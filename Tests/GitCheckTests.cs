@@ -30,31 +30,29 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_GetLastAuthor()
         {
-            testLastAuthor.Should().BeEquivalentTo(gc.getLastAuthor(testString));
-            
+            gc.getLastAuthor(testString).Should().BeEquivalentTo(testLastAuthor);
         }
 
 
         [Fact]
         public void Test_GitHasBeenUsed()
         {
-            bool testBool = true;
-            testBool.Should().Be(gc.GitHasBeenUsed(testLastAuthor,gc.getHostDomains()));
-            
+            gc.GitHasBeenUsed(testLastAuthor, gc.getHostDomains()).Should().Be(true);
+
         }
 
         [Fact] 
         public void Test_ContainsAny()
         {
-            false.Should().Be(GitCheck.ContainsAny(testLastAuthor,gc.getHostDomains()));
+            GitCheck.ContainsAny(testLastAuthor, gc.getHostDomains()).Should().Be(false);
+
 
         }
 
         [Fact]
         public void Test_ContainsAll()
         {
-            true.Should().Be(GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords()));
-
+            (GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords())).Should().Be(true);
         }
     }
 }
