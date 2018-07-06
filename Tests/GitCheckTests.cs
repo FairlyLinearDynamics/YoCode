@@ -30,8 +30,7 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_GetLastAuthor()
         {
-            testOutput = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
-            testOutput.Should().BeEquivalentTo(gc.getLastAuthor(testString));
+            testLastAuthor.Should().BeEquivalentTo(gc.getLastAuthor(testString));
             
         }
 
@@ -47,16 +46,14 @@ namespace YoCode_XUnit
         [Fact] 
         public void Test_ContainsAny()
         {
-            string testString = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
-            false.Should().Be(GitCheck.ContainsAny(testString,gc.getHostDomains()));
+            false.Should().Be(GitCheck.ContainsAny(testLastAuthor,gc.getHostDomains()));
 
         }
 
         [Fact]
         public void Test_ContainsAll()
         {
-            string testString = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
-            true.Should().Be(GitCheck.ContainsAll(testString, gc.getKeyWords()));
+            true.Should().Be(GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords()));
 
         }
     }
