@@ -9,7 +9,7 @@ namespace YoCode
     public class GitCheck
     {
         //needs to be fixed
-        public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\simon-jones";
+        public string REPOSITORY_PATH = @"C:\Users\ukekar\Downloads\drew-gibbon";
 
         public string Output { get; set; }
         public string LastAuthor { get; set; }     

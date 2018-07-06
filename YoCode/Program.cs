@@ -35,8 +35,11 @@ namespace YoCode
                 // Solution file exists
                 testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
-                //
-
+                // Git repo used
+                GitCheck gitChecker = new GitCheck();
+                gitChecker.ExecuteTheCheck();
+                testResults.GitUsed = gitChecker.GitUsed;
+                // Will not work on different systems due to issues in GitUsed method
             }
             else
                 testResults.AnyFileChanged = false;
