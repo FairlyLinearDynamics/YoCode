@@ -30,10 +30,12 @@ namespace YoCode
 
                 UICheck uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
 
-                testResults.UiCheck = uiChecker.ContainsFeature;
+                testResults.Lines = uiChecker.ListOfMatches;
 
                 // Solution file exists
                 testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+
+                //
 
             }
             else

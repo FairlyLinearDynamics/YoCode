@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 
 namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        TestResults results;
+        TestResultFormater results;
 
         public void PrintIntroduction()
         {
@@ -15,7 +16,7 @@ namespace YoCode
 
         public void PrintFinalResults(TestResults results)
         {
-            this.results = results;
+            this.results = new TestResultFormater(results);
             if (!results.AnyFileChanged)
             {
                 LazinessEvidence();
@@ -31,24 +32,33 @@ namespace YoCode
         private void PrintGitResult()
         {
             Console.Write("Git used: ");
-            Console.Write(results.GitUsedResult() + "\n");
+            Console.WriteLine(results.GitUsedResult);
         }
 
         private void SolutionFileFoundResult()
         {
             Console.Write("Solution file found: ");
-            Console.Write(results.SolutionFileExistResult() + "\n");
+            Console.WriteLine(results.SolutionFileExistResult);
         }
 
         private void PrintUIEvidenceResult()
         {
             Console.Write("Feature evidence in UI: ");
-            Console.Write(results.UiCheckResult()+"\n");
+            Console.WriteLine(results.UICheckResult);
+            if (results.UIEvidence.Any())
+            {
+                Console.Write("Found on lines: ");
+                foreach (int line in results.UIEvidence)
+                {
+                    Console.Write(line+" ");
+                }
+                Console.WriteLine();
+            }
         }
 
         private void LazinessEvidence()
         {
-            Console.Write("Project unmodified\n");
+            Console.WriteLine("Project unmodified");
         }
         // Possibly will need to add more print methods to corespond to 
         // Performed tests.

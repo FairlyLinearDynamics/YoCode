@@ -26,8 +26,8 @@ namespace YoCode
                 // Output code line where this keyword was found.
                 if (ContainsKeyWord(userFile[i], keyWords)) 
                 {
-                    ListOfMatches.Add(i+1);
-                    //Console.WriteLine((i + 1)+" "+userFilePath);
+
+                    ListOfMatches.Add(i + 1);
                 }
             }
         }
@@ -49,8 +49,6 @@ namespace YoCode
             }
             return false;
         }
-
-        public bool ContainsFeature => ListOfMatches.Any();
 
         public List<int> ListOfMatches { get; private set; } = new List<int>();
         
