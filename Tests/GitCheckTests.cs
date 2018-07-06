@@ -59,10 +59,5 @@ namespace YoCode_XUnit
             true.Should().Be(GitCheck.ContainsAll(testString, gc.getKeyWords()));
 
         }
-
-
-
-
-
     }
 }

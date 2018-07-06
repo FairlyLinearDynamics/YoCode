@@ -10,7 +10,7 @@ namespace YoCode
     {
         public string GIT_INSTALL_DIRECTORY { get; set; } = @"C:\Program Files\Git";
         //public string REPOSITORY_PATH = @"..\..\..\..\..\YoCode";
-        public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\jacob-millward";
+        public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\simon-jones";
 
         string output { get; set; }
         string lastAuthor { get; set; }
@@ -118,7 +118,6 @@ namespace YoCode
             keywords.Add(">");
             keywords.Add("@");
             keywords.Add(".");
-
             return keywords;
 
         }
@@ -128,8 +127,6 @@ namespace YoCode
             var hostDomains = new List<string>();
             hostDomains.Add("@nonlinear.com");
             hostDomains.Add("@waters.com");
-            //hostDomains.Add("@millward.io");
-
 
             return hostDomains;
         }
@@ -139,7 +136,7 @@ namespace YoCode
             ExecuteTheCheck();
             Console.WriteLine("Git Log: ");
             Console.WriteLine(output + "\n\n");
-            Console.WriteLine("Last author:" + lastAuthor);
+            Console.WriteLine(lastAuthor);
             Console.WriteLine("Has Git been used?: " + ExecuteTheCheck());
 
 
