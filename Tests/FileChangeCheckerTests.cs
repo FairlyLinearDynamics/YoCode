@@ -37,7 +37,7 @@ namespace YoCode_XUnit
             modified.Write(Encoding.ASCII.GetBytes("another thing that gets hashed"));
             modified.Position = 0;
 
-            FileChangeChecker.FileIsModified(original, modified).Should().Be(true);
+            FileChangeChecker.FileIsModified(original, modified).Should().BeTrue();
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            FileChangeChecker.ProjectIsModified(fakeDirectory).Should().Be(false);
+            FileChangeChecker.ProjectIsModified(fakeDirectory).Should().BeFalse();
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
 
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().Be(true);
+            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeTrue();
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(reverseFakeList);
 
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().Be(false);
+            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeFalse();
 
         }
     }
