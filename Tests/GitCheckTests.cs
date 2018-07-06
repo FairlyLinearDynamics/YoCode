@@ -10,7 +10,7 @@ namespace YoCode_XUnit
     {
         string testOutput,testString,testLastAuthor;
         GitCheck gc;
-        List<string> testDomainList;
+
         public GitCheckTests()
         {
             testString = "commit fd891f3dbcf0fd935814b56f87b2e0f768fe5bef (HEAD -> i8-gitcheck)\n" +
@@ -19,10 +19,6 @@ namespace YoCode_XUnit
                 "\nChanged the class logic a bit thanks to Mike";
             testLastAuthor = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
             gc = new GitCheck();
-
-            testDomainList = new List<string>();
-            testDomainList.Add("@nonlinear.com");
-            testDomainList.Add("@nonlinear.com");
 
         }
 

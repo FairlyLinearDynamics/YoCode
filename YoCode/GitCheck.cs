@@ -8,11 +8,12 @@ namespace YoCode
 {
     public class GitCheck
     {
+        //needs to be fixed
         public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\simon-jones";
 
         public string Output { get; set; }
         public string LastAuthor { get; set; }     
-        public bool GitUsed => ExecuteTheCheck();
+        public bool GitUsed { get; set; }
 
         public List<string> hostDomains = new List<string>();
 
@@ -28,7 +29,8 @@ namespace YoCode
             p.Start();
             Output = p.StandardOutput.ReadToEnd();
             LastAuthor = getLastAuthor(Output);
-            return GitHasBeenUsed(LastAuthor,getHostDomains());
+            GitUsed = GitHasBeenUsed(LastAuthor,getHostDomains());
+            return GitUsed;
         }
 
         public ProcessStartInfo SetProcessStartInfo(String PATH)
@@ -97,8 +99,6 @@ namespace YoCode
             }
             return true;
         }
-
-        //"Author: matas.zilaitis < matas.zilaitis@gmail.com > " 
 
         public List<String> getKeyWords()
         {
