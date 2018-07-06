@@ -35,13 +35,32 @@ namespace YoCode_XUnit
             
         }
 
+
         [Fact]
         public void Test_GitHasBeenUsed()
         {
             bool testBool = true;
             testBool.Should().Be(gc.GitHasBeenUsed(testLastAuthor,gc.getHostDomains()));
+            
+        }
+
+        [Fact] 
+        public void Test_ContainsAny()
+        {
+            string testString = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
+            false.Should().Be(GitCheck.ContainsAny(testString,gc.getHostDomains()));
 
         }
+
+        [Fact]
+        public void Test_ContainsAll()
+        {
+            string testString = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
+            true.Should().Be(GitCheck.ContainsAll(testString, gc.getKeyWords()));
+
+        }
+
+
 
 
 

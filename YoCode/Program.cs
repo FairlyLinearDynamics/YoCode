@@ -15,7 +15,7 @@ namespace YoCode
 
             GitCheck gc = new GitCheck();
 
-            Console.WriteLine(gc.ExecuteTheCheck());
+            gc.printDetailedResults();
             Console.Read();
         }
     }

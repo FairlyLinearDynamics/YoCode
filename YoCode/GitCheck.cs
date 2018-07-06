@@ -12,12 +12,13 @@ namespace YoCode
         //public string REPOSITORY_PATH = @"..\..\..\..\..\YoCode";
         public string REPOSITORY_PATH = @"C:\Users\ukmzil\source\repos\Tests Sent by People\Real\jacob-millward";
 
+        string output { get; set; }
+        string lastAuthor { get; set; }
+        bool result { get; set; }
+
+
         public List<string> hostDomains = new List<string>();
 
-
-        public GitCheck()
-        {
-        }
 
         public bool ExecuteTheCheck()
         {
@@ -30,9 +31,8 @@ namespace YoCode
             p.StartInfo = SetProcessStartInfo(REPOSITORY_PATH);
             p.Start();
 
-            string output = p.StandardOutput.ReadToEnd();
-            string lastAuthor = getLastAuthor(output);
-            Console.WriteLine(lastAuthor);
+            output = p.StandardOutput.ReadToEnd();
+            lastAuthor = getLastAuthor(output);
             return GitHasBeenUsed(lastAuthor,hostDomains);
         }
 
@@ -57,20 +57,23 @@ namespace YoCode
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                if (ContainsAny(line,getKeyWords() ) )
+                if (ContainsAll(line,getKeyWords() ) )
                 {
                     return line;
                 }
             }
-            return "No commits/authors found";
+            return "";
         }
+
 
         public bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
         {
-            if (ContainsAny(lastAuthor,hostDomains))
+            if (ContainsAny(lastAuthor,getHostDomains()) || string.IsNullOrEmpty(lastAuthor) )
             {
+                result = false;
                 return false;
             }
+            result = true;
             return true;
         }
     
@@ -87,13 +90,35 @@ namespace YoCode
     
         }
 
+        public static bool ContainsAll(string line, List<string> keywords)
+        {
+            foreach (string keyword in keywords)
+            {
+                if (line.Contains(keyword))
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+
+        }
+
+
+        //"Author: matas.zilaitis < matas.zilaitis@gmail.com > " 
+
         public List<String> getKeyWords()
         {
             var keywords = new List<string>();
+            keywords.Add("Author:");
             keywords.Add("<");
             keywords.Add(">");
             keywords.Add("@");
-            keywords.Add("Author");
+            keywords.Add(".");
+
             return keywords;
 
         }
@@ -103,10 +128,22 @@ namespace YoCode
             var hostDomains = new List<string>();
             hostDomains.Add("@nonlinear.com");
             hostDomains.Add("@waters.com");
+            //hostDomains.Add("@millward.io");
+
 
             return hostDomains;
         }
 
+        public void printDetailedResults()
+        {
+            ExecuteTheCheck();
+            Console.WriteLine("Git Log: ");
+            Console.WriteLine(output + "\n\n");
+            Console.WriteLine("Last author:" + lastAuthor);
+            Console.WriteLine("Has Git been used?: " + ExecuteTheCheck());
+
+
+        }
 
     }
 }
