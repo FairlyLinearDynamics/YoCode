@@ -32,7 +32,7 @@ namespace YoCode
 
             foreach (var path in paths)
             {
-                FileStream fs = File.OpenWrite(path);
+                FileStream fs = File.OpenRead(path);
                 streamList.Add(new FileContent { path = path, content = fs });
             }
 
