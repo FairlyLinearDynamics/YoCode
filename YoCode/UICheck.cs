@@ -7,32 +7,31 @@ namespace YoCode
 {
     public class UICheck
     {
-        public UICheck(List<String> userFilePaths, String[] keyWords)
+        public UICheck(List<string> userFilePaths, string[] keyWords)
         {
             UIContainsFeature(userFilePaths, keyWords);
         }
 
-        public UICheck(String userFilePath, String[] keyWords)
+        public UICheck(string userFilePath, string[] keyWords)
         {
             UIContainsFeature(userFilePath, keyWords);
         }
 
-        private void UIContainsFeature(String userFilePath, String[] keyWords)
+        private void UIContainsFeature(string userFilePath, string[] keyWords)
         {
             var userFile = File.ReadAllLines(userFilePath);
 
             for(var i=0; i<userFile.Length; i++)
             {
-                // Output code line where this keyword was found.
                 if (ContainsKeyWord(userFile[i], keyWords)) 
                 {
-
+                    // TODO: Show from which file below lines are taken
                     ListOfMatches.Add(i + 1);
                 }
             }
         }
 
-        private void UIContainsFeature(List<string> userFilePaths, String[] keyWords)
+        private void UIContainsFeature(List<string> userFilePaths, string[] keyWords)
         {
             foreach (string path in userFilePaths)
             {

@@ -19,10 +19,10 @@ namespace YoCode
 
         public string MODIFIED_PATH { get; set; } = @"..\..\..\..\..\original-test";
 
-        List<String> SearchPatterns = new List<string>{ "*.cs", "*.cshtml", "*.js" };
+        List<string> SearchPatterns = new List<string>{ "*.cs", "*.cshtml", "*.js" };
         
         //Will return a list of all files from a directory
-        public List<string> GetAllFilesInDirectory(String PATH)
+        public List<string> GetAllFilesInDirectory(string PATH)
         {
             var files = new List<string>();
             var di = new DirectoryInfo(PATH);
@@ -42,7 +42,7 @@ namespace YoCode
             }
         }
 
-        public FileStream GetFileStream(String PATH)
+        public FileStream GetFileStream(string PATH)
         {
             var fs = new FileStream(PATH,FileMode.Open);
             return fs; 

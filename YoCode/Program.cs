@@ -39,7 +39,7 @@ namespace YoCode
                 GitCheck gitChecker = new GitCheck();
                 gitChecker.ExecuteTheCheck();
                 testResults.GitUsed = gitChecker.GitUsed;
-                // Will not work on different systems due to issues in GitUsed method
+                // TODO: Update this bit after GitCheck is fixed
             }
             else
                 testResults.AnyFileChanged = false;

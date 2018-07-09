@@ -33,7 +33,7 @@ namespace YoCode
             return GitUsed;
         }
 
-        public ProcessStartInfo SetProcessStartInfo(String PATH)
+        public ProcessStartInfo SetProcessStartInfo(string PATH)
         {
             var psi = new ProcessStartInfo();
             psi.CreateNoWindow = true;
@@ -100,7 +100,7 @@ namespace YoCode
             return true;
         }
 
-        public List<String> getKeyWords()
+        public List<string> getKeyWords()
         {
             var keywords = new List<string>();
             keywords.Add("Author:");
@@ -112,7 +112,7 @@ namespace YoCode
             return keywords;
         }
 
-        public List<String> getHostDomains()
+        public List<string> getHostDomains()
         {
             var hostDomains = new List<string>();
             hostDomains.Add("@nonlinear.com");

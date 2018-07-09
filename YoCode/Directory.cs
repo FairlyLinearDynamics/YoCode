@@ -11,11 +11,11 @@ namespace YoCode
         const string CS = "*.cs";
         const string SLN = "*.sln";
 
-        public IEnumerable<String> OriginalPaths { get; }
-        public IEnumerable<String> ModifiedPaths { get; }
+        public IEnumerable<string> OriginalPaths { get; }
+        public IEnumerable<string> ModifiedPaths { get; }
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public Directory(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
+        public Directory(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
         {
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;
@@ -50,7 +50,7 @@ namespace YoCode
         }
 
         //Will return a list of files from a directory given a pattern
-        public IEnumerable<string> GetFilesInDirectory(String PATH, FileTypes type)
+        public IEnumerable<string> GetFilesInDirectory(string PATH, FileTypes type)
         {
             var files = new List<string>();
             var di = new DirectoryInfo(PATH);
