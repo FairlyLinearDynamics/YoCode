@@ -17,7 +17,7 @@ namespace YoCode
 
         public List<string> hostDomains = new List<string>();
 
-        public GitCheck(String PATH)
+        public GitCheck(string PATH)
         {
             if (Directory.Exists(PATH)) {
                 REPOSITORY_PATH = PATH;

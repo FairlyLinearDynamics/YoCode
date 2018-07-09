@@ -11,8 +11,8 @@ namespace YoCode_XUnit
         // Write better testing mehod
         [Theory]
         [InlineData(@"..\..\..\TestData\MockHTML.cshtml",
-            new String[]{"miles", "kilometer"})]
-        public void UICheck_FoundMatchesOnOneLine(String userFile, String[] keyWords)
+            new string[]{"miles", "kilometer"})]
+        public void UICheck_FoundMatchesOnOneLine(string userFile, string[] keyWords)
         {
             UICheck uiCheck = new UICheck(userFile, keyWords);
 

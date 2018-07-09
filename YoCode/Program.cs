@@ -19,7 +19,7 @@ namespace YoCode
             var modifiedTest = fileReader.GetAllFilesInDirectory(modifiedTestDirPath);
             var originalTest = fileReader.GetAllFilesInDirectory(originalTestDirPath);
 
-            var dir = new Directory(originalTest, modifiedTest);
+            var dir = new PathManager(originalTest, modifiedTest);
 
             if (FileChangeChecker.ProjectIsModified(dir))
             {
@@ -36,10 +36,8 @@ namespace YoCode
                 testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
                 // Git repo used
-                GitCheck gitChecker = new GitCheck();
-                gitChecker.ExecuteTheCheck();
+                GitCheck gitChecker = new GitCheck(modifiedTestDirPath);
                 testResults.GitUsed = gitChecker.GitUsed;
-                // TODO: Update this bit after GitCheck is fixed
             }
             else
             {

@@ -16,13 +16,13 @@ namespace YoCode_XUnit
 
             PathManager dir = new PathManager(fakeList1, fakeList2);
 
-            string path = Environment.CurrentDirectory+ "\\..\\..\\..\\TestData";
+            string path = @"..\..\..\TestData\";
 
-            List<String> result = new List<string>();
+            List<string> result = new List<string>();
 
-            result = (List<String>)dir.GetFilesInDirectory(path, FileTypes.html);
+            result = (List<string>)dir.GetFilesInDirectory(path, FileTypes.html);
 
-            result.Count.Should().Be(4);
+            result.Count.Should().Be(5);
         }
     }
 }

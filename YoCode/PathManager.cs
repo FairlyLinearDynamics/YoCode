@@ -11,12 +11,12 @@ namespace YoCode
         const string CS = "*.cs";
         const string SLN = "*.sln";
 
-        public IEnumerable<String> OriginalPaths { get; }
-        public IEnumerable<String> ModifiedPaths { get; }
+        public IEnumerable<string> OriginalPaths { get; }
+        public IEnumerable<string> ModifiedPaths { get; }
 
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public PathManager(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
+        public PathManager(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
         {
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;
