@@ -1,7 +1,10 @@
-﻿public enum FileTypes
+﻿namespace YoCode
 {
-    html,
-    css,
-    cs,
-    sln,
+    public enum FileTypes
+    {
+        html,
+        css,
+        cs,
+        sln,
+    }
 }

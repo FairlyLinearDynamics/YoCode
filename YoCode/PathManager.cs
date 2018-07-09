@@ -14,7 +14,7 @@ namespace YoCode
         public IEnumerable<string> OriginalPaths { get; }
         public IEnumerable<string> ModifiedPaths { get; }
 
-        Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
+        private readonly Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
         public PathManager(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
         {
@@ -27,13 +27,13 @@ namespace YoCode
             fileExtensions.Add(FileTypes.sln, SLN);
         }
 
-        private IEnumerable<FileContent> ReturnPathFileStream(IEnumerable<string> paths)
+        private static IEnumerable<FileContent> ReturnPathFileStream(IEnumerable<string> paths)
         {
             var streamList = new List<FileContent>();
 
             foreach (var path in paths)
             {
-                FileStream fs = File.OpenRead(path);
+                var fs = File.OpenRead(path);
                 streamList.Add(new FileContent { path = path, content = fs });
             }
 

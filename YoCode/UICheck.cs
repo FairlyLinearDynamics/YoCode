@@ -7,7 +7,7 @@ namespace YoCode
 {
     public class UICheck
     {
-        public UICheck(List<string> userFilePaths, string[] keyWords)
+        public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
         {
             UIContainsFeature(userFilePaths, keyWords);
         }
@@ -31,25 +31,20 @@ namespace YoCode
             }
         }
 
-        private void UIContainsFeature(List<string> userFilePaths, string[] keyWords)
+        private void UIContainsFeature(IEnumerable<string> userFilePaths, string[] keyWords)
         {
-            foreach (string path in userFilePaths)
+            foreach (var path in userFilePaths)
             {
                 UIContainsFeature(path, keyWords);
             }
         }
 
-        private bool ContainsKeyWord(string line, string[] keyWords)
+        public static bool ContainsKeyWord(string line, IEnumerable<string> keyWords)
         {
-            foreach (string key in keyWords)
-            {
-                if (line.ToLower().Contains(key))
-                    return true;
-            }
-            return false;
+            return keyWords.Any(key => line.ToLower().Contains(key));
         }
 
-        public List<int> ListOfMatches { get; private set; } = new List<int>();
+        public List<int> ListOfMatches { get; } = new List<int>();
         
     }
 }

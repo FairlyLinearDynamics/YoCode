@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace YoCode
 {
+    public static class HelperMethods
+    {
+        public static bool ContainsAny(this string line, IEnumerable<string> keywords)
+        {
+            return keywords.Any(line.Contains);
+        }
+    }
+
     public class GitCheck
     {
         //needs to be fixed
-        public string REPOSITORY_PATH;
-        public string Output { get; set; } = "No output found";
-        public string LastAuthor { get; set; } = "None";     
-        public bool GitUsed { get; set; }
-        public bool FailedToGetRepo { get; private set; }
+        private readonly string repositoryPath;
+        private string Output { get; set; } = "No output found";
+        private string LastAuthor { get; set; } = "None";     
+        public bool GitUsed { get; private set; }
+        private bool FailedToGetRepo { get; set; }
 
-        public List<string> hostDomains = new List<string>();
-
-        public GitCheck(string PATH)
+        public GitCheck(string path)
         {
-            if (Directory.Exists(PATH)) {
-                REPOSITORY_PATH = PATH;
+            if (Directory.Exists(path)) {
+                repositoryPath = path;
                 ExecuteTheCheck();
             }
             else
@@ -31,43 +37,44 @@ namespace YoCode
 
         }
 
-        private bool ExecuteTheCheck()
+        private void ExecuteTheCheck()
         {
             var p = new Process();
-            return ExecuteTheCheck(p);
+            ExecuteTheCheck(p);
         }
 
-        private bool ExecuteTheCheck(Process p)
+        private void ExecuteTheCheck(Process p)
         {
-            p.StartInfo = SetProcessStartInfo(REPOSITORY_PATH);
+            p.StartInfo = SetProcessStartInfo(repositoryPath);
             p.Start();
             Output = p.StandardOutput.ReadToEnd();
-            LastAuthor = getLastAuthor(Output);
-            GitUsed = GitHasBeenUsed(LastAuthor,getHostDomains());
-            return GitUsed;
+            LastAuthor = GetLastAuthor(Output);
+            GitUsed = GitHasBeenUsed(LastAuthor,GetHostDomains());
         }
 
-        public ProcessStartInfo SetProcessStartInfo(string PATH)
+        private static ProcessStartInfo SetProcessStartInfo(string path)
         {
-            var psi = new ProcessStartInfo();
-            psi.CreateNoWindow = true;
-            psi.RedirectStandardError = true;
-            psi.RedirectStandardOutput = true;
-            psi.WorkingDirectory = PATH;
-            psi.FileName = "git.exe";
-            psi.Arguments = "log ";
+            var psi = new ProcessStartInfo
+            {
+                CreateNoWindow = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                WorkingDirectory = path,
+                FileName = "git.exe",
+                Arguments = "log "
+            };
 
             return psi;
         }
 
         // get name and email address of the last author
-        public string getLastAuthor(string output)
+        public static string GetLastAuthor(string output)
         {
             var sr = new StringReader(output);
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                if (ContainsAll(line,getKeyWords() ) )
+                if (ContainsAll(line,GetKeyWords() ) )
                 {
                     return line;
                 }
@@ -76,63 +83,33 @@ namespace YoCode
         }
 
 
-        public bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
         {
-            if (ContainsAny(lastAuthor,getHostDomains()) || string.IsNullOrEmpty(lastAuthor) )
+            if (ContainsAny(lastAuthor,GetHostDomains()) || string.IsNullOrEmpty(lastAuthor) )
             {
                 return false;
             }
             return true;
         }
     
-        public static bool ContainsAny(string line,List<string> keywords)
+        public static bool ContainsAny(string line, IEnumerable<string> keywords)
         {
-            foreach(string keyword in keywords)
-            {
-                if (line.Contains(keyword))
-                {
-                    return true;
-                }
-            }
-            return false;
-    
+            return line.ContainsAny(keywords);
         }
 
-        public static bool ContainsAll(string line, List<string> keywords)
+        public static bool ContainsAll(string line, IEnumerable<string> keywords)
         {
-            foreach (string keyword in keywords)
-            {
-                if (line.Contains(keyword))
-                {
-                    continue;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return true;
+            return keywords.All(line.Contains);
         }
 
-        public List<string> getKeyWords()
+        public static IEnumerable<string> GetKeyWords()
         {
-            var keywords = new List<string>();
-            keywords.Add("Author:");
-            keywords.Add("<");
-            keywords.Add(">");
-            keywords.Add("@");
-            keywords.Add(".");
-
-            return keywords;
+            return new List<string> {"Author:", "<", ">", "@", "."};
         }
 
-        public List<string> getHostDomains()
+        public static List<string> GetHostDomains()
         {
-            var hostDomains = new List<string>();
-            hostDomains.Add("@nonlinear.com");
-            hostDomains.Add("@waters.com");
-
-            return hostDomains;
-        }       
+            return new List<string> {"@nonlinear.com", "@waters.com"};
+        }
     }
 }

@@ -2,30 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace YoCode
 {
-    // To import:
-    // UnitConverter.cs from junior-test/UnitConverterWebApp
-    // Program.cs from junior-test/UnitConverterWebApp
-    // Startup.cs from junior-test/UnitConverterWebApp
-    // HomeController.cs from junior-test/UnitConverterWebApp/Controllers
-
     public class FileImport
     {
-        // This shouldn't live in FileImport class
-
-        public string ORIGINAL_PATH { get; set; } = @"..\..\..\..\..\junior-test";
-
-        public string MODIFIED_PATH { get; set; } = @"..\..\..\..\..\original-test";
-
-        List<string> SearchPatterns = new List<string>{ "*.cs", "*.cshtml", "*.js" };
-        
         //Will return a list of all files from a directory
-        public List<string> GetAllFilesInDirectory(string PATH)
+        public static IEnumerable<string> GetAllFilesInDirectory(string path)
         {
             var files = new List<string>();
-            var di = new DirectoryInfo(PATH);
+            var di = new DirectoryInfo(path);
             var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
 
             AddFileInfoToList(files, fileinfo);
@@ -34,17 +21,14 @@ namespace YoCode
         }
 
         //Helper method to convert FileInfo[] elements to string and add them to a list 
-        public static void AddFileInfoToList(List<string> files, FileInfo[] fileinfo)
+        public static void AddFileInfoToList(List<string> files, IEnumerable<FileInfo> fileinfo)
         {
-            foreach(var fi in fileinfo)
-            {
-                files.Add(fi.ToString());
-            }
+            files.AddRange(fileinfo.Select(fi => fi.ToString()));
         }
 
-        public FileStream GetFileStream(string PATH)
+        public FileStream GetFileStream(string path)
         {
-            var fs = new FileStream(PATH,FileMode.Open);
+            var fs = new FileStream(path,FileMode.Open);
             return fs; 
         }
     }

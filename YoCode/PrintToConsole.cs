@@ -5,7 +5,7 @@ namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        TestResultFormater results;
+        TestResultFormater resultsFormatter;
 
         public void PrintIntroduction()
         {
@@ -16,7 +16,7 @@ namespace YoCode
 
         public void PrintFinalResults(TestResults results)
         {
-            this.results = new TestResultFormater(results);
+            resultsFormatter = new TestResultFormater(results);
             if (!results.AnyFileChanged)
             {
                 LazinessEvidence();
@@ -32,23 +32,23 @@ namespace YoCode
         private void PrintGitResult()
         {
             Console.Write("Git used: ");
-            Console.WriteLine(results.GitUsedResult);
+            Console.WriteLine(resultsFormatter.GitUsedResult);
         }
 
         private void SolutionFileFoundResult()
         {
             Console.Write("Solution file found: ");
-            Console.WriteLine(results.SolutionFileExistResult);
+            Console.WriteLine(resultsFormatter.SolutionFileExistResult);
         }
 
         private void PrintUIEvidenceResult()
         {
             Console.Write("Feature evidence in UI: ");
-            Console.WriteLine(results.UICheckResult);
-            if (results.UIEvidence.Any())
+            Console.WriteLine(resultsFormatter.UICheckResult);
+            if (resultsFormatter.UIEvidence.Any())
             {
                 Console.Write("Found on lines: ");
-                foreach (int line in results.UIEvidence)
+                foreach (var line in resultsFormatter.UIEvidence)
                 {
                     Console.Write(line+" ");
                 }
@@ -56,7 +56,7 @@ namespace YoCode
             }
         }
 
-        private void LazinessEvidence()
+        private static void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }
