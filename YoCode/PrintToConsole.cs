@@ -17,6 +17,10 @@ namespace YoCode
         public void PrintFinalResults(TestResults results)
         {
             this.results = new TestResultFormater(results);
+            if(results.WrongDirectory)
+            {
+                PrintWrongDirectory();
+            }
             if (!results.AnyFileChanged)
             {
                 LazinessEvidence();
@@ -54,6 +58,11 @@ namespace YoCode
                 }
                 Console.WriteLine();
             }
+        }
+
+        private void PrintWrongDirectory()
+        {
+            Console.Write("Invalid directory");
         }
 
         private void LazinessEvidence()

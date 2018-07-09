@@ -7,6 +7,8 @@ namespace YoCode
     {
         public bool AnyFileChanged { get; set; }
 
+        public bool WrongDirectory { get; set; }
+
         public bool UiCheck => Lines.Any();
         public List<int> Lines { get; set; }
 
