@@ -4,21 +4,19 @@ using System.IO;
 
 namespace YoCode
 {
-    public class Directory : IDirectory
+    public class PathManager : IPathManager
     {
         const string HTML = "*.cshtml";
         const string CSS = "*.css";
         const string CS = "*.cs";
         const string SLN = "*.sln";
 
-        public IEnumerable<string> OriginalPaths { get; }
-        public IEnumerable<string> ModifiedPaths { get; }
         public IEnumerable<String> OriginalPaths { get; }
         public IEnumerable<String> ModifiedPaths { get; }
 
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public Directory(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
+        public PathManager(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
         {
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;

@@ -9,21 +9,35 @@ namespace YoCode
     public class GitCheck
     {
         //needs to be fixed
-        public string REPOSITORY_PATH = @"C:\Users\ukekar\Downloads\drew-gibbon";
-
-        public string Output { get; set; }
-        public string LastAuthor { get; set; }     
+        public string REPOSITORY_PATH;
+        public string Output { get; set; } = "No output found";
+        public string LastAuthor { get; set; } = "None";     
         public bool GitUsed { get; set; }
+        public bool FailedToGetRepo { get; private set; }
 
         public List<string> hostDomains = new List<string>();
 
-        public bool ExecuteTheCheck()
+        public GitCheck(String PATH)
+        {
+            if (Directory.Exists(PATH)) {
+                REPOSITORY_PATH = PATH;
+                ExecuteTheCheck();
+            }
+            else
+            {
+                Console.WriteLine("Invalid directory");
+                FailedToGetRepo = true;
+            }
+
+        }
+
+        private bool ExecuteTheCheck()
         {
             var p = new Process();
             return ExecuteTheCheck(p);
         }
 
-        public bool ExecuteTheCheck(Process p)
+        private bool ExecuteTheCheck(Process p)
         {
             p.StartInfo = SetProcessStartInfo(REPOSITORY_PATH);
             p.Start();
