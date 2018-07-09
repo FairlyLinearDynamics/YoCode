@@ -10,7 +10,6 @@ namespace YoCode
     {
         //needs to be fixed
         public string REPOSITORY_PATH;
-
         public string Output { get; set; } = "No output found";
         public string LastAuthor { get; set; } = "None";     
         public bool GitUsed { get; set; }
@@ -31,8 +30,6 @@ namespace YoCode
             }
 
         }
-
-
 
         private bool ExecuteTheCheck()
         {

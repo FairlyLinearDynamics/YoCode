@@ -48,7 +48,7 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_ContainsAll()
         {
-            (GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords())).Should().Be(true);
+            GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords()).Should().Be(true);
         }
     }
 }
