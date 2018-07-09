@@ -12,10 +12,14 @@ namespace YoCode
 
         public IEnumerable<String> OriginalPaths { get; }
         public IEnumerable<String> ModifiedPaths { get; }
+
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
         public Directory(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
         {
+            OriginalPaths = originalPaths;
+            ModifiedPaths = modifiedPaths;
+
             fileExtensions.Add(FileTypes.cs, CS);
             fileExtensions.Add(FileTypes.css, CSS);
             fileExtensions.Add(FileTypes.html, HTML);
@@ -43,7 +47,6 @@ namespace YoCode
         {
             return ReturnPathFileStream(ModifiedPaths);
         }
-
 
         //Will return a list of files from a directory given a pattern
         public IEnumerable<string> GetFilesInDirectory(String PATH, FileTypes type)
