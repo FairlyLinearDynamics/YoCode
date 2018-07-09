@@ -6,7 +6,7 @@ using System;
 
 namespace YoCode_XUnit
 {
-    public class DirectoryTests
+    public class PathManagerTests
     {
         [Fact]
         public void GetFilesInDirectoryCorrectlyReturnsListOfFiles()
@@ -14,7 +14,7 @@ namespace YoCode_XUnit
             List<string> fakeList1 = new List<string>();
             List<string> fakeList2 = new List<string>();
 
-            Directory dir = new Directory(fakeList1, fakeList2);
+            PathManager dir = new PathManager(fakeList1, fakeList2);
 
             string path = Environment.CurrentDirectory+ "\\..\\..\\..\\TestData";
 
