@@ -6,7 +6,7 @@ namespace YoCode
 {
     class TestResultFormater
     {
-        TestResults results;
+        private readonly TestResults results;
 
         public TestResultFormater(TestResults results)
         {
@@ -17,6 +17,6 @@ namespace YoCode
         public string GitUsedResult => (results.GitUsed) ? "Yes" : "No";
         public string SolutionFileExistResult => (results.SolutionFileExist) ? "Yes" : "No";
 
-        public List<int> UIEvidence { get=>results.Lines; }
+        public IEnumerable<int> UIEvidence => results.Lines;
     }
 }
