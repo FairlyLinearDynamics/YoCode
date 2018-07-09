@@ -13,6 +13,9 @@ namespace YoCode
 
         public IEnumerable<string> OriginalPaths { get; }
         public IEnumerable<string> ModifiedPaths { get; }
+        public IEnumerable<String> OriginalPaths { get; }
+        public IEnumerable<String> ModifiedPaths { get; }
+
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
         public Directory(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
