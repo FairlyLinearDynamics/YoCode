@@ -6,16 +6,17 @@ namespace YoCode
 {
     public class PathManager : IPathManager
     {
-        const string HTML = "*.html";
+        const string HTML = "*.cshtml";
         const string CSS = "*.css";
         const string CS = "*.cs";
+        const string SLN = "*.sln";
 
-        public IEnumerable<String> OriginalPaths { get; }
-        public IEnumerable<String> ModifiedPaths { get; }
+        public IEnumerable<string> OriginalPaths { get; }
+        public IEnumerable<string> ModifiedPaths { get; }
 
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public PathManager(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
+        public PathManager(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
         {
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;
@@ -23,6 +24,7 @@ namespace YoCode
             fileExtensions.Add(FileTypes.cs, CS);
             fileExtensions.Add(FileTypes.css, CSS);
             fileExtensions.Add(FileTypes.html, HTML);
+            fileExtensions.Add(FileTypes.sln, SLN);
         }
 
         private IEnumerable<FileContent> ReturnPathFileStream(IEnumerable<string> paths)
@@ -31,7 +33,7 @@ namespace YoCode
 
             foreach (var path in paths)
             {
-                FileStream fs = File.OpenWrite(path);
+                FileStream fs = File.OpenRead(path);
                 streamList.Add(new FileContent { path = path, content = fs });
             }
 
@@ -49,7 +51,7 @@ namespace YoCode
         }
 
         //Will return a list of files from a directory given a pattern
-        public IEnumerable<string> GetFilesInDirectory(String PATH, FileTypes type)
+        public IEnumerable<string> GetFilesInDirectory(string PATH, FileTypes type)
         {
             var files = new List<string>();
             var di = new DirectoryInfo(PATH);

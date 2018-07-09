@@ -1,28 +1,18 @@
-﻿namespace YoCode
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace YoCode
 {
     public class TestResults
     {
-        bool uiCheck;
-        bool solutionExists;
-        bool anyFileChanged;
+        public bool AnyFileChanged { get; set; }
 
-        public bool UiCheck { set => uiCheck = value; }
-        public bool SolutionExists { set => solutionExists = value; }
-        public bool AnyFileChanged { set => anyFileChanged = value; }
+        public bool UiCheck => Lines.Any();
+        public List<int> Lines { get; set; }
 
-        public string UiCheckResult()
-        {
-            return (uiCheck) ? "Yes" : "No";
-        }
+        public bool GitUsed { get; set; }
 
-        public string SolutionExistsResult()
-        {
-            return (solutionExists) ? "Yes" : "No";
-        }
+        public bool SolutionFileExist { get; set; }
 
-        public string AnyFileChangedResult()
-        {
-            return (anyFileChanged) ? "Yes" : "No";
-        }
     }
 }

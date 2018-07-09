@@ -14,9 +14,9 @@ namespace YoCode_XUnit
 
         Mock<IPathManager> mock = new Mock<IPathManager>();
 
-        List<String> fakePaths1 = new List<String>() { "one", "two" };
+        List<string> fakePaths1 = new List<string>() { "one", "two" };
 
-        List<String> fakePaths2 = new List<String>() { "one", "two", "three" };
+        List<string> fakePaths2 = new List<string>() { "one", "two", "three" };
 
         private FileContent CreateFakeStream(int i)
         {

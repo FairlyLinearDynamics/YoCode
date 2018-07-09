@@ -3,4 +3,5 @@
     html,
     css,
     cs,
+    sln,
 }

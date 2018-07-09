@@ -1,37 +1,65 @@
 ﻿using System;
+using System.Linq;
 
 namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        TestResults results;
+        TestResultFormater results;
+
+        public void PrintIntroduction()
+        {
+            Console.WriteLine("Welcome to the YoCode, the best code checkup software on the marker!");
+            Console.WriteLine();
+            Console.WriteLine();
+        }
 
         public void PrintFinalResults(TestResults results)
         {
-            this.results = results;
-            PrintFilesChangedResult();
-            PrintSolutionFileResult();
-            PrintUIEvidenceResult();
+            this.results = new TestResultFormater(results);
+            if (!results.AnyFileChanged)
+            {
+                LazinessEvidence();
+            }
+            else
+            {
+                PrintGitResult();
+                PrintUIEvidenceResult();
+                SolutionFileFoundResult();
+            }
         }
 
-        private void PrintFilesChangedResult()
+        private void PrintGitResult()
         {
-            Console.Write("Any files changed: ");
-            Console.Write(results.AnyFileChangedResult()+"\n");
+            Console.Write("Git used: ");
+            Console.WriteLine(results.GitUsedResult);
         }
 
-        private void PrintSolutionFileResult()
+        private void SolutionFileFoundResult()
         {
-            Console.Write("Solution file was found: ");
-            Console.Write(results.SolutionExistsResult()+"\n");
+            Console.Write("Solution file found: ");
+            Console.WriteLine(results.SolutionFileExistResult);
         }
 
         private void PrintUIEvidenceResult()
         {
             Console.Write("Feature evidence in UI: ");
-            Console.Write(results.UiCheckResult()+"\n");
+            Console.WriteLine(results.UICheckResult);
+            if (results.UIEvidence.Any())
+            {
+                Console.Write("Found on lines: ");
+                foreach (int line in results.UIEvidence)
+                {
+                    Console.Write(line+" ");
+                }
+                Console.WriteLine();
+            }
         }
 
+        private void LazinessEvidence()
+        {
+            Console.WriteLine("Project unmodified");
+        }
         // Possibly will need to add more print methods to corespond to 
         // Performed tests.
     }
