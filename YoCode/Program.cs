@@ -13,14 +13,28 @@ namespace YoCode
             var originalTestDirPath = args[1];
 
             var consoleOutput = new PrintToConsole();
-            var fileReader = new FileImport();
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            TestResults testResults;
 
-            var dir = new PathManager(originalTest, modifiedTest);
+            // TODO: Create new class to handle input and check correctness of input
+            if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
+            {
+                var fileReader = new FileImport();
 
-            var testResults = PerformChecks(modifiedTestDirPath, dir);
+                var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+                var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+
+                var dir = new PathManager(originalTest, modifiedTest);
+
+                testResults = PerformChecks(modifiedTestDirPath, dir);
+            }
+            else
+            {
+                testResults = new TestResults()
+                {
+                    WrongDirectory = true
+                };
+            }
 
             // Printing calls
             consoleOutput.PrintIntroduction();
