@@ -1,15 +1,13 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using YoCode;
-using System.Collections.Generic;
 
 namespace YoCode_XUnit
 {
     public class GitCheckTests
     {
-        string testOutput,testString,testLastAuthor;
-        GitCheck gc;
+        private readonly string testString;
+        private readonly string testLastAuthor;
 
         public GitCheckTests()
         {
@@ -18,37 +16,33 @@ namespace YoCode_XUnit
                 "\n Date:   Thu Jul 5 16:57:15 2018 + 0100 " +
                 "\nChanged the class logic a bit thanks to Mike";
             testLastAuthor = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
-            gc = new GitCheck(@"C: \Users\ukmzil\source\repos\Tests Sent by People\Real\drew - gibbon");
-
         }
 
 
         [Fact]
         public void Test_GetLastAuthor()
         {
-            gc.getLastAuthor(testString).Should().BeEquivalentTo(testLastAuthor);
+            GitCheck.GetLastAuthor(testString).Should().BeEquivalentTo(testLastAuthor);
         }
 
 
         [Fact]
         public void Test_GitHasBeenUsed()
         {
-            gc.GitHasBeenUsed(testLastAuthor, gc.getHostDomains()).Should().Be(true);
+            GitCheck.GitHasBeenUsed(testLastAuthor, GitCheck.GetHostDomains()).Should().Be(true);
 
         }
 
         [Fact] 
         public void Test_ContainsAny()
         {
-            GitCheck.ContainsAny(testLastAuthor, gc.getHostDomains()).Should().Be(false);
-
-
+            GitCheck.ContainsAny(testLastAuthor, GitCheck.GetHostDomains()).Should().Be(false);
         }
 
         [Fact]
         public void Test_ContainsAll()
         {
-            GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords()).Should().Be(true);
+            GitCheck.ContainsAll(testLastAuthor, GitCheck.GetKeyWords()).Should().Be(true);
         }
     }
 }

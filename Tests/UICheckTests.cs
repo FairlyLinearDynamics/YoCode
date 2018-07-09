@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 using FluentAssertions;
 using YoCode;
@@ -14,21 +15,13 @@ namespace YoCode_XUnit
             new string[]{"miles", "kilometer"})]
         public void UICheck_FoundMatchesOnOneLine(string userFile, string[] keyWords)
         {
-            UICheck uiCheck = new UICheck(userFile, keyWords);
+            var uiCheck = new UICheck(userFile, keyWords);
 
             var listSize = uiCheck.ListOfMatches.Count;
-            var containsLine = false;
 
             var singleString = File.ReadAllText(userFile);
-            
-            foreach(string key in keyWords)
-            {
-                if (singleString.ToLower().Contains(key))
-                {
-                    containsLine = true;
-                    break;
-                }
-            }
+
+            var containsLine = keyWords.Any(key => singleString.ToLower().Contains(key));
 
             listSize.Should().Be(1);
             containsLine.Should().Be(true);
