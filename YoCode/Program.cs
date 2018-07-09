@@ -42,8 +42,9 @@ namespace YoCode
                 // TODO: Update this bit after GitCheck is fixed
             }
             else
+            {
                 testResults.AnyFileChanged = false;
-
+            }
 
             // Printing calls
             consoleOutput.PrintIntroduction();
