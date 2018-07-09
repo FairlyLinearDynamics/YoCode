@@ -7,7 +7,7 @@ namespace YoCode
 {
     public class FileChangeChecker
     {
-        public static bool ProjectIsModified(IDirectory dir)
+        public static bool ProjectIsModified(IPathManager dir)
         {
             if (dir.OriginalPaths.Count() != dir.ModifiedPaths.Count())
             {

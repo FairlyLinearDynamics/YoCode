@@ -18,7 +18,7 @@ namespace YoCode_XUnit
                 "\n Date:   Thu Jul 5 16:57:15 2018 + 0100 " +
                 "\nChanged the class logic a bit thanks to Mike";
             testLastAuthor = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
-            gc = new GitCheck();
+            gc = new GitCheck(@"C: \Users\ukmzil\source\repos\Tests Sent by People\Real\drew - gibbon");
 
         }
 
@@ -48,7 +48,7 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_ContainsAll()
         {
-            (GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords())).Should().Be(true);
+            GitCheck.ContainsAll(testLastAuthor, gc.getKeyWords()).Should().Be(true);
         }
     }
 }

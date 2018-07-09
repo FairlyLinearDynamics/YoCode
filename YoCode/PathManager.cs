@@ -4,7 +4,7 @@ using System.IO;
 
 namespace YoCode
 {
-    public class Directory : IDirectory
+    public class PathManager : IPathManager
     {
         const string HTML = "*.html";
         const string CSS = "*.css";
@@ -15,7 +15,7 @@ namespace YoCode
 
         Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public Directory(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
+        public PathManager(IEnumerable<String> originalPaths, IEnumerable<String> modifiedPaths)
         {
             OriginalPaths = originalPaths;
             ModifiedPaths = modifiedPaths;

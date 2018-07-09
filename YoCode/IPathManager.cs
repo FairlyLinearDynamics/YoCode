@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    public interface IDirectory
+    public interface IPathManager
     {
         IEnumerable<string> ModifiedPaths { get; }
         IEnumerable<string> OriginalPaths { get; }

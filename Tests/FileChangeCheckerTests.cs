@@ -12,7 +12,7 @@ namespace YoCode_XUnit
     public class FileChangeCheckerTests
     {
 
-        Mock<IDirectory> mock = new Mock<IDirectory>();
+        Mock<IPathManager> mock = new Mock<IPathManager>();
 
         List<String> fakePaths1 = new List<String>() { "one", "two" };
 
