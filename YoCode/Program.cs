@@ -12,6 +12,7 @@ namespace YoCode
             var modifiedTestDirPath = args[0];
             var originalTestDirPath = args[1];
 
+
             var consoleOutput = new PrintToConsole();
 
             TestResults testResults;
