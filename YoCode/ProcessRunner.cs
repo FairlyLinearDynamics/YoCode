@@ -10,7 +10,8 @@ namespace YoCode
         ProcessInfo procinfo;
         public string Output { get; set; }
 
-        public ProcessRunner(string processName,string workingDir,string arguments){
+        public ProcessRunner(string processName,string workingDir,string arguments)
+        {
             procinfo = setupProcessInfo(processName, workingDir, arguments);
         }
 

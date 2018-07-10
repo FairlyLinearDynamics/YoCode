@@ -1,13 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace YoCode
 {
-    class ProjectBuilder : ProcessRunner
+    class ProjectBuilder
     {
-        public ProjectBuilder(string processName, string workingDir, string arguments) : base(processName, workingDir, arguments)
+
+        string ProcessName { get; } = "dotnet";
+        string Arguments { get; } = "build";
+
+        public ProjectBuilder(string workingDir)
         {
+            ProcessRunner pr = new ProcessRunner(ProcessName, workingDir, Arguments);
+            pr.ExecuteTheCheck();
+        }
+
+        public string FindBuildResult(string output)
+        {
+
+            //do something with string
+            return output;
         }
     }
 }

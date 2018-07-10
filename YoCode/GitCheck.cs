@@ -40,7 +40,7 @@ namespace YoCode
 
             Output = pr.Output;
             LastAuthor = GetLastAuthor(Output);
-            GitUsed = GitHasBeenUsed(LastAuthor, GetHostDomains());
+            GitUsed = GitHasBeenUsed(LastAuthor);
         }
 
 
@@ -58,7 +58,7 @@ namespace YoCode
             return "";
         }
 
-        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+        public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
