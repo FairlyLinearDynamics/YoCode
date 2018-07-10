@@ -9,7 +9,7 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine("Welcome to the YoCode, the best code checkup software on the marker!");
+            Console.WriteLine("Welcome to the YoCode!");
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -50,15 +50,16 @@ namespace YoCode
         {
             Console.Write("Feature evidence in UI: ");
             Console.WriteLine(resultsFormatter.UICheckResult);
-            if (resultsFormatter.UIEvidence.Any())
-            {
-                Console.Write("Found on lines: ");
-                foreach (var line in resultsFormatter.UIEvidence)
-                {
-                    Console.Write(line+" ");
-                }
-                Console.WriteLine();
-            }
+
+            //if (resultsFormatter.UIEvidence.Any())
+            //{
+            //    Console.Write("Found on lines: ");
+            //    foreach (var line in resultsFormatter.UIEvidence)
+            //    {
+            //        Console.Write(line+" ");
+            //    }
+            //    Console.WriteLine();
+            //}
         }
 
         private void PrintWrongDirectory()
