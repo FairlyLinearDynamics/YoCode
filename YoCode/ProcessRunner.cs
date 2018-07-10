@@ -17,11 +17,6 @@ namespace YoCode
         public void ExecuteTheCheck()
         {
             var p = new Process();
-            ExecuteTheCheck(p);
-        }
-
-        public void ExecuteTheCheck(Process p)
-        {
             p.StartInfo = SetProcessStartInfo(procinfo);
             p.Start();
             Output = p.StandardOutput.ReadToEnd();
