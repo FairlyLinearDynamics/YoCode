@@ -30,10 +30,11 @@ namespace YoCode
             }
             else
             {
-                testResults = new TestResults()
+                testResults = new TestResults();
+                if (Directory.Exists(modifiedTestDirPath))
                 {
-                    WrongDirectory = true
-                };
+                    //testResults.WrongDirectory.ProvideEvidence($"{modifiedTestDirPath} does not exist.");
+                }
             }
 
             // Printing calls
@@ -46,25 +47,24 @@ namespace YoCode
             var testResults = new TestResults();
             if (FileChangeChecker.ProjectIsModified(dir))
             {
+                // TODO: Add evidence to file changed/not changed
                 testResults.AnyFileChanged = true;
+
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
                 var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
 
-                testResults.Lines = uiChecker.ListOfMatches;
+                testResults.UICheckExists = uiChecker.UIExists;
+                testResults.UICheckExistsEvidence = uiChecker.EvidenceList;
 
                 // Solution file exists
-                testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+                //testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
                 // Git repo used
-                var gitChecker = new GitCheck(modifiedTestDirPath);
-                testResults.GitUsed = gitChecker.GitUsed;
-            }
-            else
-            {
-                testResults.AnyFileChanged = false;
+                //var gitChecker = new GitCheck(modifiedTestDirPath);
+                //testResults.GitUsed = gitChecker.GitUsed;
             }
 
             return testResults;

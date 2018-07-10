@@ -48,8 +48,12 @@ namespace YoCode
 
         private void PrintUIEvidenceResult()
         {
+            Console.WriteLine("==========================================");
             Console.Write("Feature evidence in UI: ");
             Console.WriteLine(resultsFormatter.UICheckResult);
+            Console.Write("Reasoning: ");
+            Console.WriteLine(resultsFormatter.UICheckResultEvidence);
+            Console.WriteLine("==========================================");
 
             //if (resultsFormatter.UIEvidence.Any())
             //{
