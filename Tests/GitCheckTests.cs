@@ -36,13 +36,13 @@ namespace YoCode_XUnit
         [Fact] 
         public void Test_ContainsAny()
         {
-            GitCheck.ContainsAny(testLastAuthor, GitCheck.GetHostDomains()).Should().Be(false);
+            testLastAuthor.ContainsAny(GitCheck.GetHostDomains()).Should().Be(false);
         }
 
         [Fact]
         public void Test_ContainsAll()
         {
-            GitCheck.ContainsAll(testLastAuthor, GitCheck.GetKeyWords()).Should().Be(true);
+           testLastAuthor.ContainsAll(GitCheck.GetKeyWords()).Should().Be(true);
         }
     }
 }
