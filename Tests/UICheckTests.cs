@@ -17,7 +17,7 @@ namespace YoCode_XUnit
         {
             var uiCheck = new UICheck(userFile, keyWords);
 
-            var listSize = uiCheck.EvidenceList.Count;
+            var listSize = uiCheck.UIEvidence.Count;
 
             var singleString = File.ReadAllText(userFile);
 

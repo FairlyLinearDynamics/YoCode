@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,9 +12,10 @@ namespace YoCode
         public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
         {
             UIContainsFeature(userFilePaths, keyWords);
+            UIEvidence.FeatureTitle = "UICheck";
         }
 
-        public UICheck(string userFilePath, string[] keyWords)
+        public UICheck(string userFilePath, string[] keyWords) : this( new List<string> { userFilePath }, keyWords)
         {
             UIContainsFeature(userFilePath, keyWords);
         }
@@ -29,8 +31,8 @@ namespace YoCode
             {
                 if (ContainsKeyWord(userFile[i], keyWords)) 
                 {
-                    UIExists = true;
-                    EvidenceList.GiveEvidence($"Found  on line {i+1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
+                    UIEvidence.FeatureImplemented = true;
+                    UIEvidence.GiveEvidence($"Found  on line {i+1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
 
                 }
             }
@@ -54,7 +56,6 @@ namespace YoCode
         }
 
         // -------------------------------------------------------------------------------------------- Return methods
-        public FeatureEvidence EvidenceList { get; private set; } = new FeatureEvidence();
-        public bool UIExists { get; set; }
+        public FeatureEvidence UIEvidence { get; private set; } = new FeatureEvidence();
     }
 }

@@ -34,9 +34,11 @@ namespace YoCode
             ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
 
-            GitUsed = GitHasBeenUsed(GetLastAuthor(pr.Output), GetHostDomains());
+            GitEvidence.FeatureTitle = "GitCheck";
 
-            EvidenceList.GiveEvidence($"Commit outputs: \n{pr.Output}\nLast Author: {GetLastAuthor(pr.Output)}");
+            GitEvidence.FeatureImplemented = GitHasBeenUsed(GetLastAuthor(pr.Output), GetHostDomains());
+
+            GitEvidence.GiveEvidence($"Commit outputs: \n{pr.Output}\nLast Author: {GetLastAuthor(pr.Output)}");
         }
 
 
@@ -83,7 +85,6 @@ namespace YoCode
             return pi;
         }
 
-        public FeatureEvidence EvidenceList { get; private set; } = new FeatureEvidence();
-        public bool GitUsed { get; private set; }
+        public FeatureEvidence GitEvidence { get; private set; } = new FeatureEvidence();
     }
 }

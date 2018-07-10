@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        TestResultFormater resultsFormatter;
+
+        public PrintToConsole()
+        {
+            PrintIntroduction();
+        }
 
         public void PrintIntroduction()
         {
@@ -14,60 +19,37 @@ namespace YoCode
             Console.WriteLine();
         }
 
-        public void PrintFinalResults(TestResults results)
+
+        public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
-            resultsFormatter = new TestResultFormater(results);
-            if(results.WrongDirectory)
+            foreach(FeatureEvidence feature in featureList)
             {
-                PrintWrongDirectory();
-                return;
-            }
-            if (!results.AnyFileChanged)
-            {
-                LazinessEvidence();
-            }
-            else
-            {
-                PrintGitResult();
-                PrintUIEvidenceResult();
-                SolutionFileFoundResult();
+                Console.WriteLine("==========================================");
+                Console.Write($"{feature.FeatureTitle}: ");
+                Console.WriteLine((feature.FeatureImplemented)?"Yes":"No");
+                Console.WriteLine();
+                if (feature.EvidencePresent)
+                {
+                    Console.WriteLine("Indication of above result: ");
+                    Console.WriteLine(FormatEvidence(feature));
+                    Console.WriteLine("==========================================");
+                }
             }
         }
 
-        private void PrintGitResult()
+        private string FormatEvidence(FeatureEvidence evidence)
         {
-            Console.WriteLine("==========================================");
-            Console.Write("Git used: ");
-            Console.WriteLine(resultsFormatter.GitUsedResult);
-            Console.WriteLine("Indication of above result: ");
-            Console.WriteLine(resultsFormatter.GitUsedResultEvidence);
-            Console.WriteLine("==========================================");
+            return (evidence.EvidencePresent) ?
+                evidence.Evidence.Aggregate((a, b) => $"\n{a}\n{b}")
+                : "No evidence present";
         }
 
-        private void SolutionFileFoundResult()
-        {
-            Console.WriteLine("==========================================");
-            Console.Write("Solution file found: ");
-            Console.WriteLine(resultsFormatter.SolutionFileExistResult);
-            Console.WriteLine("==========================================");
-        }
-
-        private void PrintUIEvidenceResult()
-        {
-            Console.WriteLine("==========================================");
-            Console.Write("Feature evidence in UI: ");
-            Console.WriteLine(resultsFormatter.UICheckResult);
-            Console.WriteLine("Indication of above result: ");
-            Console.WriteLine(resultsFormatter.UICheckResultEvidence);
-            Console.WriteLine("==========================================");
-        }
-
-        private void PrintWrongDirectory()
+        public void PrintWrongDirectory()
         {
             Console.WriteLine("Invalid directory");
         }
 
-        private static void LazinessEvidence()
+        public void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }

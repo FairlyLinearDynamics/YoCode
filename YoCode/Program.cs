@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -15,7 +16,7 @@ namespace YoCode
 
             var consoleOutput = new PrintToConsole();
 
-            TestResults testResults;
+            List<FeatureEvidence> featureList;
 
             // TODO: Create new class to handle input and check correctness of input
             if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
@@ -27,52 +28,53 @@ namespace YoCode
 
                 var dir = new PathManager(originalTest, modifiedTest);
 
-                testResults = PerformChecks(modifiedTestDirPath, dir);
+                featureList = PerformChecks(modifiedTestDirPath, dir);
+
+                // Printing calls
+                consoleOutput.PrintFinalResults(featureList);
             }
             else
             {
-                testResults = new TestResults();
-                if (Directory.Exists(modifiedTestDirPath))
-                {
-                    // TODO: Add evidence for wrong Directory 
-                    testResults.WrongDirectory = true;
-                }
+                consoleOutput.PrintWrongDirectory();
+                //if (Directory.Exists(modifiedTestDirPath))
+                //{
+                //    // TODO: Add evidence for wrong Directory 
+                //    testResults.WrongDirectory = true;
+                //}
             }
-
-            // Printing calls
-            consoleOutput.PrintIntroduction();
-            consoleOutput.PrintFinalResults(testResults);
         }
 
-        private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
+        private static List<FeatureEvidence> PerformChecks(string modifiedTestDirPath, PathManager dir)
         {
-            var testResults = new TestResults();
+            var featureEvidences = new List<FeatureEvidence>();
+
             if (FileChangeChecker.ProjectIsModified(dir))
             {
                 // TODO: Add evidence for file changed/not changed
-                testResults.AnyFileChanged = true;
+                featureEvidences.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "AnyFileChanged",
+                    FeatureImplemented = true
+                });
 
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
-                var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
-
-                testResults.UICheckExists = uiChecker.UIExists;
-                testResults.UICheckExistsEvidence = uiChecker.EvidenceList;
+                featureEvidences.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
                 // Solution file exists
-                // TODO: Add evidence for solution file
-                testResults.SolutionFileExists = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+                featureEvidences.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "SolutionFileExists",
+                    FeatureImplemented = true,
+                });
 
                 // Git repo used
-                var gitChecker = new GitCheck(modifiedTestDirPath);
-
-                testResults.GitUsed = gitChecker.GitUsed;
-                testResults.GitUsedEvidence = gitChecker.EvidenceList;
+                featureEvidences.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
             }
 
-            return testResults;
+            return featureEvidences;
         }
     }
 }

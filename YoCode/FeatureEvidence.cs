@@ -7,6 +7,10 @@ namespace YoCode
 {
     public class FeatureEvidence
     {
+        public string FeatureTitle { get; set; }
+
+        public bool FeatureImplemented { get; set; }
+
         public bool EvidencePresent => Evidence.Any();
 
         public List<string> Evidence { get; set; } = new List<string>();
