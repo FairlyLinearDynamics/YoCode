@@ -20,7 +20,6 @@ namespace YoCode
         private readonly string repositoryPath;
         private string Output { get; set; } = "No output found";
         private string LastAuthor { get; set; } = "None";     
-        public bool GitUsed { get; private set; }
         private bool FailedToGetRepo { get; set; }
 
         public GitCheck(string path)
@@ -47,8 +46,7 @@ namespace YoCode
         {
             p.StartInfo = SetProcessStartInfo(repositoryPath);
             p.Start();
-            Output = p.StandardOutput.ReadToEnd();
-            LastAuthor = GetLastAuthor(Output);
+            EvidenceList.GiveEvidence($"Output: {p.StandardOutput.ReadToEnd()}\nLast Author: {GetLastAuthor()}");
             GitUsed = GitHasBeenUsed(LastAuthor,GetHostDomains());
         }
 
@@ -111,5 +109,8 @@ namespace YoCode
         {
             return new List<string> {"@nonlinear.com", "@waters.com"};
         }
+
+        public FeatureEvidence EvidenceList { get; private set; } = new FeatureEvidence();
+        public bool GitUsed { get; private set; }
     }
 }

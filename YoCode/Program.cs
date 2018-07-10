@@ -33,7 +33,8 @@ namespace YoCode
                 testResults = new TestResults();
                 if (Directory.Exists(modifiedTestDirPath))
                 {
-                    //testResults.WrongDirectory.ProvideEvidence($"{modifiedTestDirPath} does not exist.");
+                    // TODO: Add evidence for wrong Directory 
+                    testResults.WrongDirectory = true;
                 }
             }
 
@@ -47,7 +48,7 @@ namespace YoCode
             var testResults = new TestResults();
             if (FileChangeChecker.ProjectIsModified(dir))
             {
-                // TODO: Add evidence to file changed/not changed
+                // TODO: Add evidence for file changed/not changed
                 testResults.AnyFileChanged = true;
 
                 // UI test
@@ -60,11 +61,14 @@ namespace YoCode
                 testResults.UICheckExistsEvidence = uiChecker.EvidenceList;
 
                 // Solution file exists
-                //testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+                // TODO: Add evidence for solution file
+                testResults.SolutionFileExists = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
                 // Git repo used
-                //var gitChecker = new GitCheck(modifiedTestDirPath);
-                //testResults.GitUsed = gitChecker.GitUsed;
+                var gitChecker = new GitCheck(modifiedTestDirPath);
+
+                testResults.GitUsed = gitChecker.GitUsed;
+                testResults.GitUsedEvidence = gitChecker.EvidenceList;
             }
 
             return testResults;

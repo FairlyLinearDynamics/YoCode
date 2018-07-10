@@ -15,17 +15,21 @@ namespace YoCode
         }
 
         public string UICheckResult => (results.UICheckExists) ? "Yes" : "No";
-        public string UICheckResultEvidence => FormatUIEvidence(results.UICheckExistsEvidence.Evidence);
+        public string UICheckResultEvidence => FormatUIEvidence(results.UICheckExistsEvidence);
 
         public string GitUsedResult => (results.GitUsed) ? "Yes" : "No";
+        public string GitUsedResultEvidence => FormatUIEvidence(results.GitUsedEvidence);
 
-        public string SolutionFileExistResult => (results.SolutionFileExist) ? "Yes" : "No";
+        public string SolutionFileExistResult => (results.SolutionFileExists) ? "Yes" : "No";
 
         //public IEnumerable<int> UIEvidence => results.Lines;
 
-        public string FormatUIEvidence(List<string> evidence)
+        public string FormatUIEvidence(FeatureEvidence evidence)
         {
-            return evidence.Aggregate((a, b) => $"\n{a}\n{b}");
+            return (evidence.EvidencePresent) ?
+                evidence.Evidence.Aggregate((a, b) => $"\n{a}\n{b}")
+                : "No evidence present";
         }
+
     }
 }

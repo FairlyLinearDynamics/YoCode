@@ -36,8 +36,12 @@ namespace YoCode
 
         private void PrintGitResult()
         {
+            Console.WriteLine("==========================================");
             Console.Write("Git used: ");
             Console.WriteLine(resultsFormatter.GitUsedResult);
+            Console.Write("Reasoning: ");
+            Console.WriteLine(resultsFormatter.GitUsedResultEvidence);
+            Console.WriteLine("==========================================");
         }
 
         private void SolutionFileFoundResult()
