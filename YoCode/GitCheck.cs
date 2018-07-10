@@ -23,29 +23,20 @@ namespace YoCode
     {
         private readonly string repositoryPath;
 
-        private string Output { get; set; } = "No output found";
-        private string LastAuthor { get; set; } = "None";     
-        public bool GitUsed { get; private set; }
-        private bool FailedToGetRepo { get; set; }
-
         public GitCheck(string path)
         {
-                repositoryPath = path;
-                ExecuteTheCheck();
+            repositoryPath = path;
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git.exe",repositoryPath, "log");
+            ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
 
-        private void ExecuteTheCheck(Process p)
-        {
-            p.StartInfo = SetProcessStartInfo(repositoryPath);
-            p.Start();
-            Output = p.StandardOutput.ReadToEnd();
-            LastAuthor = GetLastAuthor(Output);
-            GitUsed = GitHasBeenUsed(LastAuthor,GetHostDomains());
+            GitUsed = GitHasBeenUsed(GetLastAuthor(pr.Output), GetHostDomains());
+
+            EvidenceList.GiveEvidence($"Commit outputs: \n{pr.Output}\nLast Author: {GetLastAuthor(pr.Output)}");
         }
 
 
@@ -55,7 +46,7 @@ namespace YoCode
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                if(line.ContainsAll(GetKeyWords()))
+                if (line.ContainsAll(GetKeyWords()))
                 {
                     return line;
                 }
@@ -82,7 +73,7 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public ProcessInfo setupProcessInfo(string processName,string workingDir,string arguments)
+        public ProcessInfo setupProcessInfo(string processName, string workingDir, string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;

@@ -39,15 +39,17 @@ namespace YoCode
             Console.WriteLine("==========================================");
             Console.Write("Git used: ");
             Console.WriteLine(resultsFormatter.GitUsedResult);
-            Console.Write("Reasoning: ");
+            Console.WriteLine("Indication of above result: ");
             Console.WriteLine(resultsFormatter.GitUsedResultEvidence);
             Console.WriteLine("==========================================");
         }
 
         private void SolutionFileFoundResult()
         {
+            Console.WriteLine("==========================================");
             Console.Write("Solution file found: ");
             Console.WriteLine(resultsFormatter.SolutionFileExistResult);
+            Console.WriteLine("==========================================");
         }
 
         private void PrintUIEvidenceResult()
@@ -55,19 +57,9 @@ namespace YoCode
             Console.WriteLine("==========================================");
             Console.Write("Feature evidence in UI: ");
             Console.WriteLine(resultsFormatter.UICheckResult);
-            Console.Write("Reasoning: ");
+            Console.WriteLine("Indication of above result: ");
             Console.WriteLine(resultsFormatter.UICheckResultEvidence);
             Console.WriteLine("==========================================");
-
-            //if (resultsFormatter.UIEvidence.Any())
-            //{
-            //    Console.Write("Found on lines: ");
-            //    foreach (var line in resultsFormatter.UIEvidence)
-            //    {
-            //        Console.Write(line+" ");
-            //    }
-            //    Console.WriteLine();
-            //}
         }
 
         private void PrintWrongDirectory()
