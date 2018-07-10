@@ -12,40 +12,31 @@ namespace YoCode
         {
             return keywords.Any(line.Contains);
         }
+
+        public static bool ContainsAll(this string line, IEnumerable<string> keywords)
+        {
+            return keywords.All(line.Contains);
+        }
     }
 
     public class GitCheck
     {
-        //needs to be fixed
         private readonly string repositoryPath;
+
         private string Output { get; set; } = "No output found";
         private string LastAuthor { get; set; } = "None";
         public bool GitUsed { get; private set; }
-        private bool FailedToGetRepo { get; set; }
 
         public GitCheck(string path)
         {
-            if (Directory.Exists(path))
-            {
                 repositoryPath = path;
                 ExecuteTheCheck();
-            }
-            else
-            {
-                Console.WriteLine("Invalid directory");
-                FailedToGetRepo = true;
-            }
-
         }
 
         public void ExecuteTheCheck()
-        {   
-
-            ProcessRunner pr = new ProcessRunner(setupProcessInfo("git.exe", "workingDir", "log"));
+        {
+            ProcessRunner pr = new ProcessRunner("git.exe",repositoryPath, "log");
             pr.ExecuteTheCheck();
-
-            RunCheck r = new RunCheck();
-            r.ExecuteTheCheck();
 
             Output = pr.Output;
             LastAuthor = GetLastAuthor(Output);
@@ -53,14 +44,13 @@ namespace YoCode
         }
 
 
-        // get name and email address of the last author
         public static string GetLastAuthor(string output)
         {
             var sr = new StringReader(output);
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                if (ContainsAll(line, GetKeyWords()))
+                if(line.ContainsAll(GetKeyWords()))
                 {
                     return line;
                 }
@@ -68,24 +58,13 @@ namespace YoCode
             return "";
         }
 
-
         public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
         {
-            if (ContainsAny(lastAuthor, GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
+            if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
                 return false;
             }
             return true;
-        }
-
-        public static bool ContainsAny(string line, IEnumerable<string> keywords)
-        {
-            return line.ContainsAny(keywords);
-        }
-
-        public static bool ContainsAll(string line, IEnumerable<string> keywords)
-        {
-            return keywords.All(line.Contains);
         }
 
         public static IEnumerable<string> GetKeyWords()
@@ -101,14 +80,11 @@ namespace YoCode
         public ProcessInfo setupProcessInfo(string processName,string workingDir,string arguments)
         {
             ProcessInfo pi;
-            pi.processName = "git.exe";
+            pi.processName = processName;
             pi.workingDir = repositoryPath;
-            pi.arguments = "log";
+            pi.arguments = arguments;
 
             return pi;
         }
-
-
-
     }
 }

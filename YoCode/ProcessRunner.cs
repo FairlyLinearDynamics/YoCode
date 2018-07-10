@@ -10,8 +10,8 @@ namespace YoCode
         ProcessInfo procinfo;
         public string Output { get; set; }
 
-        public ProcessRunner(ProcessInfo processInfo){
-            procinfo = processInfo;
+        public ProcessRunner(string processName,string workingDir,string arguments){
+            procinfo = setupProcessInfo(processName, workingDir, arguments);
         }
 
         public void ExecuteTheCheck()
@@ -42,9 +42,17 @@ namespace YoCode
             return psi;
         }
 
+        public ProcessInfo setupProcessInfo(string processName, string workingDir, string arguments)
+        {
+            ProcessInfo pi;
+            pi.processName = processName;
+            pi.workingDir = workingDir;
+            pi.arguments = arguments;
+
+            return pi;
+        }
 
 
 
-
-}
+    }
 }
