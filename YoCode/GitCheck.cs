@@ -34,7 +34,7 @@ namespace YoCode
             ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
 
-            GitEvidence.FeatureTitle = "GitCheck";
+            GitEvidence.FeatureTitle = "Git was used";
 
             GitEvidence.FeatureImplemented = GitHasBeenUsed(GetLastAuthor(pr.Output), GetHostDomains());
 

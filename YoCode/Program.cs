@@ -16,8 +16,6 @@ namespace YoCode
 
             var consoleOutput = new PrintToConsole();
 
-            List<FeatureEvidence> featureList;
-
             // TODO: Create new class to handle input and check correctness of input
             if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
             {
@@ -28,12 +26,11 @@ namespace YoCode
 
                 var dir = new PathManager(originalTest, modifiedTest);
 
-                featureList = PerformChecks(modifiedTestDirPath, dir);
+                var checkList = PerformChecks(modifiedTestDirPath, dir);
 
-                // Printing calls
-                if(featureList.Count() > 0)
+                if(checkList.Count() != 0)
                 {
-                    consoleOutput.PrintFinalResults(featureList);
+                    consoleOutput.PrintFinalResults(checkList);
                 }
                 else
                 {
@@ -53,7 +50,7 @@ namespace YoCode
 
         private static List<FeatureEvidence> PerformChecks(string modifiedTestDirPath, PathManager dir)
         {
-            var featureEvidences = new List<FeatureEvidence>();
+            var checkList = new List<FeatureEvidence>();
 
             var filesChangedEvidence = new FeatureEvidence()
             {
@@ -62,26 +59,26 @@ namespace YoCode
 
             if (FileChangeChecker.ProjectIsModified(dir,filesChangedEvidence))
             {
-                featureEvidences.Add(filesChangedEvidence);
+                checkList.Add(filesChangedEvidence);
 
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
-                featureEvidences.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
                 // Solution file exists
-                featureEvidences.Add(new FeatureEvidence()
+                checkList.Add(new FeatureEvidence()
                 {
-                    FeatureTitle = "SolutionFileExists",
+                    FeatureTitle = "Solution File Exists",
                     FeatureImplemented = true,
                 });
 
                 // Git repo used
-                featureEvidences.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
             }
 
-            return featureEvidences;
+            return checkList;
         }
     }
 }

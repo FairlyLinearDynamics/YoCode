@@ -40,7 +40,7 @@ namespace YoCode
         private string FormatEvidence(FeatureEvidence evidence)
         {
             return (evidence.EvidencePresent) ?
-                evidence.Evidence.Aggregate((a, b) => $"\n{a}\n{b}")
+                evidence.Evidence.Aggregate((a, b) => $"{a}\n{b}")
                 : "No evidence present";
         }
 

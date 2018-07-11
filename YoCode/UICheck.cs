@@ -12,7 +12,7 @@ namespace YoCode
         public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
         {
             UIContainsFeature(userFilePaths, keyWords);
-            UIEvidence.FeatureTitle = "UICheck";
+            UIEvidence.FeatureTitle = "Evidence present in UI";
         }
 
         public UICheck(string userFilePath, string[] keyWords) : this( new List<string> { userFilePath }, keyWords)

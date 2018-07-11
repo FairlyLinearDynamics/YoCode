@@ -18,6 +18,8 @@ namespace YoCode_XUnit
 
         List<string> fakePaths2 = new List<string>() { "one", "two", "three" };
 
+        readonly FeatureEvidence fakeEvidenceList = new FeatureEvidence();
+
         private FileContent CreateFakeStream(int i)
         {
             var fakeStream = new MemoryStream();
@@ -61,7 +63,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            FileChangeChecker.ProjectIsModified(fakeDirectory).Should().BeFalse();
+            FileChangeChecker.ProjectIsModified(fakeDirectory, fakeEvidenceList).Should().BeFalse();
         }
 
         [Fact]
@@ -72,7 +74,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
 
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeTrue();
+            FileChangeChecker.ProjectIsModified(fakeDir, fakeEvidenceList).Should().BeTrue();
         }
 
         [Fact]
@@ -101,7 +103,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(reverseFakeList);
 
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeFalse();
+            FileChangeChecker.ProjectIsModified(fakeDir, fakeEvidenceList).Should().BeFalse();
 
         }
     }

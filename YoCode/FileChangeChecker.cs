@@ -45,7 +45,7 @@ namespace YoCode
 
             }
         }
-        private static bool FileIsModified(Stream originalFile, Stream modifiedFile)
+        public static bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
             using (var sha1 = SHA1.Create())
             {
