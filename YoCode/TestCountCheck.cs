@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    class TestCountCheck
+    public class TestCountCheck
     {
         string processName;
         string workingDir;
