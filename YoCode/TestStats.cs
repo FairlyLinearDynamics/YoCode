@@ -11,5 +11,6 @@ namespace YoCode
         public int testsFailed;
         public int testsSkipped;
 
+
     };
 }

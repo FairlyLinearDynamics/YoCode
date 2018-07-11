@@ -17,6 +17,7 @@ namespace YoCode
         public string Output { get; set; }
 
         TestStats stats;
+        List<int> tempStats;
 
 
         public TestCountCheck(string repositoryPath)
@@ -33,12 +34,13 @@ namespace YoCode
            
             Output = pr.Output;
             statLine = getStatLine(Output);
-            countNumberOfTests(statLine);
-            
             Console.WriteLine(statLine);
-        }      
+            tempStats = countNumberOfTests(statLine);
+            storeCalculations(tempStats); 
 
-        public IEnumerable<> countNumberOfTests(String statLine)
+        }
+
+        public List<int> countNumberOfTests(String statLine)
         {
             string[] numbers = Regex.Split(statLine, @"\D+");
             var tempStats = new List<int>();
@@ -53,6 +55,15 @@ namespace YoCode
             return tempStats;
 
         }
+
+        public void storeCalculations(List<int> tempStats)
+        {
+            stats.totalTests = tempStats[0];
+            stats.testsPassed = tempStats[1];
+            stats.testsFailed = tempStats[2];
+            stats.testsSkipped = tempStats[3];
+        }
+
 
         public String getStatLine(string output)
         {
