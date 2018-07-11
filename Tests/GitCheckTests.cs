@@ -20,13 +20,6 @@ namespace YoCode_XUnit
 
 
         [Fact]
-        public void Test_GetLastAuthor()
-        {
-            GitCheck.GetLastAuthor(testString).Should().BeEquivalentTo(testLastAuthor);
-        }
-
-
-        [Fact]
         public void Test_GitHasBeenUsed()
         {
             GitCheck.GitHasBeenUsed(testLastAuthor).Should().Be(true);

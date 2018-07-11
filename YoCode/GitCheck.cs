@@ -1,23 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace YoCode
 {
-    public static class HelperMethods
-    {
-        public static bool ContainsAny(this string line, IEnumerable<string> keywords)
-        {
-            return keywords.Any(line.Contains);
-        }
-
-        public static bool ContainsAll(this string line, IEnumerable<string> keywords)
-        {
-            return keywords.All(line.Contains);
-        }
-    }
 
     public class GitCheck
     {
@@ -35,30 +20,15 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git.exe",repositoryPath, "log");
+            ProcessRunner pr = new ProcessRunner("git",repositoryPath, "log");
+
             pr.ExecuteTheCheck();
 
             Output = pr.Output;
-            LastAuthor = GetLastAuthor(Output);
-            GitUsed = GitHasBeenUsed(LastAuthor);
+            LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
+            GitUsed = GitHasBeenUsed(LastAuthor, GetHostDomains());
         }
-
-
-        public static string GetLastAuthor(string output)
-        {
-            var sr = new StringReader(output);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if(line.ContainsAll(GetKeyWords()))
-                {
-                    return line;
-                }
-            }
-            return "";
-        }
-
-        public static bool GitHasBeenUsed(string lastAuthor)
+        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
@@ -67,7 +37,7 @@ namespace YoCode
             return true;
         }
 
-        public static IEnumerable<string> GetKeyWords()
+        public static List<string> GetKeyWords()
         {
             return new List<string> { "Author:", "<", ">", "@", "." };
         }
@@ -75,6 +45,16 @@ namespace YoCode
         public static List<string> GetHostDomains()
         {
             return new List<string> { "@nonlinear.com", "@waters.com" };
+        }
+
+        public ProcessInfo SetupProcessInfo(string processName,string workingDir,string arguments)
+        {
+            ProcessInfo pi;
+            pi.processName = processName;
+            pi.workingDir = repositoryPath;
+            pi.arguments = arguments;
+
+            return pi;
         }
     }
 }
