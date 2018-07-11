@@ -26,9 +26,9 @@ namespace YoCode
 
             Output = pr.Output;
             LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
-            GitUsed = GitHasBeenUsed(LastAuthor, GetHostDomains());
+            GitUsed = GitHasBeenUsed(LastAuthor);
         }
-        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+        public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
@@ -47,7 +47,7 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public ProcessInfo SetupProcessInfo(string processName,string workingDir,string arguments)
+        public ProcessInfo SetupProcessInfo(string processName,string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;
