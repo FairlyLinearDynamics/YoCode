@@ -43,7 +43,7 @@ namespace YoCode
 
         public string ExtractPrefix(string args)
         {
-            return commandList.First(args.StartsWith);
+            return (string) args.SkipWhile(a=> commandList.First().Contains(a));
         }
 
         private string ExtractOriginal(string args)
