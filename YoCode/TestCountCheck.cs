@@ -41,12 +41,15 @@ namespace YoCode
 
         public List<int> CountNumberOfTests(String statLine)
         {
-            string[] numbers = Regex.Split(statLine, @"\D+");
+
+            string expr = @"\D+";
+
+            string[] numbers = Regex.Split(statLine, expr);
             var tempStats = new List<int>();
             for(int i = 0; i < numbers.Length; i++)
             {
                 int temp;
-                if(Int32.TryParse(numbers[i],out temp) == true)
+                if(Int32.TryParse(numbers[i],out temp))
                 {
                     tempStats.Add(temp);
                 }

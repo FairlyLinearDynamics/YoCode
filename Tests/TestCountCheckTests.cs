@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using YoCode;
+using System.Collections.Generic;
 
 namespace YoCode_XUnit
 {
@@ -39,5 +40,24 @@ namespace YoCode_XUnit
             testStatLine.Should().BeEquivalentTo(testResult);
 
         }
+
+        [Fact]
+        public void Test_CountNumberOfTests()
+        {
+            var tcc = new TestCountCheck("fake path");
+
+            string actual = "ffff125fff 1x4 adasdas29 aassss11";
+            var expected = new List<int>();
+            expected.Add(125);
+            expected.Add(1);
+            expected.Add(4);
+            expected.Add(29);
+            expected.Add(11);
+
+            expected.Should().BeEquivalentTo(tcc.CountNumberOfTests(actual));
+
+
+        }
+
     }
 }

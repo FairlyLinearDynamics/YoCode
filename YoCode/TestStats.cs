@@ -10,7 +10,7 @@ namespace YoCode
         public int testsPassed;
         public int testsFailed;
         public int testsSkipped;
-
+        public double percentage => (testsPassed * 100.0) / totalTests;
 
     };
 }
