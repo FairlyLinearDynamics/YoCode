@@ -47,7 +47,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            new FileChangeChecker(fakeDirectory).FileChangeEvidence.EvidencePresent.Should().BeFalse();
+            new FileChangeChecker(fakeDirectory).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(reverseFakeList);
 
-            new FileChangeChecker(fakeDir).FileChangeEvidence.EvidencePresent.Should().BeFalse();
+            new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
 
         }
 
@@ -117,34 +117,6 @@ namespace YoCode_XUnit
 
             var fileCheck = new FileChangeChecker(fakeDirectory);
             fileCheck.FileChangeEvidence.EvidencePresent.Should().Be(true);
-        }
-
-        [Fact]
-        public void FileChangeChecker_FeatureEvidence_EvidenceFieldTrue()
-        {
-            var fakeDirectory = mock.Object;
-
-            List<FileContent> fakeList = new List<FileContent>();
-
-            List<FileContent> fakeList2 = new List<FileContent>();
-
-            for (int i = 0; i < fakePaths1.Count; i++)
-            {
-                fakeList.Add(CreateFakeStream(i));
-                fakeList2.Add(CreateFakeStream(i));
-
-            }
-            fakeList2.Add(CreateFakeStream(10));
-            mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
-            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
-
-            fakeList2.RemoveAt(0);
-
-            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
-            mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
-
-            var fileCheck = new FileChangeChecker(fakeDirectory);
-            fileCheck.FileChangeEvidence.Evidence.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
