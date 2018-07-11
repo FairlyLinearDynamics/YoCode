@@ -76,15 +76,5 @@ namespace YoCode
         {
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
-
-        public ProcessInfo setupProcessInfo(string processName,string workingDir,string arguments)
-        {
-            ProcessInfo pi;
-            pi.processName = processName;
-            pi.workingDir = repositoryPath;
-            pi.arguments = arguments;
-
-            return pi;
-        }
     }
 }

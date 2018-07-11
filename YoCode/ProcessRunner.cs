@@ -5,14 +5,17 @@ using System.Text;
 
 namespace YoCode
 {
-    class ProcessRunner
+    public class ProcessRunner
     {
+        private int timeout = 15000; //15 seconds
+        public bool TimedOut { get; set; }
         ProcessInfo procinfo;
         public string Output { get; set; }
+        public string ErrorOutput { get; set; }
 
         public ProcessRunner(string processName,string workingDir,string arguments)
         {
-            procinfo = setupProcessInfo(processName, workingDir, arguments);
+            procinfo = SetupProcessInfo(processName, workingDir, arguments);
         }
 
         public void ExecuteTheCheck()
@@ -20,12 +23,18 @@ namespace YoCode
             var p = new Process();
             p.StartInfo = SetProcessStartInfo(procinfo);
             p.Start();
+
+            if(!p.WaitForExit(timeout))
+            {
+                TimedOut = true;
+            }
             Output = p.StandardOutput.ReadToEnd();
+            ErrorOutput = p.StandardError.ReadToEnd();
         }
 
         private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)
         {
-            var psi = new ProcessStartInfo
+            return new ProcessStartInfo
             {
                 CreateNoWindow = true,
                 RedirectStandardError = true,
@@ -34,11 +43,9 @@ namespace YoCode
                 FileName = procinfo.processName,
                 Arguments = procinfo.arguments,
             };
-
-            return psi;
         }
 
-        public ProcessInfo setupProcessInfo(string processName, string workingDir, string arguments)
+        public ProcessInfo SetupProcessInfo(string processName, string workingDir, string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;
@@ -47,8 +54,5 @@ namespace YoCode
 
             return pi;
         }
-
-
-
     }
 }
