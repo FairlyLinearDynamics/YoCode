@@ -14,8 +14,6 @@ namespace YoCode
         {
             processRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
             processRunner.ExecuteTheCheck();
-
-            Console.WriteLine(processRunner.Output);
         }
 
         public string ShowErrorOutput()
