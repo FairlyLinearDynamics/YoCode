@@ -31,7 +31,14 @@ namespace YoCode
                 featureList = PerformChecks(modifiedTestDirPath, dir);
 
                 // Printing calls
-                consoleOutput.PrintFinalResults(featureList);
+                if(featureList.Count() > 0)
+                {
+                    consoleOutput.PrintFinalResults(featureList);
+                }
+                else
+                {
+                    consoleOutput.LazinessEvidence();
+                }        
             }
             else
             {
@@ -48,14 +55,14 @@ namespace YoCode
         {
             var featureEvidences = new List<FeatureEvidence>();
 
-            if (FileChangeChecker.ProjectIsModified(dir))
+            var filesChangedEvidence = new FeatureEvidence()
             {
-                // TODO: Add evidence for file changed/not changed
-                featureEvidences.Add(new FeatureEvidence()
-                {
-                    FeatureTitle = "AnyFileChanged",
-                    FeatureImplemented = true
-                });
+                FeatureTitle = "Any files changed",
+            };
+
+            if (FileChangeChecker.ProjectIsModified(dir,filesChangedEvidence))
+            {
+                featureEvidences.Add(filesChangedEvidence);
 
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };

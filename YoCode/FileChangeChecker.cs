@@ -7,10 +7,11 @@ namespace YoCode
 {
     public class FileChangeChecker
     {
-        public static bool ProjectIsModified(IPathManager dir)
+        public static bool ProjectIsModified(IPathManager dir, FeatureEvidence evidenceList)
         {
             if (dir.OriginalPaths.Count() != dir.ModifiedPaths.Count())
             {
+                evidenceList.FeatureImplemented = true;
                 return true;
             }
             else
@@ -26,8 +27,13 @@ namespace YoCode
                     {
                         if (FileIsModified(original.content, modified.content))
                         {
-                            return true;
+                            evidenceList.GiveEvidence($"\\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
                         }
+                    }
+                    if (evidenceList.EvidencePresent)
+                    {
+                        evidenceList.FeatureImplemented = true;
+                        return true;
                     }
                     return false;
                 }
@@ -39,7 +45,7 @@ namespace YoCode
 
             }
         }
-        public static bool FileIsModified(Stream originalFile, Stream modifiedFile)
+        private static bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
             using (var sha1 = SHA1.Create())
             {
