@@ -62,6 +62,12 @@ namespace YoCode
                 // Git repo used
                 var gitChecker = new GitCheck(modifiedTestDirPath);
                 testResults.GitUsed = gitChecker.GitUsed;
+
+                // Test results
+                var testCount = new TestCountCheck(modifiedTestDirPath);
+                testCount.ExecuteTheCheck();
+
+
             }
             else
             {

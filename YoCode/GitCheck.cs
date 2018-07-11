@@ -35,7 +35,10 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git.exe",repositoryPath, "log");
+
+            ProcessRunner pr = new ProcessRunner("git",repositoryPath, "log");
+            // ProcessRunner pr = new ProcessRunner("dotnet", repositoryPath, "test");
+
             pr.ExecuteTheCheck();
 
             Output = pr.Output;
@@ -77,7 +80,7 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public ProcessInfo setupProcessInfo(string processName,string workingDir,string arguments)
+        public ProcessInfo SetupProcessInfo(string processName,string workingDir,string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;
