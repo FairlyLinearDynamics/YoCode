@@ -9,6 +9,7 @@ namespace YoCode
     {
         ProcessInfo procinfo;
         public string Output { get; set; }
+        public string ErrorOutput { get; set; }
 
         public ProcessRunner(string processName,string workingDir,string arguments){
             procinfo = setupProcessInfo(processName, workingDir, arguments);
@@ -19,7 +20,9 @@ namespace YoCode
             var p = new Process();
             p.StartInfo = SetProcessStartInfo(procinfo);
             p.Start();
+            p.WaitForExit();
             Output = p.StandardOutput.ReadToEnd();
+            ErrorOutput = p.StandardError.ReadToEnd();
         }
 
         private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)
