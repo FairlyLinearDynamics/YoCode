@@ -38,7 +38,10 @@ namespace YoCode
 
             GitEvidence.FeatureImplemented = GitHasBeenUsed(GetLastAuthor(pr.Output), GetHostDomains());
 
-            GitEvidence.GiveEvidence($"Commit outputs: \n{pr.Output}\nLast Author: {GetLastAuthor(pr.Output)}");
+            if (GitEvidence.FeatureImplemented)
+            {
+                GitEvidence.GiveEvidence($"Commit outputs: \n{pr.Output}\nLast Author: {GetLastAuthor(pr.Output)}");
+            }
         }
 
 
