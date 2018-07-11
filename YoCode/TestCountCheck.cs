@@ -33,14 +33,13 @@ namespace YoCode
             pr.ExecuteTheCheck();
            
             Output = pr.Output;
-            statLine = getStatLine(Output);
-            Console.WriteLine(statLine);
-            tempStats = countNumberOfTests(statLine);
-            storeCalculations(tempStats); 
+            statLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
+            tempStats = CountNumberOfTests(statLine);
+            StoreCalculations(tempStats); 
 
         }
 
-        public List<int> countNumberOfTests(String statLine)
+        public List<int> CountNumberOfTests(String statLine)
         {
             string[] numbers = Regex.Split(statLine, @"\D+");
             var tempStats = new List<int>();
@@ -56,7 +55,7 @@ namespace YoCode
 
         }
 
-        public void storeCalculations(List<int> tempStats)
+        public void StoreCalculations(List<int> tempStats)
         {
             stats.totalTests = tempStats[0];
             stats.testsPassed = tempStats[1];
@@ -64,24 +63,7 @@ namespace YoCode
             stats.testsSkipped = tempStats[3];
         }
 
-
-        public String getStatLine(string output)
-        {
-            var sr = new StringReader(output);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line.ContainsAll(GetTestKeyWords()))
-                {
-                    return line;
-                }
-            }
-            return "";
-        }
-
-
-
-        public static IEnumerable<string> GetTestKeyWords()
+        public static List<string> GetTestKeyWords()
         {
             return new List<string> { "Total tests:" };
         }
