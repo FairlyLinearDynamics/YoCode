@@ -7,17 +7,26 @@ namespace YoCode
 {
     public class FileChangeChecker
     {
-        public static bool ProjectIsModified(IPathManager dir, FeatureEvidence evidenceList)
+        IPathManager directory;
+
+        public FileChangeChecker(IPathManager dir)
         {
-            if (dir.OriginalPaths.Count() != dir.ModifiedPaths.Count())
+            FileChangeEvidence.FeatureTitle = "Files changed";
+            directory = dir;
+            ProjectIsModified();
+        }
+
+        public bool ProjectIsModified()
+        {
+            if (directory.OriginalPaths.Count() != directory.ModifiedPaths.Count())
             {
-                evidenceList.FeatureImplemented = true;
+                FileChangeEvidence.FeatureImplemented = true;
                 return true;
             }
             else
             {
-                var originalFileStreams = dir.ReturnOriginalPathFileStream().OrderBy((c => c.path));
-                var modifiedFileStreams = dir.ReturnModifiedPathFileStream().OrderBy((c => c.path));
+                var originalFileStreams = directory.ReturnOriginalPathFileStream().OrderBy((c => c.path));
+                var modifiedFileStreams = directory.ReturnModifiedPathFileStream().OrderBy((c => c.path));
 
                 try
                 {
@@ -27,12 +36,12 @@ namespace YoCode
                     {
                         if (FileIsModified(original.content, modified.content))
                         {
-                            evidenceList.GiveEvidence($"\\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
+                            FileChangeEvidence.GiveEvidence($"\\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
                         }
                     }
-                    if (evidenceList.EvidencePresent)
+                    if (FileChangeEvidence.EvidencePresent)
                     {
-                        evidenceList.FeatureImplemented = true;
+                        FileChangeEvidence.FeatureImplemented = true;
                         return true;
                     }
                     return false;
@@ -45,7 +54,7 @@ namespace YoCode
 
             }
         }
-        public static bool FileIsModified(Stream originalFile, Stream modifiedFile)
+        private bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
             using (var sha1 = SHA1.Create())
             {
@@ -56,6 +65,8 @@ namespace YoCode
                     return originalChecksum == modifiedCheckSum ? false : true;
             }
         }
+
+        public FeatureEvidence FileChangeEvidence { get; private set; } = new FeatureEvidence();
     }
 }
 

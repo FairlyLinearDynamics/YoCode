@@ -52,14 +52,11 @@ namespace YoCode
         {
             var checkList = new List<FeatureEvidence>();
 
-            var filesChangedEvidence = new FeatureEvidence()
-            {
-                FeatureTitle = "Any files changed",
-            };
+            var fileCheck = new FileChangeChecker(dir);
 
-            if (FileChangeChecker.ProjectIsModified(dir,filesChangedEvidence))
+            if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                checkList.Add(filesChangedEvidence);
+                checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
