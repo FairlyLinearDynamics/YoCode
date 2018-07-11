@@ -9,66 +9,68 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            var modifiedTestDirPath = args[0];
-            var originalTestDirPath = args[1];
+            var commandLinehandler = new CommandLineParser();
+            var results = commandLinehandler.Parse(args);
 
 
-            var consoleOutput = new PrintToConsole();
+            Console.WriteLine(results.testInput);
 
-            TestResults testResults;
+        //    var consoleOutput = new PrintToConsole();
 
-            // TODO: Create new class to handle input and check correctness of input
-            if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
-            {
-                var fileReader = new FileImport();
+        //    TestResults testResults;
 
-                var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-                var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+        //    // TODO: Create new class to handle input and check correctness of input
+        //    if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
+        //    {
+        //        var fileReader = new FileImport();
 
-                var dir = new PathManager(originalTest, modifiedTest);
+        //        var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+        //        var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
-                testResults = PerformChecks(modifiedTestDirPath, dir);
-            }
-            else
-            {
-                testResults = new TestResults()
-                {
-                    WrongDirectory = true
-                };
-            }
+        //        var dir = new PathManager(originalTest, modifiedTest);
 
-            // Printing calls
-            consoleOutput.PrintIntroduction();
-            consoleOutput.PrintFinalResults(testResults);
-        }
+        //        testResults = PerformChecks(modifiedTestDirPath, dir);
+        //    }
+        //    else
+        //    {
+        //        testResults = new TestResults()
+        //        {
+        //            WrongDirectory = true
+        //        };
+        //    }
 
-        private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
-        {
-            var testResults = new TestResults();
-            if (FileChangeChecker.ProjectIsModified(dir))
-            {
-                testResults.AnyFileChanged = true;
-                // UI test
-                var keyWords = new[] { "miles", "kilometers", "km" };
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
+        //    // Printing calls
+        //    consoleOutput.PrintIntroduction();
+        //    consoleOutput.PrintFinalResults(testResults);
+        //}
 
-                var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
+        //private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
+        //{
+        //    var testResults = new TestResults();
+        //    if (FileChangeChecker.ProjectIsModified(dir))
+        //    {
+        //        testResults.AnyFileChanged = true;
+        //        // UI test
+        //        var keyWords = new[] { "miles", "kilometers", "km" };
+        //        var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
-                testResults.Lines = uiChecker.ListOfMatches;
+        //        var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
 
-                // Solution file exists
-                testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+        //        testResults.Lines = uiChecker.ListOfMatches;
 
-                // Git repo used
-                var gitChecker = new GitCheck(modifiedTestDirPath);
-                testResults.GitUsed = gitChecker.GitUsed;
-            }
-            else
-            {
-                testResults.AnyFileChanged = false;
-            }
+        //        // Solution file exists
+        //        testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
-            return testResults;
+        //        // Git repo used
+        //        var gitChecker = new GitCheck(modifiedTestDirPath);
+        //        testResults.GitUsed = gitChecker.GitUsed;
+        //    }
+        //    else
+        //    {
+        //        testResults.AnyFileChanged = false;
+        //    }
+
+        //    return testResults;
         }
     }
 }
