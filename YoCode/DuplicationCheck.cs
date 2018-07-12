@@ -21,8 +21,8 @@ namespace YoCode
         {
             workingDir = @"C:\Users\ukmzil\source\repos\Tools\CMD";
             processName = @"C:\Users\ukmzil\source\repos\Tools\CMD\dupfinder.exe";
+            //arguments = @"C:\Users\ukmzil\source\repos\junior-test\UnitConverterWebApp.sln -o=""report.xml""";
             arguments = @"C:\Users\ukmzil\source\repos\Tests-Sent-by-People\Real\drew-gibbon\UnitConverterWebApp.sln -o=""report.xml""";
-
         }
 
 
