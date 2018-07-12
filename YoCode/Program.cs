@@ -28,14 +28,14 @@ namespace YoCode
 
                 var checkList = PerformChecks(modifiedTestDirPath, dir);
 
-                if (checkList.Count() != 0)
+                if(checkList.Count() != 0)
                 {
                     consoleOutput.PrintFinalResults(checkList);
                 }
                 else
                 {
                     consoleOutput.LazinessEvidence();
-                }
+                }        
             }
             else
             {
