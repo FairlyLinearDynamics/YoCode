@@ -1,34 +1,33 @@
 ﻿using System;
-using System.IO;
-using System.Text;
+using System.Collections.Generic;
 
 namespace YoCode
 {
     public class ProjectBuilder
     {
-        private readonly ProcessRunner processRunner;
+        public ProcessRunner ProcessRunner { get; }
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
 
         public ProjectBuilder(string workingDir)
         {
-            processRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
-            processRunner.ExecuteTheCheck();
+            ProcessRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
+            ProcessRunner.ExecuteTheCheck();
+
+            Console.WriteLine(ProcessRunner.Output);
         }
 
-        public string ShowErrorOutput()
+        public static string GetErrorOutput(string output)
         {
-            string[] buildKeywords = { "Build succeeded." + Environment.NewLine + Environment.NewLine,
+            string[] buildKeywords = { "Build succeeded.",
                 "Build FAILED." + Environment.NewLine + Environment.NewLine };
-            var properOutput = processRunner.Output.Split(buildKeywords, StringSplitOptions.None);
+            var properOutput = output.Split(buildKeywords, StringSplitOptions.None);
 
             try
             {
-                var result = properOutput[1].Split(Environment.NewLine+"    ");
-                if (result != null && properOutput != null)
-                {
-                    return result[0];
-                }
+                var result = properOutput[1].Split(Environment.NewLine + "    ");
+
+                return result[0];
             }
             catch (IndexOutOfRangeException) { }
             return "";
@@ -36,55 +35,34 @@ namespace YoCode
 
         public bool BuildSuccessful()
         {
-            var sr = new StringReader(processRunner.Output);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line.Contains("Build succeeded"))
-                {
-                    return true;
-                }
-            }
-            return false;
+            string buildLine = GetLineWithOneKeyword("Build succeeded");
+
+            return buildLine != "";
         }
 
         public int GetNumberOfWarnings()
         {
-            string warningLine = GetLineWithKeyword("Warning(s)");
-            return ParseStringToInt(warningLine);
+            string warningLine = GetLineWithOneKeyword("Warning(s)");
+            List<int> numbers = warningLine.GetNumbersInLine();
+
+            try { return numbers[0]; }
+            catch (ArgumentOutOfRangeException) { }
+            return -1;
         }
 
         public int GetNumberOfErrors()
         {
-            string errorLine = GetLineWithKeyword("Error(s)");
-            return ParseStringToInt(errorLine);
+            string errorLine = GetLineWithOneKeyword("Error(s)");
+            List<int> numbers = errorLine.GetNumbersInLine();
+
+            try { return numbers[0]; }
+            catch (ArgumentOutOfRangeException) { }
+            return -1;
         }
 
-        private string GetLineWithKeyword(string keyword)
+        private string GetLineWithOneKeyword(string keyword)
         {
-            var sr = new StringReader(processRunner.Output);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line.Contains(keyword))
-                {
-                    return line;
-                }
-            }
-            return "";
-        }
-
-        private int ParseStringToInt(string line)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var c in line)
-            {
-                if (char.IsNumber(c))
-                {
-                    sb.Append(c);
-                }
-            }
-            return Int32.Parse(sb.ToString());
+            return ProcessRunner.Output.GetLineWithAllKeywords(new List<string> { keyword });
         }
     }
 }

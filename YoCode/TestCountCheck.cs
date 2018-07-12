@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 namespace YoCode
 {
     public class TestCountCheck
     {
-        string processName;
-        string workingDir;
-        string arguments;
+        private readonly string processName;
+        private readonly string workingDir;
+        private readonly string arguments;
 
-        public string statLine { get; set; }
+        public string StatLine { get; set; }
         public string Output { get; set; }
 
-        TestStats stats;
-        List<int> tempStats;
-
+        private TestStats stats;
+        private List<int> tempStats;
 
         public TestCountCheck(string repositoryPath)
         {
@@ -31,31 +25,10 @@ namespace YoCode
         {
             ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
             pr.ExecuteTheCheck();
-           
             Output = pr.Output;
-            statLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
-            tempStats = CountNumberOfTests(statLine);
-            StoreCalculations(tempStats); 
-
-        }
-
-        public List<int> CountNumberOfTests(String statLine)
-        {
-
-            string expr = @"\D+";
-
-            string[] numbers = Regex.Split(statLine, expr);
-            var tempStats = new List<int>();
-            for(int i = 0; i < numbers.Length; i++)
-            {
-                int temp;
-                if(Int32.TryParse(numbers[i],out temp))
-                {
-                    tempStats.Add(temp);
-                }
-            }
-            return tempStats;
-
+            StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
+            tempStats = StatLine.GetNumbersInLine();
+            StoreCalculations(tempStats);
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -70,8 +43,5 @@ namespace YoCode
         {
             return new List<string> { "Total tests:" };
         }
-
-
-
     }
 }

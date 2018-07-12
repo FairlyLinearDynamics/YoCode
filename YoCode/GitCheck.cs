@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace YoCode
 {
-
     public class GitCheck
     {
         private readonly string repositoryPath;
@@ -28,6 +27,7 @@ namespace YoCode
             LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
             GitUsed = GitHasBeenUsed(LastAuthor);
         }
+
         public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))

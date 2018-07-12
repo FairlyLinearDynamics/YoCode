@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace YoCode
 {
@@ -17,7 +18,7 @@ namespace YoCode
             return keywords.All(line.Contains);
         }
 
-        public static string GetLineWithAllKeywords(this string output, List<String> keywords)
+        public static string GetLineWithAllKeywords(this string output, IEnumerable<String> keywords)
         {
             var sr = new StringReader(output);
             string line;
@@ -31,6 +32,20 @@ namespace YoCode
             return "";
         }
 
+        public static List<int> GetNumbersInLine(this string statLine)
+        {
+            const string expr = @"\D+";
 
+            string[] numbers = Regex.Split(statLine, expr);
+            var tempStats = new List<int>();
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                if (Int32.TryParse(numbers[i], out int temp))
+                {
+                    tempStats.Add(temp);
+                }
+            }
+            return tempStats;
+        }
     }
 }

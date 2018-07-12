@@ -7,7 +7,7 @@ namespace YoCode
 {
     public class ProcessRunner
     {
-        private int timeout = 15000; //15 seconds
+        private readonly TimeSpan timeout = TimeSpan.FromSeconds(20);
         public bool TimedOut { get; set; }
         ProcessInfo procinfo;
         public string Output { get; set; }
@@ -24,7 +24,7 @@ namespace YoCode
             p.StartInfo = SetProcessStartInfo(procinfo);
             p.Start();
 
-            if(!p.WaitForExit(timeout))
+            if(!p.WaitForExit((int)timeout.TotalMilliseconds))
             {
                 TimedOut = true;
             }
