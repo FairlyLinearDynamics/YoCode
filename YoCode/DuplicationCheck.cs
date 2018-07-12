@@ -7,46 +7,78 @@ namespace YoCode
 {
     class DuplicationCheck
     {
+        string CMDtoolsDir = @"C:\Users\ukmzil\source\repos\Tools\CMD";
+        string CMDtoolFileName = "dupfinder.exe"; 
+        string fileNameChecked = "UnitConverterWebApp.sln";
+        string outputFile = " -o=\"report.xml\"";
+
         string processName;
         string workingDir;
-        string arguments;
+        string modiArguments;
+        string origArguments;
 
         string Output { get; set; }
 
-        int CodeBaseCost { get; set; }
-        int TotalDuplicateCost { get; set; }
+        int modiCodeBaseCost { get; set; }
+        int modiDuplicateCost { get; set; }
 
+        int origCodeBaseCost { get; set; }
+        int origDuplicateCost { get; set; }
 
-        public DuplicationCheck(string repositoryPath)
+        string StrCodeBaseCost { get; set; }
+        string StrTotalDuplicateCost { get; set; }
+
+        public DuplicationCheck(string modifiedPath,string originalPath)
         {
-            workingDir = @"C:\Users\ukmzil\source\repos\Tools\CMD";
-            processName = @"C:\Users\ukmzil\source\repos\Tools\CMD\dupfinder.exe";
-            //arguments = @"C:\Users\ukmzil\source\repos\junior-test\UnitConverterWebApp.sln -o=""report.xml""";
-            arguments = @"C:\Users\ukmzil\source\repos\Tests-Sent-by-People\Real\drew-gibbon\UnitConverterWebApp.sln -o=""report.xml""";
-        }
+            processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
+            workingDir = CMDtoolsDir;
 
+            modiArguments = Path.Combine(modifiedPath, fileNameChecked) + outputFile;
+            origArguments = Path.Combine(originalPath, fileNameChecked) + outputFile;
+
+
+        }
 
         public void ExecuteTheCheck() {
 
-            ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
-            pr.ExecuteTheCheck();
-            Output = GetResults(workingDir + @"\report.xml");
-            string StrCodeBaseCost = Output.GetLineWithAllKeywords(getCodeBaseCostKeyword());
-            string StrTotalDuplicateCost = Output.GetLineWithAllKeywords(getTotalDuplicatesCostKeywords());
+            RunOneCheck(modiArguments);
+            modiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
+            modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
+              
+            RunOneCheck(origArguments);
+            origCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
+            origDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
 
-            CodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
-            TotalDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-
-            Console.WriteLine(CodeBaseCost);
-            Console.WriteLine(TotalDuplicateCost);
-
+            Console.WriteLine(HasTheCodeImproved());
 
         }
 
+        public void RunOneCheck(string args)
+        {
+
+            ProcessRunner proc = new ProcessRunner(processName, workingDir, args);
+            proc.ExecuteTheCheck();
+            Output = GetResults(workingDir + @"\report.xml");
+
+            StrCodeBaseCost = Output.GetLineWithAllKeywords(getCodeBaseCostKeyword());
+            StrTotalDuplicateCost = Output.GetLineWithAllKeywords(getTotalDuplicatesCostKeywords());
+
+
+
+
+
+
+        }
+    
         public string GetResults(string path)
         {
             return File.ReadAllText(path);
 
+        }
+
+        public bool HasTheCodeImproved()
+        {
+            return origCodeBaseCost >= modiCodeBaseCost ? true : false;        
         }
 
         public List<String> getCodeBaseCostKeyword()
@@ -58,12 +90,5 @@ namespace YoCode
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }
-
-
-
-
-
-
-
     }
 }
