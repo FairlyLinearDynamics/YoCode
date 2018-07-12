@@ -2,90 +2,115 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+
 
 namespace YoCode
 {
     class CommandLineParser
-    {
-        private ErrorList errorList;
+    { 
 
-        private List<string> commandList = new List<string> { "--" };
+        const string ORIGIN = "origin";
+        const string MODIFIED = "modified";
+        const string HELP = "help";
 
-        public CommandLineParser()
+        List<string> implementedCommands = new List<string>() { ORIGIN, MODIFIED, HELP };
+
+        string commandIdentifier = "--";
+        string dataIdentifier = "=";
+
+        public CommandLineParser(string[] args)
         {
-            errorList = new ErrorList();
+            CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
         }
 
-        public InputResults Parse(string[] args)
+        public ResultData Parse()
         {
-            return new InputResults
+            var ires = new ResultData();
+
+            foreach (SplitArg arg in CommandsList)
             {
-                //hasErrors = ErrsPresent(args),
-                testInput = ExtractPrefix(args.First()),
-                //originalFilePath = ExtractOriginal(),
-                //modifiedFilePath = ExtractModified()
-            };
+                ires.originalFilePath = (arg.command == ORIGIN) ? arg.data : ires.originalFilePath;
+                ires.modifiedFilePath = (arg.command == MODIFIED) ? arg.data : ires.modifiedFilePath;
+                ires.helpAsked = arg.command == HELP;
+            }
+
+            ires.hasErrors = ContainsErrors(ires);
+
+            return ires;
         }
 
-        private bool ErrsPresent(string[] args)
+        public bool ContainsErrors(ResultData res)
         {
-            if (args.Length == 0)
+
+            if(CommandsList.Any(arg => !implementedCommands.Contains(arg.command)))
             {
-                errorList.NoArgs = true;
+                Console.Write("Errror");
+                res.errType = ArgErrorType.WrongCommand;
                 return true;
             }
-            foreach(string arg in args)
+
+            foreach (SplitArg arg in CommandsList)
             {
-                return ExtractPrefix(arg) == null ? true : false;
+                if (CommandsList.Exists(a => a.command.Equals(ORIGIN) || a.command.Equals(MODIFIED)))
+                {
+                    if (!Directory.Exists(arg.data) && arg.command == MODIFIED)
+                    {
+                        res.errType = ArgErrorType.WrongModifiedDirectory;
+                        return true;
+                    }
+                    else if (!Directory.Exists(arg.data) && arg.command == ORIGIN)
+                    {
+                        res.errType = ArgErrorType.WrongModifiedDirectory;
+                        return true;
+                    }
+                }
             }
+
             return false;
         }
 
-        public string ExtractPrefix(string args)
+        public SplitArg ArgsSpliter (string arg)
         {
-            return (string) args.SkipWhile(a=> commandList.First().Contains(a));
-        }
-
-        private string ExtractOriginal(string args)
-        {
-
-            return "";
-        }
-
-
-        public string HelpMessage { get; set; }
-
-        public void ShowHelp()
-        {
-            if (HelpMessage != null)
+            return new SplitArg
             {
-                Console.WriteLine(HelpMessage);
-            }
-            else
-            {
-                // TODO: Create default help message
-                Console.WriteLine("Default help message");
-            }
+                command = (ExtractSuffix(arg) != null) ? ExtractPrefix(arg.Substring(0,arg.IndexOf(dataIdentifier))): ExtractPrefix(arg),
+                data = ExtractSuffix(arg),
+            };
         }
+
+        private string ExtractPrefix(string key)
+        {
+            return (key.Contains(commandIdentifier)&&key!=null) ? key.Remove(0, commandIdentifier.Length) : null;
+        }
+
+        private string ExtractSuffix(string key)
+        {
+            return (key.Contains(dataIdentifier)&&key!=null) ? key.Remove(0, key.IndexOf(dataIdentifier)+1) : null;
+        }
+
+        private List<SplitArg> CommandsList { get; set; }
     }
 }
 
-public enum Commands{
-    original,
-    modified
-}
-
-public struct ErrorList
+public struct SplitArg
 {
-    public bool NoArgs;
-    public bool WrongOriginalDirectory;
-    public bool WrongModifiedDirectory;
-    public bool WrongCommand;
+    public string command;
+    public string data;
 }
 
-public struct InputResults{
+public enum ArgErrorType
+{
+    NoArgs,
+    WrongOriginalDirectory,
+    WrongModifiedDirectory,
+    WrongCommand
+}
+
+public struct ResultData{
     public bool hasErrors;
+    public ArgErrorType errType;
+    public bool helpAsked;
     public string originalFilePath;
     public string modifiedFilePath;
-    public string testInput;
 }

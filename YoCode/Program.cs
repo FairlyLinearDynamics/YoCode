@@ -9,11 +9,14 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            var commandLinehandler = new CommandLineParser();
-            var results = commandLinehandler.Parse(args);
+            var commandLinehandler = new CommandLineParser(args);
+            var result = commandLinehandler.Parse();
+
+            Console.Write($"Modified file path: {result.modifiedFilePath}\nOriginal file path: " +
+                $"{result.originalFilePath}\nAsked for help: {result.helpAsked}\nErrors found: {result.hasErrors}\n");
 
 
-            Console.WriteLine(results.testInput);
+            //Console.WriteLine(results.testInput);
 
         //    var consoleOutput = new PrintToConsole();
 
