@@ -19,8 +19,8 @@ namespace YoCode
             ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
           
-            Output = pr.Output;
-            LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
+            var Output = pr.Output;
+            var LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
 
             GitEvidence.FeatureTitle = "Git was used";
 
