@@ -20,11 +20,6 @@ namespace YoCode
 
         public CommandLineParser(string[] args)
         {
-            ProcessArguments(args);
-        }
-
-        public void ProcessArguments(string[] args)
-        {
             CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
         }
 
@@ -75,7 +70,7 @@ namespace YoCode
             return errList;
         }
 
-        public SplitArg ArgsSpliter (string arg)
+        private SplitArg ArgsSpliter (string arg)
         {
             return new SplitArg
             {
