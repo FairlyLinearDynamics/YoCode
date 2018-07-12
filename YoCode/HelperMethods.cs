@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace YoCode
 {
@@ -30,6 +31,27 @@ namespace YoCode
             }
             return "";
         }
+
+        public static List<int> GetNumbersInALine(this string line)
+        {
+            string expr = @"\D+";
+
+            string[] numbers = Regex.Split(line, expr);
+            var list = new List<int>();
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                int temp;
+                if (Int32.TryParse(numbers[i], out temp))
+                {
+                    list.Add(temp);
+                }
+            }
+            return list;
+
+        }
+
+
+
 
 
     }

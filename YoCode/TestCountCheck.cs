@@ -35,7 +35,7 @@ namespace YoCode
             Output = pr.Output;
             statLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = CountNumberOfTests(statLine);
-            StoreCalculations(tempStats); 
+            StoreCalculations(tempStats);
 
         }
 
@@ -64,6 +64,7 @@ namespace YoCode
             stats.testsPassed = tempStats[1];
             stats.testsFailed = tempStats[2];
             stats.testsSkipped = tempStats[3];
+            
         }
 
         public static List<string> GetTestKeyWords()
