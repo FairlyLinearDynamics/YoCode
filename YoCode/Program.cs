@@ -12,68 +12,65 @@ namespace YoCode
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
-            Console.Write($"Modified file path: {result.modifiedFilePath}\nOriginal file path: " +
-                $"{result.originalFilePath}\nAsked for help: {result.helpAsked}\nErrors found: {result.hasErrors}\n");
+            if (result.hasErrors)
+            {
+                DealWithInputError();
+            }
+            else
+            {
+                var consoleOutput = new PrintToConsole();
 
+                TestResults testResults;
 
-            //Console.WriteLine(results.testInput);
+                var fileReader = new FileImport();
 
-        //    var consoleOutput = new PrintToConsole();
+                var modifiedTestDirPath = result.modifiedFilePath;
+                var originalTestDirPath = result.originalFilePath;
 
-        //    TestResults testResults;
+                var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+                var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
-        //    // TODO: Create new class to handle input and check correctness of input
-        //    if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
-        //    {
-        //        var fileReader = new FileImport();
+                var dir = new PathManager(originalTest, modifiedTest);
 
-        //        var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-        //        var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+                testResults = PerformChecks(modifiedTestDirPath, dir);
 
-        //        var dir = new PathManager(originalTest, modifiedTest);
+                consoleOutput.PrintIntroduction();
+                consoleOutput.PrintFinalResults(testResults);
+            }
+        }
 
-        //        testResults = PerformChecks(modifiedTestDirPath, dir);
-        //    }
-        //    else
-        //    {
-        //        testResults = new TestResults()
-        //        {
-        //            WrongDirectory = true
-        //        };
-        //    }
+        private static void DealWithInputError()
+        {
+            return;
+        }
 
-        //    // Printing calls
-        //    consoleOutput.PrintIntroduction();
-        //    consoleOutput.PrintFinalResults(testResults);
-        //}
+        private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
+        {
+            var testResults = new TestResults();
+            if (FileChangeChecker.ProjectIsModified(dir))
+            {
+                testResults.AnyFileChanged = true;
+                // UI test
+                var keyWords = new[] { "miles", "kilometers", "km" };
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
-        //private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
-        //{
-        //    var testResults = new TestResults();
-        //    if (FileChangeChecker.ProjectIsModified(dir))
-        //    {
-        //        testResults.AnyFileChanged = true;
-        //        // UI test
-        //        var keyWords = new[] { "miles", "kilometers", "km" };
-        //        var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
+                var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
 
-        //        var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
+                testResults.Lines = uiChecker.ListOfMatches;
 
-        //        testResults.Lines = uiChecker.ListOfMatches;
+                // Solution file exists
+                testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
 
-        //        // Solution file exists
-        //        testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+                // Git repo used
+                var gitChecker = new GitCheck(modifiedTestDirPath);
+                testResults.GitUsed = gitChecker.GitUsed;
+            }
+            else
+            {
+                testResults.AnyFileChanged = false;
+            }
 
-        //        // Git repo used
-        //        var gitChecker = new GitCheck(modifiedTestDirPath);
-        //        testResults.GitUsed = gitChecker.GitUsed;
-        //    }
-        //    else
-        //    {
-        //        testResults.AnyFileChanged = false;
-        //    }
-
-        //    return testResults;
+            return testResults;
         }
     }
 }

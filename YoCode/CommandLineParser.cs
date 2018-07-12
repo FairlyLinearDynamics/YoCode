@@ -10,7 +10,7 @@ namespace YoCode
     class CommandLineParser
     { 
 
-        const string ORIGIN = "origin";
+        const string ORIGIN = "original";
         const string MODIFIED = "modified";
         const string HELP = "help";
 
@@ -22,6 +22,7 @@ namespace YoCode
         public CommandLineParser(string[] args)
         {
             CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
+
         }
 
         public ResultData Parse()
@@ -40,12 +41,16 @@ namespace YoCode
             return ires;
         }
 
-        public bool ContainsErrors(ResultData res)
+        private bool ContainsErrors(ResultData res)
         {
+            if(CommandsList.Count() == 0)
+            {
+                res.errType = ArgErrorType.NoArgs;
+                return true;
+            }
 
             if(CommandsList.Any(arg => !implementedCommands.Contains(arg.command)))
             {
-                Console.Write("Errror");
                 res.errType = ArgErrorType.WrongCommand;
                 return true;
             }

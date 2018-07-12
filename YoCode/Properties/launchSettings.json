@@ -2,7 +2,7 @@
   "profiles": {
     "YoCode": {
       "commandName": "Project",
-      "commandLineArgs": "--origin=ORIGINALDATA --modified=MODIFIEDDATA"
+      "commandLineArgs": "--original=ORIGINALDATA --modified=MODIFIEDDATA"
     }
   }
 }
