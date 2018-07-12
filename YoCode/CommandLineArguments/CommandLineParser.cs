@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 
 
 namespace YoCode
 {
-    class CommandLineParser
+    public class CommandLineParser
     { 
 
         const string ORIGIN = "original";
@@ -97,28 +96,4 @@ namespace YoCode
 
         private List<SplitArg> CommandsList { get; set; }
     }
-}
-
-public struct SplitArg
-{
-    public string command;
-    public string data;
-}
-
-public enum ArgErrorType
-{
-    NoArguments,
-    WrongOriginalDirectory,
-    WrongModifiedDirectory,
-    WrongCommand
-}
-
-public class ResultData
-{
-    public List<string> errors;
-    public bool hasErrors => errors.Any();
-    public string errType;
-    public bool helpAsked;
-    public string originalFilePath;
-    public string modifiedFilePath;
 }
