@@ -7,27 +7,30 @@ namespace YoCode
     {
         private readonly string repositoryPath;
 
-        private string Output { get; set; } = "No output found";
-        private string LastAuthor { get; set; } = "None";
-        public bool GitUsed { get; private set; }
-
         public GitCheck(string path)
         {
-                repositoryPath = path;
-                ExecuteTheCheck();
+            repositoryPath = path;
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git",repositoryPath, "log");
-
+            ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
+          
+            var Output = pr.Output;
+            var LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
 
-            Output = pr.Output;
-            LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
-            GitUsed = GitHasBeenUsed(LastAuthor);
+            GitEvidence.FeatureTitle = "Git was used";
+
+            GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor);
+
+            if (GitEvidence.FeatureImplemented)
+            {
+                GitEvidence.GiveEvidence($"Commit outputs: \n{Output}\nLast Author: {LastAuthor}");
+            }
         }
-
+      
         public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
@@ -56,5 +59,7 @@ namespace YoCode
 
             return pi;
         }
+
+        public FeatureEvidence GitEvidence { get; private set; } = new FeatureEvidence();
     }
 }
