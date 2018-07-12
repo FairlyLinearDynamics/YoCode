@@ -21,8 +21,12 @@ namespace YoCode
 
         public CommandLineParser(string[] args)
         {
-            CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
+            ProcessArguments(args);
+        }
 
+        public void ProcessArguments(string[] args)
+        {
+            CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
         }
 
         public ResultData Parse()
@@ -36,23 +40,22 @@ namespace YoCode
                 ires.helpAsked = arg.command == HELP;
             }
 
-            ires.hasErrors = ContainsErrors(ires);
-
+            ires.errors = ContainsErrors();
+            Console.WriteLine(ires.hasErrors);
             return ires;
         }
 
-        private bool ContainsErrors(ResultData res)
+        private List<string> ContainsErrors()
         {
+            var errList = new List<string>();
             if(CommandsList.Count() == 0)
             {
-                res.errType = ArgErrorType.NoArgs;
-                return true;
+                errList.Add(nameof(ArgErrorType.NoArguments));
             }
 
             if(CommandsList.Any(arg => !implementedCommands.Contains(arg.command)))
             {
-                res.errType = ArgErrorType.WrongCommand;
-                return true;
+                errList.Add(nameof(ArgErrorType.WrongCommand));
             }
 
             foreach (SplitArg arg in CommandsList)
@@ -61,18 +64,16 @@ namespace YoCode
                 {
                     if (!Directory.Exists(arg.data) && arg.command == MODIFIED)
                     {
-                        res.errType = ArgErrorType.WrongModifiedDirectory;
-                        return true;
+                        errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
                     }
                     else if (!Directory.Exists(arg.data) && arg.command == ORIGIN)
                     {
-                        res.errType = ArgErrorType.WrongModifiedDirectory;
-                        return true;
+                        errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
                     }
                 }
             }
 
-            return false;
+            return errList;
         }
 
         public SplitArg ArgsSpliter (string arg)
@@ -106,15 +107,17 @@ public struct SplitArg
 
 public enum ArgErrorType
 {
-    NoArgs,
+    NoArguments,
     WrongOriginalDirectory,
     WrongModifiedDirectory,
     WrongCommand
 }
 
-public struct ResultData{
-    public bool hasErrors;
-    public ArgErrorType errType;
+public class ResultData
+{
+    public List<string> errors;
+    public bool hasErrors => errors.Any();
+    public string errType;
     public bool helpAsked;
     public string originalFilePath;
     public string modifiedFilePath;

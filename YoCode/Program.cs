@@ -9,17 +9,17 @@ namespace YoCode
 
         static void Main(string[] args)
         {
+            var consoleOutput = new PrintToConsole();
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
+
             if (result.hasErrors)
             {
-                DealWithInputError();
+                consoleOutput.PrintError(result.errors);
             }
             else
             {
-                var consoleOutput = new PrintToConsole();
-
                 TestResults testResults;
 
                 var fileReader = new FileImport();
@@ -37,11 +37,6 @@ namespace YoCode
                 consoleOutput.PrintIntroduction();
                 consoleOutput.PrintFinalResults(testResults);
             }
-        }
-
-        private static void DealWithInputError()
-        {
-            return;
         }
 
         private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)

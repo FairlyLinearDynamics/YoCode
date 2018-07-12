@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace YoCode
@@ -50,16 +51,6 @@ namespace YoCode
         {
             Console.Write("Feature evidence in UI: ");
             Console.WriteLine(resultsFormatter.UICheckResult);
-
-            //if (resultsFormatter.UIEvidence.Any())
-            //{
-            //    Console.Write("Found on lines: ");
-            //    foreach (var line in resultsFormatter.UIEvidence)
-            //    {
-            //        Console.Write(line+" ");
-            //    }
-            //    Console.WriteLine();
-            //}
         }
 
         private void PrintWrongDirectory()
@@ -67,11 +58,20 @@ namespace YoCode
             Console.WriteLine("Invalid directory");
         }
 
+        public void PrintError(List<string> errs)
+        {
+            Console.WriteLine("Error detected:");
+
+            foreach(string err in errs)
+            {
+                Console.WriteLine(err);
+            }
+            Console.WriteLine("\nIf you would like to see list of commands, type: --help");
+        }
+
         private static void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }
-        // Possibly will need to add more print methods to corespond to 
-        // Performed tests.
     }
 }
