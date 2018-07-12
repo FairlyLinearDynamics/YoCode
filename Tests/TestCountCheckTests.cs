@@ -47,14 +47,16 @@ namespace YoCode_XUnit
             var tcc = new TestCountCheck("fake path");
 
             string actual = "ffff125fff 1x4 adasdas29 aassss11";
-            var expected = new List<int>();
-            expected.Add(125);
-            expected.Add(1);
-            expected.Add(4);
-            expected.Add(29);
-            expected.Add(11);
+            var expected = new List<int>
+            {
+                125,
+                1,
+                4,
+                29,
+                11
+            };
 
-            expected.Should().BeEquivalentTo(tcc.CountNumberOfTests(actual));
+            expected.Should().BeEquivalentTo(actual.GetNumbersInLine());
 
 
         }
