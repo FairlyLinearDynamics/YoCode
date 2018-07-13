@@ -23,9 +23,9 @@ namespace YoCode
             CommandsList = args.Select(arg => ArgsSpliter(arg)).ToList();
         }
 
-        public ResultData Parse()
+        public InputResult Parse()
         {
-            var ires = new ResultData();
+            var ires = new InputResult();
 
             foreach (SplitArg arg in CommandsList)
             {
@@ -35,7 +35,6 @@ namespace YoCode
             }
 
             ires.errors = ContainsErrors();
-            Console.WriteLine(ires.hasErrors);
             return ires;
         }
 
@@ -54,16 +53,21 @@ namespace YoCode
 
             foreach (SplitArg arg in CommandsList)
             {
-                if (CommandsList.Exists(a => a.command.Equals(ORIGIN) || a.command.Equals(MODIFIED)))
+                if (!Directory.Exists(arg.data) && arg.command == MODIFIED)
                 {
-                    if (!Directory.Exists(arg.data) && arg.command == MODIFIED)
-                    {
-                        errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
-                    }
-                    else if (!Directory.Exists(arg.data) && arg.command == ORIGIN)
-                    {
-                        errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
-                    }
+                    errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
+                }
+                else if (!Directory.Exists(arg.data) && arg.command == ORIGIN)
+                {
+                    errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
+                }
+
+                if (arg.command == MODIFIED && !CommandsList.Exists(a => a.command.Equals(ORIGIN))){
+                    errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
+                }
+                else if (arg.command == ORIGIN && !CommandsList.Exists(a => a.command.Equals(MODIFIED)))
+                {
+                    errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
                 }
             }
 

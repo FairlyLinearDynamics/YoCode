@@ -14,7 +14,7 @@ namespace YoCode
             var result = commandLinehandler.Parse();
 
 
-            if (result.hasErrors)
+            if (result.HasErrors)
             {
                 consoleOutput.PrintError(result.errors);
             }
