@@ -15,7 +15,13 @@ namespace YoCode
             ProcessRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
             ProcessRunner.ExecuteTheCheck();
 
-            Console.WriteLine(ProcessRunner.Output);
+            ProjectBuilderEvidence.FeatureTitle = "Project build";
+            ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
+            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
+            if (GetNumberOfErrors() > 0)
+            {
+                ProjectBuilderEvidence.GiveEvidence($"Error message: {GetErrorOutput(ProcessRunner.Output)}");
+            }
         }
 
         public static string GetErrorOutput(string output)
@@ -65,5 +71,7 @@ namespace YoCode
         {
             return ProcessRunner.Output.GetLineWithAllKeywords(new List<string> { keyword });
         }
+
+        public FeatureEvidence ProjectBuilderEvidence { get; private set; } = new FeatureEvidence();
     }
 }

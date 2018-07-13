@@ -79,6 +79,8 @@ namespace YoCode
 
                 // Git repo used
                 checkList.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
+
+                checkList.Add(new ProjectBuilder(modifiedTestDirPath).ProjectBuilderEvidence);
             }
 
             return checkList;
