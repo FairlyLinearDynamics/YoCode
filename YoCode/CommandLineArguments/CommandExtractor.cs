@@ -18,7 +18,7 @@ namespace YoCode
 
                 //data = ExtractSuffix(arg, CommandIdentifiers.dataIdentifier),
                 command =  argParts[0] ,
-                data = (argParts.Any()) ? argParts[1] : null,
+                data = (argParts.Length>1) ? argParts[1] : null,
             };
         }
 
