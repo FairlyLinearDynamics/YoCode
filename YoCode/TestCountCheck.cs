@@ -27,7 +27,7 @@ namespace YoCode
             pr.ExecuteTheCheck();
             Output = pr.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
-            tempStats = StatLine.GetNumbersInLine();
+            tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
         }
 
