@@ -18,7 +18,7 @@ namespace YoCode
             return keywords.All(line.Contains);
         }
 
-        public static string GetLineWithAllKeywords(this string output, List<String> keywords)
+        public static string GetLineWithAllKeywords(this string output, IEnumerable<String> keywords)
         {
             var sr = new StringReader(output);
             string line;

@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace YoCode
 {
-
     public class GitCheck
     {
         private readonly string repositoryPath;
@@ -24,7 +23,7 @@ namespace YoCode
 
             GitEvidence.FeatureTitle = "Git was used";
 
-            GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor, GetHostDomains());
+            GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor);
 
             if (GitEvidence.FeatureImplemented)
             {
@@ -32,7 +31,7 @@ namespace YoCode
             }
         }
       
-        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+        public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
@@ -51,7 +50,7 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public ProcessInfo SetupProcessInfo(string processName,string workingDir,string arguments)
+        public ProcessInfo SetupProcessInfo(string processName,string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;
