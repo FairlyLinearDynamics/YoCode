@@ -44,7 +44,7 @@ namespace YoCode
         public int GetNumberOfWarnings()
         {
             string warningLine = GetLineWithOneKeyword("Warning(s)");
-            List<int> numbers = warningLine.GetNumbersInLine();
+            List<int> numbers = warningLine.GetNumbersInALine();
 
             try { return numbers[0]; }
             catch (ArgumentOutOfRangeException) { }
@@ -54,7 +54,7 @@ namespace YoCode
         public int GetNumberOfErrors()
         {
             string errorLine = GetLineWithOneKeyword("Error(s)");
-            List<int> numbers = errorLine.GetNumbersInLine();
+            List<int> numbers = errorLine.GetNumbersInALine();
 
             try { return numbers[0]; }
             catch (ArgumentOutOfRangeException) { }

@@ -56,7 +56,7 @@ namespace YoCode_XUnit
                 11
             };
 
-            expected.Should().BeEquivalentTo(actual.GetNumbersInLine());
+            expected.Should().BeEquivalentTo(actual.GetNumbersInALine());
 
 
         }

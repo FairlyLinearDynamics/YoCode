@@ -32,20 +32,27 @@ namespace YoCode
             return "";
         }
 
-        public static List<int> GetNumbersInLine(this string statLine)
+        public static List<int> GetNumbersInALine(this string line)
         {
-            const string expr = @"\D+";
+            string expr = @"\D+";
 
-            string[] numbers = Regex.Split(statLine, expr);
-            var tempStats = new List<int>();
+            string[] numbers = Regex.Split(line, expr);
+            var list = new List<int>();
             for (int i = 0; i < numbers.Length; i++)
             {
-                if (Int32.TryParse(numbers[i], out int temp))
+                int temp;
+                if (Int32.TryParse(numbers[i], out temp))
                 {
-                    tempStats.Add(temp);
+                    list.Add(temp);
                 }
             }
-            return tempStats;
+            return list;
+
         }
+
+
+
+
+
     }
 }
