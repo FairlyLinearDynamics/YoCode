@@ -13,11 +13,18 @@ namespace YoCode
         {
             var files = new List<string>();
             var di = new DirectoryInfo(path);
-            var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
+            try
+            {
+                var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
 
-            AddFileInfoToList(files, fileinfo);
+                AddFileInfoToList(files, fileinfo);
 
-            return files;
+                return files;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         //Helper method to convert FileInfo[] elements to string and add them to a list 
