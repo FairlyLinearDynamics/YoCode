@@ -34,9 +34,9 @@ namespace YoCode
                 return;
             }
 
-            var dir = new PathManager(originalTest, modifiedTest);
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            var checkList = PerformChecks(modifiedTestDirPath, dir);
+            var checkList = PerformChecks(dir);
 
             if (checkList.Count() != 0)
             {

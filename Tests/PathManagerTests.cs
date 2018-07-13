@@ -3,6 +3,7 @@ using FluentAssertions;
 using YoCode;
 using System.Collections.Generic;
 using System;
+using Moq;
 
 namespace YoCode_XUnit
 {
@@ -12,8 +13,12 @@ namespace YoCode_XUnit
         [Fact]
         public void GetFilesInDirectoryCorrectlyReturnsListOfFiles()
         {
-            string fakeList1 = null;
-            string fakeList2 = null;
+            Mock<IPathManager> mock = new Mock<IPathManager>();
+            var fakeDir = mock.Object;
+
+            //mock.Setup(w=>w.);
+            string fakeList1 = @"\";
+            string fakeList2 = @"\";
 
             PathManager dir = new PathManager(fakeList1, fakeList2);
 
