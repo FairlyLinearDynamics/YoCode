@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
     class DuplicationCheck
     {       
-        string CMDtoolsDir = @"C:\Users\ukmzil\source\repos\Tools\CMD";
+        string CMDtoolsDir;
         string CMDtoolFileName = "dupfinder.exe"; 
 
         string fileNameChecked = "UnitConverterWebApp.sln";
@@ -32,8 +33,14 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
-        public DuplicationCheck(string modifiedPath,string originalPath)
+        //public static IConfiguration Configuration { get; set; }
+
+
+
+        public DuplicationCheck(string modifiedPath,string originalPath, string CMDtoolsDirConfig)
         {
+            CMDtoolsDir = CMDtoolsDirConfig;
+
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
 

@@ -2,22 +2,25 @@
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
     public static class Program
     {
-
+        public static IConfiguration Configuration;
+        
         static void Main(string[] args)
         {
+            var builder = new ConfigurationBuilder().SetBasePath(Path.GetFullPath(@"..\..\..\Properties")).AddJsonFile("launchSettings.json");
+
+            Configuration = builder.Build();
+
             var modifiedTestDirPath = args[0];
             var originalTestDirPath = args[1];
 
-            var dcc = new DuplicationCheck(modifiedTestDirPath,originalTestDirPath);
+            var dcc = new DuplicationCheck(modifiedTestDirPath, originalTestDirPath, Configuration["profiles:YoCode:duplicationCheckSetup:CMDtoolsDir"]);
             dcc.ExecuteTheCheck();
-
-
-
 
             var consoleOutput = new PrintToConsole();
 
