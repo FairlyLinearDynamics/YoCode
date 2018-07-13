@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,13 +9,16 @@ namespace YoCode
     {
         public static SplitArg ArgsSplitter(string arg)
         {
+            var argParts = arg.Split(new[] { CommandIdentifiers.commandIdentifier, CommandIdentifiers.dataIdentifier }, StringSplitOptions.RemoveEmptyEntries);
             return new SplitArg
             {
-                command = (ExtractSuffix(arg,CommandIdentifiers.dataIdentifier) != null) 
-                ? ExtractPrefix(arg.Substring(0, arg.IndexOf(CommandIdentifiers.dataIdentifier)), CommandIdentifiers.commandIdentifier) 
-                : ExtractPrefix(arg, CommandIdentifiers.commandIdentifier),
+                //command = (ExtractSuffix(arg,CommandIdentifiers.dataIdentifier) != null) 
+                //? ExtractPrefix(arg.Substring(0, arg.IndexOf(CommandIdentifiers.dataIdentifier)), CommandIdentifiers.commandIdentifier) 
+                //: ExtractPrefix(arg, CommandIdentifiers.commandIdentifier),
 
-                data = ExtractSuffix(arg, CommandIdentifiers.dataIdentifier),
+                //data = ExtractSuffix(arg, CommandIdentifiers.dataIdentifier),
+                command =  argParts[0] ,
+                data = (argParts.Any()) ? argParts[1] : null,
             };
         }
 

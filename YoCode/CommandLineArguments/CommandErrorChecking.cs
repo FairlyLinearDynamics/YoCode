@@ -11,7 +11,7 @@ namespace YoCode
         {
             var errList = new List<string>();
 
-            if (currentCommands.Count() == 0)
+            if (!currentCommands.Any())
             {
                 errList.Add(nameof(ArgErrorType.NoArguments));
             }
@@ -21,6 +21,16 @@ namespace YoCode
                 errList.Add(nameof(ArgErrorType.WrongCommand));
             }
 
+            if (!currentCommands.Any(a => a.command == CommandNames.ORIGIN))
+            {
+                errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
+            }
+
+            if (!currentCommands.Any(a => a.command == CommandNames.MODIFIED))
+            {
+                errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
+            }
+            
             foreach (SplitArg arg in currentCommands)
             {
                 if (!Directory.Exists(arg.data) && arg.command == CommandNames.MODIFIED)
@@ -31,15 +41,6 @@ namespace YoCode
                 {
                     Console.Write("INVALID DIRECTORY");
                     errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
-                }
-
-                if (arg.command == CommandNames.MODIFIED && !currentCommands.Exists(a => a.command.Equals(CommandNames.ORIGIN)))
-                {
-                    errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
-                }
-                else if (arg.command == CommandNames.ORIGIN && !currentCommands.Exists(a => a.command.Equals(CommandNames.MODIFIED)))
-                {
-                    errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
                 }
             }
 

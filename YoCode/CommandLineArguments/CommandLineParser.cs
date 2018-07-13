@@ -22,9 +22,18 @@ namespace YoCode
 
             foreach (SplitArg arg in currentCommands)
             {
-                ires.originalFilePath = (arg.command == CommandNames.ORIGIN) ? arg.data : ires.originalFilePath;
-                ires.modifiedFilePath = (arg.command == CommandNames.MODIFIED) ? arg.data : ires.modifiedFilePath;
-                ires.helpAsked = arg.command == CommandNames.HELP;
+                switch (arg.command)
+                {
+                    case CommandNames.ORIGIN:
+                        ires.originalFilePath = arg.data;
+                        break;
+                    case CommandNames.MODIFIED:
+                        ires.modifiedFilePath = arg.data;
+                        break;
+                    case CommandNames.HELP:
+                        ires.helpAsked = arg.command == CommandNames.HELP;
+                        break;
+                }
             }
 
             ires.errors = CommandErrorChecking.ContainsErrors(currentCommands, implementedCommands);
