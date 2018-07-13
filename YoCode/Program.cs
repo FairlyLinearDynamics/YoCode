@@ -28,6 +28,12 @@ namespace YoCode
             var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
             var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
+            if (modifiedTest == null || originalTest == null)
+            {
+                consoleOutput.NothingInDirectory();
+                return;
+            }
+
             var dir = new PathManager(originalTest, modifiedTest);
 
             var checkList = PerformChecks(modifiedTestDirPath, dir);

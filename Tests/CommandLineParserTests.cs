@@ -9,15 +9,10 @@ namespace YoCode_XUnit
 {
     public class CommandLineParserTests
     {
-        string[] fakeArgs_WrongOriginalPath = { "--original=WRONGPATH" };
-        string[] fakeArgs_WrongModifiedPath = { "--modified=WRONGPATH" };
-        string[] fakeArgs_WrongCommand = { "--wrongCommand=/" };
-
-
         [Fact]
         public void CommandLineParser_WrongOriginalPathInput()
         {
-            var cmd = new CommandLineParser(fakeArgs_WrongOriginalPath);
+            var cmd = new CommandLineParser(new string[] { "--original=WRONGPATH" });
 
             var cmdResult = cmd.Parse();
 
@@ -27,7 +22,7 @@ namespace YoCode_XUnit
         [Fact]
         public void CommandLineParser_WrongModifiedPathInput()
         {
-            var cmd = new CommandLineParser(fakeArgs_WrongModifiedPath);
+            var cmd = new CommandLineParser(new string[] { "--modified=WRONGPATH" });
 
             var cmdResult = cmd.Parse();
 
@@ -37,7 +32,7 @@ namespace YoCode_XUnit
         [Fact]
         public void CommandLineParser_WrongCommand()
         {
-            var cmd = new CommandLineParser(fakeArgs_WrongCommand);
+            var cmd = new CommandLineParser(new string[] { "--wrongCommand=/" });
 
             var cmdResult = cmd.Parse();
 

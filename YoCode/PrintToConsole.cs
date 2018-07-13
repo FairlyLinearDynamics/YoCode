@@ -64,5 +64,10 @@ namespace YoCode
         {
             Console.WriteLine("Project unmodified");
         }
+
+        public void NothingInDirectory()
+        {
+            Console.WriteLine("Specified directory inaccessible");
+        }
     }
 }
