@@ -39,7 +39,6 @@ namespace YoCode
                 }
                 else if (!Directory.Exists(arg.data) && arg.command == CommandNames.ORIGIN)
                 {
-                    Console.Write("INVALID DIRECTORY");
                     errList.Add(nameof(ArgErrorType.WrongOriginalDirectory));
                 }
             }
