@@ -13,6 +13,11 @@ namespace YoCode
             var modifiedTestDirPath = args[0];
             var originalTestDirPath = args[1];
 
+            var dcc = new DuplicationCheck(modifiedTestDirPath,originalTestDirPath);
+            dcc.ExecuteTheCheck();
+
+
+
 
             var consoleOutput = new PrintToConsole();
 
