@@ -10,39 +10,41 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            var modifiedTestDirPath = args[0];
-            var originalTestDirPath = args[1];
-
             var consoleOutput = new PrintToConsole();
+            var commandLinehandler = new CommandLineParser(args);
+            var result = commandLinehandler.Parse();
 
-            // TODO: Create new class to handle input and check correctness of input
-            if (Directory.Exists(modifiedTestDirPath) && Directory.Exists(originalTestDirPath))
+            if (result.HasErrors)
             {
+                consoleOutput.PrintError(result.errors);
+                return;
+            }
 
-                var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-                var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            var modifiedTestDirPath = result.modifiedFilePath;
+            var originalTestDirPath = result.originalFilePath;
 
-                var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
+            var fileReader = new FileImport();
 
-                var checkList = PerformChecks(dir);
+            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
-                if(checkList.Count() != 0)
-                {
-                    consoleOutput.PrintFinalResults(checkList);
-                }
-                else
-                {
-                    consoleOutput.LazinessEvidence();
-                }        
+            if (modifiedTest == null || originalTest == null)
+            {
+                consoleOutput.NothingInDirectory();
+                return;
+            }
+
+            var dir = new PathManager(originalTest, modifiedTest);
+
+            var checkList = PerformChecks(modifiedTestDirPath, dir);
+
+            if (checkList.Count() != 0)
+            {
+                consoleOutput.PrintFinalResults(checkList);
             }
             else
             {
-                consoleOutput.PrintWrongDirectory();
-                //if (Directory.Exists(modifiedTestDirPath))
-                //{
-                //    // TODO: Add evidence for wrong Directory 
-                //    testResults.WrongDirectory = true;
-                //}
+                consoleOutput.LazinessEvidence();
             }
         }
 
