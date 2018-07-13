@@ -62,7 +62,7 @@ namespace YoCode
 
         public void PrintHelp()
         {
-            Console.WriteLine($"Application takes 2 parameters: path to original test directory and path to modified test directory" +
+            Console.WriteLine("Application takes 2 parameters: path to original test directory and path to modified test directory" +
                 $"\nPossible commands: --{CommandNames.ORIGIN}; --{CommandNames.MODIFIED}; --{CommandNames.HELP}" +
                 $"\nExample use: --{CommandNames.ORIGIN}=<path-to-original-test> --{CommandNames.MODIFIED}=<path-to-modified-test>");
         }
