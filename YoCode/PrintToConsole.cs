@@ -49,11 +49,25 @@ namespace YoCode
             Console.WriteLine("Invalid directory");
         }
 
+        public void PrintError(List<string> errs)
+        {
+            Console.WriteLine("Error detected:");
+
+            foreach(string err in errs)
+            {
+                Console.WriteLine(err);
+            }
+            Console.WriteLine("\nIf you would like to see list of commands, type: --help");
+        }
+
         public void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }
-        // Possibly will need to add more print methods to corespond to 
-        // Performed tests.
+
+        public void NothingInDirectory()
+        {
+            Console.WriteLine("Specified directory inaccessible");
+        }
     }
 }
