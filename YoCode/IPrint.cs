@@ -7,6 +7,6 @@ namespace YoCode
     interface IPrint
     {
         void PrintIntroduction();
-        void PrintFinalResults(TestResults results);
+        void PrintFinalResults(List<FeatureEvidence> featureList);
     }
 }

@@ -70,7 +70,6 @@ namespace YoCode
                     errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
                 }
             }
-
             return errList;
         }
 

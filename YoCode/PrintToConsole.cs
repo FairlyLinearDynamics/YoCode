@@ -6,7 +6,11 @@ namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        TestResultFormater resultsFormatter;
+
+        public PrintToConsole()
+        {
+            PrintIntroduction();
+        }
 
         public void PrintIntroduction()
         {
@@ -15,45 +19,32 @@ namespace YoCode
             Console.WriteLine();
         }
 
-        public void PrintFinalResults(TestResults results)
+
+        public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
-            resultsFormatter = new TestResultFormater(results);
-            if(results.WrongDirectory)
+            foreach(FeatureEvidence feature in featureList)
             {
-                PrintWrongDirectory();
-                return;
-            }
-            if (!results.AnyFileChanged)
-            {
-                LazinessEvidence();
-            }
-            else
-            {
-                PrintGitResult();
-                PrintUIEvidenceResult();
-                SolutionFileFoundResult();
+                Console.WriteLine("==========================================");
+                Console.Write($"{feature.FeatureTitle}: ");
+                Console.WriteLine((feature.FeatureImplemented)?"Yes":"No");
+                Console.WriteLine();
+                if (feature.EvidencePresent)
+                {
+                    Console.WriteLine("Indication of above result: ");
+                    Console.WriteLine(FormatEvidence(feature));
+                    Console.WriteLine("==========================================");
+                }
             }
         }
 
-        private void PrintGitResult()
+        private string FormatEvidence(FeatureEvidence evidence)
         {
-            Console.Write("Git used: ");
-            Console.WriteLine(resultsFormatter.GitUsedResult);
+            return (evidence.EvidencePresent) ?
+                evidence.Evidence.Aggregate((a, b) => $"{a}\n{b}")
+                : "No evidence present";
         }
 
-        private void SolutionFileFoundResult()
-        {
-            Console.Write("Solution file found: ");
-            Console.WriteLine(resultsFormatter.SolutionFileExistResult);
-        }
-
-        private void PrintUIEvidenceResult()
-        {
-            Console.Write("Feature evidence in UI: ");
-            Console.WriteLine(resultsFormatter.UICheckResult);
-        }
-
-        private void PrintWrongDirectory()
+        public void PrintWrongDirectory()
         {
             Console.WriteLine("Invalid directory");
         }
@@ -69,7 +60,7 @@ namespace YoCode
             Console.WriteLine("\nIf you would like to see list of commands, type: --help");
         }
 
-        private static void LazinessEvidence()
+        public void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }

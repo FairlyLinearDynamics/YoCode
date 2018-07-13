@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "YoCode": {
-      "commandName": "Project",
-      "commandLineArgs": "--original=ORIGINALDATA --modified=MODIFIEDDATA"
-    }
-  }
-}

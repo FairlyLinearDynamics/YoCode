@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -13,59 +14,62 @@ namespace YoCode
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
-
             if (result.HasErrors)
             {
                 consoleOutput.PrintError(result.errors);
+                return;
+            }
+
+            var modifiedTestDirPath = result.modifiedFilePath;
+            var originalTestDirPath = result.originalFilePath;
+
+            var fileReader = new FileImport();
+
+            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+
+            var dir = new PathManager(originalTest, modifiedTest);
+
+            var checkList = PerformChecks(modifiedTestDirPath, dir);
+
+            if (checkList.Count() != 0)
+            {
+                consoleOutput.PrintFinalResults(checkList);
             }
             else
             {
-                TestResults testResults;
-
-                var fileReader = new FileImport();
-
-                var modifiedTestDirPath = result.modifiedFilePath;
-                var originalTestDirPath = result.originalFilePath;
-
-                var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-                var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
-
-                var dir = new PathManager(originalTest, modifiedTest);
-
-                testResults = PerformChecks(modifiedTestDirPath, dir);
-
-                consoleOutput.PrintIntroduction();
-                consoleOutput.PrintFinalResults(testResults);
+                consoleOutput.LazinessEvidence();
             }
         }
 
-        private static TestResults PerformChecks(string modifiedTestDirPath, PathManager dir)
+        private static List<FeatureEvidence> PerformChecks(string modifiedTestDirPath, PathManager dir)
         {
-            var testResults = new TestResults();
-            if (FileChangeChecker.ProjectIsModified(dir))
+            var checkList = new List<FeatureEvidence>();
+
+            var fileCheck = new FileChangeChecker(dir);
+
+            if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                testResults.AnyFileChanged = true;
+                checkList.Add(fileCheck.FileChangeEvidence);
+
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
 
-                var uiChecker = new UICheck(modifiedHtmlFiles, keyWords);
-
-                testResults.Lines = uiChecker.ListOfMatches;
+                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
                 // Solution file exists
-                testResults.SolutionFileExist = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.sln).Count() != 0;
+                checkList.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "Solution File Exists",
+                    FeatureImplemented = true,
+                });
 
                 // Git repo used
-                var gitChecker = new GitCheck(modifiedTestDirPath);
-                testResults.GitUsed = gitChecker.GitUsed;
-            }
-            else
-            {
-                testResults.AnyFileChanged = false;
+                checkList.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
             }
 
-            return testResults;
+            return checkList;
         }
     }
 }

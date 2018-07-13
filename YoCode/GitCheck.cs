@@ -1,64 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace YoCode
 {
-    public static class HelperMethods
-    {
-        public static bool ContainsAny(this string line, IEnumerable<string> keywords)
-        {
-            return keywords.Any(line.Contains);
-        }
-
-        public static bool ContainsAll(this string line, IEnumerable<string> keywords)
-        {
-            return keywords.All(line.Contains);
-        }
-    }
-
     public class GitCheck
     {
         private readonly string repositoryPath;
 
-        private string Output { get; set; } = "No output found";
-        private string LastAuthor { get; set; } = "None";
-        public bool GitUsed { get; private set; }
-
         public GitCheck(string path)
         {
-                repositoryPath = path;
-                ExecuteTheCheck();
+            repositoryPath = path;
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git.exe",repositoryPath, "log");
+            ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
+          
+            var Output = pr.Output;
+            var LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
 
-            Output = pr.Output;
-            LastAuthor = GetLastAuthor(Output);
-            GitUsed = GitHasBeenUsed(LastAuthor, GetHostDomains());
-        }
+            GitEvidence.FeatureTitle = "Git was used";
 
+            GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor);
 
-        public static string GetLastAuthor(string output)
-        {
-            var sr = new StringReader(output);
-            string line;
-            while ((line = sr.ReadLine()) != null)
+            if (GitEvidence.FeatureImplemented)
             {
-                if(line.ContainsAll(GetKeyWords()))
-                {
-                    return line;
-                }
+                GitEvidence.GiveEvidence($"Commit outputs: \n{Output}\nLast Author: {LastAuthor}");
             }
-            return "";
         }
-
-        public static bool GitHasBeenUsed(string lastAuthor, List<string> hostDomains)
+      
+        public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
             {
@@ -67,7 +40,7 @@ namespace YoCode
             return true;
         }
 
-        public static IEnumerable<string> GetKeyWords()
+        public static List<string> GetKeyWords()
         {
             return new List<string> { "Author:", "<", ">", "@", "." };
         }
@@ -77,7 +50,7 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public ProcessInfo setupProcessInfo(string processName,string workingDir,string arguments)
+        public ProcessInfo SetupProcessInfo(string processName,string arguments)
         {
             ProcessInfo pi;
             pi.processName = processName;
@@ -86,5 +59,7 @@ namespace YoCode
 
             return pi;
         }
+
+        public FeatureEvidence GitEvidence { get; private set; } = new FeatureEvidence();
     }
 }

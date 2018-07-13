@@ -15,8 +15,19 @@ namespace YoCode_XUnit
         Mock<IPathManager> mock = new Mock<IPathManager>();
 
         List<string> fakePaths1 = new List<string>() { "one", "two" };
-
         List<string> fakePaths2 = new List<string>() { "one", "two", "three" };
+
+        IPathManager fakeDir;
+        List<FileContent> fakeList1;
+        List<FileContent> fakeList2;
+
+        public FileChangeCheckerTests()
+        {
+            fakeDir = mock.Object;
+
+            fakeList1 = new List<FileContent>();
+            fakeList2 = new List<FileContent>();
+        }
 
         private FileContent CreateFakeStream(int i)
         {
@@ -27,82 +38,77 @@ namespace YoCode_XUnit
         }
 
         [Fact]
-        public void CheckIfFileCheckerHashesCorrectly()
+        public void FileChangeChecker_ProjectUnmodifiedCheck()
         {
-            var original = new MemoryStream();
-            original.Write(Encoding.ASCII.GetBytes("thing that gets hashed"));
-            original.Position = 0;
-
-            var modified = new MemoryStream();
-            modified.Write(Encoding.ASCII.GetBytes("another thing that gets hashed"));
-            modified.Position = 0;
-
-            FileChangeChecker.FileIsModified(original, modified).Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfProjectIsModifiedOutputsCorrectValue()
-        {
-            var fakeDirectory = mock.Object;
-
-            List<FileContent> fakeList = new List<FileContent>();
-
-            List<FileContent> fakeList2 = new List<FileContent>();
-
             for (int i = 0; i < fakePaths1.Count; i++)
             {
-                fakeList.Add(CreateFakeStream(i));
+                fakeList1.Add(CreateFakeStream(i));
                 fakeList2.Add(CreateFakeStream(i));
 
             }           
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
 
-            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
+            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList1);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            FileChangeChecker.ProjectIsModified(fakeDirectory).Should().BeFalse();
-        }
-
-        [Fact]
-        public void ProjectIsModifiedCorrectlyFindsDifferentListLengths()
-        {
-            var fakeDir = mock.Object;
-
-            mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
-            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
-
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeTrue();
+            new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
         }
 
         [Fact]
         public void ProjectIsModifiedWithDifferentFileOrder()
         {
-            var fakeDir = mock.Object;
-
-            List<FileContent> reverseFakeList = new List<FileContent>();
-
-            List<FileContent> fakeList = new List<FileContent>();
-
-           
             for (int i = fakePaths1.Count - 1; i >= 0; i--)
             {
-                reverseFakeList.Add(CreateFakeStream(i));
+                fakeList2.Add(CreateFakeStream(i));
             }
 
             for (int i = 0; i < fakePaths1.Count; i++)
             {
-                fakeList.Add(CreateFakeStream(i));
+                fakeList1.Add(CreateFakeStream(i));
             }
 
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
 
-            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList);
-            mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(reverseFakeList);
+            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList1);
+            mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            FileChangeChecker.ProjectIsModified(fakeDir).Should().BeFalse();
+            new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
 
+        }
+
+        [Fact]
+        public void FileChangeChecker_FeatureEvidence_EvidencePresentFieldTrue()
+        {
+
+            for (int i = 0; i < fakePaths1.Count; i++)
+            {
+                fakeList1.Add(CreateFakeStream(i));
+                fakeList2.Add(CreateFakeStream(i));
+
+            }
+            fakeList2.Add(CreateFakeStream(10));
+            mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
+            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
+
+            fakeList2.RemoveAt(0);
+
+            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList1);
+            mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
+
+            var fileCheck = new FileChangeChecker(fakeDir);
+            fileCheck.FileChangeEvidence.EvidencePresent.Should().Be(true);
+        }
+
+        [Fact]
+        public void FileChangeChecker_FeatureEvidence_FeatureImplementedFieldTrue()
+        {
+            mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
+            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
+
+            var fileCheck = new FileChangeChecker(fakeDir);
+            fileCheck.FileChangeEvidence.FeatureImplemented.Should().Be(true);
         }
     }
 }

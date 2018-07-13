@@ -9,22 +9,38 @@ namespace YoCode_XUnit
 {
     public class UICheckTests
     {
+        readonly string fakeFilePath = @"..\..\..\TestData\MockHTML.cshtml";
+        readonly string[] keyWords = { "miles", "kilometer" };
+
         // Write better testing mehod
-        [Theory]
-        [InlineData(@"..\..\..\TestData\MockHTML.cshtml",
-            new string[]{"miles", "kilometer"})]
-        public void UICheck_FoundMatchesOnOneLine(string userFile, string[] keyWords)
+        [Fact]
+        public void UICheck_FeatureImplementedBoolCheck()
         {
-            var uiCheck = new UICheck(userFile, keyWords);
+            var uiCheck = new UICheck(fakeFilePath, keyWords);
 
-            var listSize = uiCheck.ListOfMatches.Count;
+            var evidence = uiCheck.UIEvidence;
 
-            var singleString = File.ReadAllText(userFile);
+            evidence.FeatureImplemented.Should().Be(true);
+        }
 
-            var containsLine = keyWords.Any(key => singleString.ToLower().Contains(key));
+        [Fact]
+        public void UICheck_FeatureEvidencePresent()
+        {
+            var uiCheck = new UICheck(fakeFilePath, keyWords);
 
-            listSize.Should().Be(1);
-            containsLine.Should().Be(true);
+            var evidence = uiCheck.UIEvidence;
+
+            evidence.EvidencePresent.Should().Be(true);
+        }
+
+        [Fact]
+        public void UICheck_FeatureTitleSet()
+        {
+            var uiCheck = new UICheck(fakeFilePath, keyWords);
+
+            var evidence = uiCheck.UIEvidence;
+
+            evidence.FeatureTitle.Should().NotBeEmpty();
         }
         // TODO: Add tests for: Multiple files with one line of keywords; 
         // multiple files with multiple lines of keywords; one file with multiple lines of keywords
