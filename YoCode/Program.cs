@@ -14,6 +14,12 @@ namespace YoCode
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
+            if (result.helpAsked)
+            {
+                consoleOutput.PrintHelp();
+                return;
+            }
+
             if (result.HasErrors)
             {
                 consoleOutput.PrintError(result.errors);
