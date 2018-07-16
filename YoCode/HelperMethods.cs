@@ -34,7 +34,7 @@ namespace YoCode
 
         public static List<int> GetNumbersInALine(this string line)
         {
-            string expr = @"\D+";
+            const string expr = @"\D+";
 
             string[] numbers = Regex.Split(line, expr);
             var list = new List<int>();
