@@ -7,7 +7,7 @@ namespace YoCode
 {
     class DuplicationCheck
     {       
-        string CMDtoolsDir = @"C:\Users\ukmzil\source\repos\Tools\CMD";
+        string CMDtoolsDir = @"..\..\..\..\..\Tools\CMD";
         string CMDtoolFileName = "dupfinder.exe"; 
 
         string fileNameChecked = "UnitConverterWebApp.sln";
@@ -18,8 +18,6 @@ namespace YoCode
         string workingDir;
         string modiArguments;
         string origArguments;
-
-        bool FinalResult;
 
         string Output { get; set; }
 
@@ -32,13 +30,15 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
-        public DuplicationCheck(string modifiedPath,string originalPath)
+        public DuplicationCheck(PathManager dir)
         {
+            DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
 
-            modiArguments = Path.Combine(modifiedPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(originalPath, fileNameChecked) + outputArg + outputFile;
+            modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
+            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck() {
@@ -46,16 +46,14 @@ namespace YoCode
             RunOneCheck(origArguments);
             origCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
             origDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-            Console.WriteLine(origCodeBaseCost);
-            Console.WriteLine(origDuplicateCost);
 
             RunOneCheck(modiArguments);
             modiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
             modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-            Console.WriteLine(modiCodeBaseCost);
-            Console.WriteLine(modiDuplicateCost);
 
-            FinalResult = HasTheCodeImproved();
+            DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
+            DuplicationEvidence.GiveEvidence($"Original code score: {origCodeBaseCost}\nModified code score: {modiCodeBaseCost}" +
+                $"\nOriginal code duplication score: {origDuplicateCost}\nModified code duplication score: {modiDuplicateCost}");
         }
 
         public void RunOneCheck(string args)
@@ -88,5 +86,7 @@ namespace YoCode
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }
+
+        public FeatureEvidence DuplicationEvidence { get; private set; } = new FeatureEvidence();
     }
 }
