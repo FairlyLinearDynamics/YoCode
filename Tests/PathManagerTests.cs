@@ -16,7 +16,6 @@ namespace YoCode_XUnit
             Mock<IPathManager> mock = new Mock<IPathManager>();
             var fakeDir = mock.Object;
 
-            //mock.Setup(w=>w.);
             string fakeList1 = @"\";
             string fakeList2 = @"\";
 

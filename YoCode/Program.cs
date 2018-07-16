@@ -23,8 +23,6 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var fileReader = new FileImport();
-
             var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
             var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
