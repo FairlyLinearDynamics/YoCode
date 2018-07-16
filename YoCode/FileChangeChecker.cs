@@ -10,7 +10,7 @@ namespace YoCode
     {
         IPathManager directory;
 
-        // TODO: Fix bugs #46 and #45
+        // TODO: Fix bugs #46
         public FileChangeChecker(IPathManager dir)
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
@@ -21,28 +21,27 @@ namespace YoCode
         private void ProjectIsModified()
         {
 
-            var originalFileStreams = directory.ReturnOriginalPathFileStream();//.OrderBy((c => Path.GetFileName(c.path)));
-            var modifiedFileStreams = directory.ReturnModifiedPathFileStream();//.OrderBy((c => Path.GetFileName( c.path)));
+            var originalFileStreams = directory.ReturnOriginalPathFileStream();
+            var modifiedFileStreams = directory.ReturnModifiedPathFileStream();
 
             try
             {
                 foreach (var modified in modifiedFileStreams)
                 {
 
-                    var similar = originalFileStreams.Where(a => Path.GetFileName(a.path).Equals(Path.GetFileName(modified.path)));
+                    var similar = originalFileStreams.Where(a => Path.GetRelativePath(directory.originalTestDirPath,a.path).Equals(
+                        Path.GetRelativePath(directory.modifiedTestDirPath,modified.path)));
 
                     if (similar.Count() != 0)
                     {
                         if (FileIsModified(similar.First().content, modified.content))
                         {
                             FileChangeEvidence.GiveEvidence($"Changed file: \\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
-                            Debugger.Break();
                         }
                     }
                     else
                     {
                         FileChangeEvidence.GiveEvidence($"Added file: \\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
-
                     }
                 }
 

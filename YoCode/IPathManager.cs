@@ -4,6 +4,8 @@ namespace YoCode
 {
     public interface IPathManager
     {
+        string originalTestDirPath { get; set; }
+        string modifiedTestDirPath { get; set; }
         IEnumerable<string> ModifiedPaths { get; }
         IEnumerable<string> OriginalPaths { get; }
 
