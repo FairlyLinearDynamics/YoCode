@@ -12,6 +12,11 @@ namespace YoCode
         
         static void Main(string[] args)
         {
+            //This needs to be implemented in order for DuplicationCheck to work
+            var builder = new ConfigurationBuilder().SetBasePath(Path.GetFullPath(@"..\..\..\Properties")).AddJsonFile("launchsettings.json");
+            Configuration = builder.Build();
+            var CMDToolsPath = Configuration["profiles:YoCode:duplicationCheckSetup:CMDtoolsDir"];
+
             var consoleOutput = new PrintToConsole();
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -30,6 +35,11 @@ namespace YoCode
 
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
+
+            //Run the duplication check, showed how to get the final answer from that class.
+            var dcc = new DuplicationCheck(modifiedTestDirPath, originalTestDirPath, CMDToolsPath);
+            dcc.ExecuteTheCheck();
+            bool isCodeLessDuplicate = dcc.FinalResult;
 
             var fileReader = new FileImport();
 

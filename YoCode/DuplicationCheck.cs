@@ -20,7 +20,7 @@ namespace YoCode
         string modiArguments;
         string origArguments;
 
-        bool FinalResult;
+        public bool FinalResult;
 
         string Output { get; set; }
 
@@ -32,9 +32,6 @@ namespace YoCode
 
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
-
-        //public static IConfiguration Configuration { get; set; }
-
 
         public DuplicationCheck(string modifiedPath,string originalPath, string CMDtoolsDirConfig)
         {
@@ -52,15 +49,11 @@ namespace YoCode
             RunOneCheck(origArguments);
             origCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
             origDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-            Console.WriteLine(origCodeBaseCost);
-            Console.WriteLine(origDuplicateCost);
 
             RunOneCheck(modiArguments);
             modiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
             modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-            Console.WriteLine(modiCodeBaseCost);
-            Console.WriteLine(modiDuplicateCost);
-
+        
             FinalResult = HasTheCodeImproved();
         }
 
@@ -82,7 +75,7 @@ namespace YoCode
 
         public bool HasTheCodeImproved()
         {
-            return origDuplicateCost >= modiDuplicateCost ? true : false;        
+            return origDuplicateCost > modiDuplicateCost ? true : false;        
         }
 
         public List<String> getCodeBaseCostKeyword()
