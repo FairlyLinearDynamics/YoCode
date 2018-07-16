@@ -18,6 +18,9 @@ namespace YoCode_XUnit
         List<string> fakePaths1 = new List<string>() { "one", "two" };
         List<string> fakePaths2 = new List<string>() { "one", "two", "three" };
 
+        string fakeOriginal = @"C:\Users\ukekar\Downloads\junior-test";
+        string fakeModified = @"C:\Users\ukekar\Downloads\drew-gibbon";
+
         IPathManager fakeDir;
         List<FileContent> fakeList1;
         List<FileContent> fakeList2;
@@ -29,6 +32,9 @@ namespace YoCode_XUnit
             _output = output;
 
             fakeDir = mock.Object;
+
+            mock.Setup(w => w.originalTestDirPath).Returns(fakeOriginal);
+            mock.Setup(w => w.modifiedTestDirPath).Returns(fakeModified);
 
             fakeList1 = new List<FileContent>();
             fakeList2 = new List<FileContent>();
@@ -109,8 +115,21 @@ namespace YoCode_XUnit
         [Fact]
         public void FileChangeChecker_FeatureEvidence_FeatureImplementedFieldTrue()
         {
+
+            for (int i = 0; i < fakePaths1.Count; i++)
+            {
+                fakeList1.Add(CreateFakeStream(i));
+                fakeList2.Add(CreateFakeStream(i));
+
+            }
+            fakeList2.Add(CreateFakeStream(10));
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
-            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
+            mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
+
+            fakeList2.RemoveAt(0);
+
+            mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList1);
+            mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
             var fileCheck = new FileChangeChecker(fakeDir);
             _output.WriteLine($"{fileCheck.FileChangeEvidence.EvidencePresent}");
