@@ -2,14 +2,22 @@
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
     public static class Program
     {
+        public static IConfiguration Configuration;
+
+        static string CMDToolsPath;
 
         static void Main(string[] args)
         {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
+            CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
+
             var consoleOutput = new PrintToConsole();
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -79,7 +87,7 @@ namespace YoCode
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Code score test
-                checkList.Add(new DuplicationCheck(dir).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
             }
 
             return checkList;

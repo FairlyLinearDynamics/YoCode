@@ -47,7 +47,6 @@ namespace YoCode
                 }
             }
             return list;
-
         }
 
         public static string GetLineWithOneKeyword(this string line, string keyword)

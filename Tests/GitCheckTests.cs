@@ -18,7 +18,6 @@ namespace YoCode_XUnit
             testLastAuthor = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
         }
 
-
         [Fact]
         public void Test_GitHasBeenUsed()
         {
@@ -26,16 +25,5 @@ namespace YoCode_XUnit
 
         }
 
-        [Fact] 
-        public void Test_ContainsAny()
-        {
-            testLastAuthor.ContainsAny(GitCheck.GetHostDomains()).Should().Be(false);
-        }
-
-        [Fact]
-        public void Test_ContainsAll()
-        {
-           testLastAuthor.ContainsAll(GitCheck.GetKeyWords()).Should().Be(true);
-        }
     }
 }

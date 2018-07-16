@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
-    class DuplicationCheck
+    public class DuplicationCheck
     {       
-        string CMDtoolsDir = @"..\..\..\..\..\Tools\CMD";
+        string CMDtoolsDir;
         string CMDtoolFileName = "dupfinder.exe"; 
 
         string fileNameChecked = "UnitConverterWebApp.sln";
@@ -30,14 +31,17 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
-        public DuplicationCheck(PathManager dir)
+        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
         {
+            CMDtoolsDir = CMDtoolsDirConfig;
+
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
 
             modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
+            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;            
+            
             ExecuteTheCheck();
         }
 
@@ -74,7 +78,7 @@ namespace YoCode
 
         public bool HasTheCodeImproved()
         {
-            return origDuplicateCost >= modiDuplicateCost ? true : false;        
+            return origDuplicateCost > modiDuplicateCost ? true : false;        
         }
 
         public List<String> getCodeBaseCostKeyword()
