@@ -31,7 +31,7 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
-        public DuplicationCheck(PathManager dir)
+        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
         {
             CMDtoolsDir = CMDtoolsDirConfig;
 
@@ -39,8 +39,8 @@ namespace YoCode
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
 
-            modiArguments = Path.Combine(modifiedPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(originalPath, fileNameChecked) + outputArg + outputFile;            
+            modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
+            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;            
             
             ExecuteTheCheck();
         }

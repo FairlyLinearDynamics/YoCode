@@ -9,13 +9,15 @@ namespace YoCode
     public static class Program
     {
         public static IConfiguration Configuration;
-        
+
+        static string CMDToolsPath;
+
         static void Main(string[] args)
         {
             //This needs to be implemented in order for DuplicationCheck to work
             var builder = new ConfigurationBuilder().SetBasePath(Path.GetFullPath(@"..\..\..\Properties")).AddJsonFile("launchsettings.json");
             Configuration = builder.Build();
-            var CMDToolsPath = Configuration["profiles:YoCode:duplicationCheckSetup:CMDtoolsDir"];
+            CMDToolsPath = Configuration["profiles:YoCode:duplicationCheckSetup:CMDtoolsDir"];
 
             var consoleOutput = new PrintToConsole();
             var commandLinehandler = new CommandLineParser(args);
@@ -86,7 +88,7 @@ namespace YoCode
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Code score test
-                checkList.Add(new DuplicationCheck(dir).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
             }
 
             return checkList;
