@@ -20,8 +20,6 @@ namespace YoCode
         string modiArguments;
         string origArguments;
 
-        public bool FinalResult;
-
         string Output { get; set; }
 
         int modiCodeBaseCost { get; set; }
@@ -33,13 +31,11 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
-        public FeatureEvidence DuplicationCheckEvidence { get; private set; } = new FeatureEvidence();
-
-
-        public DuplicationCheck(string modifiedPath,string originalPath, string CMDtoolsDirConfig)
+        public DuplicationCheck(PathManager dir)
         {
             CMDtoolsDir = CMDtoolsDirConfig;
 
+            DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
 
@@ -58,8 +54,10 @@ namespace YoCode
             RunOneCheck(modiArguments);
             modiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
             modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-        
-            FinalResult = HasTheCodeImproved();
+
+            DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
+            DuplicationEvidence.GiveEvidence($"Original code score: {origCodeBaseCost}\nModified code score: {modiCodeBaseCost}" +
+                $"\nOriginal code duplication score: {origDuplicateCost}\nModified code duplication score: {modiDuplicateCost}");
         }
 
         public void RunOneCheck(string args)
@@ -92,5 +90,7 @@ namespace YoCode
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }
+
+        public FeatureEvidence DuplicationEvidence { get; private set; } = new FeatureEvidence();
     }
 }
