@@ -27,7 +27,7 @@ namespace YoCode
             pr.ExecuteTheCheck();
             Output = pr.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
-            tempStats = StatLine.GetNumbersInLine();
+            tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
         }
 
@@ -37,6 +37,7 @@ namespace YoCode
             stats.testsPassed = tempStats[1];
             stats.testsFailed = tempStats[2];
             stats.testsSkipped = tempStats[3];
+            
         }
 
         public static List<string> GetTestKeyWords()

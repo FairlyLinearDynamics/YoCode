@@ -49,11 +49,32 @@ namespace YoCode
             Console.WriteLine("Invalid directory");
         }
 
+        public void PrintError(List<string> errs)
+        {
+            Console.WriteLine("Error detected:");
+
+            foreach(string err in errs)
+            {
+                Console.WriteLine(err);
+            }
+            Console.WriteLine("\nIf you would like to see list of commands, type: --help");
+        }
+
+        public void PrintHelp()
+        {
+            Console.WriteLine("Application takes 2 parameters: path to original test directory and path to modified test directory" +
+                $"\nPossible commands: --{CommandNames.ORIGIN}; --{CommandNames.MODIFIED}; --{CommandNames.HELP}" +
+                $"\nExample use: --{CommandNames.ORIGIN}=<path-to-original-test> --{CommandNames.MODIFIED}=<path-to-modified-test>");
+        }
+
         public void LazinessEvidence()
         {
             Console.WriteLine("Project unmodified");
         }
-        // Possibly will need to add more print methods to corespond to 
-        // Performed tests.
+
+        public void NothingInDirectory()
+        {
+            Console.WriteLine("Specified directory inaccessible");
+        }
     }
 }

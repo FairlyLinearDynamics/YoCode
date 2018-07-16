@@ -1,14 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>1.0.42.1-dev0116</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="input\**" />
     <EmbeddedResource Remove="input\**" />
     <None Remove="input\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="MSBump" Version="2.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>

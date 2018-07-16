@@ -9,6 +9,7 @@ namespace YoCode
     {
         IPathManager directory;
 
+        // TODO: Fix bugs #46 and #45
         public FileChangeChecker(IPathManager dir)
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
