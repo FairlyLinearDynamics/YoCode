@@ -87,7 +87,7 @@ namespace YoCode
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Code score test
-                checkList.Add(new DuplicationCheck(dir).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
