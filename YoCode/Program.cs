@@ -14,8 +14,6 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            //This needs to be implemented in order for DuplicationCheck to work
-            //var builder = new ConfigurationBuilder().SetBasePath(Path.GetFullPath(@"..\..\..\Properties")).AddJsonFile("appsettings.json");
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
