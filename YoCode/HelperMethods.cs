@@ -47,5 +47,10 @@ namespace YoCode
             }
             return tempStats;
         }
+
+        public static string GetLineWithOneKeyword(this string line, string keyword)
+        {
+            return line.GetLineWithAllKeywords(new List<string> { keyword });
+        }
     }
 }

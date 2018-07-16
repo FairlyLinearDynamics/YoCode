@@ -4,18 +4,19 @@ using System.Collections.Generic;
 namespace YoCode
 {
     // TODO: populate evidence object in ProjectBuilder class
+    // TODO: handle error return values (-1 for GetNumberOfErrors and GetNumberOfWarnings)
     public class ProjectBuilder
     {
         public ProcessRunner ProcessRunner { get; }
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
+        private string Output;
 
         public ProjectBuilder(string workingDir)
         {
             ProcessRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
             ProcessRunner.ExecuteTheCheck();
-
-            Console.WriteLine(ProcessRunner.Output);
+            Output = ProcessRunner.Output;
         }
 
         public static string GetErrorOutput(string output)
@@ -36,14 +37,14 @@ namespace YoCode
 
         public bool BuildSuccessful()
         {
-            string buildLine = GetLineWithOneKeyword("Build succeeded");
+            string buildLine = Output.GetLineWithOneKeyword("Build succeeded");
 
             return buildLine != "";
         }
 
         public int GetNumberOfWarnings()
         {
-            string warningLine = GetLineWithOneKeyword("Warning(s)");
+            string warningLine = Output.GetLineWithOneKeyword("Warning(s)");
             List<int> numbers = warningLine.GetNumbersInLine();
 
             try { return numbers[0]; }
@@ -53,17 +54,12 @@ namespace YoCode
 
         public int GetNumberOfErrors()
         {
-            string errorLine = GetLineWithOneKeyword("Error(s)");
+            string errorLine = Output.GetLineWithOneKeyword("Error(s)");
             List<int> numbers = errorLine.GetNumbersInLine();
 
             try { return numbers[0]; }
             catch (ArgumentOutOfRangeException) { }
             return -1;
-        }
-
-        private string GetLineWithOneKeyword(string keyword)
-        {
-            return ProcessRunner.Output.GetLineWithAllKeywords(new List<string> { keyword });
         }
     }
 }
