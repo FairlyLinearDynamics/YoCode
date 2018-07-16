@@ -21,7 +21,7 @@ namespace YoCode
 
                 return files;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

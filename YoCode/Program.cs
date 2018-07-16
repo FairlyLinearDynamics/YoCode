@@ -29,8 +29,6 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var fileReader = new FileImport();
-
             var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
             var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
 
@@ -40,9 +38,9 @@ namespace YoCode
                 return;
             }
 
-            var dir = new PathManager(originalTest, modifiedTest);
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            var checkList = PerformChecks(modifiedTestDirPath, dir);
+            var checkList = PerformChecks(dir);
 
             if (checkList.Count() != 0)
             {
@@ -54,7 +52,7 @@ namespace YoCode
             }
         }
 
-        private static List<FeatureEvidence> PerformChecks(string modifiedTestDirPath, PathManager dir)
+        private static List<FeatureEvidence> PerformChecks(PathManager dir)
         {
             var checkList = new List<FeatureEvidence>();
 
@@ -66,7 +64,7 @@ namespace YoCode
 
                 // UI test
                 var keyWords = new[] { "miles", "kilometers", "km" };
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(modifiedTestDirPath, FileTypes.html).ToList();
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
                 checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
@@ -78,7 +76,10 @@ namespace YoCode
                 });
 
                 // Git repo used
-                checkList.Add(new GitCheck(modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+
+                // Code score test
+                checkList.Add(new DuplicationCheck(dir).DuplicationEvidence);
             }
 
             return checkList;
