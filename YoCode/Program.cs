@@ -36,10 +36,6 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            //Run the duplication check, showed how to get the final answer from that class.
-            var dcc = new DuplicationCheck(modifiedTestDirPath, originalTestDirPath, CMDToolsPath);
-            dcc.ExecuteTheCheck();
-            bool isCodeLessDuplicate = dcc.FinalResult;
 
             var fileReader = new FileImport();
 

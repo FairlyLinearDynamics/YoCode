@@ -33,6 +33,9 @@ namespace YoCode
         string StrCodeBaseCost { get; set; }
         string StrTotalDuplicateCost { get; set; }
 
+        public FeatureEvidence DuplicationCheckEvidence { get; private set; } = new FeatureEvidence();
+
+
         public DuplicationCheck(string modifiedPath,string originalPath, string CMDtoolsDirConfig)
         {
             CMDtoolsDir = CMDtoolsDirConfig;
@@ -41,7 +44,9 @@ namespace YoCode
             workingDir = CMDtoolsDir;
 
             modiArguments = Path.Combine(modifiedPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(originalPath, fileNameChecked) + outputArg + outputFile;
+            origArguments = Path.Combine(originalPath, fileNameChecked) + outputArg + outputFile;            
+            
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck() {
