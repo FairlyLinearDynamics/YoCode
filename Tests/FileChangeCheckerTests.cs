@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using Xunit.Abstractions;
 using FluentAssertions;
 using System.IO;
 using YoCode;
@@ -21,8 +22,12 @@ namespace YoCode_XUnit
         List<FileContent> fakeList1;
         List<FileContent> fakeList2;
 
-        public FileChangeCheckerTests()
+        private readonly ITestOutputHelper _output;
+
+        public FileChangeCheckerTests(ITestOutputHelper output)
         {
+            _output = output;
+
             fakeDir = mock.Object;
 
             fakeList1 = new List<FileContent>();
@@ -108,6 +113,7 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths2);
 
             var fileCheck = new FileChangeChecker(fakeDir);
+            _output.WriteLine($"{fileCheck.FileChangeEvidence.EvidencePresent}");
             fileCheck.FileChangeEvidence.FeatureImplemented.Should().Be(true);
         }
     }

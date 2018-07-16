@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Linq;
+using System.Diagnostics;
 
 namespace YoCode
 {
@@ -17,44 +18,46 @@ namespace YoCode
             ProjectIsModified();
         }
 
-        public bool ProjectIsModified()
+        private void ProjectIsModified()
         {
-            if (directory.OriginalPaths.Count() != directory.ModifiedPaths.Count())
-            {
-                FileChangeEvidence.FeatureImplemented = true;
-                return true;
-            }
-            else
-            {
-                var originalFileStreams = directory.ReturnOriginalPathFileStream().OrderBy((c => c.path));
-                var modifiedFileStreams = directory.ReturnModifiedPathFileStream().OrderBy((c => c.path));
 
-                try
+            var originalFileStreams = directory.ReturnOriginalPathFileStream();//.OrderBy((c => Path.GetFileName(c.path)));
+            var modifiedFileStreams = directory.ReturnModifiedPathFileStream();//.OrderBy((c => Path.GetFileName( c.path)));
+
+            try
+            {
+                foreach (var modified in modifiedFileStreams)
                 {
-                    var streamsList = originalFileStreams.Zip(modifiedFileStreams, (o, m) => (original: o, modified: m));
 
-                    foreach (var (original, modified) in streamsList)
+                    var similar = originalFileStreams.Where(a => Path.GetFileName(a.path).Equals(Path.GetFileName(modified.path)));
+
+                    if (similar.Count() != 0)
                     {
-                        if (FileIsModified(original.content, modified.content))
+                        if (FileIsModified(similar.First().content, modified.content))
                         {
-                            FileChangeEvidence.GiveEvidence($"\\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
+                            FileChangeEvidence.GiveEvidence($"Changed file: \\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
+                            Debugger.Break();
                         }
                     }
-                    if (FileChangeEvidence.EvidencePresent)
+                    else
                     {
-                        FileChangeEvidence.FeatureImplemented = true;
-                        return true;
+                        FileChangeEvidence.GiveEvidence($"Added file: \\{new DirectoryInfo(modified.path).Parent.Name}\\{Path.GetFileName(modified.path)}");
+
                     }
-                    return false;
-                }
-                finally
-                {
-                    foreach (var o in originalFileStreams) o.content.Dispose();
-                    foreach (var m in modifiedFileStreams) m.content.Dispose();
                 }
 
+                if (FileChangeEvidence.EvidencePresent)
+                {
+                    FileChangeEvidence.FeatureImplemented = true;
+                }
+            }
+            finally
+            {
+                foreach (var o in originalFileStreams) o.content.Dispose();
+                foreach (var m in modifiedFileStreams) m.content.Dispose();
             }
         }
+
         private bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
             using (var sha1 = SHA1.Create())
