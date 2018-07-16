@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
-    class DuplicationCheck
+    public class DuplicationCheck
     {       
         string CMDtoolsDir;
         string CMDtoolFileName = "dupfinder.exe"; 
@@ -34,7 +34,6 @@ namespace YoCode
         string StrTotalDuplicateCost { get; set; }
 
         //public static IConfiguration Configuration { get; set; }
-
 
 
         public DuplicationCheck(string modifiedPath,string originalPath, string CMDtoolsDirConfig)

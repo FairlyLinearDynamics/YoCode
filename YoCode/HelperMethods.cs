@@ -47,12 +47,7 @@ namespace YoCode
                 }
             }
             return list;
-
         }
-
-
-
-
 
     }
 }
