@@ -34,7 +34,7 @@ namespace YoCode
 
         public static List<int> GetNumbersInALine(this string line)
         {
-            string expr = @"\D+";
+            const string expr = @"\D+";
 
             string[] numbers = Regex.Split(line, expr);
             var list = new List<int>();
@@ -49,5 +49,9 @@ namespace YoCode
             return list;
         }
 
+        public static string GetLineWithOneKeyword(this string line, string keyword)
+        {
+            return line.GetLineWithAllKeywords(new List<string> { keyword });
+        }
     }
 }
