@@ -10,7 +10,7 @@ namespace YoCode
         // TODO: find other way of running .dll file instead of hardcoding the name 
         // TODO: find a way to specify location of appsettings.json file when running
         private string Argument { get; } = @"bin\Debug\netcoreapp1.1\UnitConverterWebApp.dll";
-        private string Output { get; }
+        public string Output { get; }
         private string ErrorOutput { get; }
 
         public ProjectRunner(string workingDir)
@@ -28,12 +28,10 @@ namespace YoCode
 
         public string GetPort()
         {
-            string portKeyword = "Now listening on: ";
-            string line = Output.GetLineWithOneKeyword(portKeyword);
-            string[] splitLine = line.Split(portKeyword, StringSplitOptions.None);
-            try { return splitLine[1]; }
-            catch(IndexOutOfRangeException) { }
-            return "";
+            const string portKeyword = "Now listening on: ";
+            var line = Output.GetLineWithOneKeyword(portKeyword);
+            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
+            return splitLine.Length > 1 ? splitLine[1] : "";
         }
 
         public string GetErrorOutput()

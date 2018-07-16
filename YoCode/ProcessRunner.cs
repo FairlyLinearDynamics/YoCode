@@ -67,7 +67,7 @@ namespace YoCode
 
             var loopRetryDelay = TimeSpan.FromSeconds(0.5);
             var numberOfTimesToRetry = (int)(timeout / loopRetryDelay);
-            int numberOfRetries = 0;
+            var numberOfRetries = 0;
 
             while (!p.HasExited
                 && !output.ToString().ContainsAny(keywords)
@@ -78,10 +78,10 @@ namespace YoCode
                 numberOfRetries++;
             }
 
-            try { p.Kill(); }
-            catch (InvalidOperationException) { }
-            /*if this exception occurs that means the process has
-            already exited so no need to do anything*/
+            if(!p.HasExited)
+            {
+                p.Kill();
+            }
         }
 
         private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)

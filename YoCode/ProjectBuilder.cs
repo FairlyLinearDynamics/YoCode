@@ -37,29 +37,25 @@ namespace YoCode
 
         public bool BuildSuccessful()
         {
-            string buildLine = Output.GetLineWithOneKeyword("Build succeeded");
+            var buildLine = Output.GetLineWithOneKeyword("Build succeeded");
 
             return buildLine != "";
         }
 
         public int GetNumberOfWarnings()
         {
-            string warningLine = Output.GetLineWithOneKeyword("Warning(s)");
-            List<int> numbers = warningLine.GetNumbersInALine();
+            var warningLine = Output.GetLineWithOneKeyword("Warning(s)");
+            var numbers = warningLine.GetNumbersInALine();
 
-            try { return numbers[0]; }
-            catch (ArgumentOutOfRangeException) { }
-            return -1;
+            return numbers.Count > 0 ? numbers[0] : -1;
         }
 
         public int GetNumberOfErrors()
         {
-            string errorLine = Output.GetLineWithOneKeyword("Error(s)");
-            List<int> numbers = errorLine.GetNumbersInALine();
+            var errorLine = Output.GetLineWithOneKeyword("Error(s)");
+            var numbers = errorLine.GetNumbersInALine();
 
-            try { return numbers[0]; }
-            catch (ArgumentOutOfRangeException) { }
-            return -1;
+            return numbers.Count > 0 ? numbers[0] : -1;
         }
     }
 }
