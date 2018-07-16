@@ -3,16 +3,21 @@ using FluentAssertions;
 using YoCode;
 using System.Collections.Generic;
 using System;
+using Moq;
 
 namespace YoCode_XUnit
 {
     public class PathManagerTests
     {
+        // TODO: fix test, need to somehow mock file path instead of passing null
         [Fact]
         public void GetFilesInDirectoryCorrectlyReturnsListOfFiles()
         {
-            List<string> fakeList1 = new List<string>();
-            List<string> fakeList2 = new List<string>();
+            Mock<IPathManager> mock = new Mock<IPathManager>();
+            var fakeDir = mock.Object;
+
+            string fakeList1 = @"\";
+            string fakeList2 = @"\";
 
             PathManager dir = new PathManager(fakeList1, fakeList2);
 

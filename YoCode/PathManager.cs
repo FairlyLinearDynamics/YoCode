@@ -11,15 +11,20 @@ namespace YoCode
         const string CS = "*.cs";
         const string SLN = "*.sln";
 
+        public string originalTestDirPath { get; set; }
+        public string modifiedTestDirPath { get; set; }
         public IEnumerable<string> OriginalPaths { get; }
         public IEnumerable<string> ModifiedPaths { get; }
 
         private readonly Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
-        public PathManager(IEnumerable<string> originalPaths, IEnumerable<string> modifiedPaths)
+        public PathManager(string originalTestDir, string modifiedTestDir)
         {
-            OriginalPaths = originalPaths;
-            ModifiedPaths = modifiedPaths;
+            originalTestDirPath = originalTestDir;
+            modifiedTestDirPath = modifiedTestDir;
+
+            OriginalPaths = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            ModifiedPaths = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
 
             fileExtensions.Add(FileTypes.cs, CS);
             fileExtensions.Add(FileTypes.css, CSS);
