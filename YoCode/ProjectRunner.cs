@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.IO;
 
@@ -10,29 +9,38 @@ namespace YoCode
         private string Process { get; } = "dotnet";
 
         // TODO: find other way of running .dll file instead of hardcoding the name 
-        // TODO: find a way to specify location of appsettings.json file when running
-        private string Argument { get; } = @"bin\Debug\";   //      netcoreapp2.0\UnitConverterWebApp.dll";
+        private string Argument { get; } = @"bin\Debug\";
         public string Output { get; }
         private string ErrorOutput { get; }
 
+        private const string PROJECT_FOLDER = @"\UnitConverterWebApp";
+
         public ProjectRunner(string workingDir)
         {
-            workingDir += @"\UnitConverterWebApp";
+            ProjectRunEvidence.FeatureTitle = "Project Run";
+            workingDir += PROJECT_FOLDER;
+            if (!Directory.Exists(workingDir))
+            {
+                ProjectRunEvidence.FeatureImplemented = false;
+                ProjectRunEvidence.GiveEvidence("UnitConverterWebApp not found");
+                return;
+            }
 
             Argument = Argument + (Path.GetFileName(Directory.GetDirectories(workingDir + "\\" + Argument).First()))+"\\UnitConverterWebApp.dll";
-  
+
             ProcessRunner processRunner = new ProcessRunner(Process, workingDir, Argument);
             processRunner.ExecuteTheCheck("Application started.");
             Output = processRunner.Output;
             ErrorOutput = processRunner.ErrorOutput;
-            ProjectRunEvidence.FeatureTitle = "Project Run";
-            ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
-
+            
             if (processRunner.TimedOut)
             {
-                ProjectRunEvidence.GiveEvidence("Timed out");
+                ProjectRunEvidence.FeatureImplemented = false;
+                ProjectRunEvidence.GiveEvidence("Timed Out");
                 return;
             }
+
+            ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
 
             if(ProjectRunEvidence.FeatureImplemented)
             {
@@ -42,8 +50,6 @@ namespace YoCode
             {
                 ProjectRunEvidence.GiveEvidence($"Error Output: {GetErrorOutput()}");
             }
-            
-
         }
 
         public bool ApplicationStarted()

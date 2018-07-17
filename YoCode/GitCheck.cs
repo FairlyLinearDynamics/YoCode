@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace YoCode
 {
@@ -17,11 +16,17 @@ namespace YoCode
         {
             ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
             pr.ExecuteTheCheck();
-          
             var Output = pr.Output;
             var LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
 
             GitEvidence.FeatureTitle = "Git was used";
+
+            if(pr.TimedOut)
+            {
+                GitEvidence.FeatureImplemented = false;
+                GitEvidence.GiveEvidence("Timed out");
+                return;
+            }
 
             GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor);
 
@@ -30,7 +35,7 @@ namespace YoCode
                 GitEvidence.GiveEvidence($"Commit outputs: \n{Output}\nLast Author: {LastAuthor}");
             }
         }
-      
+
         public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
@@ -50,6 +55,6 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public FeatureEvidence GitEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
     }
 }

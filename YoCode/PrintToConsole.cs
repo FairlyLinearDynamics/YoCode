@@ -14,7 +14,7 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine("Welcome to the YoCode!");
+            Console.WriteLine("Welcome to YoCode!");
             Console.WriteLine();
             Console.WriteLine();
         }
