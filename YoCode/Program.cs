@@ -91,6 +91,8 @@ namespace YoCode
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+
+                
             }
 
             return checkList;

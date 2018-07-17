@@ -60,7 +60,7 @@ namespace YoCode
             Console.WriteLine("\nIf you would like to see list of commands, type: --help");
         }
 
-        public void PrintDupfinderHelp()
+        public static void PrintDupfinderHelp()
         {          
             Console.WriteLine("\nTo run this application you will have to install Command Line Tools by Jetbrains\n" +
                 "Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&code=RSCLT" +
