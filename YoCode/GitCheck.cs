@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace YoCode
 {
@@ -15,22 +14,23 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner("git.exe", repositoryPath, "log");
-            pr.ExecuteTheCheck();
-          
-            var Output = pr.Output;
-            var LastAuthor = Output.GetLineWithAllKeywords(GetKeyWords());
+            var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
 
-            GitEvidence.FeatureTitle = "Git was used";
+            var evidence = FeatureRunner.Execute(processDetails, "Git was used");
+            if (evidence.FeatureFailed)
+            {
+                return;
+            }
 
-            GitEvidence.FeatureImplemented = GitHasBeenUsed(LastAuthor);
+            var lastAuthor = evidence.Output.GetLineWithAllKeywords(GetKeyWords());
+            GitEvidence.FeatureImplemented = GitHasBeenUsed(lastAuthor);
 
             if (GitEvidence.FeatureImplemented)
             {
-                GitEvidence.GiveEvidence($"Commit outputs: \n{Output}\nLast Author: {LastAuthor}");
+                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast Author: {lastAuthor}");
             }
         }
-      
+
         public static bool GitHasBeenUsed(string lastAuthor)
         {
             if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
@@ -50,6 +50,6 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public FeatureEvidence GitEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
     }
 }

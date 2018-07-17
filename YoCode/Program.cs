@@ -10,7 +10,7 @@ namespace YoCode
     {
         public static IConfiguration Configuration;
 
-        static string CMDToolsPath;
+        private static string CMDToolsPath;
 
         static void Main(string[] args)
         {
@@ -50,7 +50,7 @@ namespace YoCode
 
             var checkList = PerformChecks(dir);
 
-            if (checkList.Count() != 0)
+            if (checkList.Any())
             {
                 consoleOutput.PrintFinalResults(checkList);
             }
@@ -86,7 +86,10 @@ namespace YoCode
                 // Git repo used
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
-                // Code score test
+                // Project build
+                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
+
+                // Duplication check
                 checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
 
                 // Project run test

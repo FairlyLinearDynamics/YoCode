@@ -14,12 +14,7 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine("Welcome to the YoCode!");
-
-            var version = ThisAssembly.AssemblyInformationalVersion;
-
-
-            Console.WriteLine(version.Substring);
+            Console.WriteLine("Welcome to YoCode!");
             Console.WriteLine();
             Console.WriteLine();
         }

@@ -8,7 +8,7 @@ namespace YoCode
 {
     public class FileChangeChecker
     {
-        IPathManager directory;
+        private readonly IPathManager directory;
 
         // TODO: Fix bugs #46
         public FileChangeChecker(IPathManager dir)
@@ -20,7 +20,6 @@ namespace YoCode
 
         private void ProjectIsModified()
         {
-
             var originalFileStreams = directory.ReturnOriginalPathFileStream();
             var modifiedFileStreams = directory.ReturnModifiedPathFileStream();
 
@@ -28,11 +27,10 @@ namespace YoCode
             {
                 foreach (var modified in modifiedFileStreams)
                 {
-
                     var similar = originalFileStreams.Where(a => Path.GetRelativePath(directory.originalTestDirPath,a.path).Equals(
                         Path.GetRelativePath(directory.modifiedTestDirPath,modified.path)));
 
-                    if (similar.Count() != 0)
+                    if (similar.Any())
                     {
                         if (FileIsModified(similar.First().content, modified.content))
                         {
@@ -65,11 +63,11 @@ namespace YoCode
 
                     string modifiedCheckSum = BitConverter.ToString(sha1.ComputeHash(modifiedFile));
 
-                    return originalChecksum == modifiedCheckSum ? false : true;
+                    return originalChecksum != modifiedCheckSum;
             }
         }
 
-        public FeatureEvidence FileChangeEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence FileChangeEvidence { get; } = new FeatureEvidence();
     }
 }
 

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Microsoft.Extensions.Configuration;
 
 namespace YoCode
 {
     public class DuplicationCheck
     {
         private readonly string CMDtoolsDir;
-        private readonly string CMDtoolFileName = "dupfinder.exe"; 
+        private readonly string CMDtoolFileName = "dupfinder.exe";
 
         private readonly string fileNameChecked = "UnitConverterWebApp.sln";
         private readonly string outputFile = "report.xml";
@@ -20,16 +18,16 @@ namespace YoCode
         private readonly string modiArguments;
         private readonly string origArguments;
 
-        string Output { get; set; }
+        private string Output { get; set; }
 
-        int modiCodeBaseCost { get; set; }
-        int modiDuplicateCost { get; set; }
+        private int ModiCodeBaseCost { get; set; }
+        private int ModiDuplicateCost { get; set; }
 
-        int origCodeBaseCost { get; set; }
-        int origDuplicateCost { get; set; }
+        private int OrigCodeBaseCost { get; set; }
+        private int OrigDuplicateCost { get; set; }
 
-        string StrCodeBaseCost { get; set; }
-        string StrTotalDuplicateCost { get; set; }
+        private string StrCodeBaseCost { get; set; }
+        private string StrTotalDuplicateCost { get; set; }
 
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
         {
@@ -40,37 +38,45 @@ namespace YoCode
             workingDir = CMDtoolsDir;
 
             modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;            
-            
+            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
+
             ExecuteTheCheck();
         }
 
-        public void ExecuteTheCheck() {
+        private void ExecuteTheCheck() {
+            var origEvidence = RunAndGatherEvidence(origArguments);
+            var modEvidence = RunAndGatherEvidence(modiArguments);
 
-            RunOneCheck(origArguments);
-            origCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
-            origDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-
-            RunOneCheck(modiArguments);
-            modiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
-            modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
+            if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
+            {
+                DuplicationEvidence.SetFailed($"Failed: Original={origEvidence.FeatureFailed}, Modified={modEvidence.FeatureFailed}");
+                return;
+            }
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.GiveEvidence($"Original\nCodebase cost: {origCodeBaseCost}\nDuplicate cost: {origDuplicateCost}" +
-                $"\n\nModified\nCodebase cost {modiCodeBaseCost}\nDuplicate cost: {modiDuplicateCost}");
+            DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        public void RunOneCheck(string args)
+        private FeatureEvidence RunAndGatherEvidence(string arguments)
         {
-            ProcessRunner proc = new ProcessRunner(processName, workingDir, args);
-            proc.ExecuteTheCheck();
-
-            Output = GetResults(Path.Combine(workingDir,outputFile));
-
-            StrCodeBaseCost = Output.GetLineWithAllKeywords(getCodeBaseCostKeyword());
-            StrTotalDuplicateCost = Output.GetLineWithAllKeywords(getTotalDuplicatesCostKeywords());
+            var evidence = RunOneCheck(arguments);
+            var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
+            var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
+            var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
+            var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
+            evidence.GiveEvidence($"Original\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+            return evidence;
         }
-    
+
+        private FeatureEvidence RunOneCheck(string args)
+        {
+            var proc = new ProcessDetails(processName, workingDir, args);
+            var evidence = FeatureRunner.Execute(proc, "Check duplication");
+
+            evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
+            return evidence;
+        }
+
         public string GetResults(string path)
         {
             return File.ReadAllText(path);
@@ -78,15 +84,15 @@ namespace YoCode
 
         public bool HasTheCodeImproved()
         {
-            return origDuplicateCost > modiDuplicateCost ? true : false;        
+            return OrigDuplicateCost > ModiDuplicateCost;
         }
 
-        public List<String> getCodeBaseCostKeyword()
+        public List<String> GetCodeBaseCostKeyword()
         {
             return new List<string> { "<CodebaseCost>" };
         }
 
-        public List<String> getTotalDuplicatesCostKeywords()
+        public List<String> GetTotalDuplicatesCostKeywords()
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }
