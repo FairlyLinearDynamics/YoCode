@@ -22,8 +22,7 @@ namespace YoCode
 
             if(Process.TimedOut || GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1)
             {
-                ProjectBuilderEvidence.FeatureImplemented = false;
-                ProjectBuilderEvidence.GiveEvidence("Timed Out");
+                ProjectBuilderEvidence.SetFailed("Timed Out");
                 return;
             }
 
@@ -31,7 +30,7 @@ namespace YoCode
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {
-                ProjectBuilderEvidence.GiveEvidence($"Error message: {GetErrorOutput(Process.Output)}");
+                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Process.Output)}");
             }
         }
 
@@ -51,24 +50,26 @@ namespace YoCode
             return "";
         }
 
-        public bool BuildSuccessful()
+        private bool BuildSuccessful()
         {
             var buildLine = Output.GetLineWithOneKeyword("Build succeeded");
 
             return buildLine != "";
         }
 
-        public int GetNumberOfWarnings()
+        private int GetNumberOfWarnings()
         {
-            var warningLine = Output.GetLineWithOneKeyword("Warning(s)");
-            var numbers = warningLine.GetNumbersInALine();
-
-            return numbers.Count > 0 ? numbers[0] : -1;
+            return GetReportedNumber("Warning(s)");
         }
 
-        public int GetNumberOfErrors()
+        private int GetNumberOfErrors()
         {
-            var errorLine = Output.GetLineWithOneKeyword("Error(s)");
+            return GetReportedNumber("Error(s)");
+        }
+
+        private int GetReportedNumber(string keyword)
+        {
+            var errorLine = Output.GetLineWithOneKeyword(keyword);
             var numbers = errorLine.GetNumbersInALine();
 
             return numbers.Count > 0 ? numbers[0] : -1;

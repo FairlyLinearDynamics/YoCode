@@ -43,40 +43,38 @@ namespace YoCode
             ExecuteTheCheck();
         }
 
-        public void ExecuteTheCheck() {
-            RunOneCheck(origArguments);
-            OrigCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
-            OrigDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
+        private void ExecuteTheCheck() {
+            var origEvidence = RunAndGatherEvidence(origArguments);
+            var modEvidence = RunAndGatherEvidence(modiArguments);
 
-            RunOneCheck(modiArguments);
-            ModiCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
-            ModiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
-
-            if(DuplicationEvidence.Evidence.Count > 0)
+            if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
+                DuplicationEvidence.SetFailed($"Failed: Original={origEvidence.FeatureFailed}, Modified={modEvidence.FeatureFailed}");
                 return;
             }
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.GiveEvidence($"Original\nCodebase cost: {OrigCodeBaseCost}\nDuplicate cost: {OrigDuplicateCost}" +
-                $"\n\nModified\nCodebase cost {ModiCodeBaseCost}\nDuplicate cost: {ModiDuplicateCost}");
+            DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        public void RunOneCheck(string args)
+        private FeatureEvidence RunAndGatherEvidence(string arguments)
         {
-            ProcessRunner proc = new ProcessRunner(processName, workingDir, args);
-            proc.ExecuteTheCheck();
+            var evidence = RunOneCheck(arguments);
+            var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
+            var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
+            var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
+            var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
+            evidence.GiveEvidence($"Original\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+            return evidence;
+        }
 
-            Output = GetResults(Path.Combine(workingDir,outputFile));
+        private FeatureEvidence RunOneCheck(string args)
+        {
+            var proc = new ProcessDetails(processName, workingDir, args);
+            var evidence = FeatureRunner.Execute(proc, "Check duplication");
 
-            StrCodeBaseCost = Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
-            StrTotalDuplicateCost = Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
-
-            if(proc.TimedOut && DuplicationEvidence.Evidence.Count == 0)
-            {
-                DuplicationEvidence.FeatureImplemented = false;
-                DuplicationEvidence.GiveEvidence("Timed Out");
-            }
+            evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
+            return evidence;
         }
 
         public string GetResults(string path)

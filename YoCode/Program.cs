@@ -50,7 +50,7 @@ namespace YoCode
 
             var checkList = PerformChecks(dir);
 
-            if (checkList.Count != 0)
+            if (checkList.Any())
             {
                 consoleOutput.PrintFinalResults(checkList);
             }
