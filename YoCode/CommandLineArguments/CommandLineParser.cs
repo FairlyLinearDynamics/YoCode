@@ -9,11 +9,11 @@ namespace YoCode
     public class CommandLineParser
     {
         List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP };
-        List<SplitArg> currentCommands;
+        private List<SplitArg> currentCommands;
         
         public CommandLineParser(string[] args)
         {
-            currentCommands = args.Select(arg => CommandExtractor.ArgsSplitter(arg)).ToList();
+            currentCommands = args.Select(CommandExtractor.ArgsSplitter).ToList();
         }
 
         public InputResult Parse()
