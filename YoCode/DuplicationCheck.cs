@@ -7,18 +7,18 @@ using Microsoft.Extensions.Configuration;
 namespace YoCode
 {
     public class DuplicationCheck
-    {       
-        string CMDtoolsDir;
-        string CMDtoolFileName = "dupfinder.exe"; 
+    {
+        private readonly string CMDtoolsDir;
+        private readonly string CMDtoolFileName = "dupfinder.exe"; 
 
-        string fileNameChecked = "UnitConverterWebApp.sln";
-        string outputFile = "report.xml";
-        string outputArg = " -o=\"";
+        private readonly string fileNameChecked = "UnitConverterWebApp.sln";
+        private readonly string outputFile = "report.xml";
+        private readonly string outputArg = " -o=\"";
 
-        string processName;
-        string workingDir;
-        string modiArguments;
-        string origArguments;
+        private readonly string processName;
+        private readonly string workingDir;
+        private readonly string modiArguments;
+        private readonly string origArguments;
 
         string Output { get; set; }
 
@@ -56,8 +56,8 @@ namespace YoCode
             modiDuplicateCost = StrTotalDuplicateCost.GetNumbersInALine()[0];
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.GiveEvidence($"Original code score: {origCodeBaseCost}\nModified code score: {modiCodeBaseCost}" +
-                $"\nOriginal code duplication score: {origDuplicateCost}\nModified code duplication score: {modiDuplicateCost}");
+            DuplicationEvidence.GiveEvidence($"Original\nCodebase cost: {origCodeBaseCost}\nDuplicate cost: {origDuplicateCost}" +
+                $"\n\nModified\nCodebase cost {modiCodeBaseCost}\nDuplicate cost: {modiDuplicateCost}");
         }
 
         public void RunOneCheck(string args)
@@ -91,6 +91,6 @@ namespace YoCode
             return new List<string> { "<TotalDuplicatesCost>" };
         }
 
-        public FeatureEvidence DuplicationEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence DuplicationEvidence { get; } = new FeatureEvidence();
     }
 }

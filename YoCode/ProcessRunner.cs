@@ -77,6 +77,10 @@ namespace YoCode
                 Thread.Sleep(loopRetryDelay);
                 numberOfRetries++;
             }
+            if(numberOfRetries == numberOfTimesToRetry)
+            {
+                TimedOut = true;
+            }
 
             if(!p.HasExited)
             {
