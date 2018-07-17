@@ -18,8 +18,7 @@ namespace YoCode
 
             var version = ThisAssembly.AssemblyInformationalVersion;
 
-
-            Console.WriteLine(version.Substring);
+            Console.WriteLine(version);
             Console.WriteLine();
             Console.WriteLine();
         }
