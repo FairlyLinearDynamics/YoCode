@@ -14,6 +14,8 @@ namespace YoCode
         private TestStats stats;
         private List<int> tempStats;
 
+        const int TEST_PASS_THRESHOLD = 80;
+
         public TestCountCheck(string repositoryPath)
         {
             TestCountEvidence.FeatureTitle = "Tests";
@@ -32,7 +34,10 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            TestCountEvidence.GiveEvidence(Output);
+            TestCountEvidence.FeatureImplemented = stats.percentagePassed > TEST_PASS_THRESHOLD;
+
+            TestCountEvidence.GiveEvidence($"Tests passed: {stats.testsPassed}\nTests failed: {stats.testsFailed}\nTests skipped: {stats.testsSkipped}" +
+                $"\nTotal number of Tests: {stats.totalTests}\nTests passed(%): {stats.percentagePassed}");
         }
 
         public void StoreCalculations(List<int> tempStats)
