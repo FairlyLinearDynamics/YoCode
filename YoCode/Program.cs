@@ -84,10 +84,10 @@ namespace YoCode
                 });
 
                 // Git repo used
-                //checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Code score test
-                //checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
