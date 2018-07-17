@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -7,26 +6,32 @@ namespace YoCode
     // TODO: handle error return values (-1 for GetNumberOfErrors and GetNumberOfWarnings)
     public class ProjectBuilder
     {
-        public ProcessRunner ProcessRunner { get; }
+        public ProcessRunner Process { get; }
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
-        private string Output;
+        private readonly string Output;
 
         public ProjectBuilder(string workingDir)
         {
-            ProcessRunner = new ProcessRunner(ProcessName, workingDir, Arguments);
-            ProcessRunner.ExecuteTheCheck();
+            Process = new ProcessRunner(ProcessName, workingDir, Arguments);
+            Process.ExecuteTheCheck();
 
-            Output = ProcessRunner.Output;
+            Output = Process.Output;
 
             ProjectBuilderEvidence.FeatureTitle = "Project build";
+
+            if(Process.TimedOut || GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1)
+            {
+                ProjectBuilderEvidence.SetFailed("Timed Out");
+                return;
+            }
+
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {
-                ProjectBuilderEvidence.GiveEvidence($"Error message: {GetErrorOutput(ProcessRunner.Output)}");
+                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Process.Output)}");
             }
-            
         }
 
         public static string GetErrorOutput(string output)
@@ -45,29 +50,31 @@ namespace YoCode
             return "";
         }
 
-        public bool BuildSuccessful()
+        private bool BuildSuccessful()
         {
             var buildLine = Output.GetLineWithOneKeyword("Build succeeded");
 
             return buildLine != "";
         }
 
-        public int GetNumberOfWarnings()
+        private int GetNumberOfWarnings()
         {
-            var warningLine = Output.GetLineWithOneKeyword("Warning(s)");
-            var numbers = warningLine.GetNumbersInALine();
-
-            return numbers.Count > 0 ? numbers[0] : -1;
+            return GetReportedNumber("Warning(s)");
         }
 
-        public int GetNumberOfErrors()
+        private int GetNumberOfErrors()
         {
-            var errorLine = Output.GetLineWithOneKeyword("Error(s)");
+            return GetReportedNumber("Error(s)");
+        }
+
+        private int GetReportedNumber(string keyword)
+        {
+            var errorLine = Output.GetLineWithOneKeyword(keyword);
             var numbers = errorLine.GetNumbersInALine();
 
             return numbers.Count > 0 ? numbers[0] : -1;
         }
 
-        public FeatureEvidence ProjectBuilderEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence ProjectBuilderEvidence { get; set; } = new FeatureEvidence();
     }
 }
