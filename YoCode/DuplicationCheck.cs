@@ -33,9 +33,9 @@ namespace YoCode
 
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
         {
-
             try
             {
+            CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
@@ -55,8 +55,6 @@ namespace YoCode
         }
 
         public void ExecuteTheCheck() {
-
-
 
             RunOneCheck(origArguments);
             origCodeBaseCost = StrCodeBaseCost.GetNumbersInALine()[0];
