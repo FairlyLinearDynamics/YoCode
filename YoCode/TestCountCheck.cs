@@ -23,9 +23,14 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
-            pr.ExecuteTheCheck();
-            Output = pr.Output;
+            var pr = new ProcessDetails(processName, workingDir, arguments);
+            var evidence = FeatureRunner.Execute(pr, "Unit test check");
+            if (evidence.FeatureFailed)
+            {
+                return;
+            }
+
+            Output = evidence.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.IO;
 
@@ -10,29 +9,38 @@ namespace YoCode
         private string Process { get; } = "dotnet";
 
         // TODO: find other way of running .dll file instead of hardcoding the name 
-        // TODO: find a way to specify location of appsettings.json file when running
-        private string Argument { get; } = @"bin\Debug\";   //      netcoreapp2.0\UnitConverterWebApp.dll";
+        private string Argument { get; } = @"bin\Debug\";
         public string Output { get; }
         private string ErrorOutput { get; }
 
+        private const string projectFolder = @"\UnitConverterWebApp";
+
         public ProjectRunner(string workingDir)
         {
-            workingDir += @"\UnitConverterWebApp";
+            ProjectRunEvidence.FeatureTitle = "Project Run";
+            workingDir += projectFolder;
+            if (!Directory.Exists(workingDir))
+            {
+                ProjectRunEvidence.SetFailed("UnitConverterWebApp not found");
+                return;
+            }
 
-            Argument = Argument + (Path.GetFileName(Directory.GetDirectories(workingDir + "\\" + Argument).First()))+"\\UnitConverterWebApp.dll";
-  
-            ProcessRunner processRunner = new ProcessRunner(Process, workingDir, Argument);
+            var binDebugFolder = Path.Combine(workingDir, Argument);
+            var netCoreOutputFolder = Directory.GetDirectories(binDebugFolder).First();
+            Argument = Path.Combine(Argument, Path.GetFileName(netCoreOutputFolder), "UnitConverterWebApp.dll");
+
+            var processRunner = new ProcessRunner(Process, workingDir, Argument);
             processRunner.ExecuteTheCheck("Application started.");
             Output = processRunner.Output;
             ErrorOutput = processRunner.ErrorOutput;
-            ProjectRunEvidence.FeatureTitle = "Project Run";
-            ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
-
+            
             if (processRunner.TimedOut)
             {
-                ProjectRunEvidence.GiveEvidence("Timed out");
+                ProjectRunEvidence.SetFailed("Timed Out");
                 return;
             }
+
+            ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
 
             if(ProjectRunEvidence.FeatureImplemented)
             {
@@ -40,10 +48,8 @@ namespace YoCode
             }
             else
             {
-                ProjectRunEvidence.GiveEvidence($"Error Output: {GetErrorOutput()}");
+                ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
-            
-
         }
 
         public bool ApplicationStarted()
@@ -57,11 +63,6 @@ namespace YoCode
             var line = Output.GetLineWithOneKeyword(portKeyword);
             var splitLine = line.Split(portKeyword, StringSplitOptions.None);
             return splitLine.Length > 1 ? splitLine[1] : "";
-        }
-
-        public string GetErrorOutput()
-        {
-            return ErrorOutput;
         }
 
         public FeatureEvidence ProjectRunEvidence { get; } = new FeatureEvidence();
