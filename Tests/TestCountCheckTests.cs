@@ -44,8 +44,6 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_CountNumberOfTests()
         {
-            var tcc = new TestCountCheck("fake path");
-
             string actual = "ffff125fff 1x4 adasdas29 aassss11";
             var expected = new List<int>
             {
