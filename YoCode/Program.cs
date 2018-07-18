@@ -25,13 +25,13 @@ namespace YoCode
 
             if (result.helpAsked)
             {
-                consoleOutput.PrintHelp();
+                //consoleOutput.PrintHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.PrintError(result.errors);
+                //consoleOutput.PrintError(result.errors);
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace YoCode
 
             if (modifiedTest == null || originalTest == null)
             {
-                consoleOutput.NothingInDirectory();
+                //consoleOutput.NothingInDirectory();
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace YoCode
             }
             else
             {
-                consoleOutput.LazinessEvidence();
+                //consoleOutput.LazinessEvidence();
             }
         }
 
