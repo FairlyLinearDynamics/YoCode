@@ -10,6 +10,9 @@ namespace YoCode
         public GitCheck(string path, IFeatureRunner featureRunner)
         {
             repositoryPath = path;
+            GitEvidence.FeatureTitle = "Git was used";
+
+
             this.featureRunner = featureRunner;
             ExecuteTheCheck();
         }
@@ -29,7 +32,7 @@ namespace YoCode
 
             if (GitEvidence.FeatureImplemented)
             {
-                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast Author: {lastAuthor}");
+                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast {lastAuthor}");
             }
         }
 
