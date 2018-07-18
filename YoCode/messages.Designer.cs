@@ -61,11 +61,21 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ==========================================================.
+        ///   Looks up a localized string similar to If you would like to see list of commands, type: --help.
         /// </summary>
-        public static string Devider {
+        public static string AskForHelp {
             get {
-                return ResourceManager.GetString("Devider", resourceCulture);
+                return ResourceManager.GetString("AskForHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ==========================================================
+        ///.
+        /// </summary>
+        public static string Divider {
+            get {
+                return ResourceManager.GetString("Divider", resourceCulture);
             }
         }
         

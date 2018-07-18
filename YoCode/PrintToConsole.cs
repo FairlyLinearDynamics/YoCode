@@ -6,14 +6,22 @@ namespace YoCode
 {
     public class PrintToConsole : IPrint
     {
-        public void PrintFinalResults(List<FeatureEvidence> featureList)
+        string textToPrint;
+
+        public void AddNewLine(string text)
         {
-            throw new NotImplementedException();
+            textToPrint += text + Environment.NewLine;
         }
 
-        public void PrintLine(string text)
+        public void PrintMessage()
         {
-            Console.WriteLine(text);
+            Console.Write(textToPrint);
+            textToPrint = null;
+        }
+
+        public void PrintDiv()
+        {
+            textToPrint += messages.Divider;
         }
     }
 }

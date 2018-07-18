@@ -7,7 +7,7 @@ namespace YoCode
 {
     class Output
     {
-        PrintToConsole consoleWritter;
+        IPrint consoleWritter;
 
         public Output()
         {
@@ -17,7 +17,8 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine(YoCode.messages.Welcome);
+            consoleWritter.AddNewLine(messages.Welcome);
+            consoleWritter.PrintMessage();
         }
 
 
@@ -26,45 +27,56 @@ namespace YoCode
             var resultOutput = "";
             foreach (FeatureEvidence feature in featureList)
             {
-                resultOutput += (YoCode.messages.Devider);
-                Console.Write($"{feature.FeatureTitle}: ");
-                Console.WriteLine((feature.FeatureImplemented) ? "Yes" : "No");
-                Console.WriteLine();
                 if (feature.EvidencePresent)
                 {
-                    Console.WriteLine("Indication of above result: ");
-                    Console.WriteLine(FormatEvidence(feature));
-                    Console.WriteLine(YoCode.messages.Devider);
+                    consoleWritter.PrintDiv();
+                    consoleWritter.AddNewLine(feature.FeatureTitle);
+                    consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+                    consoleWritter.AddNewLine("Indication of above: ");
+                    consoleWritter.AddNewLine(FormatEvidence(feature));
+                    consoleWritter.PrintDiv();
+                }
+                else
+                {
+                    consoleWritter.PrintDiv();
+                    consoleWritter.AddNewLine(feature.FeatureTitle);
+                    consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+                    consoleWritter.PrintDiv();
                 }
             }
+
+            consoleWritter.PrintMessage();
         }
 
         private string FormatEvidence(FeatureEvidence evidence)
         {
             return (evidence.EvidencePresent) ?
-                evidence.Evidence.Aggregate((a, b) => $"{a}\n{b}")
+                evidence.Evidence.Aggregate((a, b) => $"{a}{Environment.NewLine}{b}")
                 : "No evidence present";
         }
 
         public void PrintWrongDirectory()
         {
-            Console.WriteLine("Invalid directory");
+            consoleWritter.AddNewLine("Invalid directory");
+            consoleWritter.PrintMessage();
         }
 
         public void PrintError(List<string> errs)
         {
-            Console.WriteLine("Error detected:");
+            var resultOutput = "";
 
-            foreach (string err in errs)
-            {
-                Console.WriteLine(err);
-            }
-            Console.WriteLine("\nIf you would like to see list of commands, type: --help");
+            resultOutput += ("Error detected:")
+                +Environment.NewLine + errs.Select(row => row + Environment.NewLine)
+                +Environment.NewLine + messages.AskForHelp;
+
+            consoleWritter.AddNewLine(resultOutput);
+            consoleWritter.PrintMessage();
         }
 
-        public static void PrintDupfinderHelp()
+        public void PrintDupfinderHelp()
         {
-            Console.WriteLine(YoCode.messages.DupFinderHelp);
+            consoleWritter.AddNewLine(messages.DupFinderHelp);
+            consoleWritter.PrintMessage();
         }
 
 
@@ -77,23 +89,26 @@ namespace YoCode
 
         public void PrintHelpMessage()
         {
-            var x = String.Format(YoCode.messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP);
-            Console.Write(x);
+            consoleWritter.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
+            consoleWritter.PrintMessage();
         }
 
         public void PrintFireplace()
         {
-            Console.WriteLine(YoCode.messages.Fireplace);
+            consoleWritter.AddNewLine(messages.Fireplace);
+            consoleWritter.PrintMessage();
         }
 
         public void LazinessEvidence()
         {
-            Console.WriteLine("Project unmodified");
+            consoleWritter.AddNewLine("Project unmodified");
+            consoleWritter.PrintMessage();
         }
 
         public void NothingInDirectory()
         {
-            Console.WriteLine("Specified directory inaccessible");
+            consoleWritter.AddNewLine("Specified directory inaccessible");
+            consoleWritter.PrintMessage();
         }
     }
 }
