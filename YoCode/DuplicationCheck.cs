@@ -17,6 +17,7 @@ namespace YoCode
         private readonly string workingDir;
         private readonly string modiArguments;
         private readonly string origArguments;
+        private readonly IFeatureRunner featureRunner;
 
         private string Output { get; set; }
 
@@ -29,19 +30,20 @@ namespace YoCode
         private string StrCodeBaseCost { get; set; }
         private string StrTotalDuplicateCost { get; set; }
 
-        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
+        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
-            try
-            {
             CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
+            this.featureRunner = featureRunner;
 
             modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
             origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
 
-            ExecuteTheCheck();
+            try
+            {
+                ExecuteTheCheck();
             }
             catch(Exception e)
             {
@@ -50,6 +52,7 @@ namespace YoCode
                 "Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&code=RSCLT" +
                 "After you downloaded it please specify its location in appsetting.json file, which lives in the root directory of this  project ");
             }
+
         }
 
         private void ExecuteTheCheck() {
@@ -80,7 +83,7 @@ namespace YoCode
         private FeatureEvidence RunOneCheck(string args)
         {
             var proc = new ProcessDetails(processName, workingDir, args);
-            var evidence = FeatureRunner.Execute(proc, "Check duplication");
+            var evidence = featureRunner.Execute(proc, "Check duplication");
 
             evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
             return evidence;
