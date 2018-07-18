@@ -47,7 +47,7 @@ namespace YoCode
                 return;
             }
 
-            if (dir.ModifiedPaths.Any())
+            if (!dir.ModifiedPaths.Any())
             {
                 consoleOutput.LazinessEvidence();
                 return;

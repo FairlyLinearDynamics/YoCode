@@ -17,7 +17,6 @@ namespace YoCode
         public string modifiedTestDirPath { get; set; }
         public IEnumerable<string> OriginalPaths { get; }
         public IEnumerable<string> ModifiedPaths { get; }
-        public bool NoGitFound { get; }
 
         private readonly Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
         
