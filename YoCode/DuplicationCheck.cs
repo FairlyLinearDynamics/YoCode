@@ -55,8 +55,8 @@ namespace YoCode
         }
 
         private void ExecuteTheCheck() {
-            var origEvidence = RunAndGatherEvidence(origArguments);
-            var modEvidence = RunAndGatherEvidence(modiArguments);
+            var origEvidence = RunAndGatherEvidence(origArguments,"Original");
+            var modEvidence = RunAndGatherEvidence(modiArguments,"Modified");
 
             if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
@@ -68,14 +68,16 @@ namespace YoCode
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private FeatureEvidence RunAndGatherEvidence(string arguments)
+        private FeatureEvidence RunAndGatherEvidence(string arguments, string whichDir)
         {
             var evidence = RunOneCheck(arguments);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
             var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
-            evidence.GiveEvidence($"Original\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+
+            evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+
             return evidence;
         }
 

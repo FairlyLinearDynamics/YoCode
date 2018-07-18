@@ -17,6 +17,7 @@ namespace YoCode
 
         public TestCountCheck(string repositoryPath, IFeatureRunner featureRunner)
         {
+            UnitTestEvidence.FeatureTitle = "Unit Test";
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
@@ -34,6 +35,9 @@ namespace YoCode
 
             Output = evidence.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
+            UnitTestEvidence.FeatureImplemented = StatLine != null ? true :false;
+
+            UnitTestEvidence.GiveEvidence(StatLine);
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
         }
@@ -51,5 +55,9 @@ namespace YoCode
         {
             return new List<string> { "Total tests:" };
         }
+
+        public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
+
+
     }
 }

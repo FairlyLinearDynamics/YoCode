@@ -98,6 +98,9 @@ namespace YoCode
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
 
+                // Unit test test
+                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
+
                 
             }
 
