@@ -23,9 +23,10 @@ namespace YoCode
 
         public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
+            var resultOutput = "";
             foreach (FeatureEvidence feature in featureList)
             {
-                Console.WriteLine(YoCode.messages.equalsFormat);
+                resultOutput += (YoCode.messages.Devider);
                 Console.Write($"{feature.FeatureTitle}: ");
                 Console.WriteLine((feature.FeatureImplemented) ? "Yes" : "No");
                 Console.WriteLine();
@@ -33,7 +34,7 @@ namespace YoCode
                 {
                     Console.WriteLine("Indication of above result: ");
                     Console.WriteLine(FormatEvidence(feature));
-                    Console.WriteLine(YoCode.messages.equalsFormat);
+                    Console.WriteLine(YoCode.messages.Devider);
                 }
             }
         }
@@ -82,7 +83,7 @@ namespace YoCode
 
         public void PrintFireplace()
         {
-            Console.WriteLine(YoCode.messages.fireplace);
+            Console.WriteLine(YoCode.messages.Fireplace);
         }
 
         public void LazinessEvidence()

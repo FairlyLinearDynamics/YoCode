@@ -61,6 +61,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ==========================================================.
+        /// </summary>
+        public static string Devider {
+            get {
+                return ResourceManager.GetString("Devider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 
         ///To run this application you will have to install Command Line Tools by Jetbrains
         ///Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.htmlplatform=windows&amp;code=RSCLT
@@ -69,15 +78,6 @@ namespace YoCode {
         public static string DupFinderHelp {
             get {
                 return ResourceManager.GetString("DupFinderHelp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ==========================================.
-        /// </summary>
-        public static string equalsFormat {
-            get {
-                return ResourceManager.GetString("equalsFormat", resourceCulture);
             }
         }
         
@@ -96,9 +96,9 @@ namespace YoCode {
         ///                  C(__)`\ \____
         ///                      /_`\/___/.
         /// </summary>
-        public static string fireplace {
+        public static string Fireplace {
             get {
-                return ResourceManager.GetString("fireplace", resourceCulture);
+                return ResourceManager.GetString("Fireplace", resourceCulture);
             }
         }
         

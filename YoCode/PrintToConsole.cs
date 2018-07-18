@@ -13,7 +13,7 @@ namespace YoCode
 
         public void PrintLine(string text)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(text);
         }
     }
 }
