@@ -8,9 +8,10 @@ namespace YoCode
     {
         string textToPrint;
 
-        public void AddNewLine(string text)
+        public bool AddNewLine(string text)
         {
             textToPrint += text + Environment.NewLine;
+            return true;
         }
 
         public void PrintMessage()

@@ -6,7 +6,7 @@ namespace YoCode
 {
     interface IPrint
     {
-        void AddNewLine(string text);
+        bool AddNewLine(string text);
         void PrintMessage();
         void PrintDiv();
     }

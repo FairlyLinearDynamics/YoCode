@@ -24,8 +24,7 @@ namespace YoCode
 
         public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
-            var resultOutput = "";
-            foreach (FeatureEvidence feature in featureList)
+            foreach (var feature in featureList)
             {
                 if (feature.EvidencePresent)
                 {
@@ -33,7 +32,7 @@ namespace YoCode
                     consoleWritter.AddNewLine(feature.FeatureTitle);
                     consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
                     consoleWritter.AddNewLine("Indication of above: ");
-                    consoleWritter.AddNewLine(FormatEvidence(feature));
+                    printEvidence(feature);
                     consoleWritter.PrintDiv();
                 }
                 else
@@ -48,11 +47,12 @@ namespace YoCode
             consoleWritter.PrintMessage();
         }
 
-        private string FormatEvidence(FeatureEvidence evidence)
+        private void printEvidence(FeatureEvidence feature)
         {
-            return (evidence.EvidencePresent) ?
-                evidence.Evidence.Aggregate((a, b) => $"{a}{Environment.NewLine}{b}")
-                : "No evidence present";
+            foreach(var evidence in feature.Evidence)
+            {
+                consoleWritter.AddNewLine(evidence);
+            }
         }
 
         public void PrintWrongDirectory()
@@ -63,13 +63,13 @@ namespace YoCode
 
         public void PrintError(List<string> errs)
         {
-            var resultOutput = "";
 
-            resultOutput += ("Error detected:")
-                +Environment.NewLine + errs.Select(row => row + Environment.NewLine)
-                +Environment.NewLine + messages.AskForHelp;
-
-            consoleWritter.AddNewLine(resultOutput);
+            consoleWritter.AddNewLine("Error detected:");
+            foreach(var err in errs)
+            {
+                consoleWritter.AddNewLine(err);
+            }
+            consoleWritter.AddNewLine(messages.AskForHelp);
             consoleWritter.PrintMessage();
         }
 
