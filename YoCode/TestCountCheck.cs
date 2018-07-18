@@ -42,9 +42,10 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold ? true :false;
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold;
             UnitTestEvidence.GiveEvidence(StatLine);
             UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
+            UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
 
         }
 
