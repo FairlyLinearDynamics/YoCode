@@ -64,7 +64,7 @@ namespace YoCode {
         ///   Looks up a localized string similar to 
         ///To run this application you will have to install Command Line Tools by Jetbrains
         ///Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.htmlplatform=windows&amp;code=RSCLT
-        ///After you downloaded it please specify its location in appsetting.json file, which lives in the root directory of this  project.
+        ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this  project.
         /// </summary>
         public static string DupFinderHelp {
             get {

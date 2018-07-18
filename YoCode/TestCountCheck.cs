@@ -12,6 +12,8 @@ namespace YoCode
         public string StatLine { get; set; }
         public string Output { get; set; }
 
+        private int TestCountTreshold = 10;
+
         private TestStats stats;
         private List<int> tempStats;
         private readonly IFeatureRunner featureRunner;
@@ -40,7 +42,7 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > 10 ? true :false;
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold ? true :false;
             UnitTestEvidence.GiveEvidence(StatLine);
             UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
 
