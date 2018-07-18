@@ -46,16 +46,13 @@ namespace YoCode
                 return;
             }
 
-            var checkList = PerformChecks(dir);
-
-            if (checkList.Any()||!dir.ModifiedPaths.Any())
-            {
-                consoleOutput.PrintFinalResults(checkList);
-            }
-            else
+            if (dir.ModifiedPaths.Any())
             {
                 consoleOutput.LazinessEvidence();
+                return;
             }
+
+            consoleOutput.PrintFinalResults(PerformChecks(dir));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
