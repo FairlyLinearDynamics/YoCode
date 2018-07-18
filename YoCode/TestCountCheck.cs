@@ -40,7 +40,7 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 ? true :false;
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > 10 ? true :false;
             UnitTestEvidence.GiveEvidence(StatLine);
             UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
 
@@ -51,8 +51,7 @@ namespace YoCode
             stats.totalTests = tempStats[0];
             stats.testsPassed = tempStats[1];
             stats.testsFailed = tempStats[2];
-            stats.testsSkipped = tempStats[3];
-            
+            stats.testsSkipped = tempStats[3];            
         }
 
         public static List<string> GetTestKeyWords()
@@ -61,7 +60,5 @@ namespace YoCode
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
-
-
     }
 }
