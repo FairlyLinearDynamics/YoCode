@@ -3,6 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using LibGit2Sharp;
 
 namespace YoCode
 {
@@ -37,8 +38,11 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath)
+                .Where(a=>!new Repository(modifiedTestDirPath).Ignore.IsPathIgnored(Path.GetRelativePath(modifiedTestDirPath,a)));
+
             var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+
 
             if (modifiedTest == null || originalTest == null)
             {

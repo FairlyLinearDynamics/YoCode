@@ -5,6 +5,6 @@
         html,
         css,
         cs,
-        sln,
+        sln,a
     }
 }
