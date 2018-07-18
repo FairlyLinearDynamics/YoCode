@@ -14,9 +14,7 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine("Welcome to YoCode!");
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine(YoCode.messages.Welcome);
         }
 
 
@@ -24,7 +22,7 @@ namespace YoCode
         {
             foreach(FeatureEvidence feature in featureList)
             {
-                Console.WriteLine("==========================================");
+                Console.WriteLine(YoCode.messages.equalsFormat);
                 Console.Write($"{feature.FeatureTitle}: ");
                 Console.WriteLine((feature.FeatureImplemented)?"Yes":"No");
                 Console.WriteLine();
@@ -32,7 +30,7 @@ namespace YoCode
                 {
                     Console.WriteLine("Indication of above result: ");
                     Console.WriteLine(FormatEvidence(feature));
-                    Console.WriteLine("==========================================");
+                    Console.WriteLine(YoCode.messages.equalsFormat);
                 }
             }
         }
@@ -61,26 +59,27 @@ namespace YoCode
         }
 
         public static void PrintDupfinderHelp()
-        {          
-            Console.WriteLine("\nTo run this application you will have to install Command Line Tools by Jetbrains\n" +
-                "Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&code=RSCLT" +
-                "After you downloaded it please specify its location in appsetting.json file, which lives in the root directory of this  project ");
+        {
+            Console.WriteLine(YoCode.messages.DupFinderHelp);
         }
 
 
         public void PrintHelp()
-        {
+        {        
             PrintFireplace();
-            Console.WriteLine("Application takes 2 parameters: path to original test directory and path to modified test directory" +
-                $"\nPossible commands: --{CommandNames.ORIGIN}; --{CommandNames.MODIFIED}; --{CommandNames.HELP}" +
-                $"\nExample use: --{CommandNames.ORIGIN}=<path-to-original-test> --{CommandNames.MODIFIED}=<path-to-modified-test>");
+            PrintHelpMessage();
             PrintDupfinderHelp();
+        }
+
+        public void PrintHelpMessage()
+        {
+            var x = String.Format(YoCode.messages.HelpMessage, CommandNames.ORIGIN,CommandNames.MODIFIED,CommandNames.HELP);
+            Console.Write(x);
         }
 
         public void PrintFireplace()
         {
-            Console.WriteLine("   ___________________________\r\n   _|__ _________________ __|__\r\n  _|___||               ||_|__\r\n  ___|_||       )  '    ||___|_\r\n   _|__||    ( ()\\(     ||_|___\r\n  ___|_||  ( ,|,(X)'    ||___#_\r\n  _|___|| /,)/|`\\``\\\\\\  |||__/\\\r\n       ''---------------''  /  `--#\r\n       . - ------------ . #/      |\r\n     (( (((  (( ))) ))))  )\\      |\r\n       `  -   ----  __ -/\\  `.__.-#\r\n                  C(__)`\\ \\____\r\n                      /_`\\/___/\n");
-          
+            Console.WriteLine(YoCode.messages.fireplace);          
         }
 
         public void LazinessEvidence()

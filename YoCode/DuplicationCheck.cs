@@ -32,6 +32,7 @@ namespace YoCode
 
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
+
             CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
@@ -48,9 +49,7 @@ namespace YoCode
             catch(Exception e)
             {
             DuplicationEvidence.FeatureImplemented = false;
-            DuplicationEvidence.GiveEvidence("To run this application you will have to install Command Line Tools by Jetbrains\n" +
-                "Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&code=RSCLT" +
-                "After you downloaded it please specify its location in appsetting.json file, which lives in the root directory of this  project ");
+            DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
             }
 
         }
