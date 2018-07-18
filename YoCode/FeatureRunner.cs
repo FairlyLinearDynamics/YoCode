@@ -1,8 +1,13 @@
 ﻿namespace YoCode
 {
-    public static class FeatureRunner
+    public interface IFeatureRunner
     {
-        public static FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
+        FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle);
+    }
+
+    public class FeatureRunner : IFeatureRunner
+    {
+        public FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
         {
             var pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
             pr.ExecuteTheCheck();
