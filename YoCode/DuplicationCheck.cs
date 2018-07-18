@@ -55,8 +55,8 @@ namespace YoCode
         }
 
         private void ExecuteTheCheck() {
-            var origEvidence = RunAndGatherEvidence(origArguments,"Original");
-            var modEvidence = RunAndGatherEvidence(modiArguments,"Modified");
+            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(origArguments,"Original");
+            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modiArguments,"Modified");
 
             if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
@@ -64,11 +64,17 @@ namespace YoCode
                 return;
             }
 
+            OrigCodeBaseCost = origCodeBaseCost;
+            OrigDuplicateCost = origDuplicateCost;
+
+            ModiCodeBaseCost = modCodeBaseCost;
+            ModiDuplicateCost = modDuplicateCost;
+
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private FeatureEvidence RunAndGatherEvidence(string arguments, string whichDir)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string arguments, string whichDir)
         {
             var evidence = RunOneCheck(arguments);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
@@ -78,7 +84,7 @@ namespace YoCode
 
             evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
 
-            return evidence;
+            return (evidence, codebaseCost, duplicateCost);
         }
 
         private FeatureEvidence RunOneCheck(string args)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -17,11 +18,12 @@ namespace YoCode
 
         public TestCountCheck(string repositoryPath, IFeatureRunner featureRunner)
         {
-            UnitTestEvidence.FeatureTitle = "Unit Test";
+            UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
             this.featureRunner = featureRunner;
+            ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
@@ -35,11 +37,13 @@ namespace YoCode
 
             Output = evidence.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
-            UnitTestEvidence.FeatureImplemented = StatLine != null ? true :false;
-
-            UnitTestEvidence.GiveEvidence(StatLine);
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
+
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 ? true :false;
+            UnitTestEvidence.GiveEvidence(StatLine);
+            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
+
         }
 
         public void StoreCalculations(List<int> tempStats)
