@@ -38,23 +38,17 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath)
-                .Where(a=>!new Repository(modifiedTestDirPath).Ignore.IsPathIgnored(Path.GetRelativePath(modifiedTestDirPath,a)));
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
-
-
-            if (modifiedTest == null || originalTest == null)
+            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
                 consoleOutput.NothingInDirectory();
                 return;
             }
 
-            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
-
             var checkList = PerformChecks(dir);
 
-            if (checkList.Any())
+            if (checkList.Any()||!dir.ModifiedPaths.Any())
             {
                 consoleOutput.PrintFinalResults(checkList);
             }
