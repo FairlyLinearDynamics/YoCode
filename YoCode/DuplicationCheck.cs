@@ -27,9 +27,6 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
-        private string StrCodeBaseCost { get; set; }
-        private string StrTotalDuplicateCost { get; set; }
-
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
 
