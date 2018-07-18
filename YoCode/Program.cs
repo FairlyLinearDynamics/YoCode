@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using LibGit2Sharp;
+using System.Resources;
 
 namespace YoCode
 {
@@ -78,17 +79,21 @@ namespace YoCode
                     FeatureImplemented = true,
                 });
 
+                var featureRunner = new FeatureRunner();
+
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+
+                
             }
 
             return checkList;

@@ -13,18 +13,20 @@ namespace YoCode
 
         private TestStats stats;
         private List<int> tempStats;
+        private readonly IFeatureRunner featureRunner;
 
-        public TestCountCheck(string repositoryPath)
+        public TestCountCheck(string repositoryPath, IFeatureRunner featureRunner)
         {
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
+            this.featureRunner = featureRunner;
         }
 
         public void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = FeatureRunner.Execute(pr, "Unit test check");
+            var evidence = featureRunner.Execute(pr, "Unit test check");
             if (evidence.FeatureFailed)
             {
                 return;
