@@ -3,6 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using LibGit2Sharp;
 using System.Resources;
 
 namespace YoCode
@@ -38,27 +39,21 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            if (modifiedTest == null || originalTest == null)
+            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
                 consoleOutput.NothingInDirectory();
                 return;
             }
 
-            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
-
-            var checkList = PerformChecks(dir);
-
-            if (checkList.Any())
-            {
-                consoleOutput.PrintFinalResults(checkList);
-            }
-            else
+            if (!dir.ModifiedPaths.Any())
             {
                 consoleOutput.LazinessEvidence();
+                return;
             }
+
+            consoleOutput.PrintFinalResults(PerformChecks(dir));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
