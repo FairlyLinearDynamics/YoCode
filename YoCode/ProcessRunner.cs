@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 
 namespace YoCode
@@ -37,7 +36,6 @@ namespace YoCode
 
                 Output = string.Join(Environment.NewLine, output);
                 ErrorOutput = string.Join(Environment.NewLine, errorOutput);
-
         }
 
         private void WaitForExitCondition(Process p, string wait)
@@ -48,6 +46,7 @@ namespace YoCode
                 {
                     TimedOut = true;
                 }
+                KillLiveProcess(p);
                 return;
             }
 
@@ -70,9 +69,9 @@ namespace YoCode
             var numberOfRetries = 0;
 
             while (!p.HasExited
-                && !output.ToString().ContainsAny(keywords)
+                && !output.ListContainsAnyKeywords(keywords)
                 && numberOfRetries < numberOfTimesToRetry
-                && !errorOutput.ToString().ContainsAny(errorKeywords))
+                && !errorOutput.ListContainsAnyKeywords(errorKeywords))
             {
                 Thread.Sleep(loopRetryDelay);
                 numberOfRetries++;
@@ -81,11 +80,7 @@ namespace YoCode
             {
                 TimedOut = true;
             }
-
-            if(!p.HasExited)
-            {
-                p.Kill();
-            }
+            KillLiveProcess(p);     
         }
 
         private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)
@@ -120,6 +115,14 @@ namespace YoCode
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             errorOutput.Add(e.Data);
+        }
+
+        private void KillLiveProcess(Process p)
+        {
+            if (!p.HasExited)
+            {
+                p.Kill();
+            }
         }
     }
 }

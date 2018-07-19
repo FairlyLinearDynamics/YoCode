@@ -53,5 +53,17 @@ namespace YoCode
         {
             return line.GetLineWithAllKeywords(new List<string> { keyword });
         }
+
+        public static bool ListContainsAnyKeywords(this List<string> list, IEnumerable<string> keywords)
+        {
+            foreach (var keyword in keywords)
+            {
+                if (list.Contains(keyword))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
