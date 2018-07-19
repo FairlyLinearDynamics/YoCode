@@ -7,24 +7,24 @@ namespace YoCode
 {
     class Output
     {
-        IPrint printer;
+        IPrint outputWriter;
 
         public Output(IPrint printTo)
         {
-            printer = printTo;
+            outputWriter = printTo;
         }
 
         public void PrintIntroduction()
         {
-            printer.AddNewLine(messages.Welcome);
-            printer.PrintMessage();
+            outputWriter.AddNewLine(messages.Welcome);
+            outputWriter.PrintMessage();
         }
 
         public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
             foreach (var feature in featureList)
             {
-                printer.PrintDiv();
+                outputWriter.PrintDiv();
                 if (feature.EvidencePresent)
                 {
                     OutputForEvidencePresnt(feature);
@@ -33,51 +33,51 @@ namespace YoCode
                 {
                     OutputForEvidenceAbsent(feature);
                 }
-                printer.PrintDiv();
+                outputWriter.PrintDiv();
             }
 
-            printer.PrintMessage();
+            outputWriter.PrintMessage();
         }
 
         public void OutputForEvidencePresnt(FeatureEvidence feature)
         {
-            printer.AddNewLine(feature.FeatureTitle);
-            printer.AddNewLine("");
-            printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
-            printer.AddNewLine("Indication of above: ");
+            outputWriter.AddNewLine(feature.FeatureTitle);
+            outputWriter.AddNewLine("");
+            outputWriter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+            outputWriter.AddNewLine("Indication of above: ");
             ShowEvidence(feature);
         }
 
         public void OutputForEvidenceAbsent(FeatureEvidence feature)
         {
-            printer.AddNewLine(feature.FeatureTitle);
-            printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+            outputWriter.AddNewLine(feature.FeatureTitle);
+            outputWriter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
         }
 
         private void ShowEvidence(FeatureEvidence feature)
         {
             foreach(var evidence in feature.Evidence)
             {
-                printer.AddNewLine(evidence);
+                outputWriter.AddNewLine(evidence);
             }
         }
 
         public void ShowWrongDirectoryMsg()
         {
-            printer.AddNewLine("Invalid directory");
-            printer.PrintMessage();
+            outputWriter.AddNewLine("Invalid directory");
+            outputWriter.PrintMessage();
         }
 
         public void ShowErrors(List<string> errs)
         {
 
-            printer.AddNewLine("Error detected:");
+            outputWriter.AddNewLine("Error detected:");
             foreach(var err in errs)
             {
-                printer.AddNewLine(err);
+                outputWriter.AddNewLine(err);
             }
-            printer.AddNewLine(messages.AskForHelp);
-            printer.PrintMessage();
+            outputWriter.AddNewLine(messages.AskForHelp);
+            outputWriter.PrintMessage();
         }
 
         public void ShowHelp()
@@ -89,32 +89,32 @@ namespace YoCode
 
         public void ShowBanner()
         {
-            printer.AddNewLine(messages.Fireplace);
-            printer.PrintMessage();
+            outputWriter.AddNewLine(messages.Fireplace);
+            outputWriter.PrintMessage();
         }
 
         public void ShowHelpMsg()
         {
-            printer.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
-            printer.PrintMessage();
+            outputWriter.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
+            outputWriter.PrintMessage();
         }
 
         public void ShowDupfinderHelp()
         {
-            printer.AddNewLine(messages.DupFinderHelp);
-            printer.PrintMessage();
+            outputWriter.AddNewLine(messages.DupFinderHelp);
+            outputWriter.PrintMessage();
         }
 
         public void ShowLaziness()
         {
-            printer.AddNewLine("Project unmodified");
-            printer.PrintMessage();
+            outputWriter.AddNewLine("Project unmodified");
+            outputWriter.PrintMessage();
         }
 
         public void ShowDirEmptyMsg()
         {
-            printer.AddNewLine("Specified directory inaccessible");
-            printer.PrintMessage();
+            outputWriter.AddNewLine("Specified directory inaccessible");
+            outputWriter.PrintMessage();
         }
     }
 }
