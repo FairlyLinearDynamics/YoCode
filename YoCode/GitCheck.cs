@@ -5,10 +5,15 @@ namespace YoCode
     public class GitCheck
     {
         private readonly string repositoryPath;
+        private readonly IFeatureRunner featureRunner;
 
-        public GitCheck(string path)
+        public GitCheck(string path, IFeatureRunner featureRunner)
         {
             repositoryPath = path;
+            GitEvidence.FeatureTitle = "Git was used";
+
+
+            this.featureRunner = featureRunner;
             ExecuteTheCheck();
         }
 
@@ -16,7 +21,7 @@ namespace YoCode
         {
             var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
 
-            var evidence = FeatureRunner.Execute(processDetails, "Git was used");
+            var evidence = featureRunner.Execute(processDetails, "Git was used");
             if (evidence.FeatureFailed)
             {
                 return;
@@ -27,7 +32,7 @@ namespace YoCode
 
             if (GitEvidence.FeatureImplemented)
             {
-                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast Author: {lastAuthor}");
+                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast {lastAuthor}");
             }
         }
 
