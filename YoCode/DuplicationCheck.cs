@@ -27,7 +27,7 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
-        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
+        public DuplicationCheck(IPathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
 
             CMDtoolsDir = CMDtoolsDirConfig;
@@ -43,10 +43,10 @@ namespace YoCode
             {
                 ExecuteTheCheck();
             }
-            catch(Exception e)
+            catch(Exception)
             {
             DuplicationEvidence.FeatureImplemented = false;
-            DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
+            DuplicationEvidence.GiveEvidence(messages.DupFinderHelp);
             }
 
         }
@@ -93,22 +93,22 @@ namespace YoCode
             return evidence;
         }
 
-        public string GetResults(string path)
+        private string GetResults(string path)
         {
             return File.ReadAllText(path);
         }
 
-        public bool HasTheCodeImproved()
+        private bool HasTheCodeImproved()
         {
             return OrigDuplicateCost > ModiDuplicateCost;
         }
 
-        public List<String> GetCodeBaseCostKeyword()
+        private List<String> GetCodeBaseCostKeyword()
         {
             return new List<string> { "<CodebaseCost>" };
         }
 
-        public List<String> GetTotalDuplicatesCostKeywords()
+        private List<String> GetTotalDuplicatesCostKeywords()
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }
