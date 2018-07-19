@@ -27,24 +27,34 @@ namespace YoCode
             {
                 if (feature.EvidencePresent)
                 {
-                    printer.PrintDiv();
-                    printer.AddNewLine(feature.FeatureTitle);
-                    printer.AddNewLine("");
-                    printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
-                    printer.AddNewLine("Indication of above: ");
-                    printEvidence(feature);
-                    printer.PrintDiv();
+                    OutputForEvidencePresnt(feature);
                 }
                 else
                 {
-                    printer.PrintDiv();
-                    printer.AddNewLine(feature.FeatureTitle);
-                    printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
-                    printer.PrintDiv();
+                    OutputForEvidenceAbsent(feature);
                 }
             }
 
             printer.PrintMessage();
+        }
+
+        public void OutputForEvidencePresnt(FeatureEvidence feature)
+        {
+            printer.PrintDiv();
+            printer.AddNewLine(feature.FeatureTitle);
+            printer.AddNewLine("");
+            printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+            printer.AddNewLine("Indication of above: ");
+            printEvidence(feature);
+            printer.PrintDiv();
+        }
+
+        public void OutputForEvidenceAbsent(FeatureEvidence feature)
+        {
+            printer.PrintDiv();
+            printer.AddNewLine(feature.FeatureTitle);
+            printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+            printer.PrintDiv();
         }
 
         private void printEvidence(FeatureEvidence feature)
