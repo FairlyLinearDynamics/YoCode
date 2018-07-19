@@ -30,6 +30,7 @@ namespace YoCode
                 {
                     consoleWritter.PrintDiv();
                     consoleWritter.AddNewLine(feature.FeatureTitle);
+                    consoleWritter.AddNewLine("");
                     consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
                     consoleWritter.AddNewLine("Indication of above: ");
                     printEvidence(feature);
