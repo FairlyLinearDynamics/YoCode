@@ -3,6 +3,8 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using LibGit2Sharp;
+using System.Resources;
 
 namespace YoCode
 {
@@ -37,27 +39,21 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            if (modifiedTest == null || originalTest == null)
+            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
                 consoleOutput.NothingInDirectory();
                 return;
             }
 
-            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
-
-            var checkList = PerformChecks(dir);
-
-            if (checkList.Any())
-            {
-                consoleOutput.PrintFinalResults(checkList);
-            }
-            else
+            if (!dir.ModifiedPaths.Any())
             {
                 consoleOutput.LazinessEvidence();
+                return;
             }
+
+            consoleOutput.PrintFinalResults(PerformChecks(dir));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -83,17 +79,22 @@ namespace YoCode
                     FeatureImplemented = true,
                 });
 
+                var featureRunner = new FeatureRunner();
+
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir,CMDToolsPath).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+
+                // Unit test test
+                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
                 
             }

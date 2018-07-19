@@ -17,6 +17,7 @@ namespace YoCode
         private readonly string workingDir;
         private readonly string modiArguments;
         private readonly string origArguments;
+        private readonly IFeatureRunner featureRunner;
 
         private string Output { get; set; }
 
@@ -26,35 +27,33 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
-        private string StrCodeBaseCost { get; set; }
-        private string StrTotalDuplicateCost { get; set; }
-
-        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig)
+        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
-            try
-            {
+
             CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
             workingDir = CMDtoolsDir;
+            this.featureRunner = featureRunner;
 
             modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
             origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
 
-            ExecuteTheCheck();
+            try
+            {
+                ExecuteTheCheck();
             }
             catch(Exception e)
             {
             DuplicationEvidence.FeatureImplemented = false;
-            DuplicationEvidence.GiveEvidence("To run this application you will have to install Command Line Tools by Jetbrains\n" +
-                "Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&code=RSCLT" +
-                "After you downloaded it please specify its location in appsetting.json file, which lives in the root directory of this  project ");
+            DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
             }
+
         }
 
         private void ExecuteTheCheck() {
-            var origEvidence = RunAndGatherEvidence(origArguments);
-            var modEvidence = RunAndGatherEvidence(modiArguments);
+            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(origArguments,"Original");
+            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modiArguments,"Modified");
 
             if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
@@ -62,25 +61,33 @@ namespace YoCode
                 return;
             }
 
+            OrigCodeBaseCost = origCodeBaseCost;
+            OrigDuplicateCost = origDuplicateCost;
+
+            ModiCodeBaseCost = modCodeBaseCost;
+            ModiDuplicateCost = modDuplicateCost;
+
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private FeatureEvidence RunAndGatherEvidence(string arguments)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string arguments, string whichDir)
         {
             var evidence = RunOneCheck(arguments);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
             var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
-            evidence.GiveEvidence($"Original\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
-            return evidence;
+
+            evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+
+            return (evidence, codebaseCost, duplicateCost);
         }
 
         private FeatureEvidence RunOneCheck(string args)
         {
             var proc = new ProcessDetails(processName, workingDir, args);
-            var evidence = FeatureRunner.Execute(proc, "Check duplication");
+            var evidence = featureRunner.Execute(proc, "Check duplication");
 
             evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
             return evidence;
