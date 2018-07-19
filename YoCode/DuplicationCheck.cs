@@ -27,9 +27,6 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
-        private string StrCodeBaseCost { get; set; }
-        private string StrTotalDuplicateCost { get; set; }
-
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
 
@@ -55,8 +52,8 @@ namespace YoCode
         }
 
         private void ExecuteTheCheck() {
-            var origEvidence = RunAndGatherEvidence(origArguments);
-            var modEvidence = RunAndGatherEvidence(modiArguments);
+            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(origArguments,"Original");
+            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modiArguments,"Modified");
 
             if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
@@ -64,19 +61,27 @@ namespace YoCode
                 return;
             }
 
+            OrigCodeBaseCost = origCodeBaseCost;
+            OrigDuplicateCost = origDuplicateCost;
+
+            ModiCodeBaseCost = modCodeBaseCost;
+            ModiDuplicateCost = modDuplicateCost;
+
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private FeatureEvidence RunAndGatherEvidence(string arguments)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string arguments, string whichDir)
         {
             var evidence = RunOneCheck(arguments);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
             var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
-            evidence.GiveEvidence($"Original\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
-            return evidence;
+
+            evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
+
+            return (evidence, codebaseCost, duplicateCost);
         }
 
         private FeatureEvidence RunOneCheck(string args)
