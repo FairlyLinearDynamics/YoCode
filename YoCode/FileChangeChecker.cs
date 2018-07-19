@@ -18,6 +18,11 @@ namespace YoCode
             ProjectIsModified();
         }
 
+        public FileChangeChecker()
+        {
+
+        }
+
         private void ProjectIsModified()
         {
             var originalFileStreams = directory.ReturnOriginalPathFileStream();
@@ -55,7 +60,7 @@ namespace YoCode
             }
         }
 
-        private bool FileIsModified(Stream originalFile, Stream modifiedFile)
+        public bool FileIsModified(Stream originalFile, Stream modifiedFile)
         {
             using (var sha1 = SHA1.Create())
             {

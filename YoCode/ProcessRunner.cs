@@ -13,9 +13,9 @@ namespace YoCode
         public string ErrorOutput { get; set; }
 
         private ProcessInfo procinfo;
-        private readonly TimeSpan timeout = TimeSpan.FromSeconds(15);
-        private readonly StringBuilder output = new StringBuilder();
-        private readonly StringBuilder errorOutput = new StringBuilder();
+        private readonly TimeSpan timeout = TimeSpan.FromSeconds(20);
+        private readonly List<string> output = new List<string>();
+        private readonly List<string> errorOutput = new List<string>();
 
         public ProcessRunner(string processName, string workingDir, string arguments)
         {
@@ -35,8 +35,8 @@ namespace YoCode
 
                 WaitForExitCondition(p, waitForMessage);
 
-                Output = output.ToString();
-                ErrorOutput = errorOutput.ToString();
+                Output = string.Join(Environment.NewLine, output);
+                ErrorOutput = string.Join(Environment.NewLine, errorOutput);
 
         }
 
@@ -114,12 +114,12 @@ namespace YoCode
 
         private void DataReceived(object sender, DataReceivedEventArgs e)
         {
-            output.Append(e.Data + Environment.NewLine);
+            output.Add(e.Data);
         }
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            errorOutput.Append(e.Data + Environment.NewLine);
+            errorOutput.Add(e.Data);
         }
     }
 }
