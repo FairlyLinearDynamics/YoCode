@@ -1,0 +1,8 @@
+﻿{
+  "AutomatedTesting": {
+    "TestDataPath": "C:\\YoCodeTestData"
+  },
+  "YoCodeLocation": {
+    "DLLFolderPath":  "C:\\Users\\ukmaug\\source\\repos\\YoCode\\YoCode\\bin\\Debug\\netcoreapp2.1"
+  }
+}

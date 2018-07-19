@@ -3,21 +3,34 @@ using FluentAssertions;
 using YoCode;
 using System.IO;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace YoCodeAutomatedTests
 {
     public class HelpMessageTest
     {
+        private string TestPath;
+        private string dllPath;
+        public static IConfiguration Configuration;
+ 
+        public HelpMessageTest()
+        {
+            var builder1 = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("testappsettings.json");
+            Configuration = builder1.Build();
+        }
+
         [Fact]
         public void CheckHelpMessage()
         {
-            const string dir = @"C:\Users\ukmaug\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1";
-            string argument = "YoCode.dll --help";
-            ProcessRunner pr = new ProcessRunner("dotnet", dir, argument);
+            TestPath = Configuration["AutomatedTesting:TestDataPath"];
+            dllPath = Configuration["YoCodeLocation:DLLFolderPath"];
+
+            const string argument = "YoCode.dll --help";
+            ProcessRunner pr = new ProcessRunner("dotnet", dllPath, argument);
             pr.ExecuteTheCheck();
 
-            var actualPath = @"C:\YoCodeTestData\Outputs\helpMessageActualOutput.txt";
-            var expectedPath = @"C:\YoCodeTestData\Outputs\helpMessage.txt";
+            var actualPath = TestPath+@"\Outputs\helpMessageActualOutput.txt";
+            var expectedPath = TestPath+@"\Outputs\helpMessage.txt";
 
             if (!File.Exists(actualPath))
             {

@@ -3,21 +3,35 @@ using FluentAssertions;
 using YoCode;
 using System.IO;
 using System;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace YoCodeAutomatedTests
 {
     public class SuccessfulBuilds
     {
+        private string dllPath;
+        private string TestPath;
+        public static IConfiguration Configuration;
+
+        public SuccessfulBuilds()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("testappsettings.json");
+            Configuration = builder.Build();
+        }
+
         [Fact]
         public void RunProject1()
         {
-            const string dir = @"C:\Users\ukmaug\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1";
-            string argument = @"YoCode.dll --original=C:\YoCodeTestData\TestProjects\junior-test --modified=C:\YoCodeTestData\TestProjects\Project1";
-            ProcessRunner pr = new ProcessRunner("dotnet", dir, argument);
+            TestPath = Configuration["AutomatedTesting:TestDataPath"];
+            dllPath = Configuration["YoCodeLocation:DLLFolderPath"];
+
+            const string argument = @"YoCode.dll --original=C:\YoCodeTestData\TestProjects\junior-test --modified=C:\YoCodeTestData\TestProjects\Project1";
+            ProcessRunner pr = new ProcessRunner("dotnet", dllPath, argument);
             pr.ExecuteTheCheck("Minimum test count:");
 
-            var actualPath = @"C:\YoCodeTestData\Outputs\P1ActualOutput.txt";
-            var expectedPath = @"C:\YoCodeTestData\Outputs\P1.txt";
+            var actualPath = TestPath+@"\Outputs\P1ActualOutput.txt";
+            var expectedPath =TestPath+ @"\Outputs\P1.txt";
 
             if (!File.Exists(actualPath))
             {
