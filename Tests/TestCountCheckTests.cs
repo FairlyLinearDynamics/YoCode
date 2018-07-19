@@ -28,7 +28,6 @@ namespace YoCode_XUnit
             "Test Run Successful.\n" +
             "Test execution time: 1.6349 Seconds\n";
             testStatLine = "Total tests: 22.Passed: 22.Failed: 0.Skipped: 0.";
-
         }
 
         [Fact]
@@ -38,7 +37,6 @@ namespace YoCode_XUnit
             string testResult = testTestOutput.GetLineWithAllKeywords(TestCountCheck.GetTestKeyWords());
 
             testStatLine.Should().BeEquivalentTo(testResult);
-
         }
 
         [Fact]
@@ -55,6 +53,5 @@ namespace YoCode_XUnit
             };
             expected.Should().BeEquivalentTo(actual.GetNumbersInALine());
         }
-
     }
 }
