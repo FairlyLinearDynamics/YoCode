@@ -16,8 +16,11 @@ namespace YoCode
 
         public void PrintMessage()
         {
-            Console.Write(textToPrint);
-            textToPrint = null;
+            if (textToPrint != null)
+            {
+                Console.Write(textToPrint);
+                textToPrint = null;
+            }
         }
 
         public void PrintDiv()
