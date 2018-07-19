@@ -18,8 +18,6 @@ namespace YoCode
             WebControllerEndpoint wce = new WebControllerEndpoint("1");
             wce.ExecuteTheCheck();
 
-
-
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
