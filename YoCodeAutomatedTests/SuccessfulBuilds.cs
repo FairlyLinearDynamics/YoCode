@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using YoCode;
 using System.IO;
@@ -6,18 +6,18 @@ using System;
 
 namespace YoCodeAutomatedTests
 {
-    public class HelpMessageTest
+    public class SuccessfulBuilds
     {
         [Fact]
-        public void CheckHelpMessage()
+        public void RunProject1()
         {
             const string dir = @"C:\Users\ukmaug\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1";
-            string argument = "YoCode.dll --help";
+            string argument = @"YoCode.dll --original=C:\YoCodeTestData\TestProjects\junior-test --modified=C:\YoCodeTestData\TestProjects\Project1";
             ProcessRunner pr = new ProcessRunner("dotnet", dir, argument);
-            pr.ExecuteTheCheck();
+            pr.ExecuteTheCheck("Minimum test count:");
 
-            var actualPath = @"C:\YoCodeTestData\Outputs\helpMessageActualOutput.txt";
-            var expectedPath = @"C:\YoCodeTestData\Outputs\helpMessage.txt";
+            var actualPath = @"C:\YoCodeTestData\Outputs\P1ActualOutput.txt";
+            var expectedPath = @"C:\YoCodeTestData\Outputs\P1.txt";
 
             if (!File.Exists(actualPath))
             {
@@ -26,13 +26,11 @@ namespace YoCodeAutomatedTests
 
             string output = File.ReadAllText(expectedPath);
 
-
             //WriteAllLines leaves a newline at the end
             File.WriteAllLines(actualPath, new string[] { pr.Output });
 
             //===================================================
             var fcc = new FileChangeChecker();
-
 
             using (FileStream f1 = File.OpenRead(actualPath))
             using (FileStream f2 = File.OpenRead(expectedPath))
@@ -41,7 +39,8 @@ namespace YoCodeAutomatedTests
             }
             //===================================================
 
-            (pr.Output).Should().BeEquivalentTo(output+Environment.NewLine);
+            (pr.Output).Should().BeEquivalentTo(output + Environment.NewLine);
         }
     }
 }
+
