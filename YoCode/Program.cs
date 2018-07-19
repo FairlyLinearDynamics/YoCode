@@ -20,7 +20,7 @@ namespace YoCode
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
 
-            var consoleOutput = new Output(new PrintToConsole());
+            var consoleOutput = new Output(new ConsoleWriter());
             consoleOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);

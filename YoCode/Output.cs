@@ -7,9 +7,9 @@ namespace YoCode
 {
     class Output
     {
-        IPrint outputWriter;
+        IOutputWriter outputWriter;
 
-        public Output(IPrint printTo)
+        public Output(IOutputWriter printTo)
         {
             outputWriter = printTo;
         }
@@ -17,14 +17,14 @@ namespace YoCode
         public void PrintIntroduction()
         {
             outputWriter.AddNewLine(messages.Welcome);
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void PrintFinalResults(List<FeatureEvidence> featureList)
         {
             foreach (var feature in featureList)
             {
-                outputWriter.PrintDiv();
+                outputWriter.AddDiv();
                 if (feature.EvidencePresent)
                 {
                     OutputForEvidencePresnt(feature);
@@ -33,10 +33,10 @@ namespace YoCode
                 {
                     OutputForEvidenceAbsent(feature);
                 }
-                outputWriter.PrintDiv();
+                outputWriter.AddDiv();
             }
 
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void OutputForEvidencePresnt(FeatureEvidence feature)
@@ -65,7 +65,7 @@ namespace YoCode
         public void ShowWrongDirectoryMsg()
         {
             outputWriter.AddNewLine("Invalid directory");
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowErrors(List<string> errs)
@@ -77,7 +77,7 @@ namespace YoCode
                 outputWriter.AddNewLine(err);
             }
             outputWriter.AddNewLine(messages.AskForHelp);
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowHelp()
@@ -90,31 +90,31 @@ namespace YoCode
         public void ShowBanner()
         {
             outputWriter.AddNewLine(messages.Fireplace);
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowHelpMsg()
         {
             outputWriter.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowDupfinderHelp()
         {
             outputWriter.AddNewLine(messages.DupFinderHelp);
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowLaziness()
         {
             outputWriter.AddNewLine("Project unmodified");
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
 
         public void ShowDirEmptyMsg()
         {
             outputWriter.AddNewLine("Specified directory inaccessible");
-            outputWriter.PrintMessage();
+            outputWriter.WriteAndFlush();
         }
     }
 }

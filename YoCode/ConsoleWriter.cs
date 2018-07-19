@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace YoCode
 {
-    public class PrintToConsole : IPrint
+    public class ConsoleWriter : IOutputWriter
     {
         string textToPrint;
 
@@ -14,7 +14,7 @@ namespace YoCode
             return true;
         }
 
-        public void PrintMessage()
+        public void WriteAndFlush()
         {
             if (textToPrint != null)
             {
@@ -23,7 +23,7 @@ namespace YoCode
             }
         }
 
-        public void PrintDiv()
+        public void AddDiv()
         {
             textToPrint += messages.Divider;
         }
