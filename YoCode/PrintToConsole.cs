@@ -14,13 +14,7 @@ namespace YoCode
 
         public void PrintIntroduction()
         {
-            Console.WriteLine("Welcome to the YoCode!");
-
-            var version = ThisAssembly.AssemblyInformationalVersion;
-
-            Console.WriteLine(version);
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine(YoCode.messages.Welcome);
         }
 
 
@@ -28,7 +22,7 @@ namespace YoCode
         {
             foreach(FeatureEvidence feature in featureList)
             {
-                Console.WriteLine("==========================================");
+                Console.WriteLine(YoCode.messages.equalsFormat);
                 Console.Write($"{feature.FeatureTitle}: ");
                 Console.WriteLine((feature.FeatureImplemented)?"Yes":"No");
                 Console.WriteLine();
@@ -36,7 +30,7 @@ namespace YoCode
                 {
                     Console.WriteLine("Indication of above result: ");
                     Console.WriteLine(FormatEvidence(feature));
-                    Console.WriteLine("==========================================");
+                    Console.WriteLine(YoCode.messages.equalsFormat);
                 }
             }
         }
@@ -64,11 +58,28 @@ namespace YoCode
             Console.WriteLine("\nIf you would like to see list of commands, type: --help");
         }
 
-        public void PrintHelp()
+        public static void PrintDupfinderHelp()
         {
-            Console.WriteLine("Application takes 2 parameters: path to original test directory and path to modified test directory" +
-                $"\nPossible commands: --{CommandNames.ORIGIN}; --{CommandNames.MODIFIED}; --{CommandNames.HELP}" +
-                $"\nExample use: --{CommandNames.ORIGIN}=<path-to-original-test> --{CommandNames.MODIFIED}=<path-to-modified-test>");
+            Console.WriteLine(YoCode.messages.DupFinderHelp);
+        }
+
+
+        public void PrintHelp()
+        {        
+            PrintFireplace();
+            PrintHelpMessage();
+            PrintDupfinderHelp();
+        }
+
+        public void PrintHelpMessage()
+        {
+            var x = String.Format(YoCode.messages.HelpMessage, CommandNames.ORIGIN,CommandNames.MODIFIED,CommandNames.HELP);
+            Console.Write(x);
+        }
+
+        public void PrintFireplace()
+        {
+            Console.WriteLine(YoCode.messages.fireplace);          
         }
 
         public void LazinessEvidence()

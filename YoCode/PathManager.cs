@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using LibGit2Sharp;
 
 namespace YoCode
 {
@@ -23,8 +25,19 @@ namespace YoCode
             originalTestDirPath = originalTestDir;
             modifiedTestDirPath = modifiedTestDir;
 
-            OriginalPaths = FileImport.GetAllFilesInDirectory(originalTestDirPath);
-            ModifiedPaths = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+            if (Repository.IsValid(modifiedTestDir))
+            {
+                var repo = new Repository(modifiedTestDir);
+                OriginalPaths = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+                ModifiedPaths = FileImport.GetAllFilesInDirectory(modifiedTestDirPath)
+                    .Where(a => !repo.Ignore.IsPathIgnored(Path.GetRelativePath(modifiedTestDirPath, a))
+                                && repo.RetrieveStatus(a) != FileStatus.Ignored && !a.Contains(".git"));
+            }
+            else
+            {
+                OriginalPaths = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+                ModifiedPaths = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
+            }
 
             fileExtensions.Add(FileTypes.cs, CS);
             fileExtensions.Add(FileTypes.css, CSS);

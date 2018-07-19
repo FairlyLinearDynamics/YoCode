@@ -17,7 +17,6 @@ namespace YoCode
         private readonly StringBuilder output = new StringBuilder();
         private readonly StringBuilder errorOutput = new StringBuilder();
 
-
         public ProcessRunner(string processName, string workingDir, string arguments)
         {
             procinfo = SetupProcessInfo(processName, workingDir, arguments);
@@ -25,19 +24,20 @@ namespace YoCode
 
         public void ExecuteTheCheck(string waitForMessage = null)
         {
-            var p = new Process();
-            p.StartInfo = SetProcessStartInfo(procinfo);
-            p.EnableRaisingEvents = true;
-            p.OutputDataReceived += DataReceived;
-            p.ErrorDataReceived += ErrorDataReceived;
-            p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
+                var p = new Process();
+                p.StartInfo = SetProcessStartInfo(procinfo);
+                p.EnableRaisingEvents = true;
+                p.OutputDataReceived += DataReceived;
+                p.ErrorDataReceived += ErrorDataReceived;
+                p.Start();
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
 
-            WaitForExitCondition(p, waitForMessage);
+                WaitForExitCondition(p, waitForMessage);
 
-            Output = output.ToString();
-            ErrorOutput = errorOutput.ToString();
+                Output = output.ToString();
+                ErrorOutput = errorOutput.ToString();
+
         }
 
         private void WaitForExitCondition(Process p, string wait)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -11,33 +12,41 @@ namespace YoCode
         public string StatLine { get; set; }
         public string Output { get; set; }
 
+        private int TestCountTreshold = 10;
+
         private TestStats stats;
         private List<int> tempStats;
+        private readonly IFeatureRunner featureRunner;
 
-        const int TEST_PASS_THRESHOLD = 80;
-
-        public TestCountCheck(string repositoryPath)
+        public TestCountCheck(string repositoryPath, IFeatureRunner featureRunner)
         {
-            TestCountEvidence.FeatureTitle = "Tests";
+            UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
+            this.featureRunner = featureRunner;
             ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
         {
-            ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
-            pr.ExecuteTheCheck();
-            Output = pr.Output;
+            var pr = new ProcessDetails(processName, workingDir, arguments);
+            var evidence = featureRunner.Execute(pr, "Unit test check");
+            if (evidence.FeatureFailed)
+            {
+                return;
+            }
+
+            Output = evidence.Output;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            TestCountEvidence.FeatureImplemented = stats.percentagePassed > TEST_PASS_THRESHOLD;
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold;
+            UnitTestEvidence.GiveEvidence(StatLine);
+            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
+            UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
 
-            TestCountEvidence.GiveEvidence($"Tests passed: {stats.testsPassed}\nTests failed: {stats.testsFailed}\nTests skipped: {stats.testsSkipped}" +
-                $"\nTotal number of Tests: {stats.totalTests}\nTests passed(%): {stats.percentagePassed}");
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -45,8 +54,7 @@ namespace YoCode
             stats.totalTests = tempStats[0];
             stats.testsPassed = tempStats[1];
             stats.testsFailed = tempStats[2];
-            stats.testsSkipped = tempStats[3];
-            
+            stats.testsSkipped = tempStats[3];            
         }
 
         public static List<string> GetTestKeyWords()
@@ -54,6 +62,6 @@ namespace YoCode
             return new List<string> { "Total tests:" };
         }
 
-        public FeatureEvidence TestCountEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
     }
 }
