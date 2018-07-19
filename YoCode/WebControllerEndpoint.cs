@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -15,36 +17,64 @@ namespace YoCode
         List<string> actions;
 
 
+        string from = "value=\"";
+        string to = "\"";
+
+        HttpClient client;
+
+        private string HTMLcode;
+
         public WebControllerEndpoint(string port)
         {
-            HttpClient client = new HttpClient { BaseAddress = new Uri("http://localhost:57009") };
-
-
-
+            client = new HttpClient { BaseAddress = new Uri(port) };
+            GetHTMLCodeAsString();
             InitializeLists();
             ExecuteTheCheck();
         }
 
-        public async string GetHTMLFile()
+        public List<string> GetActions(string HTMLfile)
         {
-
+            var actionlines = GetActionLines(HTMLfile);
+            return ExtractActions(actionlines);
         }
 
-
-        public void readActions()
+        public async Task<string> GetHTMLCodeAsTask()
+        { 
+            return await client.GetStringAsync("/");
+        }
+       
+        public async void GetHTMLCodeAsString()
         {
+            HTMLcode = GetHTMLCodeAsTask().Result;
+        }
+        
+        public List<string> GetActionLines(string file)
+        {
+            return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
+        }
 
+        public List<string> ExtractActions(List<string> actionLines)
+        {
+            var list = new List<string>();
+
+            foreach (string line in actionLines)
+            {
+                string res = line.GetStringBetweenStrings(from, to);
+
+                list.Add(res);
+            }
+            return list;
         }
 
         public void InitializeLists()
         {
             texts = new List<string> { "5", "25", "125" };
-            actions = new List<string>{"Yards to meters", "Inches to centimeters", "Miles to kilometers"};
+            actions = GetActions(HTMLcode);
         }
 
         public async void ExecuteTheCheck()
         {
-            for(int i = 0; i < texts.Count; i++)
+            for (int i = 0; i < texts.Count; i++)
             {
                 for (int j = 0; j < actions.Count; j++)
                 {
@@ -54,15 +84,19 @@ namespace YoCode
                         new KeyValuePair<string, string>("action",actions[j])
                     });
 
-                    //Post request with above vlaues
                     var bar = await client.PostAsync("/Home/Convert", formContent);
-                    //Console.WriteLine(bar);
 
                     var baz = await bar.Content.ReadAsStringAsync();
                     Console.WriteLine(i + " " + j + " " + texts[i] + actions[j]);
                     Console.WriteLine(baz);
                 }
-            } 
+            }
         }
+
+        public List<string> GetActionKeywords()
+        {
+            return new List<string> { "action", "value" };
+        }
+
     }
 }
