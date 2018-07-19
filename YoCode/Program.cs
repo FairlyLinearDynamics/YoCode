@@ -21,6 +21,8 @@ namespace YoCode
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
 
             var consoleOutput = new Output(new PrintToConsole());
+            consoleOutput.PrintIntroduction();
+
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 

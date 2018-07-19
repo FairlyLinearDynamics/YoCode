@@ -12,7 +12,6 @@ namespace YoCode
         public Output(IPrint printTo)
         {
             printer = printTo;
-            PrintIntroduction();
         }
 
         public void PrintIntroduction()
