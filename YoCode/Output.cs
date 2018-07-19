@@ -82,12 +82,12 @@ namespace YoCode
 
         public void ShowHelp()
         {
-            ShowFireplace();
+            ShowBanner();
             ShowHelpMsg();
             ShowDupfinderHelp();
         }
 
-        public void ShowFireplace()
+        public void ShowBanner()
         {
             printer.AddNewLine(messages.Fireplace);
             printer.PrintMessage();
