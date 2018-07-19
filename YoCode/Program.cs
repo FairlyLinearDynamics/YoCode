@@ -88,7 +88,7 @@ namespace YoCode
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(featureRunner, CMDToolsPath)).DuplicationEvidence);
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
