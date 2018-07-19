@@ -14,8 +14,8 @@ namespace YoCode_XUnit
 
         Mock<IPathManager> mock = new Mock<IPathManager>();
 
-        List<string> fakePaths1 = new List<string>() { "one", "two" };
-        List<string> fakePaths2 = new List<string>() { "one", "two", "three" };
+        List<string> fakePaths1 = new List<string>() { @"\one", @"\two" };
+        List<string> fakePaths2 = new List<string>() { @"\one", @"\two", @"\three" };
 
         string fakeOriginal = @"C:\Users\ukekar\Downloads\junior-test";
         string fakeModified = @"C:\Users\ukekar\Downloads\drew-gibbon";
@@ -48,21 +48,25 @@ namespace YoCode_XUnit
         }
 
         [Fact]
-        public void FileChangeChecker_ProjectUnmodifiedCheck()
+        public void FileChangeChecker_ProjectModified()
         {
             for (int i = 0; i < fakePaths1.Count; i++)
             {
                 fakeList1.Add(CreateFakeStream(i));
-                fakeList2.Add(CreateFakeStream(i));
+            }
 
-            }           
+            for (int i = fakePaths2.Count - 1; i >= 0; i--)
+            {
+                fakeList2.Add(CreateFakeStream(i));
+            }
+
             mock.Setup(w => w.OriginalPaths).Returns(fakePaths1);
             mock.Setup(w => w.ModifiedPaths).Returns(fakePaths1);
 
             mock.Setup(w => w.ReturnOriginalPathFileStream()).Returns(fakeList1);
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(fakeList2);
 
-            new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
+            new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeTrue();
         }
 
         [Fact]
