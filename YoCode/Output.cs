@@ -7,18 +7,18 @@ namespace YoCode
 {
     class Output
     {
-        IPrint consoleWritter;
+        IPrint printer;
 
-        public Output()
+        public Output(IPrint printTo)
         {
-            consoleWritter = new PrintToConsole();
+            printer = printTo;
             PrintIntroduction();
         }
 
         public void PrintIntroduction()
         {
-            consoleWritter.AddNewLine(messages.Welcome);
-            consoleWritter.PrintMessage();
+            printer.AddNewLine(messages.Welcome);
+            printer.PrintMessage();
         }
 
 
@@ -28,56 +28,56 @@ namespace YoCode
             {
                 if (feature.EvidencePresent)
                 {
-                    consoleWritter.PrintDiv();
-                    consoleWritter.AddNewLine(feature.FeatureTitle);
-                    consoleWritter.AddNewLine("");
-                    consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
-                    consoleWritter.AddNewLine("Indication of above: ");
+                    printer.PrintDiv();
+                    printer.AddNewLine(feature.FeatureTitle);
+                    printer.AddNewLine("");
+                    printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+                    printer.AddNewLine("Indication of above: ");
                     printEvidence(feature);
-                    consoleWritter.PrintDiv();
+                    printer.PrintDiv();
                 }
                 else
                 {
-                    consoleWritter.PrintDiv();
-                    consoleWritter.AddNewLine(feature.FeatureTitle);
-                    consoleWritter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
-                    consoleWritter.PrintDiv();
+                    printer.PrintDiv();
+                    printer.AddNewLine(feature.FeatureTitle);
+                    printer.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+                    printer.PrintDiv();
                 }
             }
 
-            consoleWritter.PrintMessage();
+            printer.PrintMessage();
         }
 
         private void printEvidence(FeatureEvidence feature)
         {
             foreach(var evidence in feature.Evidence)
             {
-                consoleWritter.AddNewLine(evidence);
+                printer.AddNewLine(evidence);
             }
         }
 
         public void PrintWrongDirectory()
         {
-            consoleWritter.AddNewLine("Invalid directory");
-            consoleWritter.PrintMessage();
+            printer.AddNewLine("Invalid directory");
+            printer.PrintMessage();
         }
 
         public void PrintError(List<string> errs)
         {
 
-            consoleWritter.AddNewLine("Error detected:");
+            printer.AddNewLine("Error detected:");
             foreach(var err in errs)
             {
-                consoleWritter.AddNewLine(err);
+                printer.AddNewLine(err);
             }
-            consoleWritter.AddNewLine(messages.AskForHelp);
-            consoleWritter.PrintMessage();
+            printer.AddNewLine(messages.AskForHelp);
+            printer.PrintMessage();
         }
 
         public void PrintDupfinderHelp()
         {
-            consoleWritter.AddNewLine(messages.DupFinderHelp);
-            consoleWritter.PrintMessage();
+            printer.AddNewLine(messages.DupFinderHelp);
+            printer.PrintMessage();
         }
 
 
@@ -90,26 +90,26 @@ namespace YoCode
 
         public void PrintHelpMessage()
         {
-            consoleWritter.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
-            consoleWritter.PrintMessage();
+            printer.AddNewLine(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
+            printer.PrintMessage();
         }
 
         public void PrintFireplace()
         {
-            consoleWritter.AddNewLine(messages.Fireplace);
-            consoleWritter.PrintMessage();
+            printer.AddNewLine(messages.Fireplace);
+            printer.PrintMessage();
         }
 
         public void LazinessEvidence()
         {
-            consoleWritter.AddNewLine("Project unmodified");
-            consoleWritter.PrintMessage();
+            printer.AddNewLine("Project unmodified");
+            printer.PrintMessage();
         }
 
         public void NothingInDirectory()
         {
-            consoleWritter.AddNewLine("Specified directory inaccessible");
-            consoleWritter.PrintMessage();
+            printer.AddNewLine("Specified directory inaccessible");
+            printer.PrintMessage();
         }
     }
 }
