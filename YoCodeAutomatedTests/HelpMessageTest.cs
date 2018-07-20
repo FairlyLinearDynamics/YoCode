@@ -2,6 +2,7 @@ using Xunit;
 using FluentAssertions;
 using YoCode;
 using System.IO;
+using System;
 
 namespace YoCodeAutomatedTests
 {
@@ -20,14 +21,14 @@ namespace YoCodeAutomatedTests
             var actualPath = helper.testPath + @"\Outputs\helpMessageActualOutput.txt";
             var expectedPath = helper.testPath + @"\Outputs\helpMessage.txt";
 
-            var actualOutput = pr.Output;
+            var actualOutput = pr.Output.Trim();
             var expectedOutput = File.ReadAllText(expectedPath);
 
             TestHelperMethods.WriteToFile(actualPath, actualOutput);
 
             TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
 
-            //(pr.Output).Should().BeEquivalentTo(expectedOutput + Environment.NewLine);
+            //(pr.Output).Should().BeEquivalentTo(expectedOutput);
         }
     }
 }

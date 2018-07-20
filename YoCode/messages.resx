@@ -123,10 +123,11 @@ To run this application you will have to install Command Line Tools by Jetbrains
 Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&amp;code=RSCLT
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
-  <data name="equalsFormat" xml:space="preserve">
-    <value>==========================================</value>
+  <data name="Divider" xml:space="preserve">
+    <value>==========================================================
+</value>
   </data>
-  <data name="fireplace" xml:space="preserve">
+  <data name="Fireplace" xml:space="preserve">
     <value>___________________________
    _|__ _________________ __|__
   _|___||               ||_|__
@@ -151,5 +152,8 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
     <value>Welcome to YoCode!
 
 </value>
+  </data>
+  <data name="AskForHelp" xml:space="preserve">
+    <value>If you would like to see list of commands, type: --help</value>
   </data>
 </root>
