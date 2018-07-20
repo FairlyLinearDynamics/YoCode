@@ -6,21 +6,25 @@ using System;
 
 namespace YoCodeAutomatedTests
 {
-    public class SuccessfulBuildTests
+    //Compares projects against junior-test unmodified project
+    public class BuildTests
     {
-        [Fact]
-        public void RunProject1()
+        [Theory]
+        [InlineData("\\P1.txt", "\\Project1")]
+        [InlineData("\\P2.txt", "\\Project2")]
+        [InlineData("\\P3.txt", "\\Project3")]
+        public void CompareProjects(string outputFile, string project)
         {
             var helper = new TestHelperMethods();
 
             string argument = $"YoCode.dll --original={helper.testPath}\\TestProjects\\junior-test " +
-                $"--modified={helper.testPath}\\TestProjects\\Project1";
+                $"--modified={helper.testPath}\\TestProjects{project}";
 
             ProcessRunner pr = new ProcessRunner("dotnet", helper.dllPath, argument);
             pr.ExecuteTheCheck("Minimum test count:");
 
-            var actualPath = helper.testPath+@"\Outputs\P1ActualOutput.txt";
-            var expectedPath =helper.testPath+ @"\Outputs\P1.txt";
+            var actualPath = helper.testPath+"\\ActualOutputs"+outputFile;
+            var expectedPath =helper.testPath+"\\ExpectedOutputs"+outputFile;
 
             var actualOutput = pr.Output.Trim();
             var expectedOutput = File.ReadAllText(expectedPath);
@@ -28,8 +32,6 @@ namespace YoCodeAutomatedTests
             TestHelperMethods.WriteToFile(actualPath, actualOutput);
 
             TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
-            
-            //(actualOutput).Should().BeEquivalentTo(expectedOutput);
         }
     }
 }

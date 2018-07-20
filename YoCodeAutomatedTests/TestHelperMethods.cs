@@ -13,7 +13,6 @@ namespace YoCodeAutomatedTests
         public TestHelperMethods()
         {
             Setup();
-            
         }
 
         public void Setup()

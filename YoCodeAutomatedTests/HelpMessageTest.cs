@@ -18,8 +18,8 @@ namespace YoCodeAutomatedTests
             ProcessRunner pr = new ProcessRunner("dotnet", helper.dllPath, argument);
             pr.ExecuteTheCheck("Minimum test count:");
 
-            var actualPath = helper.testPath + @"\Outputs\helpMessageActualOutput.txt";
-            var expectedPath = helper.testPath + @"\Outputs\helpMessage.txt";
+            var actualPath = helper.testPath + @"\ActualOutputs\helpMessage.txt";
+            var expectedPath = helper.testPath + @"\ExpectedOutputs\helpMessage.txt";
 
             var actualOutput = pr.Output.Trim();
             var expectedOutput = File.ReadAllText(expectedPath);
@@ -27,8 +27,6 @@ namespace YoCodeAutomatedTests
             TestHelperMethods.WriteToFile(actualPath, actualOutput);
 
             TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
-
-            //(pr.Output).Should().BeEquivalentTo(expectedOutput);
         }
     }
 }
