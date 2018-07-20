@@ -81,22 +81,20 @@ namespace YoCode
                     FeatureImplemented = true,
                 });
 
-                var featureRunner = new FeatureRunner();
-
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(featureRunner, CMDToolsPath)).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
 
                 // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
+                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath).UnitTestEvidence);
 
                 
             }
