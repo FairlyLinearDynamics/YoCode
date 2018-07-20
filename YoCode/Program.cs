@@ -20,19 +20,21 @@ namespace YoCode
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
 
-            var consoleOutput = new PrintToConsole();
+            var consoleOutput = new Output(new ConsoleWriter());
+            consoleOutput.PrintIntroduction();
+
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.PrintHelp();
+                consoleOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.PrintError(result.errors);
+                consoleOutput.ShowErrors(result.errors);
                 return;
             }
 
@@ -43,13 +45,13 @@ namespace YoCode
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.NothingInDirectory();
+                consoleOutput.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.LazinessEvidence();
+                consoleOutput.ShowLaziness();
                 return;
             }
 
