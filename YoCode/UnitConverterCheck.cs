@@ -8,18 +8,12 @@ using System.Threading.Tasks;
 
 namespace YoCode
 {
-    //Part 1. Getting "action" names
-    //Part 2. Testing "actions" with values and expected answers
-    // If all of them are correct, the test has passed
-
     class UnitConverterCheck
     {
         List<string> texts;
         List<string> actions;
-        List<string> answers;
-
+       
         List<string> expectedOutputs;
-
         List<UnitConverterResults> actual;
         
         string from = "value=\"";
@@ -32,22 +26,22 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
-            client = new HttpClient { BaseAddress = new Uri(port) };    
+            client = new HttpClient { BaseAddress = new Uri(port) };
             Setup();
-            var task = ExecuteTheCheck();
-            task.Wait();
-            answers = task.Result;
-
-            PrintResults(actual);
-
-            Console.WriteLine(OutputsAreEqual());
-
+            RunTheCheck();
         }
 
         private void Setup()
         {
             GetHTMLCodeAsString();
             InitializeLists();
+        }
+
+        private void RunTheCheck()
+        {
+            var task = ExecuteTheCheck();
+            task.Wait();
+            actual = task.Result;
         }
 
         public List<string> GetActions(string HTMLfile)
@@ -88,40 +82,39 @@ namespace YoCode
         {
             actual = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
-            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675" };
-            //FillExpectedOutputs(expected, expectedValues);                
-               
+            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675" };               
             actions = GetActions(HTMLcode);
         }
 
-        public async Task<List<string>> ExecuteTheCheck()
+        public async Task<List<UnitConverterResults>> ExecuteTheCheck()
         {
-            var answers = new List<string>();
-
             for (int i = 0; i < texts.Count; i++)
             {
                 UnitConverterResults tempActual = new UnitConverterResults();
-
                 tempActual.input = texts[i];
 
                 for (int j = 0; j < actions.Count; j++)
                 {
                     tempActual.action = actions[j];
-                        
-                    var formContent = new FormUrlEncodedContent(new[]
-                    {
-                        new KeyValuePair<string,string>("text",texts[i]),
-                        new KeyValuePair<string, string>("action",actions[j])
-                    });
+                    var formContent = GetEncodedContent(i, j);
 
                     var bar = await client.PostAsync("/Home/Convert", formContent);
-                    string baz = await GetResponseAsTaskAsync(bar);
+                    //string baz = await GetResponseAsTaskAsync(bar);
 
-                    tempActual.output = baz;
+                    tempActual.output = await GetResponseAsTaskAsync(bar);
                     actual.Add(tempActual);
                 }
             }
-            return answers;
+            return actual;
+        }
+
+        private FormUrlEncodedContent GetEncodedContent(int i, int j)
+        {
+            return new FormUrlEncodedContent(new[]
+            {
+                        new KeyValuePair<string,string>("text",texts[i]),
+                        new KeyValuePair<string, string>("action",actions[j])
+                    });
         }
 
         private static Task<string> GetResponseAsTaskAsync(HttpResponseMessage bar)
@@ -153,17 +146,12 @@ namespace YoCode
                 Console.WriteLine("Output: " + x.output);
                 Console.WriteLine("-------------------");
             }
-                Console.WriteLine("END----------------\n");
         }
 
         public bool OutputsAreEqual()
         {
             for(int i = 0; i < actual.Count; i++)
             {
-                Console.WriteLine("Compare number: " + i + 1);
-                Console.WriteLine("Actual number: " + actual[i].output);
-                Console.WriteLine("Expected number: " + expectedOutputs[i]);
-
                 if (!expectedOutputs[i].Equals(actual[i].output))
                 {
                     return false;
@@ -171,7 +159,5 @@ namespace YoCode
             }
             return true;
         }
-
-
     }
 }
