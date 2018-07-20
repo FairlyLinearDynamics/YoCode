@@ -17,11 +17,11 @@ namespace YoCode
         List<string> texts;
         List<string> actions;
         List<string> answers;
-        List<double> answers_numbers;
+
+        List<string> expectedOutputs;
 
         List<UnitConverterResults> actual;
-        List<UnitConverterResults> expected;
-       
+        
         string from = "value=\"";
         string to = "\"";
 
@@ -32,19 +32,22 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
-            actual = new List<UnitConverterResults>();
-            expected = new List<UnitConverterResults>();
-
-            client = new HttpClient { BaseAddress = new Uri(port) };
-            GetHTMLCodeAsString();
-            InitializeLists();
+            client = new HttpClient { BaseAddress = new Uri(port) };    
+            Setup();
             var task = ExecuteTheCheck();
             task.Wait();
             answers = task.Result;
-            //answers_numbers = ConvertAnswersToDouble(answers);
+
             PrintResults(actual);
-            PrintResults(expected);
-         
+
+            Console.WriteLine(OutputsAreEqual());
+
+        }
+
+        private void Setup()
+        {
+            GetHTMLCodeAsString();
+            InitializeLists();
         }
 
         public List<string> GetActions(string HTMLfile)
@@ -83,7 +86,11 @@ namespace YoCode
 
         public void InitializeLists()
         {
+            actual = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
+            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675" };
+            //FillExpectedOutputs(expected, expectedValues);                
+               
             actions = GetActions(HTMLcode);
         }
 
@@ -94,15 +101,12 @@ namespace YoCode
             for (int i = 0; i < texts.Count; i++)
             {
                 UnitConverterResults tempActual = new UnitConverterResults();
-                UnitConverterResults tempExpected = new UnitConverterResults();
 
                 tempActual.input = texts[i];
-                tempExpected.input = texts[i];
 
                 for (int j = 0; j < actions.Count; j++)
                 {
                     tempActual.action = actions[j];
-                    tempExpected.action = actions[j];
                         
                     var formContent = new FormUrlEncodedContent(new[]
                     {
@@ -115,7 +119,6 @@ namespace YoCode
 
                     tempActual.output = baz;
                     actual.Add(tempActual);
-                    expected.Add(tempExpected);
                 }
             }
             return answers;
@@ -141,8 +144,8 @@ namespace YoCode
             return new List<string> { "action", "value" };
         }
 
-        public void PrintResults(List<UnitConverterResults> results){
-
+        public void PrintResults(List<UnitConverterResults> results)
+        {
             foreach(UnitConverterResults x in results)
             {
                 Console.WriteLine("Input: " + x.input);
@@ -150,9 +153,23 @@ namespace YoCode
                 Console.WriteLine("Output: " + x.output);
                 Console.WriteLine("-------------------");
             }
+                Console.WriteLine("END----------------\n");
+        }
 
-                Console.WriteLine("END----------------");
+        public bool OutputsAreEqual()
+        {
+            for(int i = 0; i < actual.Count; i++)
+            {
+                Console.WriteLine("Compare number: " + i + 1);
+                Console.WriteLine("Actual number: " + actual[i].output);
+                Console.WriteLine("Expected number: " + expectedOutputs[i]);
 
+                if (!expectedOutputs[i].Equals(actual[i].output))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
 
