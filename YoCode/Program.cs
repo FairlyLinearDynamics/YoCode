@@ -15,7 +15,7 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            WebControllerEndpoint wce = new WebControllerEndpoint("http://localhost:57009");
+            UnitConverterCheck ucc = new UnitConverterCheck("http://localhost:57009");
 
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
