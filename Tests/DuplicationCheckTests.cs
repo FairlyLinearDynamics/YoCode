@@ -14,9 +14,9 @@ namespace YoCode_XUnit
         IPathManager fakeDir;
         IDupFinder fakeDupFinder;
 
-        private readonly ITestOutputHelper _output;
+        DuplicationCheck dupCheck;
 
-        public DuplicationCheckTests(ITestOutputHelper output)
+        public DuplicationCheckTests()
         {
             var mockDir = new Mock<IPathManager>();
             var mockDupFinder = new Mock<IDupFinder>();
@@ -24,39 +24,38 @@ namespace YoCode_XUnit
             var fakeOriginal = @"\fake\original\dir";
             var fakeModified = @"\fake\modified\dir";
 
+            var fakeOriginalCodeScore = "<CodebaseCost>50 <TotalDuplicatesCost>50";
+            var fakeModifiedCodeScore = "<CodebaseCost>10 <TotalDuplicatesCost>10";
+
             var fileNameChecked = "UnitConverterWebApp.sln";
 
             mockDir.Setup(w => w.originalTestDirPath).Returns(fakeOriginal);
             mockDir.Setup(w => w.modifiedTestDirPath).Returns(fakeModified);
 
-            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(),Path.Combine(fakeOriginal,fileNameChecked))).Returns(new FeatureEvidence()
-            {
-                Output = "<CodebaseCost>50 <TotalDuplicatesCost>50",
-            });
+            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeOriginal, fileNameChecked)))
+                .Returns(SetUpFeatureEvidence(fakeOriginalCodeScore));
 
-            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(),Path.Combine(fakeModified,fileNameChecked))).Returns(new FeatureEvidence()
-            {
-                Output = "<CodebaseCost>10 <TotalDuplicatesCost>10",
-            });
-
-            _output = output;
+            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeModified, fileNameChecked)))
+                .Returns(SetUpFeatureEvidence(fakeModifiedCodeScore));
 
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
+
+            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder);
+        }
+
+        private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)
+        {
+            return new FeatureEvidence()
+            {
+                Output = outputToBeSet,
+            };
         }
 
         [Fact]
         public void DuplicationCheck_FeatureImplemented_TRUE()
         {
-            var dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder);
-            foreach(var evidence in dupCheck.DuplicationEvidence.Evidence)
-            {
-                _output.WriteLine(evidence);
-            }
-
             dupCheck.DuplicationEvidence.FeatureImplemented.Should().BeTrue();
         }
-
-        
     }
 }
