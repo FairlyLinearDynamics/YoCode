@@ -30,9 +30,7 @@ namespace YoCode
             client = new HttpClient { BaseAddress = new Uri(port) };
             Setup();
             RunTheCheck();
-
             UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
-
         }
 
         private void Setup()
@@ -86,7 +84,7 @@ namespace YoCode
         {
             actual = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
-            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675"};               
+            expectedOutputs = GetExpectedOutputs();              
             actions = GetActions(HTMLcode);
         }
 
@@ -144,6 +142,7 @@ namespace YoCode
         {
             bool ret = true;
 
+            UnitConverterCheckEvidence.GiveEvidence(client.BaseAddress.AbsoluteUri);
             UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
 
             for(int i = 0; i < actual.Count; i++)
@@ -164,6 +163,11 @@ namespace YoCode
         public (double,double) ToDouble(string a, string b)
         {
             return (Double.Parse(a), Double.Parse(b));
+        }
+
+        public List<string> GetExpectedOutputs()
+        {
+            return new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675"};
         }
 
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();

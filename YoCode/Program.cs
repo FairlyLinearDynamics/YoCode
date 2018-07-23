@@ -93,13 +93,15 @@ namespace YoCode
                 checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
                 // Project run test
-                checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+                var pr = new ProjectRunner(dir.modifiedTestDirPath);
+                checkList.Add(pr.ProjectRunEvidence);
                 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
                 // Unit converter check test
-                checkList.Add(new UnitConverterCheck("http://localhost:57009").UnitConverterCheckEvidence);                
+                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+                //pr.GetPort() "http://localhost:57009"
             }
             return checkList;
         }

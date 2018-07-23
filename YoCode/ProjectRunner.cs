@@ -30,9 +30,13 @@ namespace YoCode
             Argument = Path.Combine(Argument, Path.GetFileName(netCoreOutputFolder), "UnitConverterWebApp.dll");
 
             var processRunner = new ProcessRunner(Process, workingDir, Argument);
-            processRunner.ExecuteTheCheck("Application started. Press Ctrl+C to shut down.");
+            processRunner.ExecuteTheCheck();
+            //"Application started. Press Ctrl+C to shut down."
             Output = processRunner.Output;
             ErrorOutput = processRunner.ErrorOutput;
+
+            //UnitConverterCheck ucc = new UnitConverterCheck(GetPort());
+
             
             if (processRunner.TimedOut)
             {
@@ -41,6 +45,7 @@ namespace YoCode
             }
 
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
+
 
             if(ProjectRunEvidence.FeatureImplemented)
             {
