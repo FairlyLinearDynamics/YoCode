@@ -142,7 +142,6 @@ namespace YoCode
         {
             bool ret = true;
 
-            UnitConverterCheckEvidence.GiveEvidence(client.BaseAddress.AbsoluteUri);
             UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
 
             for(int i = 0; i < actual.Count; i++)

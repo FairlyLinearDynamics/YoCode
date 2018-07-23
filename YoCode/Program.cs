@@ -95,14 +95,14 @@ namespace YoCode
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, featureRunner);
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
-                pr.KillProject();
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
-                // Unit converter check test
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
-                //pr.GetPort() "http://localhost:57009"
+
+                pr.KillProject();         
+
             }
             return checkList;
         }
