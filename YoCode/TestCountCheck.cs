@@ -12,6 +12,8 @@ namespace YoCode
         public string StatLine { get; set; }
         public string Output { get; set; }
 
+        private int TestCountTreshold = 10;
+
         private TestStats stats;
         private List<int> tempStats;
         private readonly IFeatureRunner featureRunner;
@@ -40,9 +42,10 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 ? true :false;
+            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold;
             UnitTestEvidence.GiveEvidence(StatLine);
             UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
+            UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
 
         }
 
@@ -51,8 +54,7 @@ namespace YoCode
             stats.totalTests = tempStats[0];
             stats.testsPassed = tempStats[1];
             stats.testsFailed = tempStats[2];
-            stats.testsSkipped = tempStats[3];
-            
+            stats.testsSkipped = tempStats[3];            
         }
 
         public static List<string> GetTestKeyWords()
@@ -61,7 +63,5 @@ namespace YoCode
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
-
-
     }
 }

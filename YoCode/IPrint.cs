@@ -4,9 +4,10 @@ using System.Text;
 
 namespace YoCode
 {
-    interface IPrint
+    interface IOutputWriter
     {
-        void PrintIntroduction();
-        void PrintFinalResults(List<FeatureEvidence> featureList);
+        bool AddNewLine(string text);
+        void WriteAndFlush();
+        void AddDiv();
     }
 }
