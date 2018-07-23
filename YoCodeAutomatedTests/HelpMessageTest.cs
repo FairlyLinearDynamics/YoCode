@@ -13,16 +13,15 @@ namespace YoCodeAutomatedTests
         {
             var helper = new TestHelperMethods();
 
-            string argument = "YoCode.dll --help";
+            const string argument = "YoCode.dll --help";
 
             ProcessRunner pr = new ProcessRunner("dotnet", helper.dllPath, argument);
             pr.ExecuteTheCheck("Minimum test count:");
 
-            var actualPath = helper.testPath + @"\ActualOutputs\helpMessage.txt";
-            var expectedPath = helper.testPath + @"\ExpectedOutputs\helpMessage.txt";
+            var actualPath = Path.Combine(helper.testPath, "ActualOutputs\\helpMessage.txt");
+            var expectedPath = Path.Combine(helper.testPath, "ExpectedOutputs\\helpMessage.txt");
 
             var actualOutput = pr.Output.Trim();
-            var expectedOutput = File.ReadAllText(expectedPath);
 
             TestHelperMethods.WriteToFile(actualPath, actualOutput);
 
