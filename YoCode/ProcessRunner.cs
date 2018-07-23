@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 
 namespace YoCode
@@ -13,80 +12,87 @@ namespace YoCode
         public string ErrorOutput { get; set; }
 
         private ProcessInfo procinfo;
-        private readonly TimeSpan timeout = TimeSpan.FromSeconds(15);
-        private readonly StringBuilder output = new StringBuilder();
-        private readonly StringBuilder errorOutput = new StringBuilder();
+        private readonly TimeSpan timeout = TimeSpan.FromSeconds(40);
+        private readonly List<string> output = new List<string>();
+        private readonly List<string> errorOutput = new List<string>();
 
         public ProcessRunner(string processName, string workingDir, string arguments)
         {
             procinfo = SetupProcessInfo(processName, workingDir, arguments);
         }
 
+        private bool ProcessShouldFinishAutomatically(string message) => string.IsNullOrWhiteSpace(message);
+
         public void ExecuteTheCheck(string waitForMessage = null)
         {
-                var p = new Process();
-                p.StartInfo = SetProcessStartInfo(procinfo);
-                p.EnableRaisingEvents = true;
-                p.OutputDataReceived += DataReceived;
-                p.ErrorDataReceived += ErrorDataReceived;
-                p.Start();
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
+            var p = new Process();
+            p.StartInfo = SetProcessStartInfo(procinfo);
+            p.EnableRaisingEvents = true;
+            p.OutputDataReceived += DataReceived;
+            p.ErrorDataReceived += ErrorDataReceived;
+            p.Start();
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
 
+            if (ProcessShouldFinishAutomatically(waitForMessage))
+            {
+                WaitForProcessToFinish(p);
+            } else
+            {
                 WaitForExitCondition(p, waitForMessage);
+            }
 
-                Output = output.ToString();
-                ErrorOutput = errorOutput.ToString();
+            Output = string.Join(Environment.NewLine, output);
+            ErrorOutput = string.Join(Environment.NewLine, errorOutput);
+        }
 
+        private bool OutputContainsStopKeywords(List<string> outputStopWords, List<string> errorStopWords)
+        {
+            return output.ListContainsAnyKeywords(outputStopWords) || errorOutput.ListContainsAnyKeywords(errorStopWords);
+        }
+
+        private void WaitForProcessToFinish(Process p)
+        {
+            if (!p.WaitForExit((int)timeout.TotalMilliseconds))
+            {
+                TimedOut = true;
+            }
+            KillLiveProcess(p);
         }
 
         private void WaitForExitCondition(Process p, string wait)
         {
-            if (string.IsNullOrEmpty(wait))
-            {
-                if (!p.WaitForExit((int)timeout.TotalMilliseconds))
-                {
-                    TimedOut = true;
-                }
-                return;
-            }
-
-            /*If code gets to this point, it should also look for "Unable to start Kestrel"
-             *in case kestrel fails (Fails to bind to address)*/
-            List<string> keywords = new List<string>
-            {
-                wait,
-                "Unable to start Kestrel"
-            };
-
-            /*Check if 'appsettings.json file is missing*/
-            List<string> errorKeywords = new List<string>
-            {
-                "'appsettings.json' was not found and is not optional."
-            };
+            var keywords = ExpectedStopConditions(wait);
+            var errorKeywords = ExpectedErrorStopConditions();
 
             var loopRetryDelay = TimeSpan.FromSeconds(0.5);
             var numberOfTimesToRetry = (int)(timeout / loopRetryDelay);
             var numberOfRetries = 0;
 
             while (!p.HasExited
-                && !output.ToString().ContainsAny(keywords)
-                && numberOfRetries < numberOfTimesToRetry
-                && !errorOutput.ToString().ContainsAny(errorKeywords))
+                && !OutputContainsStopKeywords(keywords, errorKeywords)
+                && numberOfRetries < numberOfTimesToRetry)
             {
                 Thread.Sleep(loopRetryDelay);
                 numberOfRetries++;
             }
-            if(numberOfRetries == numberOfTimesToRetry)
-            {
-                TimedOut = true;
-            }
 
-            if(!p.HasExited)
-            {
-                p.Kill();
-            }
+            TimedOut = numberOfRetries == numberOfTimesToRetry;
+
+            KillLiveProcess(p);
         }
+
+        private List<string> ExpectedStopConditions(string extraCondition) => new List<string>
+            {
+                extraCondition,
+                "Unable to start Kestrel",
+                "Failed to bind to address"
+            };
+
+        private List<string> ExpectedErrorStopConditions() => new List<string>
+            {
+                "'appsettings.json' was not found and is not optional."
+            };
 
         private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)
         {
@@ -114,12 +120,20 @@ namespace YoCode
 
         private void DataReceived(object sender, DataReceivedEventArgs e)
         {
-            output.Append(e.Data + Environment.NewLine);
+            output.Add(e.Data);
         }
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            errorOutput.Append(e.Data + Environment.NewLine);
+            errorOutput.Add(e.Data);
+        }
+
+        private void KillLiveProcess(Process p)
+        {
+            if (!p.HasExited)
+            {
+                p.Kill();
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace YoCode
             Argument = Path.Combine(Argument, Path.GetFileName(netCoreOutputFolder), "UnitConverterWebApp.dll");
 
             var processRunner = new ProcessRunner(Process, workingDir, Argument);
-            processRunner.ExecuteTheCheck("Application started.");
+            processRunner.ExecuteTheCheck("Application started. Press Ctrl+C to shut down.");
             Output = processRunner.Output;
             ErrorOutput = processRunner.ErrorOutput;
             
