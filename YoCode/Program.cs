@@ -14,13 +14,7 @@ namespace YoCode
         private static string CMDToolsPath;
 
         static void Main(string[] args)
-        {
-      
-            UnitConverterCheck ucc = new UnitConverterCheck("http://localhost:57009");
-
-
-
-
+        {      
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
@@ -103,13 +97,13 @@ namespace YoCode
 
                 // Project run test
                 checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
-
+                
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
-                
+                // Unit converter check test
+                checkList.Add(new UnitConverterCheck("http://localhost:57009").UnitConverterCheckEvidence);                
             }
-
             return checkList;
         }
     }

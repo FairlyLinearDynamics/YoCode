@@ -27,7 +27,6 @@ namespace YoCode
 
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
-
             CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);

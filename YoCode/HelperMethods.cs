@@ -8,6 +8,8 @@ namespace YoCode
 {
     public static class HelperMethods
     {
+        const int RoundTo = 6;
+
         public static bool ContainsAny(this string line, IEnumerable<string> keywords)
         {
             return keywords.Any(line.Contains);
@@ -79,22 +81,14 @@ namespace YoCode
 
         public static bool SubjectivelyEquals(this double a, double b)
         {
-            int RoundTo = 6;
-            var aComp = Decimal.Round(a, RoundTo);
-            var bComp = Decimal.Round(b, RoundTo);
+            double aComp = Math.Round(a, RoundTo);
+            double bComp = Math.Round(b, RoundTo);
 
-            if(Math.Abs(aComp,bComp) >= 0.000001M)
+            if(Math.Abs(aComp - bComp) > 0.000001)
             {
                 return false;
             }
             return true;
-
-
-
-
-            return false;
-
-
         }
 
     }

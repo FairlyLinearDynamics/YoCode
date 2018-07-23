@@ -26,9 +26,13 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
+            UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
             client = new HttpClient { BaseAddress = new Uri(port) };
             Setup();
             RunTheCheck();
+
+            UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+
         }
 
         private void Setup()
@@ -82,7 +86,7 @@ namespace YoCode
         {
             actual = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
-            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675" };               
+            expectedOutputs = new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675"};               
             actions = GetActions(HTMLcode);
         }
 
@@ -136,37 +140,32 @@ namespace YoCode
             return new List<string> { "action", "value" };
         }
 
-        public void PrintResults(List<UnitConverterResults> results)
-        {
-            foreach(UnitConverterResults x in results)
-            {
-                Console.WriteLine("Input: " + x.input);
-                Console.WriteLine("Action: " + x.action);
-                Console.WriteLine("Output: " + x.output);
-                Console.WriteLine("-------------------");
-            }
-        }
-
         public bool OutputsAreEqual()
         {
+            bool ret = true;
+
+            UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
+
             for(int i = 0; i < actual.Count; i++)
             {
                 (var A, var B) = ToDouble(expectedOutputs[i], actual[i].output);
 
-                if (A.SubjectivelyEquals(B))
+                var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", Math.Round(A,6), Math.Round(B,6), A.SubjectivelyEquals(B));
+                UnitConverterCheckEvidence.GiveEvidence(x);
+
+                if (!A.SubjectivelyEquals(B))
                 {
-                    return false;
+                    ret = false;
                 }
             }
-            return true;
+            return ret;
         }
 
         public (double,double) ToDouble(string a, string b)
         {
-            int resA = Int32.Parse(a);
-            int resB = Int32.Parse(b);
-            return (resA,resB);
+            return (Double.Parse(a), Double.Parse(b));
         }
 
+        public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
     }
 }
