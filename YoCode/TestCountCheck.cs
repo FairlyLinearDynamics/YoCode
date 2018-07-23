@@ -31,7 +31,7 @@ namespace YoCode
         public void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = featureRunner.Execute(pr, "Unit test check");
+            var evidence = featureRunner.Execute(pr);
             if (evidence.FeatureFailed)
             {
                 return;

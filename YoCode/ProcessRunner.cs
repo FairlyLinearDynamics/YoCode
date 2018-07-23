@@ -7,7 +7,8 @@ namespace YoCode
 {
     public class ProcessRunner
     {
-        public bool TimedOut { get; private set; }
+        internal bool TimedOut { get; private set; }
+
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
@@ -15,6 +16,7 @@ namespace YoCode
         private readonly TimeSpan timeout = TimeSpan.FromSeconds(40);
         private readonly List<string> output = new List<string>();
         private readonly List<string> errorOutput = new List<string>();
+        private Process p;
 
         public ProcessRunner(string processName, string workingDir, string arguments)
         {
@@ -23,9 +25,9 @@ namespace YoCode
 
         private bool ProcessShouldFinishAutomatically(string message) => string.IsNullOrWhiteSpace(message);
 
-        public void ExecuteTheCheck(string waitForMessage = null)
+        public void ExecuteTheCheck(string waitForMessage = null, bool kill=true)
         {
-            var p = new Process();
+            p = new Process();
             p.StartInfo = SetProcessStartInfo(procinfo);
             p.EnableRaisingEvents = true;
             p.OutputDataReceived += DataReceived;
@@ -39,7 +41,7 @@ namespace YoCode
                 WaitForProcessToFinish(p);
             } else
             {
-                WaitForExitCondition(p, waitForMessage);
+                WaitForExitCondition(p, waitForMessage, kill);
             }
 
             Output = string.Join(Environment.NewLine, output);
@@ -57,10 +59,10 @@ namespace YoCode
             {
                 TimedOut = true;
             }
-            KillLiveProcess(p);
+            KillLiveProcess();
         }
 
-        private void WaitForExitCondition(Process p, string wait)
+        private void WaitForExitCondition(Process p, string wait, bool kill)
         {
             var keywords = ExpectedStopConditions(wait);
             var errorKeywords = ExpectedErrorStopConditions();
@@ -78,8 +80,11 @@ namespace YoCode
             }
 
             TimedOut = numberOfRetries == numberOfTimesToRetry;
-
-            KillLiveProcess(p);
+            if(kill)
+            {
+                KillLiveProcess();
+            }
+            
         }
 
         private List<string> ExpectedStopConditions(string extraCondition) => new List<string>
@@ -128,7 +133,7 @@ namespace YoCode
             errorOutput.Add(e.Data);
         }
 
-        private void KillLiveProcess(Process p)
+        public void KillLiveProcess()
         {
             if (!p.HasExited)
             {
