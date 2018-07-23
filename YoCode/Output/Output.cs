@@ -33,15 +33,14 @@ namespace YoCode
             outputWriter.WriteReport();
         }
 
-        public void ShowErrors(List<string> errs)
+        public void ShowInputErrors(List<string> errs)
         {
-
-            outputWriter.AddMessage("Error detected:");
             foreach(var err in errs)
             {
                 outputWriter.AddErr(err);
             }
             outputWriter.AddMessage(messages.AskForHelp);
+            outputWriter.WriteReport();
         }
 
         public void ShowHelp()
@@ -49,6 +48,7 @@ namespace YoCode
             ShowBanner();
             ShowHelpMsg();
             ShowDupfinderHelp();
+            outputWriter.WriteReport();
         }
 
         public void ShowBanner()
@@ -69,11 +69,13 @@ namespace YoCode
         public void ShowLaziness()
         {
             outputWriter.AddMessage("Project unmodified");
+            outputWriter.WriteReport();
         }
 
         public void ShowDirEmptyMsg()
         {
             outputWriter.AddMessage("Specified directory inaccessible");
+            outputWriter.WriteReport();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace YoCode
 
         public void AddMessage(string message)
         {
-            msg.Append($"<p1>{message}</p1>");
+            msg.Append($"<p1>{message}<br /></p1>");
         }
 
         public void AddFeature(FeatureData data)
@@ -65,10 +65,22 @@ namespace YoCode
         private string BuildReport()
         {
             var report = new StringBuilder();
-            report.Append(introduction);
-            report.Append("<ul>");
-            report.Append(features.ToString());
-            report.Append("</ul>");
+            if (features.Length != 0)
+            {
+                report.Append(introduction);
+                report.Append("<ul>");
+                report.Append(features.ToString());
+                report.Append("</ul>");
+            }
+            if (errors.Length != 0)
+            {
+                report.Append("<h1>Input errors present: </h1>");
+                report.Append($"<ul>{errors.ToString()}</ul>");
+            }
+            if (msg.Length != 0)
+            {
+                report.Append($"{msg.ToString()}");
+            }
 
             return template.Replace(FEATURE_TAG,report.ToString());
         }

@@ -34,7 +34,7 @@ namespace YoCode
 
             if (result.HasErrors)
             {
-                consoleOutput.ShowErrors(result.errors);
+                consoleOutput.ShowInputErrors(result.errors);
                 return;
             }
 
