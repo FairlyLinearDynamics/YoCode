@@ -7,12 +7,12 @@ namespace YoCode
     {
         public static FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
         {
-            var pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck();
+            pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
+            pr.ExecuteTheCheck(waitForMessage, kill);
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,
-                FeatureTitle = featureTitle
+                ErrorOutput = pr.ErrorOutput
             };
 
             if (pr.TimedOut)
@@ -20,6 +20,11 @@ namespace YoCode
                 evidence.SetFailed("Timed out");
             }
             return evidence;
+        }
+
+        public void EndProcess()
+        {
+            pr.KillLiveProcess();
         }
     }
 }
