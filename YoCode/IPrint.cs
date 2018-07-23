@@ -4,10 +4,11 @@ using System.Text;
 
 namespace YoCode
 {
-    interface IOutputWriter
+    interface IPrint
     {
-        bool AddNewLine(string text);
+        void AddNewLine(string text);
         void WriteAndFlush();
         void AddDiv();
+
     }
 }

@@ -7,9 +7,9 @@ namespace YoCode
 {
     class Output
     {
-        IOutputWriter outputWriter;
+        IPrint outputWriter;
 
-        public Output(IOutputWriter printTo)
+        public Output(IPrint printTo)
         {
             outputWriter = printTo;
         }
@@ -42,8 +42,9 @@ namespace YoCode
         public void OutputForEvidencePresnt(FeatureEvidence feature)
         {
             outputWriter.AddNewLine(feature.FeatureTitle);
-            outputWriter.AddNewLine("");
+            outputWriter.AddDiv();
             outputWriter.AddNewLine($"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}");
+            outputWriter.AddDiv();
             outputWriter.AddNewLine("Indication of above: ");
             ShowEvidence(feature);
         }

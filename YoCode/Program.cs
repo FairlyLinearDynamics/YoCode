@@ -20,7 +20,7 @@ namespace YoCode
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
 
-            var consoleOutput = new Output(new ConsoleWriter());
+            var consoleOutput = new Output(new WebWriter());
             consoleOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
@@ -90,13 +90,13 @@ namespace YoCode
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
+                //checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
                 // Project run test
-                checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+                //checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
 
                 // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
+                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
                 
             }

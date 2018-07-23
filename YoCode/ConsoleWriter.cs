@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace YoCode
 {
-    public class ConsoleWriter : IOutputWriter
+    public class ConsoleWriter /*: IPrint*/
     {
         string textToPrint;
 
