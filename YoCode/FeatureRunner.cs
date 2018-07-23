@@ -2,18 +2,22 @@
 {
     public interface IFeatureRunner
     {
-        FeatureEvidence Execute(ProcessDetails processDetails);
+        FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true);
+        void EndProcess();
     }
 
     public class FeatureRunner : IFeatureRunner
     {
-        public FeatureEvidence Execute(ProcessDetails processDetails)
+        private ProcessRunner pr;
+
+        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
         {
-            var pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck();
+            pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
+            pr.ExecuteTheCheck(waitForMessage, kill);
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,
+                ErrorOutput = pr.ErrorOutput
             };
 
             if (pr.TimedOut)
@@ -21,6 +25,11 @@
                 evidence.SetFailed("Timed out");
             }
             return evidence;
+        }
+
+        public void EndProcess()
+        {
+            pr.KillLiveProcess();
         }
     }
 }

@@ -92,8 +92,10 @@ namespace YoCode
                 // Duplication check
                 checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, featureRunner);
                 // Project run test
-                checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+                checkList.Add(pr.ProjectRunEvidence);
+                pr.KillProject();
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);

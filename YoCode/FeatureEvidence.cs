@@ -9,6 +9,7 @@ namespace YoCode
         public bool FeatureImplemented { get; set; }
         public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
+        public string ErrorOutput { get; set; }
         public bool FeatureFailed { get; private set; }
 
         public List<string> Evidence { get; set; } = new List<string>();

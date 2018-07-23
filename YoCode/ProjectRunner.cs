@@ -10,12 +10,14 @@ namespace YoCode
         internal string Output { get; }
 
         private string Process { get; } = "dotnet";
-        private string Argument { get; } = @"bin\Debug\";
+        private string Argument { get; set; } = @"bin\Debug\";
         private string ErrorOutput { get; }
         private const string projectFolder = @"\UnitConverterWebApp";
+        private IFeatureRunner featureRunner;
 
-        public ProjectRunner(string workingDir)
+        public ProjectRunner(string workingDir, IFeatureRunner featureRunner)
         {
+            this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
             workingDir += projectFolder;
             if (!Directory.Exists(workingDir))
@@ -24,24 +26,17 @@ namespace YoCode
                 return;
             }
 
-            var binDebugFolder = Path.Combine(workingDir, Argument);
-            var netCoreOutputFolder = Directory.GetDirectories(binDebugFolder).First();
-            Argument = Path.Combine(Argument, Path.GetFileName(netCoreOutputFolder), "UnitConverterWebApp.dll");
+            Argument = CreateArgument(workingDir);
 
-            var processRunner = new ProcessRunner(Process, workingDir, Argument);
-            processRunner.ExecuteTheCheck("Application started. Press Ctrl+C to shut down.");
-            Output = processRunner.Output;
-            ErrorOutput = processRunner.ErrorOutput;
+            var processDetails = new ProcessDetails(Process, workingDir, Argument);
 
-            if (processRunner.TimedOut)
-            {
-                ProjectRunEvidence.SetFailed("Timed Out");
-                return;
-            }
+            var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
+            Output = evidence.Output;
+            ErrorOutput = evidence.ErrorOutput;
 
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
 
-            if(ProjectRunEvidence.FeatureImplemented)
+            if (ProjectRunEvidence.FeatureImplemented)
             {
                 ProjectRunEvidence.GiveEvidence($"Port: {GetPort()}");
             }
@@ -49,6 +44,13 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
+        }
+
+        private string CreateArgument(string workingDir)
+        {
+            var binDebugFolder = Path.Combine(workingDir, Argument);
+            var netCoreOutputFolder = Directory.GetDirectories(binDebugFolder).First();
+            return Argument = Path.Combine(Argument, Path.GetFileName(netCoreOutputFolder), "UnitConverterWebApp.dll");
         }
 
         public bool ApplicationStarted()
@@ -62,6 +64,11 @@ namespace YoCode
             var line = Output.GetLineWithOneKeyword(portKeyword);
             var splitLine = line.Split(portKeyword, StringSplitOptions.None);
             return splitLine.Length > 1 ? splitLine[1] : "";
+        }
+
+        public void KillProject()
+        {
+            featureRunner.EndProcess();
         }
 
         public FeatureEvidence ProjectRunEvidence { get; } = new FeatureEvidence();
