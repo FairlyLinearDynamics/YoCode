@@ -7,7 +7,8 @@ namespace YoCode
     // TODO: find other way of running .dll file instead of hardcoding the name 
     public class ProjectRunner
     {
-        private string Output { get; }
+        internal string Output { get; }
+
         private string Process { get; } = "dotnet";
         private string Argument { get; } = @"bin\Debug\";
         private string ErrorOutput { get; }
