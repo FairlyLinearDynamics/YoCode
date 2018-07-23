@@ -7,9 +7,9 @@ namespace YoCode
 {
     public class ProcessRunner
     {
-        public bool TimedOut { get; private set; }
-        public string Output { get; set; }
-        public string ErrorOutput { get; set; }
+        internal bool TimedOut { get; private set; }
+        internal string Output { get; set; }
+        internal string ErrorOutput { get; set; }
 
         private ProcessInfo procinfo;
         private readonly TimeSpan timeout = TimeSpan.FromSeconds(40);

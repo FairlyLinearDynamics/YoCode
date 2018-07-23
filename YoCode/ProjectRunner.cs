@@ -4,15 +4,13 @@ using System.IO;
 
 namespace YoCode
 {
+    // TODO: find other way of running .dll file instead of hardcoding the name 
     public class ProjectRunner
     {
+        private string Output { get; }
         private string Process { get; } = "dotnet";
-
-        // TODO: find other way of running .dll file instead of hardcoding the name 
         private string Argument { get; } = @"bin\Debug\";
-        public string Output { get; }
         private string ErrorOutput { get; }
-
         private const string projectFolder = @"\UnitConverterWebApp";
 
         public ProjectRunner(string workingDir)
@@ -33,7 +31,7 @@ namespace YoCode
             processRunner.ExecuteTheCheck("Application started. Press Ctrl+C to shut down.");
             Output = processRunner.Output;
             ErrorOutput = processRunner.ErrorOutput;
-            
+
             if (processRunner.TimedOut)
             {
                 ProjectRunEvidence.SetFailed("Timed Out");

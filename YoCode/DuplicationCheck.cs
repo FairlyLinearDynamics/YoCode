@@ -87,7 +87,7 @@ namespace YoCode
         private FeatureEvidence RunOneCheck(string args)
         {
             var proc = new ProcessDetails(processName, workingDir, args);
-            var evidence = featureRunner.Execute(proc, "Check duplication");
+            var evidence = featureRunner.Execute(proc);
 
             evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
             return evidence;

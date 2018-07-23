@@ -2,19 +2,18 @@
 {
     public interface IFeatureRunner
     {
-        FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle);
+        FeatureEvidence Execute(ProcessDetails processDetails);
     }
 
     public class FeatureRunner : IFeatureRunner
     {
-        public FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
+        public FeatureEvidence Execute(ProcessDetails processDetails)
         {
             var pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
             pr.ExecuteTheCheck();
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,
-                FeatureTitle = featureTitle
             };
 
             if (pr.TimedOut)
