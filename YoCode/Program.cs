@@ -87,15 +87,16 @@ namespace YoCode
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
 
                 // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
+                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, featureRunner).ProjectBuilderEvidence);
 
                 // Duplication check
                 checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
 
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, featureRunner);
                 // Project run test
-                var pr = new ProjectRunner(dir.modifiedTestDirPath);
                 checkList.Add(pr.ProjectRunEvidence);
-                
+                pr.KillProject();
+
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
 
