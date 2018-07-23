@@ -17,7 +17,7 @@ namespace YoCode
         {
             var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
 
-            var evidence = featureRunner.Execute(processDetails);
+            var evidence = new FeatureRunner().Execute(processDetails);
             if (evidence.FeatureFailed)
             {
                 return;

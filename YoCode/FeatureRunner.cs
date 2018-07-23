@@ -3,12 +3,14 @@ using System.IO;
 
 namespace YoCode
 {
-    public static class FeatureRunner
+    public class FeatureRunner
     {
-        public static FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
+        ProcessRunner pr;
+
+        public FeatureEvidence Execute(ProcessDetails processDetails)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck(waitForMessage, kill);
+            pr.ExecuteTheCheck();
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,

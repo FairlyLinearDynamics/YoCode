@@ -81,6 +81,8 @@ namespace YoCode
                     FeatureImplemented = true,
                 });
 
+                var featureRunner = new FeatureRunner();
+
                 // Git repo used
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
