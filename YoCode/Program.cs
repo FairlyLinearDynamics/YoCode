@@ -99,10 +99,7 @@ namespace YoCode
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
-
-                
             }
-
             return checkList;
         }
     }
