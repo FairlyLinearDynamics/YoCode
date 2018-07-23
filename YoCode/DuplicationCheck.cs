@@ -19,16 +19,11 @@ namespace YoCode
         private readonly string origArguments;
         private readonly IFeatureRunner featureRunner;
 
-        private string Output { get; set; }
-
         private int ModiCodeBaseCost { get; set; }
         private int ModiDuplicateCost { get; set; }
 
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
-
-        private string StrCodeBaseCost { get; set; }
-        private string StrTotalDuplicateCost { get; set; }
 
         public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
         {
@@ -48,8 +43,8 @@ namespace YoCode
             }
             catch(Exception e)
             {
-            DuplicationEvidence.FeatureImplemented = false;
-            DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
+                DuplicationEvidence.FeatureImplemented = false;
+                DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
             }
 
         }

@@ -99,7 +99,6 @@ namespace YoCode
                     var formContent = GetEncodedContent(i, j);
 
                     var bar = await client.PostAsync("/Home/Convert", formContent);
-                    //string baz = await GetResponseAsTaskAsync(bar);
 
                     tempActual.output = await GetResponseAsTaskAsync(bar);
                     actual.Add(tempActual);
@@ -152,12 +151,22 @@ namespace YoCode
         {
             for(int i = 0; i < actual.Count; i++)
             {
-                if (!expectedOutputs[i].Equals(actual[i].output))
+                (var A, var B) = ToDouble(expectedOutputs[i], actual[i].output);
+
+                if (A.SubjectivelyEquals(B))
                 {
                     return false;
                 }
             }
             return true;
         }
+
+        public (double,double) ToDouble(string a, string b)
+        {
+            int resA = Int32.Parse(a);
+            int resB = Int32.Parse(b);
+            return (resA,resB);
+        }
+
     }
 }

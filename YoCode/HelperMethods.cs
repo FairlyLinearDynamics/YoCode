@@ -77,5 +77,25 @@ namespace YoCode
             return line.Substring(pFrom, pTo - pFrom);
         }
 
+        public static bool SubjectivelyEquals(this double a, double b)
+        {
+            int RoundTo = 6;
+            var aComp = Decimal.Round(a, RoundTo);
+            var bComp = Decimal.Round(b, RoundTo);
+
+            if(Math.Abs(aComp,bComp) >= 0.000001M)
+            {
+                return false;
+            }
+            return true;
+
+
+
+
+            return false;
+
+
+        }
+
     }
 }
