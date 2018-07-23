@@ -3,6 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using LibGit2Sharp;
 using System.Resources;
 
 namespace YoCode
@@ -19,46 +20,42 @@ namespace YoCode
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
 
-            var consoleOutput = new PrintToConsole();
+            var consoleOutput = new Output(new ConsoleWriter());
+            consoleOutput.PrintIntroduction();
+
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.PrintHelp();
+                consoleOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.PrintError(result.errors);
+                consoleOutput.ShowErrors(result.errors);
                 return;
             }
 
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
-            var modifiedTest = FileImport.GetAllFilesInDirectory(modifiedTestDirPath);
-            var originalTest = FileImport.GetAllFilesInDirectory(originalTestDirPath);
+            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            if (modifiedTest == null || originalTest == null)
+            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.NothingInDirectory();
+                consoleOutput.ShowDirEmptyMsg();
                 return;
             }
 
-            var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
-
-            var checkList = PerformChecks(dir);
-
-            if (checkList.Any())
+            if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.PrintFinalResults(checkList);
+                consoleOutput.ShowLaziness();
+                return;
             }
-            else
-            {
-                consoleOutput.LazinessEvidence();
-            }
+
+            consoleOutput.PrintFinalResults(PerformChecks(dir));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)

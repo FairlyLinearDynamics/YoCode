@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCode_XUnit", "Tests\YoCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCode", "YoCode\YoCode.csproj", "{7901B379-9C27-4732-908D-54F03DB027D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoCodeAutomatedTests", "YoCodeAutomatedTests\YoCodeAutomatedTests.csproj", "{FF1B6385-DB36-45F8-992E-F6E25677ACD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7901B379-9C27-4732-908D-54F03DB027D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7901B379-9C27-4732-908D-54F03DB027D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7901B379-9C27-4732-908D-54F03DB027D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1B6385-DB36-45F8-992E-F6E25677ACD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1B6385-DB36-45F8-992E-F6E25677ACD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1B6385-DB36-45F8-992E-F6E25677ACD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1B6385-DB36-45F8-992E-F6E25677ACD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
