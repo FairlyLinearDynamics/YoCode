@@ -166,7 +166,7 @@ namespace YoCode
 
         public List<string> GetExpectedOutputs()
         {
-            return new List<string> { "4.572", "12.7", "8.0467", "22.86", "63.5", "40.2335", "114.3", "317.5", "201.1675"};
+            return new List<string> { "4.572", "12.7", "8.04672", "22.86", "63.5", "40.2336", "114.3", "317.5", "201.168"};
         }
 
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
