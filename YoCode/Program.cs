@@ -15,7 +15,7 @@ namespace YoCode
         private static string CMDToolsPath;
 
         static void Main(string[] args)
-        {
+        {      
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
@@ -94,10 +94,13 @@ namespace YoCode
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
-                pr.KillProject();
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+
+                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+
+                pr.KillProject();         
             }
             return checkList;
         }

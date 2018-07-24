@@ -7,10 +7,10 @@ namespace YoCode
     {
         ProcessRunner pr;
 
-        public FeatureEvidence Execute(ProcessDetails processDetails)
+        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill =true)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck();
+            pr.ExecuteTheCheck(waitForMessage, kill);
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,

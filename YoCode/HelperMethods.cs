@@ -8,6 +8,8 @@ namespace YoCode
 {
     public static class HelperMethods
     {
+        const int RoundTo = 3;
+
         public static bool ContainsAny(this string line, IEnumerable<string> keywords)
         {
             return keywords.Any(line.Contains);
@@ -65,5 +67,34 @@ namespace YoCode
             }
             return false;
         }
+
+        public static List<string> GetMultipleLinesWithAllKeywords(this string text, List<string> keywords)
+        {
+            var list = new List<string>();
+            var sr = new StringReader(text);
+            string line;
+            while ((line = sr.ReadLine()) != null){
+                if(line.ContainsAll(keywords))
+                {
+                    list.Add(line);
+                }
+
+            }
+            return list;
+        }
+    
+        public static string GetStringBetweenStrings(this string line, string fromString,string toString)
+        {
+            int pFrom = line.IndexOf(fromString) + fromString.Length;
+            int pTo = line.LastIndexOf(toString);
+
+            return line.Substring(pFrom, pTo - pFrom);
+        }
+
+        public static bool ApproximatelyEquals(this double a, double b)
+        {
+            return (Math.Abs(a-b) <= 0.000001);
+        }
+
     }
 }

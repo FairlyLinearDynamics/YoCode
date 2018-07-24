@@ -12,8 +12,6 @@ namespace YoCode
         private readonly string originalSolutionPath;
         private readonly IDupFinder dupFinder;
 
-        private string Output { get; set; }
-
         private int ModiCodeBaseCost { get; set; }
         private int ModiDuplicateCost { get; set; }
 
