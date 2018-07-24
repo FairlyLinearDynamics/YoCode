@@ -80,6 +80,18 @@ namespace YoCode
             outputWriter.WriteAndFlush();
         }
 
+        public void AppsettingsHelp()
+        {
+            outputWriter.AddNewLine(messages.AppsettingsHelp);
+            outputWriter.WriteAndFlush();
+        }
+
+        public void ShowSettingHelp()
+        {
+            AppsettingsHelp();
+            ShowHelp();
+        }
+
         public void ShowHelp()
         {
             ShowBanner();
