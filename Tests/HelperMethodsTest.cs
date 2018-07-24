@@ -59,9 +59,9 @@ namespace YoCode_XUnit
         }
 
         [Theory]
-        [InlineData (20,20.0002)]
-        [InlineData (19.6666,19.66668)]
-        [InlineData (0,0.0001)]
+        [InlineData (20,20.0000002)]
+        [InlineData (19.6666,19.666600668)]
+        [InlineData (0,0.00000001)]
         [InlineData (49.20,49.200001)]
         [InlineData (20.20,20.2000002002)]
         
