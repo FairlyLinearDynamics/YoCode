@@ -8,6 +8,7 @@ namespace YoCode
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
+        private FeatureRunner featureRunner;
 
         public string StatLine { get; set; }
         public string Output { get; set; }
@@ -17,8 +18,9 @@ namespace YoCode
         private TestStats stats;
         private List<int> tempStats;
 
-        public TestCountCheck(string repositoryPath)
+        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
+            this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             processName = "dotnet";
             workingDir = repositoryPath;
@@ -29,7 +31,7 @@ namespace YoCode
         public void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = new FeatureRunner().Execute(pr);
+            var evidence = featureRunner.Execute(pr);
             if (evidence.FeatureFailed)
             {
                 return;

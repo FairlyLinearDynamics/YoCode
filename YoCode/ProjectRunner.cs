@@ -30,7 +30,7 @@ namespace YoCode
 
             var processDetails = new ProcessDetails(Process, workingDir, Argument);
 
-            var evidence = new FeatureRunner().Execute(processDetails);
+            var evidence = featureRunner.Execute(processDetails);
             Output = evidence.Output;
             ErrorOutput = evidence.ErrorOutput;
 
