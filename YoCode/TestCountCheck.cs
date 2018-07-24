@@ -60,8 +60,7 @@ namespace YoCode
             }
             else
             {
-                UnitTestEvidence.FeatureImplemented = false;
-                UnitTestEvidence.GiveEvidence("Couldn't get information about tests");
+                UnitTestEvidence.SetFailed("Couldn't get information about tests");
             }
         }
 

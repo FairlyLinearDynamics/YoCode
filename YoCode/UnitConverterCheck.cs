@@ -28,8 +28,7 @@ namespace YoCode
         {
             if (String.IsNullOrEmpty(port))
             {
-                UnitConverterCheckEvidence.FeatureImplemented = false;
-                UnitConverterCheckEvidence.GiveEvidence("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
+                UnitConverterCheckEvidence.SetFailed("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.")
             }
             else
             {
