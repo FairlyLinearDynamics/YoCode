@@ -15,7 +15,7 @@ namespace YoCode
         private static string CMDToolsPath;
 
         static void Main(string[] args)
-        {
+        {      
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
@@ -81,26 +81,27 @@ namespace YoCode
                     FeatureImplemented = true,
                 });
 
-                var featureRunner = new FeatureRunner();
-
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath).ProjectBuilderEvidence);
+                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 // Duplication check
-                //checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
 
+
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 // Project run test
-                //checkList.Add(new ProjectRunner(dir.modifiedTestDirPath).ProjectRunEvidence);
+                checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
-                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath,featureRunner).UnitTestEvidence);
+                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-                
+                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+
+                pr.KillProject();         
             }
-
             return checkList;
         }
     }

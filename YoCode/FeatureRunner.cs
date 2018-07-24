@@ -1,20 +1,20 @@
-﻿namespace YoCode
-{
-    public interface IFeatureRunner
-    {
-        FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle);
-    }
+﻿using System;
+using System.IO;
 
-    public class FeatureRunner : IFeatureRunner
+namespace YoCode
+{
+    public class FeatureRunner
     {
-        public FeatureEvidence Execute(ProcessDetails processDetails, string featureTitle)
+        ProcessRunner pr;
+
+        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill =true)
         {
-            var pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck();
+            pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
+            pr.ExecuteTheCheck(waitForMessage, kill);
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,
-                FeatureTitle = featureTitle
+                ErrorOutput = pr.ErrorOutput
             };
 
             if (pr.TimedOut)
@@ -22,6 +22,11 @@
                 evidence.SetFailed("Timed out");
             }
             return evidence;
+        }
+
+        public void EndProcess()
+        {
+            pr.KillLiveProcess();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace YoCode
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
+        private FeatureRunner featureRunner;
 
         public string StatLine { get; set; }
         public string Output { get; set; }
@@ -16,22 +17,21 @@ namespace YoCode
 
         private TestStats stats;
         private List<int> tempStats;
-        private readonly IFeatureRunner featureRunner;
 
-        public TestCountCheck(string repositoryPath, IFeatureRunner featureRunner)
+        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
+            this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
-            this.featureRunner = featureRunner;
             ExecuteTheCheck();
         }
 
         public void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = featureRunner.Execute(pr, "Unit test check");
+            var evidence = featureRunner.Execute(pr);
             if (evidence.FeatureFailed)
             {
                 return;
@@ -51,10 +51,13 @@ namespace YoCode
 
         public void StoreCalculations(List<int> tempStats)
         {
-            stats.totalTests = tempStats[0];
-            stats.testsPassed = tempStats[1];
-            stats.testsFailed = tempStats[2];
-            stats.testsSkipped = tempStats[3];            
+            if(tempStats != null)
+            {
+                stats.totalTests = tempStats[0];
+                stats.testsPassed = tempStats[1];
+                stats.testsFailed = tempStats[2];
+                stats.testsSkipped = tempStats[3];    
+            }        
         }
 
         public static List<string> GetTestKeyWords()

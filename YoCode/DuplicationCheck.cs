@@ -6,20 +6,11 @@ namespace YoCode
 {
     public class DuplicationCheck
     {
-        private readonly string CMDtoolsDir;
-        private readonly string CMDtoolFileName = "dupfinder.exe";
-
         private readonly string fileNameChecked = "UnitConverterWebApp.sln";
-        private readonly string outputFile = "report.xml";
-        private readonly string outputArg = " -o=\"";
 
-        private readonly string processName;
-        private readonly string workingDir;
-        private readonly string modiArguments;
-        private readonly string origArguments;
-        private readonly IFeatureRunner featureRunner;
-
-        private string Output { get; set; }
+        private readonly string modifiedSolutionPath;
+        private readonly string originalSolutionPath;
+        private readonly IDupFinder dupFinder;
 
         private int ModiCodeBaseCost { get; set; }
         private int ModiDuplicateCost { get; set; }
@@ -27,17 +18,14 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
-        public DuplicationCheck(PathManager dir, string CMDtoolsDirConfig, IFeatureRunner featureRunner)
+        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
 
-            CMDtoolsDir = CMDtoolsDirConfig;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
-            processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
-            workingDir = CMDtoolsDir;
-            this.featureRunner = featureRunner;
+            this.dupFinder = dupFinder;
 
-            modiArguments = Path.Combine(dir.modifiedTestDirPath, fileNameChecked) + outputArg + outputFile;
-            origArguments = Path.Combine(dir.originalTestDirPath, fileNameChecked) + outputArg + outputFile;
+            modifiedSolutionPath = Path.Combine(dir.modifiedTestDirPath, fileNameChecked);
+            originalSolutionPath = Path.Combine(dir.originalTestDirPath, fileNameChecked);
 
             try
             {
@@ -45,15 +33,15 @@ namespace YoCode
             }
             catch(Exception e)
             {
-            DuplicationEvidence.FeatureImplemented = false;
-            DuplicationEvidence.GiveEvidence(YoCode.messages.DupFinderHelp);
+                DuplicationEvidence.FeatureImplemented = false;
+                DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" +e);
             }
 
         }
 
         private void ExecuteTheCheck() {
-            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(origArguments,"Original");
-            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modiArguments,"Modified");
+            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(originalSolutionPath,"Original");
+            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath,"Modified");
 
             if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
             {
@@ -71,9 +59,9 @@ namespace YoCode
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private (FeatureEvidence, int, int) RunAndGatherEvidence(string arguments, string whichDir)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath, string whichDir)
         {
-            var evidence = RunOneCheck(arguments);
+            var evidence = RunOneCheck(solutionPath);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
             var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
@@ -84,31 +72,22 @@ namespace YoCode
             return (evidence, codebaseCost, duplicateCost);
         }
 
-        private FeatureEvidence RunOneCheck(string args)
+        private FeatureEvidence RunOneCheck(string solutionPath)
         {
-            var proc = new ProcessDetails(processName, workingDir, args);
-            var evidence = featureRunner.Execute(proc, "Check duplication");
-
-            evidence.Output = GetResults(Path.Combine(workingDir,outputFile));
-            return evidence;
+            return dupFinder.Execute("Dup check",solutionPath);
         }
 
-        public string GetResults(string path)
-        {
-            return File.ReadAllText(path);
-        }
-
-        public bool HasTheCodeImproved()
+        private bool HasTheCodeImproved()
         {
             return OrigDuplicateCost > ModiDuplicateCost;
         }
 
-        public List<String> GetCodeBaseCostKeyword()
+        private List<String> GetCodeBaseCostKeyword()
         {
             return new List<string> { "<CodebaseCost>" };
         }
 
-        public List<String> GetTotalDuplicatesCostKeywords()
+        private List<String> GetTotalDuplicatesCostKeywords()
         {
             return new List<string> { "<TotalDuplicatesCost>" };
         }

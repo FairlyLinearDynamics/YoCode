@@ -2,35 +2,34 @@
 
 namespace YoCode
 {
-    // TODO: populate evidence object in ProjectBuilder class
-    // TODO: handle error return values (-1 for GetNumberOfErrors and GetNumberOfWarnings)
     public class ProjectBuilder
     {
-        public ProcessRunner Process { get; }
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
         private readonly string Output;
 
-        public ProjectBuilder(string workingDir)
+        public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
-            Process = new ProcessRunner(ProcessName, workingDir, Arguments);
-            Process.ExecuteTheCheck();
-
-            Output = Process.Output;
+            CleanBuildOutput(workingDir);
 
             ProjectBuilderEvidence.FeatureTitle = "Project build";
+            var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
-            if(Process.TimedOut || GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1)
+            var evidence = featureRunner.Execute(processDetails);
+            Output = evidence.Output;
+
+            bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
+
+            if (evidence.FeatureFailed|| ErrorGettingErrorsOrWarnings)
             {
                 ProjectBuilderEvidence.SetFailed("Timed Out");
                 return;
             }
-
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {
-                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Process.Output)}");
+                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");
             }
         }
 
@@ -73,6 +72,12 @@ namespace YoCode
             var numbers = errorLine.GetNumbersInALine();
 
             return numbers.Count > 0 ? numbers[0] : -1;
+        }
+
+        private void CleanBuildOutput(string workingDir)
+        {
+            var pr = new ProcessRunner("dotnet", workingDir, "clean");
+            pr.ExecuteTheCheck();
         }
 
         public FeatureEvidence ProjectBuilderEvidence { get; set; } = new FeatureEvidence();
