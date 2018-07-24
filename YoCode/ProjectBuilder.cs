@@ -8,7 +8,7 @@ namespace YoCode
         private string Arguments { get; } = "build";
         private readonly string Output;
 
-        public ProjectBuilder(string workingDir, IFeatureRunner featureRunner)
+        public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
             ProjectBuilderEvidence.FeatureTitle = "Project build";
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
