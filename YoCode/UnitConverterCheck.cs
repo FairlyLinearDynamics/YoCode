@@ -148,10 +148,10 @@ namespace YoCode
             {
                 (var A, var B) = ToDouble(expectedOutputs[i], actual[i].output);
 
-                var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", Math.Round(A,6), Math.Round(B,6), A.SubjectivelyEquals(B));
+                var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", Math.Round(A,6), Math.Round(B,6), A.ApproximatelyEquals(B));
                 UnitConverterCheckEvidence.GiveEvidence(x);
 
-                if (!A.SubjectivelyEquals(B))
+                if (!A.ApproximatelyEquals(B))
                 {
                     ret = false;
                 }

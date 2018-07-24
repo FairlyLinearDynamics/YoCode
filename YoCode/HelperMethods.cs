@@ -8,7 +8,7 @@ namespace YoCode
 {
     public static class HelperMethods
     {
-        const int RoundTo = 6;
+        const int RoundTo = 3;
 
         public static bool ContainsAny(this string line, IEnumerable<string> keywords)
         {
@@ -91,16 +91,9 @@ namespace YoCode
             return line.Substring(pFrom, pTo - pFrom);
         }
 
-        public static bool SubjectivelyEquals(this double a, double b)
+        public static bool ApproximatelyEquals(this double a, double b)
         {
-            double aComp = Math.Round(a, RoundTo);
-            double bComp = Math.Round(b, RoundTo);
-
-            if(Math.Abs(aComp - bComp) > 0.000001)
-            {
-                return false;
-            }
-            return true;
+            return (Math.Abs(a-b) <= 0.000001);
         }
 
     }
