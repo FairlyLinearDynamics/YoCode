@@ -1,19 +1,16 @@
-﻿namespace YoCode
+﻿using System;
+using System.IO;
+
+namespace YoCode
 {
-    public interface IFeatureRunner
+    public class FeatureRunner
     {
-        FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true);
-        void EndProcess();
-    }
+        ProcessRunner pr;
 
-    public class FeatureRunner : IFeatureRunner
-    {
-        private ProcessRunner pr;
-
-        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
+        public FeatureEvidence Execute(ProcessDetails processDetails)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
-            pr.ExecuteTheCheck(waitForMessage, kill);
+            pr.ExecuteTheCheck();
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,

@@ -84,13 +84,13 @@ namespace YoCode
                 var featureRunner = new FeatureRunner();
 
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath, featureRunner).GitEvidence);
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, featureRunner).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir,CMDToolsPath, featureRunner).DuplicationEvidence);
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
 
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, featureRunner);
                 // Project run test

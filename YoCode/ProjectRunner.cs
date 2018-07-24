@@ -13,9 +13,9 @@ namespace YoCode
         private string Argument { get; set; } = @"bin\Debug\";
         private string ErrorOutput { get; }
         private const string projectFolder = @"\UnitConverterWebApp";
-        private IFeatureRunner featureRunner;
+        private FeatureRunner featureRunner;
 
-        public ProjectRunner(string workingDir, IFeatureRunner featureRunner)
+        public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
@@ -30,7 +30,7 @@ namespace YoCode
 
             var processDetails = new ProcessDetails(Process, workingDir, Argument);
 
-            var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
+            var evidence = new FeatureRunner().Execute(processDetails);
             Output = evidence.Output;
             ErrorOutput = evidence.ErrorOutput;
 
