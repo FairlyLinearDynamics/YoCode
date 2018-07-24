@@ -35,10 +35,7 @@ namespace YoCode
 
         public void ShowInputErrors(List<string> errs)
         {
-            foreach(var err in errs)
-            {
-                outputWriter.AddErr(err);
-            }
+            outputWriter.AddErrs(errs);
             outputWriter.AddMessage(messages.AskForHelp);
             outputWriter.WriteReport();
         }

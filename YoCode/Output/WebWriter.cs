@@ -8,8 +8,8 @@ namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string TEMPLATE_FILE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\HTMLTemplate.html";
-        const string OUTPUT_FILE = @"C:\Users\ukekar\source\repos\YoCode\output.html";
+        const string TEMPLATE_FILE = @"C:\Users\ukekar\source\repos\YoCode\webReport\HTMLTemplate.html";
+        const string OUTPUT_FILE = @"C:\Users\ukekar\source\repos\YoCode\webReport\output.html";
 
         const string FEATURE_TAG = "{FEATURE}";
 
@@ -31,35 +31,26 @@ namespace YoCode
 
         public void AddIntro(string text)
         {
-            introduction = "<p1>" + text + "</p1>";
+            introduction = WebTemplateBuilder.FormatParagraph(text).ToString();
         }
 
-        public void AddErr(string err)
+        public void AddErrs(IEnumerable<string> err)
         {
-            errors.Append($"<li>{err}</li>");
+            errors.Append(WebTemplateBuilder.FormatAccordionElement("Errors present",
+                WebTemplateBuilder.FormatListOfStrings(err).ToString()));
         }
 
         public void AddMessage(string message)
         {
-            msg.Append($"<p1>{message}<br /></p1>");
+            msg.Append(WebTemplateBuilder.FormatParagraph(message));
         }
 
         public void AddFeature(FeatureData data)
         {
-            features.Append("<li>");
-            features.Append($"<h1>{data.title}</h1>");
-            features.Append($"<p1>{data.featureResult}<br /></p1>");
-            if (data.evidence.Any())
-            {
-                features.Append("<p1>Evidence: <br /></p1>");
-                features.Append("<ul>");
-                foreach (var feat in data.evidence)
-                {
-                    features.Append($"<li>{feat}</li>");
-                }
-                features.Append("</ul>");
-            }
-            features.Append("</li>");
+            var feature = new StringBuilder();
+            feature.Append(WebTemplateBuilder.FormatParagraph(data.featureResult));
+            feature.Append(WebTemplateBuilder.FormatListOfStrings(data.evidence));
+            features.Append(WebTemplateBuilder.FormatAccordionElement(data.title, feature.ToString()));
         }
 
         private string BuildReport()
@@ -68,18 +59,15 @@ namespace YoCode
             if (features.Length != 0)
             {
                 report.Append(introduction);
-                report.Append("<ul>");
                 report.Append(features.ToString());
-                report.Append("</ul>");
             }
             if (errors.Length != 0)
             {
-                report.Append("<h1>Input errors present: </h1>");
-                report.Append($"<ul>{errors.ToString()}</ul>");
+                report.Append(errors.ToString());
             }
             if (msg.Length != 0)
             {
-                report.Append($"{msg.ToString()}");
+                report.Append(msg);
             }
 
             return template.Replace(FEATURE_TAG,report.ToString());
