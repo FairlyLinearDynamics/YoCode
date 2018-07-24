@@ -30,7 +30,7 @@ namespace YoCode
 
             var processDetails = new ProcessDetails(Process, workingDir, Argument);
 
-            var evidence = new FeatureRunner().Execute(processDetails);
+            var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
             Output = evidence.Output;
             ErrorOutput = evidence.ErrorOutput;
 

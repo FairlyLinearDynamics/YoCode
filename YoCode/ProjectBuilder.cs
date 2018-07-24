@@ -10,6 +10,8 @@ namespace YoCode
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
+            CleanBuildOutput(workingDir);
+
             ProjectBuilderEvidence.FeatureTitle = "Project build";
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
@@ -23,7 +25,6 @@ namespace YoCode
                 ProjectBuilderEvidence.SetFailed("Timed Out");
                 return;
             }
-           
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
@@ -71,6 +72,12 @@ namespace YoCode
             var numbers = errorLine.GetNumbersInALine();
 
             return numbers.Count > 0 ? numbers[0] : -1;
+        }
+
+        private void CleanBuildOutput(string workingDir)
+        {
+            var pr = new ProcessRunner("dotnet", workingDir, "clean");
+            pr.ExecuteTheCheck();
         }
 
         public FeatureEvidence ProjectBuilderEvidence { get; set; } = new FeatureEvidence();
