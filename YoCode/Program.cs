@@ -15,13 +15,23 @@ namespace YoCode
         private static string CMDToolsPath;
 
         static void Main(string[] args)
-        {      
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-            Configuration = builder.Build();
-            CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
+        {
+            
 
             var consoleOutput = new Output(new ConsoleWriter());
             consoleOutput.PrintIntroduction();
+
+            try
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+                Configuration = builder.Build();
+                CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
+            }
+            catch (FileNotFoundException)
+            {
+                consoleOutput.ShowSettingHelp();
+                return;
+            }
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();

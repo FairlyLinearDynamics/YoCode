@@ -61,6 +61,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to appsettings.json file missing. Please make sure to create the file as specified in the README.
+        /// </summary>
+        public static string AppsettingsHelp {
+            get {
+                return ResourceManager.GetString("AppsettingsHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to If you would like to see list of commands, type: --help.
         /// </summary>
         public static string AskForHelp {
