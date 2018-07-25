@@ -82,13 +82,13 @@ namespace YoCode
                 });
 
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                //checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 // Duplication check
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                //checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
 
 
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
@@ -96,7 +96,7 @@ namespace YoCode
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
