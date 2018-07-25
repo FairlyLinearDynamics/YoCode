@@ -51,13 +51,17 @@ namespace YoCode
 
         public void StoreCalculations(List<int> tempStats)
         {
-            if(tempStats != null)
+            if(tempStats.Count == 4)
             {
                 stats.totalTests = tempStats[0];
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
                 stats.testsSkipped = tempStats[3];    
-            }        
+            }
+            else
+            {
+                UnitTestEvidence.SetFailed("Couldn't get information about tests");
+            }
         }
 
         public static List<string> GetTestKeyWords()
