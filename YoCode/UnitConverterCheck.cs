@@ -11,7 +11,8 @@ namespace YoCode
 {
     class UnitConverterCheck
     {
-        Dictionary<List<string>,List<double>> map;
+        Dictionary<List<string>,List<double>> KeywordMap;
+        Dictionary<string, List<double>> ActionValueMap;
 
         List<string> texts;
         List<string> actions;
@@ -56,6 +57,8 @@ namespace YoCode
 
             }
         }
+        
+        // setup and run
 
         private void Setup()
         {
@@ -70,25 +73,57 @@ namespace YoCode
             actual = task.Result;
         }
 
+        public void InitializeLists()
+        {
+            KeywordMap = new Dictionary<List<string>, List<double>>();
+            ActionValueMap = new Dictionary<string, List<double>>();
+            actual = new List<UnitConverterResults>();
+            texts = new List<string> { "5", "25", "125" };
+
+            InchesToCentimetres = MakeConversion(texts, InToCm);
+            MilesToKilometres = MakeConversion(texts, MiToKm);
+            YardsToMeters = MakeConversion(texts, YdToMe);
+            InchesToCentimetres[2] = 5;
+
+            InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
+            MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
+            YdToMeKeys = new List<string> {"yards","yard","yardstometers","tometers"  };
+                
+            actions = GetActions(HTMLcode);
+
+            FillMap();
+            FillActionValueMap();
+            //CheckActionNames();
+        }
+
+        // Work with Data
+
+        public void FillMap()
+        {
+            KeywordMap.Add(InToCmKeys, InchesToCentimetres);
+            KeywordMap.Add(MiToKmKeys, MilesToKilometres);
+            KeywordMap.Add(YdToMeKeys, YardsToMeters);
+        }
+
+        public void FillActionValueMap()
+        {
+            foreach(var x in actions)
+            {
+                ActionValueMap.Add(x, CheckActions(x));
+
+            }
+        }
+
+
+        public List<string> GetActionLines(string file)
+        {
+            return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
+        }
+
         public List<string> GetActions(string HTMLfile)
         {
             var actionlines = GetActionLines(HTMLfile);
             return ExtractActions(actionlines);
-        }
-
-        public async Task<string> GetHTMLCodeAsTask()
-        { 
-            return await client.GetStringAsync("/");
-        }
-       
-        public async void GetHTMLCodeAsString()
-        {
-            HTMLcode = GetHTMLCodeAsTask().Result;
-        }
-        
-        public List<string> GetActionLines(string file)
-        {
-            return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
 
         public List<string> ExtractActions(List<string> actionLines)
@@ -104,33 +139,6 @@ namespace YoCode
             return list;
         }
 
-        public void InitializeLists()
-        {
-            map = new Dictionary<List<string>, List<double>>();
-            actual = new List<UnitConverterResults>();
-            texts = new List<string> { "5", "25", "125" };
-
-            InchesToCentimetres = MakeConversion(texts, InToCm);
-            MilesToKilometres = MakeConversion(texts, MiToKm);
-            YardsToMeters = MakeConversion(texts, YdToMe);
-
-            InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
-            MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
-            YdToMeKeys = new List<string> {"yards","yard","yardstometers","tometers"  };
-                
-            actions = GetActions(HTMLcode);
-
-            FillMap();
-            //CheckActionNames();
-        }
-
-        public void FillMap()
-        {
-            map.Add(InToCmKeys, InchesToCentimetres);
-            map.Add(MiToKmKeys, MilesToKilometres);
-            map.Add(YdToMeKeys, YardsToMeters);
-        }
-
         public List<double> MakeConversion(List<string> inputs, double mult)
         {
             var list = new List<double>();
@@ -141,6 +149,46 @@ namespace YoCode
             }
             return list;
         }
+
+        public int CheckActionNames(List<string> keywords)
+        {
+            for(int i=0;i<actions.Count;i++)
+            {
+                foreach(string y in keywords)
+                {
+                    if (actions[i].ContainsAny(keywords)){
+
+                        return i;
+
+                    }
+                }                                   
+            }
+            return -1;
+        }
+
+        public List<double> ConvertAnswersToDouble(List<String> strings)
+        {
+            return strings.Select(s => double.Parse(s)).ToList();
+        }
+
+        public List<string> GetActionKeywords()
+        {
+            return new List<string> { "action", "value" };
+        }
+
+        public List<double> CheckActions(string action)
+        {
+                foreach (var keywords in KeywordMap)
+                {
+                    if (action.ToLower().ContainsAny(keywords.Key))
+                    {
+                        return keywords.Value;
+                    }
+                }
+            return new List<double>{0.0};
+        }
+
+        // HTML stuff
 
         public async Task<List<UnitConverterResults>> ExecuteTheCheck()
         {
@@ -163,22 +211,16 @@ namespace YoCode
             return actual;
         }
 
-        public int CheckActionNames(List<string> keywords)
-        {
-            for(int i=0;i<actions.Count;i++)
-            {
-                foreach(string y in keywords)
-                {
-                    if (actions[i].ContainsAny(keywords)){
-
-                        return i;
-
-                    }
-                }                                   
-            }
-            return -1;
+        public async Task<string> GetHTMLCodeAsTask()
+        { 
+            return await client.GetStringAsync("/");
         }
-
+       
+        public async void GetHTMLCodeAsString()
+        {
+            HTMLcode = GetHTMLCodeAsTask().Result;
+        }
+        
         private FormUrlEncodedContent GetEncodedContent(int i, int j)
         {
             return new FormUrlEncodedContent(new[]
@@ -198,96 +240,44 @@ namespace YoCode
             tempResultStorage = bar.Result;
         }
 
-        public List<double> ConvertAnswersToDouble(List<String> strings)
-        {
-            return strings.Select(s => double.Parse(s)).ToList();
-        }
-
-        public List<string> GetActionKeywords()
-        {
-            return new List<string> { "action", "value" };
-        }
-
-        public List<double> CheckActions(string action)
-        {
-                foreach (var keywords in map)
-                {
-                    if (action.ContainsAny(keywords.Key))
-                    {
-                        return keywords.Value;
-                    }
-                }
-            return new List<double>{0.0};
-        }
-
         public bool OutputsAreEqual()
         {
-            bool ret = true;
             UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
 
-            int cur = 0;
 
-            for(int i=0; i<actual.Count;i++)
+            for (int i = 0; i < actual.Count; i++)
             {
-                var toCheck = CheckActions(actual[i].action);
+                bool ret = true;
 
-                foreach(var x in toCheck)
+                var temp = CheckActions(actual[i].action);
+                var tempA = Double.Parse(actual[i].output);
+
+                Console.WriteLine(i);
+
+
+                foreach (var j in ActionValueMap)
                 {
-                    if( x.ApproximatelyEquals(Double.Parse(actual[i].output)))
-                    {
-                        Console.WriteLine(x + " " + actual[i].output);
+
+                        foreach (var k in j.Value)
+                        {
+                        if (tempA.ApproximatelyEquals(k))
+                        {
+                             UnitConverterCheckEvidence.GiveEvidence(actual[i].input + j.Key);
+
+                            var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", tempA, k, tempA.ApproximatelyEquals(k));
+                            UnitConverterCheckEvidence.GiveEvidence(x);
+                        }
+                        }
                     }
-                }
-
-
             }
-
             return true;
-        }
 
-        //public bool OutputsAreEqual()
-        //{
-        //    bool ret = true;
-
-        //    UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
-
-        //    for(int i = 0; i < actual.Count; i++)
-        //    {
-        //        (var A, var B) = ToDouble(expectedOutputs[i], actual[i].output);
-
-        //        var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", Math.Round(A,6), Math.Round(B,6), A.ApproximatelyEquals(B));
-        //        UnitConverterCheckEvidence.GiveEvidence(x);
-
-        //        if (!A.ApproximatelyEquals(B))
-        //        {
-        //            ret = false;
-        //        }
-        //    }
-        //    return ret;
-        //}
-
+        }        
         
         public void PrintProgress()
         {
-            //foreach(string x in actions)
-            //{
-            //    Console.WriteLine(x);
-
-            //    foreach(double y in CheckActions(x.ToLower()))
-            //    {
-            //        Console.WriteLine(y);
-            //    }
-            //    Console.WriteLine("-------------");
-            //}
-
-            foreach(var y in actual)
-            {
-                Console.WriteLine(y.action);
-            }
-
+            
         }
-
-
 
         public (double,double) ToDouble(string a, string b)
         {
