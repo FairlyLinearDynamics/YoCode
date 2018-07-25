@@ -9,8 +9,6 @@ namespace YoCode
 {
     static class WebElementBuilder
     {
-        const string LIST_ELEMENT_TEMPLATE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\ListElementTemplate.html";
-
         const string TITLE_TAG = "{TITLE}";
         const string CONTENT_TAG = "{CONTENT}";
 
@@ -33,7 +31,7 @@ namespace YoCode
 
         public static string FormatAccordionElement(string featureTitle, string content)
         {
-            return File.ReadAllText(LIST_ELEMENT_TEMPLATE)
+            return messages.ListElementTemplate
                 .Replace(TITLE_TAG,featureTitle).Replace(CONTENT_TAG,content);
         }
 

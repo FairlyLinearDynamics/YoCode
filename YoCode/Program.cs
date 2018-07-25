@@ -16,9 +16,11 @@ namespace YoCode
 
         static void Main(string[] args)
         {
+            var outputs = new List<IPrint>();
+            outputs.Add(new WebWriter());
+            outputs.Add(new ConsoleWriter());
 
-            var consoleOutput = new Output(new ConsoleWriter());
-            var webReport = new Output(new WebWriter());
+            var compositeOutput = new Output(new CompositeWriter(outputs));
 
             try
             {
@@ -28,29 +30,24 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                consoleOutput.ShowHelp();
-                webReport.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
-            //var consoleOutput = new Output(new WebWriter());
-            consoleOutput.PrintIntroduction();
-            webReport.PrintIntroduction();
+            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.ShowHelp();
-                webReport.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.ShowInputErrors(result.errors);
-                webReport.ShowInputErrors(result.errors);
+                compositeOutput.ShowInputErrors(result.errors);
                 return;
             }
 
@@ -61,21 +58,18 @@ namespace YoCode
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.ShowDirEmptyMsg();
-                webReport.ShowDirEmptyMsg();
+                compositeOutput.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.ShowLaziness();
-                webReport.ShowLaziness();
+                compositeOutput.ShowLaziness();
                 return;
             }
 
             var implementedFeatureList = PerformChecks(dir);
-            consoleOutput.PrintFinalResults(implementedFeatureList);
-            webReport.PrintFinalResults(implementedFeatureList);
+            compositeOutput.PrintFinalResults(implementedFeatureList);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
