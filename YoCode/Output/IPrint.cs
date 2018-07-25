@@ -7,7 +7,7 @@ namespace YoCode
     interface IPrint
     {
         void AddIntro(string intro);
-        void AddFeature(FeatureData data, bool featurePass);
+        void AddFeature(FeatureData data);
         void AddMessage(string msg);
         void AddErrs(IEnumerable<string> err);
         void WriteReport();

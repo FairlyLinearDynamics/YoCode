@@ -17,8 +17,8 @@ namespace YoCode
         static void Main(string[] args)
         {
 
-            var consoleOutput = new Output(new WebWriter());
-            consoleOutput.PrintIntroduction();
+            var consoleOutput = new Output(new ConsoleWriter());
+            var webReport = new Output(new WebWriter());
 
             try
             {
@@ -29,11 +29,13 @@ namespace YoCode
             catch (FileNotFoundException)
             {
                 consoleOutput.ShowHelpMsg();
+                webReport.ShowHelpMsg();
                 return;
             }
 
             //var consoleOutput = new Output(new WebWriter());
             consoleOutput.PrintIntroduction();
+            webReport.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -41,12 +43,14 @@ namespace YoCode
             if (result.helpAsked)
             {
                 consoleOutput.ShowHelp();
+                webReport.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
                 consoleOutput.ShowInputErrors(result.errors);
+                webReport.ShowInputErrors(result.errors);
                 return;
             }
 
@@ -58,16 +62,20 @@ namespace YoCode
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
                 consoleOutput.ShowDirEmptyMsg();
+                webReport.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
                 consoleOutput.ShowLaziness();
+                webReport.ShowLaziness();
                 return;
             }
 
-            consoleOutput.PrintFinalResults(PerformChecks(dir));
+            var implementedFeatureList = PerformChecks(dir);
+            consoleOutput.PrintFinalResults(implementedFeatureList);
+            webReport.PrintFinalResults(implementedFeatureList);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)

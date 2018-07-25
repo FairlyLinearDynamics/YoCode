@@ -9,6 +9,7 @@ namespace YoCode
     {
         public string title;
         public string featureResult;
+        public bool featurePass;
         public List<string> evidence;
 
 

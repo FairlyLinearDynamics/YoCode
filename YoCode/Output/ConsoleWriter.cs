@@ -1,56 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace YoCode
 {
-    public class ConsoleWriter/* : IPrint*/
+    public class ConsoleWriter : IPrint
     {
-        string textToPrint;
+        StringBuilder consoleReport = new StringBuilder();
 
-        public bool AddNewLine(string text)
+        public void AddErrs(IEnumerable<string> errs)
         {
-            textToPrint += text + Environment.NewLine;
-            return true;
-        }
-
-        public void WriteAndFlush()
-        {
-            if (textToPrint != null)
+            foreach(var err in errs)
             {
-                Console.Write(textToPrint);
-                textToPrint = null;
+                consoleReport.AppendLine(err);
             }
-        }
-
-        public void AddDiv()
-        {
-            textToPrint += messages.Divider;
-        }
-
-        public void AddIntro(string intro)
-        {
-            throw new NotImplementedException();
+            consoleReport.AppendLine(messages.Divider);
         }
 
         public void AddFeature(FeatureData data)
         {
-            throw new NotImplementedException();
+            consoleReport.AppendLine(data.title);
+            consoleReport.AppendLine(data.featureResult);
+            foreach(var evidence in data.evidence)
+            {
+                consoleReport.AppendLine(evidence);
+            }
+            consoleReport.AppendLine(messages.Divider);
+        }
+
+        public void AddIntro(string intro)
+        {
+            consoleReport.AppendLine(intro);
+            consoleReport.AppendLine(messages.Divider);
         }
 
         public void AddMessage(string msg)
         {
-            throw new NotImplementedException();
-        }
-
-        public void AddErrs(string err)
-        {
-            throw new NotImplementedException();
+            consoleReport.AppendLine(msg);
+            consoleReport.AppendLine(messages.Divider);
         }
 
         public void WriteReport()
         {
-            throw new NotImplementedException();
+            Console.Write(consoleReport);
         }
     }
 }

@@ -13,9 +13,6 @@ namespace YoCode
 
         const string FEATURE_TAG = "{FEATURE}";
 
-
-        string template;
-
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
@@ -23,7 +20,6 @@ namespace YoCode
 
         public WebWriter()
         {
-            template = File.ReadAllText(TEMPLATE_FILE);
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
@@ -31,47 +27,40 @@ namespace YoCode
 
         public void AddIntro(string text)
         {
-            introduction = WebTemplateBuilder.FormatParagraph(text).ToString();
+            introduction = WebElementBuilder.FormatParagraph(text);
         }
 
-        public void AddErrs(IEnumerable<string> err)
+        public void AddErrs(IEnumerable<string> errs)
         {
-            errors.Append(WebTemplateBuilder.FormatAccordionElement("Errors present",
-                WebTemplateBuilder.FormatListOfStrings(err).ToString()));
+            errors.Append(WebElementBuilder.FormatAccordionElement("Errors present",
+                WebElementBuilder.FormatListOfStrings(errs)));
         }
 
         public void AddMessage(string message)
         {
-            msg.Append(WebTemplateBuilder.FormatParagraph(message));
+            msg.Append(WebElementBuilder.FormatParagraph(message));
         }
 
-        public void AddFeature(FeatureData data, bool featurePass)
+        public void AddFeature(FeatureData data)
         {
-            var feature = new StringBuilder();
-            var featureCheckMark = WebTemplateBuilder.FormatCheckIcont(featurePass);
-            feature.Append(WebTemplateBuilder.FormatParagraph(data.featureResult));
-            feature.Append(WebTemplateBuilder.FormatListOfStrings(data.evidence));
-            features.Append(WebTemplateBuilder.FormatAccordionElement(data.title+featureCheckMark, feature.ToString()));
+            var featureResults = new StringBuilder();
+            featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
+            featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
+
+            var featureTitle = data.title + WebElementBuilder.FormatCheckIcont(data.featurePass);
+
+            features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
 
         private string BuildReport()
         {
             var report = new StringBuilder();
-            if (features.Length != 0)
-            {
-                report.Append(introduction);
-                report.Append(features.ToString());
-            }
-            if (errors.Length != 0)
-            {
-                report.Append(errors.ToString());
-            }
-            if (msg.Length != 0)
-            {
-                report.Append(msg);
-            }
+            report.Append(introduction);
+            report.Append(features.ToString());
+            report.Append(errors.ToString());
+            report.Append(msg);
 
-            return template.Replace(FEATURE_TAG,report.ToString());
+            return File.ReadAllText(TEMPLATE_FILE).Replace(FEATURE_TAG,report.ToString());
         }
 
         public void WriteReport()
