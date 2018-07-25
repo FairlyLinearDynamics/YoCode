@@ -44,6 +44,7 @@ namespace YoCode
         public void WriteReport()
         {
             Console.Write(consoleReport);
+            consoleReport.Clear();
         }
     }
 }

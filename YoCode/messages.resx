@@ -156,4 +156,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
   <data name="AskForHelp" xml:space="preserve">
     <value>If you would like to see list of commands, type: --help</value>
   </data>
+  <data name="AppsettingsHelp" xml:space="preserve">
+    <value>appsettings.json file missing. Please make sure to create the file as specified in the README</value>
+  </data>
 </root>

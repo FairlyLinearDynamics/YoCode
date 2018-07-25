@@ -28,8 +28,8 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                consoleOutput.ShowHelpMsg();
-                webReport.ShowHelpMsg();
+                consoleOutput.ShowHelp();
+                webReport.ShowHelp();
                 return;
             }
 

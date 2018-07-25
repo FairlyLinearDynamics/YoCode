@@ -26,11 +26,18 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
-            UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
-            client = new HttpClient { BaseAddress = new Uri(port) };
-            Setup();
-            RunTheCheck();
-            UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+            if (String.IsNullOrEmpty(port))
+            {
+                UnitConverterCheckEvidence.SetFailed("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
+            }
+            else
+            {
+                UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
+                client = new HttpClient { BaseAddress = new Uri(port) };
+                Setup();
+                RunTheCheck();
+                UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+            }
         }
 
         private void Setup()

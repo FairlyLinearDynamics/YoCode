@@ -49,17 +49,17 @@ namespace YoCode
             outputWriter.WriteReport();
         }
 
-        public void ShowBanner()
+        private void ShowBanner()
         {
             outputWriter.AddMessage(messages.Fireplace);
         }
 
-        public void ShowHelpMsg()
+        private void ShowHelpMsg()
         {
             outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
         }
 
-        public void ShowDupfinderHelp()
+        private void ShowDupfinderHelp()
         {
             outputWriter.AddMessage(messages.DupFinderHelp);
         }
@@ -74,6 +74,18 @@ namespace YoCode
         {
             outputWriter.AddMessage("Specified directory inaccessible");
             outputWriter.WriteReport();
+        }
+
+        public void AppsettingsHelp()
+        {
+            outputWriter.AddMessage(messages.AppsettingsHelp);
+            outputWriter.WriteReport();
+        }
+
+        public void ShowSettingHelp()
+        {
+            AppsettingsHelp();
+            ShowHelp();
         }
     }
 }
