@@ -7,8 +7,8 @@ namespace YoCode
 {
     static class WebTemplateBuilder
     {
-        const string HTML_TEMPLATE = @"C:\Users\ukekar\source\repos\YoCode\webReport\HTMLTemplate.html";
-        const string LIST_ELEMENT_TEMPLATE = @"C:\Users\ukekar\source\repos\YoCode\webReport\ListElementTemplate.html";
+        const string HTML_TEMPLATE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\HTMLTemplate.html";
+        const string LIST_ELEMENT_TEMPLATE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\ListElementTemplate.html";
 
         const string TITLE_TAG = "{TITLE}";
         const string CONTENT_TAG = "{CONTENT}";
@@ -48,6 +48,11 @@ namespace YoCode
             }
             result.AppendLine(LIST_CLOSE);
             return result;
+        }
+
+        public static string FormatCheckIcont(bool checkMark)
+        {
+            return checkMark ? "<i class=\"fa fa-check-circle-o\"></i>" : "<i class=\"fa fa-times-circle-o\"></i>";
         }
     }
 }

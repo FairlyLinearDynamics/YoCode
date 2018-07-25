@@ -8,7 +8,7 @@ namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string TEMPLATE_FILE = @"C:\Users\ukekar\source\repos\YoCode\webReport\HTMLTemplate.html";
+        const string TEMPLATE_FILE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\HTMLTemplate.html";
         const string OUTPUT_FILE = @"C:\Users\ukekar\source\repos\YoCode\webReport\output.html";
 
         const string FEATURE_TAG = "{FEATURE}";
@@ -45,12 +45,13 @@ namespace YoCode
             msg.Append(WebTemplateBuilder.FormatParagraph(message));
         }
 
-        public void AddFeature(FeatureData data)
+        public void AddFeature(FeatureData data, bool featurePass)
         {
             var feature = new StringBuilder();
+            var featureCheckMark = WebTemplateBuilder.FormatCheckIcont(featurePass);
             feature.Append(WebTemplateBuilder.FormatParagraph(data.featureResult));
             feature.Append(WebTemplateBuilder.FormatListOfStrings(data.evidence));
-            features.Append(WebTemplateBuilder.FormatAccordionElement(data.title, feature.ToString()));
+            features.Append(WebTemplateBuilder.FormatAccordionElement(data.title+featureCheckMark, feature.ToString()));
         }
 
         private string BuildReport()

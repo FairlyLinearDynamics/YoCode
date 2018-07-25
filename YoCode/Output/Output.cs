@@ -28,7 +28,7 @@ namespace YoCode
                 featData.title = feature.FeatureTitle;
                 featData.featureResult = $"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}";
                 featData.evidence = feature.Evidence;
-                outputWriter.AddFeature(featData);
+                outputWriter.AddFeature(featData, feature.FeatureImplemented);
             }
             outputWriter.WriteReport();
         }
