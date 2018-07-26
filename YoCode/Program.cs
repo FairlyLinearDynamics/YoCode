@@ -3,8 +3,6 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using LibGit2Sharp;
-using System.Resources;
 using System.Threading;
 
 namespace YoCode
@@ -17,9 +15,9 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            var timer = System.Diagnostics.Stopwatch.StartNew();
-            var consoleOutput = new Output(new ConsoleWriter());
-            var webReport = new Output(new WebWriter());
+            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
+
+            var compositeOutput = new Output(new CompositeWriter(outputs));
 
             try
             {
@@ -29,29 +27,24 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                consoleOutput.ShowHelp();
-                webReport.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
-            //var consoleOutput = new Output(new WebWriter());
-            consoleOutput.PrintIntroduction();
-            webReport.PrintIntroduction();
+            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.ShowHelp();
-                webReport.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.ShowInputErrors(result.errors);
-                webReport.ShowInputErrors(result.errors);
+                compositeOutput.ShowInputErrors(result.errors);
                 return;
             }
 
@@ -62,25 +55,18 @@ namespace YoCode
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.ShowDirEmptyMsg();
-                webReport.ShowDirEmptyMsg();
+                compositeOutput.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.ShowLaziness();
-                webReport.ShowLaziness();
+                compositeOutput.ShowLaziness();
                 return;
             }
-
             
             var implementedFeatureList = PerformChecks(dir);
-
-            consoleOutput.PrintFinalResults(implementedFeatureList);
-            webReport.PrintFinalResults(implementedFeatureList);
-            timer.Stop();
-            Console.WriteLine(timer.ElapsedMilliseconds);
+            compositeOutput.PrintFinalResults(implementedFeatureList);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -92,12 +78,12 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                var dupFinder = new Thread(() =>
+                // Duplication check
+                var dupFinderThread = new Thread(() =>
                 {
-                    // Duplication check
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
                 });
-                dupFinder.Start();
+                dupFinderThread.Start();
 
                 checkList.Add(fileCheck.FileChangeEvidence);
 
@@ -117,22 +103,22 @@ namespace YoCode
                 // Git repo used
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
-
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 // Project run test
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
+                // Unit converter test
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
                 pr.KillProject();
 
-                dupFinder.Join();
+                dupFinderThread.Join();
             }
             return checkList;
         }

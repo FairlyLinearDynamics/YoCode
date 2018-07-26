@@ -8,9 +8,7 @@ namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string TEMPLATE_FILE = @"C:\Users\ukekar\source\repos\YoCode\YoCode\Output\HTMLTemplate.html";
-        const string OUTPUT_FILE = @"C:\Users\ukekar\source\repos\YoCode\webReport\output.html";
-
+        const string OUTPUT_PATH = @"YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
 
         StringBuilder features;
@@ -60,12 +58,12 @@ namespace YoCode
             report.Append(errors.ToString());
             report.Append(msg);
 
-            return File.ReadAllText(TEMPLATE_FILE).Replace(FEATURE_TAG,report.ToString());
+            return messages.HtmlTemplate.Replace(FEATURE_TAG,report.ToString());
         }
 
         public void WriteReport()
         {
-            File.WriteAllText(OUTPUT_FILE, BuildReport());
+            File.WriteAllText(OUTPUT_PATH, BuildReport());
         }
     }
 }
