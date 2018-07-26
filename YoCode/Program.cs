@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using LibGit2Sharp;
 using System.Resources;
+using System.Threading;
 
 namespace YoCode
 {
@@ -16,7 +17,7 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-
+            var timer = System.Diagnostics.Stopwatch.StartNew();
             var consoleOutput = new Output(new ConsoleWriter());
             var webReport = new Output(new WebWriter());
 
@@ -73,9 +74,13 @@ namespace YoCode
                 return;
             }
 
+            
             var implementedFeatureList = PerformChecks(dir);
+
             consoleOutput.PrintFinalResults(implementedFeatureList);
             webReport.PrintFinalResults(implementedFeatureList);
+            timer.Stop();
+            Console.WriteLine(timer.ElapsedMilliseconds);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -83,9 +88,17 @@ namespace YoCode
             var checkList = new List<FeatureEvidence>();
 
             var fileCheck = new FileChangeChecker(dir);
+            
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+                var dupFinder = new Thread(() =>
+                {
+                    // Duplication check
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                });
+                dupFinder.Start();
+
                 checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
@@ -104,12 +117,9 @@ namespace YoCode
                 // Git repo used
                 checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
+
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
-
-                // Duplication check
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-
 
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 // Project run test
@@ -120,7 +130,9 @@ namespace YoCode
 
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
-                pr.KillProject();         
+                pr.KillProject();
+
+                dupFinder.Join();
             }
             return checkList;
         }
