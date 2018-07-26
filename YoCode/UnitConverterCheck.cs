@@ -64,7 +64,7 @@ namespace YoCode
 
         private void RunTheCheck()
         {
-            var task = ExecuteTheCheck();
+            var task = GetActionNamesViaHTTP();
             task.Wait();
             actual = task.Result;
         }
@@ -75,6 +75,7 @@ namespace YoCode
 
             actual = new List<UnitConverterResults>();
             expected = new List<UnitConverterResults>();
+
             texts = new List<string> { "5", "25", "125" };
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
@@ -89,7 +90,6 @@ namespace YoCode
 
             FillMap();
             InitializeExpectedValues();
-
         }
 
         // Work with Data
@@ -116,8 +116,6 @@ namespace YoCode
                 }
             }
         }
-
-        //public double MakeSingleConversion(string text,double mult)
 
         public List<string> GetActionLines(string file)
         {
@@ -153,22 +151,6 @@ namespace YoCode
             return list;
         }
 
-        public int CheckActionNames(List<string> keywords)
-        {
-            for(int i=0;i<actions.Count;i++)
-            {
-                foreach(string y in keywords)
-                {
-                    if (actions[i].ContainsAny(keywords)){
-
-                        return i;
-
-                    }
-                }                                   
-            }
-            return -1;
-        }
-
         public List<double> ConvertAnswersToDouble(List<String> strings)
         {
             return strings.Select(s => double.Parse(s)).ToList();
@@ -191,9 +173,14 @@ namespace YoCode
             return new List<double>{0.1};
         }
 
+        public (double,double) ToDouble(string a, string b)
+        {
+            return (Double.Parse(a), Double.Parse(b));
+        }
+
         // HTML stuff
 
-        public async Task<List<UnitConverterResults>> ExecuteTheCheck()
+        public async Task<List<UnitConverterResults>> GetActionNamesViaHTTP()
         {
             for (int i = 0; i < texts.Count; i++)
             {
@@ -214,9 +201,9 @@ namespace YoCode
             return actual;
         }
 
-        public async Task<string> GetHTMLCodeAsTask()
+        public Task<string> GetHTMLCodeAsTask()
         { 
-            return await client.GetStringAsync("/");
+            return client.GetStringAsync("/");
         }
        
         public async void GetHTMLCodeAsString()
@@ -261,10 +248,6 @@ namespace YoCode
                 }
             }
             return ret;
-        }
-        public (double,double) ToDouble(string a, string b)
-        {
-            return (Double.Parse(a), Double.Parse(b));
         }
 
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
