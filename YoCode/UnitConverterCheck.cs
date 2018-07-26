@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace YoCode
@@ -59,16 +57,16 @@ namespace YoCode
             return ExtractActions(actionlines);
         }
 
-        public async Task<string> GetHTMLCodeAsTask()
+        public Task<string> GetHTMLCodeAsTask()
         { 
-            return await client.GetStringAsync("/");
+            return client.GetStringAsync("/");
         }
-       
-        public async void GetHTMLCodeAsString()
+
+        public void GetHTMLCodeAsString()
         {
             HTMLcode = GetHTMLCodeAsTask().Result;
         }
-        
+
         public List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
@@ -91,7 +89,7 @@ namespace YoCode
         {
             actual = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
-            expectedOutputs = GetExpectedOutputs();              
+            expectedOutputs = GetExpectedOutputs();
             actions = GetActions(HTMLcode);
         }
 
@@ -130,7 +128,7 @@ namespace YoCode
             return bar.Content.ReadAsStringAsync();
         }
 
-        public async void GetResponseAsString(Task<string> bar)
+        public void GetResponseAsString(Task<string> bar)
         {
             tempResultStorage = bar.Result;
         }
