@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCode_XUnit", "Tests\YoCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCode", "YoCode\YoCode.csproj", "{7901B379-9C27-4732-908D-54F03DB027D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoCodeAutomatedTests", "YoCodeAutomatedTests\YoCodeAutomatedTests.csproj", "{FF1B6385-DB36-45F8-992E-F6E25677ACD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoCodeAutomatedTests", "YoCodeAutomatedTests\YoCodeAutomatedTests.csproj", "{FF1B6385-DB36-45F8-992E-F6E25677ACD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

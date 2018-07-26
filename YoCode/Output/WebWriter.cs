@@ -8,7 +8,7 @@ namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string OUTPUT_PATH = @"..\..\..\..\webReport\YoCodeReport.html";
+        const string OUTPUT_PATH = @"YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
 
         StringBuilder features;
