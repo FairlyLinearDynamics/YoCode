@@ -12,8 +12,6 @@ namespace YoCode
     class UnitConverterCheck
     {
         Dictionary<List<string>,List<double>> KeywordMap;
-        Dictionary<string, List<double>> ActionValueMap;
-
         List<string> texts;
         List<string> actions;
            
@@ -30,6 +28,7 @@ namespace YoCode
         List<string> YdToMeKeys;
        
         List<UnitConverterResults> actual;
+        List<UnitConverterResults> expected;
         
         string from = "value=\"";
         string to = "\"";
@@ -53,11 +52,8 @@ namespace YoCode
                 Setup();
                 RunTheCheck();
                 UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
-                PrintProgress();
-
             }
-        }
-        
+        }        
         // setup and run
 
         private void Setup()
@@ -76,14 +72,14 @@ namespace YoCode
         public void InitializeLists()
         {
             KeywordMap = new Dictionary<List<string>, List<double>>();
-            ActionValueMap = new Dictionary<string, List<double>>();
+
             actual = new List<UnitConverterResults>();
+            expected = new List<UnitConverterResults>();
             texts = new List<string> { "5", "25", "125" };
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
             YardsToMeters = MakeConversion(texts, YdToMe);
-            InchesToCentimetres[2] = 5;
 
             InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
             MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
@@ -92,8 +88,8 @@ namespace YoCode
             actions = GetActions(HTMLcode);
 
             FillMap();
-            FillActionValueMap();
-            //CheckActionNames();
+            InitializeExpectedValues();
+
         }
 
         // Work with Data
@@ -105,15 +101,23 @@ namespace YoCode
             KeywordMap.Add(YdToMeKeys, YardsToMeters);
         }
 
-        public void FillActionValueMap()
+        public void InitializeExpectedValues()
         {
-            foreach(var x in actions)
+            UnitConverterResults ToBeAdded = new UnitConverterResults();
+            for(int x=0;x<texts.Count;x++)
             {
-                ActionValueMap.Add(x, CheckActions(x));
-
+                for(int y=0;y<actions.Count;y++)
+                {
+                    List<double> outputsForThisAction = CheckActions(actions[y]);
+                    ToBeAdded.input = texts[x];
+                    ToBeAdded.action = actions[y];
+                    ToBeAdded.output = outputsForThisAction[x].ToString();
+                    expected.Add(ToBeAdded);
+                }
             }
         }
 
+        //public double MakeSingleConversion(string text,double mult)
 
         public List<string> GetActionLines(string file)
         {
@@ -145,7 +149,6 @@ namespace YoCode
             foreach (string x in inputs)
             {
                 list.Add(Double.Parse(x) * mult);
-
             }
             return list;
         }
@@ -185,7 +188,7 @@ namespace YoCode
                         return keywords.Value;
                     }
                 }
-            return new List<double>{0.0};
+            return new List<double>{0.1};
         }
 
         // HTML stuff
@@ -242,43 +245,23 @@ namespace YoCode
 
         public bool OutputsAreEqual()
         {
-            UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}","Expected","Actual"));
+            UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
+            bool ret = true;
 
-
-            for (int i = 0; i < actual.Count; i++)
+            for(int i = 0; i < actual.Count; i++)
             {
-                bool ret = true;
+                (var a, var b) = ToDouble(actual[i].output, expected[i].output);
 
-                var temp = CheckActions(actual[i].action);
-                var tempA = Double.Parse(actual[i].output);
+                var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", a, b, a.ApproximatelyEquals(b));
+                UnitConverterCheckEvidence.GiveEvidence(x);
 
-                Console.WriteLine(i);
-
-
-                foreach (var j in ActionValueMap)
+                if (!a.ApproximatelyEquals(b))
                 {
-
-                        foreach (var k in j.Value)
-                        {
-                        if (tempA.ApproximatelyEquals(k))
-                        {
-                             UnitConverterCheckEvidence.GiveEvidence(actual[i].input + j.Key);
-
-                            var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", tempA, k, tempA.ApproximatelyEquals(k));
-                            UnitConverterCheckEvidence.GiveEvidence(x);
-                        }
-                        }
-                    }
+                    ret = false;
+                }
             }
-            return true;
-
-        }        
-        
-        public void PrintProgress()
-        {
-            
+            return ret;
         }
-
         public (double,double) ToDouble(string a, string b)
         {
             return (Double.Parse(a), Double.Parse(b));
