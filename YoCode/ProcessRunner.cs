@@ -138,6 +138,7 @@ namespace YoCode
             if (!p.HasExited)
             {
                 p.Kill();
+                p.Dispose();
             }
         }
     }

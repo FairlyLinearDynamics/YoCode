@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using FluentAssertions;
-using YoCode;
 using System.IO;
 
 namespace YoCodeAutomatedTests
@@ -16,20 +15,21 @@ namespace YoCodeAutomatedTests
         {
             var helper = new TestHelperMethods();
 
-            string argument = $"YoCode.dll --original={helper.testPath}\\TestProjects\\junior-test " +
-                $"--modified={helper.testPath}\\TestProjects{project}";
+            string argument = $"YoCode.dll --original={helper.TestPath}\\TestProjects\\junior-test " +
+                $"--modified={helper.TestPath}\\TestProjects{project}";
 
-            ProcessRunner pr = new ProcessRunner("dotnet", helper.dllPath, argument);
-            pr.ExecuteTheCheck("Minimum test count:");
+            var procinfo = helper.SetupProcessInfo("dotnet", helper.DllPath, argument);
 
-            var actualPath = Path.Combine(helper.testPath, "ActualOutputs", outputFile);
-            var expectedPath =Path.Combine(helper.testPath, "ExpectedOutputs", outputFile);
+            var Output = helper.RunProcess(procinfo);
 
-            var actualOutput = pr.Output.Trim();
+            var actualPath = Path.Combine(helper.TestPath, "ActualOutputs", outputFile);
+            var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs", outputFile);
 
-            TestHelperMethods.WriteToFile(actualPath, actualOutput);
+            var actualOutput = Output.Trim();
 
-            TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
+            helper.WriteToFile(actualPath, actualOutput);
+
+            helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
         }
     }
 }
