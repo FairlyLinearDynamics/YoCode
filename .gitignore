@@ -7,8 +7,8 @@
 *.userosscache
 *.sln.docstates
 launchSettings.json 
-appsettings.json
-testappsettings.json
+**/appsettings.json
+**/testappsettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -262,4 +262,3 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-YoCode/appsettings.json
