@@ -3,8 +3,6 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using LibGit2Sharp;
-using System.Resources;
 
 namespace YoCode
 {
@@ -16,10 +14,9 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            
+            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
-            var consoleOutput = new Output(new ConsoleWriter());
-            consoleOutput.PrintIntroduction();
+            var compositeOutput = new Output(new CompositeWriter(outputs));
 
             try
             {
@@ -29,22 +26,24 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                consoleOutput.ShowSettingHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
+
+            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.ShowErrors(result.errors);
+                compositeOutput.ShowInputErrors(result.errors);
                 return;
             }
 
@@ -55,17 +54,18 @@ namespace YoCode
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.ShowDirEmptyMsg();
+                compositeOutput.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.ShowLaziness();
+                compositeOutput.ShowLaziness();
                 return;
             }
 
-            consoleOutput.PrintFinalResults(PerformChecks(dir));
+            var implementedFeatureList = PerformChecks(dir);
+            compositeOutput.PrintFinalResults(implementedFeatureList);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
