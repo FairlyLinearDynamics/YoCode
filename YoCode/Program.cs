@@ -16,9 +16,7 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            var outputs = new List<IPrint>();
-            outputs.Add(new WebWriter());
-            outputs.Add(new ConsoleWriter());
+            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
 
