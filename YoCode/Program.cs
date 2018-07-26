@@ -3,8 +3,6 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using LibGit2Sharp;
-using System.Resources;
 
 namespace YoCode
 {
