@@ -12,7 +12,7 @@ namespace YoCode
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
-        private ProcessInfo procinfo;
+        public ProcessInfo procinfo;
         private readonly TimeSpan timeout = TimeSpan.FromSeconds(40);
         private readonly List<string> output = new List<string>();
         private readonly List<string> errorOutput = new List<string>();

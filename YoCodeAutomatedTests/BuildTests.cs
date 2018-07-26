@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
+using YoCode;
 using System.IO;
 
 namespace YoCodeAutomatedTests
@@ -18,9 +19,7 @@ namespace YoCodeAutomatedTests
             string argument = $"YoCode.dll --original={helper.TestPath}\\TestProjects\\junior-test " +
                 $"--modified={helper.TestPath}\\TestProjects{project}";
 
-            var procinfo = helper.SetupProcessInfo("dotnet", helper.DllPath, argument);
-
-            var Output = helper.RunProcess(procinfo);
+            var Output = helper.RunProcess("dotnet", helper.DllPath, argument);
 
             var actualPath = Path.Combine(helper.TestPath, "ActualOutputs", outputFile);
             var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs", outputFile);

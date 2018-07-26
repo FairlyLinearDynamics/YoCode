@@ -41,10 +41,13 @@ namespace YoCodeAutomatedTests
             }
         }
 
-        public string RunProcess(ProcessInfo procinfo)
+        public string RunProcess(string processName, string workingDir, string arguments)
         {
+            var pr = new ProcessRunner(processName, workingDir, arguments);
+
             var p = new Process();
-            p.StartInfo = SetProcessStartInfo(procinfo);
+
+            p.StartInfo = SetProcessStartInfo(pr.procinfo);
             p.Start();
 
             var Output = p.StandardOutput.ReadToEnd();
@@ -63,22 +66,11 @@ namespace YoCodeAutomatedTests
             return new ProcessStartInfo
             {
                 CreateNoWindow = true,
-                RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 WorkingDirectory = procinfo.workingDir,
                 FileName = procinfo.processName,
                 Arguments = procinfo.arguments,
             };
-        }
-
-        public ProcessInfo SetupProcessInfo(string processName, string workingDir, string arguments)
-        {
-            ProcessInfo pi;
-            pi.processName = processName;
-            pi.workingDir = workingDir;
-            pi.arguments = arguments;
-
-            return pi;
         }
     }
 }
