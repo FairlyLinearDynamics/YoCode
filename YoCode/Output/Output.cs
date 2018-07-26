@@ -19,6 +19,7 @@ namespace YoCode
         public void PrintIntroduction()
         {
             outputWriter.AddIntro(messages.Welcome);
+            outputWriter.WriteReport();
         }
 
         public void PrintFinalResults(List<FeatureEvidence> featureList)
