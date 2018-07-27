@@ -16,18 +16,17 @@ namespace YoCodeAutomatedTests
         {
             var helper = new TestHelperMethods();
 
-            string argument = $"YoCode.dll --original={helper.testPath}\\TestProjects\\junior-test " +
-                $"--modified={helper.testPath}\\TestProjects{project}";
+            string argument = $"YoCode.dll --original={helper.TestPath}\\TestProjects\\junior-test " +
+                $"--modified={helper.TestPath}\\TestProjects{project}";
 
-            ProcessRunner pr = new ProcessRunner("dotnet", helper.dllPath, argument);
-            pr.ExecuteTheCheck("Minimum test count:");
+            var Output = helper.RunProcess("dotnet", helper.DllPath, argument);
 
-            var actualPath = Path.Combine(helper.testPath, "ActualOutputs", outputFile);
-            var expectedPath =Path.Combine(helper.testPath, "ExpectedOutputs", outputFile);
+            var actualPath = Path.Combine(helper.TestPath, "ActualOutputs", outputFile);
+            var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs", outputFile);
 
-            var actualOutput = pr.Output.Trim();
+            var actualOutput = Output.Trim();
 
-            TestHelperMethods.WriteToFile(actualPath, actualOutput);
+            helper.WriteToFile(actualPath, actualOutput);
 
             TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
         }
