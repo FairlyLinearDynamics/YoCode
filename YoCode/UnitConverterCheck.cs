@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace YoCode
@@ -41,8 +38,7 @@ namespace YoCode
         {
             if (String.IsNullOrEmpty(port))
             {
-                UnitConverterCheckEvidence.FeatureImplemented = false;
-                UnitConverterCheckEvidence.GiveEvidence("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
+                UnitConverterCheckEvidence.SetFailed("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
             }
             else
             {

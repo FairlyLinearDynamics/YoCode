@@ -156,4 +156,99 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
   <data name="AskForHelp" xml:space="preserve">
     <value>If you would like to see list of commands, type: --help</value>
   </data>
+  <data name="AppsettingsHelp" xml:space="preserve">
+    <value>appsettings.json file missing. Please make sure to create the file as specified in the README</value>
+  </data>
+  <data name="HtmlTemplate" xml:space="preserve">
+    <value>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;meta http-equiv="x-ua-compatible" content="ie=edge"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        
+        &lt;title&gt;YoCode Report&lt;/title&gt;
+
+        &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
+        &lt;style&gt;
+            body{
+                margin: 0;
+            }
+            .accordion {
+                background-color: #eee;
+                color: #444;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                text-align: left;
+                font-weight: 600;
+                border: none;
+                outline: none;
+                transition: 0.4s;
+            }
+            .accordion::after{
+                content: '\002B';
+                font-size: 10px;
+                color: #777;
+                float: right;
+                font-weight: bold;
+                margin-left: 5px;
+            }
+            .active:after {
+                content: "\2212";
+            }
+            .active, .accordion:hover {
+                background-color: #ccc;
+            }
+            .panel {
+                padding: 0 18px;
+                background-color: white;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.2s ease-out;
+            }
+            .fa-times-circle-o{
+                font-size:20px;
+                color:red;
+                padding-left: 15px;
+            }
+            .fa-check-circle-o{
+                font-size: 20px;
+                color:green;
+                padding-left: 15px;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        {FEATURE}
+        &lt;script&gt;
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+
+            for (i = 0; i &lt; acc.length; i++) {
+                acc[i].addEventListener("click", function() 
+                {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight)
+                    {
+                        panel.style.maxHeight = null;
+                    } else 
+                    {
+                        panel.style.maxHeight = panel.scrollHeight + "px";
+                    }
+                });
+            }
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="ListElementTemplate" xml:space="preserve">
+    <value>&lt;button class="accordion"&gt;{TITLE}&lt;/button&gt;
+&lt;div class="panel"&gt;
+    {CONTENT}
+&lt;/div&gt;</value>
+  </data>
 </root>
