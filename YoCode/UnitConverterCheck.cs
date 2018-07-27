@@ -46,10 +46,13 @@ namespace YoCode
             }
             else
             {
+                HTMLFetcher fetcher = new HTMLFetcher(port);
+
                 UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
                 client = new HttpClient { BaseAddress = new Uri(port) };
-                GetHTMLCodeAsString();
-                
+                fetcher.GetHTMLCodeAsString();
+                HTMLcode = fetcher.HTMLcode;
+
                 KeywordMap = new Dictionary<List<string>, List<double>>();
 
                 actual = new List<UnitConverterResults>();
