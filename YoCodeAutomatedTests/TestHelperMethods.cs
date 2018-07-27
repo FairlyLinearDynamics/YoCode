@@ -43,34 +43,10 @@ namespace YoCodeAutomatedTests
 
         public string RunProcess(string processName, string workingDir, string arguments)
         {
-            var pr = new ProcessRunner(processName, workingDir, arguments);
+            ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
+            pr.ExecuteTheCheck("Minimum test count:");
 
-            var p = new Process();
-
-            p.StartInfo = SetProcessStartInfo(pr.procinfo);
-            p.Start();
-
-            var Output = p.StandardOutput.ReadToEnd();
-
-            if (!p.HasExited)
-            {
-                p.Kill();
-                p.Dispose();
-            }
-
-            return Output;
-        }
-
-        private static ProcessStartInfo SetProcessStartInfo(ProcessInfo procinfo)
-        {
-            return new ProcessStartInfo
-            {
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                WorkingDirectory = procinfo.workingDir,
-                FileName = procinfo.processName,
-                Arguments = procinfo.arguments,
-            };
+            return pr.Output;
         }
     }
 }
