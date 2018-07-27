@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using LibGit2Sharp;
 
 namespace YoCode
 {
@@ -15,20 +17,25 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
+            // TODO: Check if the base path is the same as working dir (git rev-parse --show-toplevel) or libgit2sharp
 
-            var evidence = new FeatureRunner().Execute(processDetails);
-            if (evidence.FeatureFailed)
+            if(Repository.IsValid(repositoryPath))
             {
-                return;
-            }
+                var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
 
-            var lastAuthor = evidence.Output.GetLineWithAllKeywords(GetKeyWords());
-            GitEvidence.FeatureImplemented = GitHasBeenUsed(lastAuthor);
+                var evidence = new FeatureRunner().Execute(processDetails);
+                if (evidence.FeatureFailed)
+                {
+                    return;
+                }
 
-            if (GitEvidence.FeatureImplemented)
-            {
-                GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast {lastAuthor}");
+                var lastAuthor = evidence.Output.GetLineWithAllKeywords(GetKeyWords());
+                GitEvidence.FeatureImplemented = GitHasBeenUsed(lastAuthor);
+
+                if (GitEvidence.FeatureImplemented)
+                {
+                    GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast {lastAuthor}");
+                }
             }
         }
 
