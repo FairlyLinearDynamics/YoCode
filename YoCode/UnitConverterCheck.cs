@@ -164,7 +164,7 @@ namespace YoCode
 
         public bool OutputsAreEqual()
         {
-            bool ret = false;
+            bool ret = true;
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
