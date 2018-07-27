@@ -20,12 +20,14 @@ namespace YoCode
 
             var foxService = FirefoxDriverService.CreateDefaultService(@"C:\Users\ukekar\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1\");
             foxService.HideCommandPromptWindow = true;
-
             browser = new FirefoxDriver(foxService,new FirefoxOptions());
             browser.Navigate().GoToUrl("http://localhost:5000/");
-            FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(); ;
-            FrontEndEvidence.GiveEvidence(InputData());
-            //browser.Close();
+            FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature();
+            InputData();
+            OutputCheck();
+            
+            //FrontEndEvidence.GiveEvidence(InputData());
+            browser.Close();
         }
 
         private bool CheckIfUIContainsFeature()
@@ -58,48 +60,87 @@ namespace YoCode
 
         }
 
-        private string InputData()
-        {
-            //var form = browser.FindElements(By.CssSelector("form"));
-
-            //if (!form.Any())
-            //{
-            //    return null;
-            //}
-
-            //var selectors = browser.FindElements(By.CssSelector("select"));
-            //if (selectors.Count > 1)
-            //{
-                
-            //}
-
-            var tags = browser.FindElements(By.CssSelector("select"));
-
-            SelectElement click1 = new SelectElement(tags[0]);
-            click1.SelectByText("Yard");
-
-            SelectElement click2 = new SelectElement(tags[1]);
-            click2.SelectByText("Mile");
-
-            var textBoxes = browser.FindElements(By.CssSelector("textarea"));
-            foreach(var texBox in textBoxes)
+        private void OutputCheck()
+        { 
+            // TODO: Check for thrown exceptions
+            var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred ')]"));
+            if (exception.Any())
             {
-                texBox.SendKeys("1");
+                FrontEndEvidence.SetFailed("Exception not handled");
+            }
+            else
+            {
+                FrontEndEvidence.GiveEvidence("No exceptions found");
             }
 
-            var inputForm = browser.FindElement(By.CssSelector("form"));
-            var child = inputForm.FindElement(By.CssSelector("div"));
-            child.Submit();
-
-            var output = browser.FindElements(By.CssSelector("textarea"));
-            foreach(var textBox in output)
-            {
-                FrontEndEvidence.GiveEvidence(textBox.Text);
-            }
-
-            return tags.Count.ToString();
+            // TODO: Check if output is number
         }
 
+        private void InputData()
+        {
+            var forms = browser.FindElements(By.CssSelector("form"));
+
+            if (!forms.Any())
+            {
+                return;
+            }
+            foreach(var form in forms)
+            {
+                try
+                {
+                    var selectors = form.FindElements(By.CssSelector("select"));
+                    if (selectors.Count > 1)
+                    {
+                        SelectElement clicker;
+                        foreach (var select in selectors)
+                        {
+                            clicker = new SelectElement(select);
+                            clicker.SelectByText(clicker.SelectedOption.Text.Contains("Yard") ? "Meter" : "Yard");
+                        }
+
+                        // TODO: Find and enter something in textfield
+                        var textFields = form.FindElements(By.CssSelector("textarea"));
+                        foreach (var textField in textFields)
+                        {
+                            textField.SendKeys("");
+                        }
+
+                        // TODO: Submit form
+                        form.FindElement(By.CssSelector("input")).Click();
+                    }
+                    else if (selectors.Count == 1)
+                    {
+                        // Only one drop down, check if it has Yards And Meters
+                        // TODO: Select proper option
+                        SelectElement selectFromDropDown = new SelectElement(selectors.First());
+                        selectFromDropDown.SelectByIndex(1);
+
+                        // TODO: Find and enter something in textfield
+                        var textFields = form.FindElements(By.CssSelector("textarea"));
+                        foreach (var textField in textFields)
+                        {
+                            textField.SendKeys("");
+                        }
+
+                        // TODO: Submit form
+                        form.FindElement(By.CssSelector("input")).Click();
+                    }
+                    else
+                    {
+                        // No dropdown, check for other type of input
+                        var textFields = form.FindElements(By.CssSelector("textarea"));
+                        foreach (var textField in textFields)
+                        {
+                            textField.SendKeys("");
+                        }
+
+                        form.FindElement(By.CssSelector("input")).Click();
+                    }
+                }
+                catch (Exception) { }
+            }
+
+        }
 
         public FeatureEvidence FrontEndEvidence { get; private set; } = new FeatureEvidence();
 

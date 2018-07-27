@@ -126,6 +126,8 @@ namespace YoCode
 
                 //dupFinderThread.Join();
                 SeleniumThread.Join();
+
+                
             }
             return checkList;
         }
