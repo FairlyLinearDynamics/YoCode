@@ -9,7 +9,6 @@ namespace YoCode
     class HTMLFetcher
     {
         HttpClient client;
-        List<UnitConverterResults> actual;
         public string HTMLcode { get; set; }
        
 
@@ -33,6 +32,8 @@ namespace YoCode
 
         public async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<string> texts, List<string> actions)
         {
+            var actual = new List<UnitConverterResults>();
+
             for (int i = 0; i < texts.Count; i++)
             {
                 UnitConverterResults tempActual = new UnitConverterResults();

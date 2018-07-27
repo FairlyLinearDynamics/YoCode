@@ -88,10 +88,14 @@ namespace YoCode
                     expected.Add(ToBeAdded);
                     }
                 }
-           
-                var task = GetActionNamesViaHTTP();
-                task.Wait();
-                actual = task.Result;
+
+                actual = fetcher.GetActualValues(texts, actions);
+
+
+
+                //var task = GetActionNamesViaHTTP();
+                //task.Wait();
+                //actual = task.Result;
                 UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
             }
         }        
