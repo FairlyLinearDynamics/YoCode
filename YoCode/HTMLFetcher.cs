@@ -12,7 +12,6 @@ namespace YoCode
         public string HTMLcode { get; set; }
        
 
-
         public HTMLFetcher(string port)
         {
             client = new HttpClient { BaseAddress = new Uri(port) };
@@ -29,7 +28,6 @@ namespace YoCode
             HTMLcode = GetHTMLCodeAsTask().Result;
         }
 
-
         public async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<string> texts, List<string> actions)
         {
             var actual = new List<UnitConverterResults>();
@@ -42,6 +40,7 @@ namespace YoCode
                 for (int j = 0; j < actions.Count; j++)
                 {
                     tempActual.action = actions[i];
+
                     var formContent = GetEncodedContent(texts[i], actions[j]);
 
                     var bar = await client.PostAsync("/Home/Convert", formContent);
@@ -61,7 +60,6 @@ namespace YoCode
         }
 
 
-
         private FormUrlEncodedContent GetEncodedContent(string i, string j)
         {
             return new FormUrlEncodedContent(new[]
@@ -75,9 +73,6 @@ namespace YoCode
         {
             return bar.Content.ReadAsStringAsync();
         }
-
-
-
 
     }
 }

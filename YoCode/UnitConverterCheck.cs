@@ -46,39 +46,59 @@ namespace YoCode
             }
             else
             {
-                HTMLFetcher fetcher = new HTMLFetcher(port);
-
-                UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
-                client = new HttpClient { BaseAddress = new Uri(port) };
-                fetcher.GetHTMLCodeAsString();
-                HTMLcode = fetcher.HTMLcode;
-
-                KeywordMap = new Dictionary<List<string>, List<double>>();
-
-                actual = new List<UnitConverterResults>();
-                expected = new List<UnitConverterResults>();
-
-                texts = new List<string> { "5", "25", "125" };
-
-                InchesToCentimetres = MakeConversion(texts, InToCm);
-                MilesToKilometres = MakeConversion(texts, MiToKm);
-                YardsToMeters = MakeConversion(texts, YdToMe);
-
-                InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
-                MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
-                YdToMeKeys = new List<string> {"yards","yard","yardstometers","tometers"  };
-                
-                actions = GetListOfActions(HTMLcode);
-
-                KeywordMap.Add(InToCmKeys, InchesToCentimetres);
-                KeywordMap.Add(MiToKmKeys, MilesToKilometres);
-                KeywordMap.Add(YdToMeKeys, YardsToMeters);
-
-                UnitConverterResults ToBeAdded = new UnitConverterResults();
-                for(int x=0;x<texts.Count;x++)
+                try
                 {
-                    for(int y=0;y<actions.Count;y++)
-                    {
+                    HTMLFetcher fetcher = new HTMLFetcher(port);
+                    UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
+
+                    fetcher.GetHTMLCodeAsString();
+                    HTMLcode = fetcher.HTMLcode;
+                    InitializeDataStructures();
+                    actual = fetcher.GetActualValues(texts, actions);
+                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();    
+                }
+                catch (Exception)
+                {
+                    UnitConverterCheckEvidence.SetFailed("The program could not check this feature");
+                }
+
+            }
+        }
+
+        private void InitializeDataStructures()
+        {
+            KeywordMap = new Dictionary<List<string>, List<double>>();
+
+            actual = new List<UnitConverterResults>();
+            expected = new List<UnitConverterResults>();
+
+            texts = new List<string> { "5", "25", "125" };
+
+            InchesToCentimetres = MakeConversion(texts, InToCm);
+            MilesToKilometres = MakeConversion(texts, MiToKm);
+            YardsToMeters = MakeConversion(texts, YdToMe);
+
+            InToCmKeys = new List<string> { "inc", "in", "inch", "inches", "cm", "centimetres", "centimetre" };
+            MiToKmKeys = new List<string> { "miles", "mi", "mile", "kilo", "kilometres", "kilometre" };
+            YdToMeKeys = new List<string> { "yards", "yard", "yardstometers", "tometers" };
+
+            actions = GetListOfActions(HTMLcode);
+
+            KeywordMap.Add(InToCmKeys, InchesToCentimetres);
+            KeywordMap.Add(MiToKmKeys, MilesToKilometres);
+            KeywordMap.Add(YdToMeKeys, YardsToMeters);
+
+            InitializeExpectedValues();
+
+        }
+
+        private void InitializeExpectedValues()
+        {
+            UnitConverterResults ToBeAdded = new UnitConverterResults();
+            for (int x = 0; x < texts.Count; x++)
+            {
+                for (int y = 0; y < actions.Count; y++)
+                {
                     List<double> outputsForThisAction = CheckActions(actions[y]);
 
                     ToBeAdded.input = texts[x];
@@ -86,19 +106,9 @@ namespace YoCode
                     ToBeAdded.output = outputsForThisAction[x].ToString();
 
                     expected.Add(ToBeAdded);
-                    }
                 }
-
-                actual = fetcher.GetActualValues(texts, actions);
-
-
-
-                //var task = GetActionNamesViaHTTP();
-                //task.Wait();
-                //actual = task.Result;
-                UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
             }
-        }        
+        }
 
         public List<string> GetActionLines(string file)
         {
@@ -183,54 +193,7 @@ namespace YoCode
             }
             return ret;
         }
-
-        // HTML stuff
-
-        public async Task<List<UnitConverterResults>> GetActionNamesViaHTTP()
-        {
-            for (int i = 0; i < texts.Count; i++)
-            {
-                UnitConverterResults tempActual = new UnitConverterResults();
-                tempActual.input = texts[i];
-
-                for (int j = 0; j < actions.Count; j++)
-                {
-                    tempActual.action = actions[i];
-                    var formContent = GetEncodedContent(i, j);
-
-                    var bar = await client.PostAsync("/Home/Convert", formContent);
-
-                    tempActual.output = await GetResponseAsTaskAsync(bar);
-                    actual.Add(tempActual);
-                }
-            }
-            return actual;
-        }
-
-        public Task<string> GetHTMLCodeAsTask()
-        { 
-            return client.GetStringAsync("/");
-        }
-       
-        public async void GetHTMLCodeAsString()
-        {
-            HTMLcode = GetHTMLCodeAsTask().Result;
-        }
-        
-        private FormUrlEncodedContent GetEncodedContent(int i, int j)
-        {
-            return new FormUrlEncodedContent(new[]
-            {
-                        new KeyValuePair<string,string>("text",texts[i]),
-                        new KeyValuePair<string, string>("action",actions[j])
-                    });
-        }
-
-        private static Task<string> GetResponseAsTaskAsync(HttpResponseMessage bar)
-        {
-            return bar.Content.ReadAsStringAsync();
-        }
-
+         
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
     }
 }
