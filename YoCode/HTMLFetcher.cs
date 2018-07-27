@@ -8,9 +8,7 @@ namespace YoCode
 {
     class HTMLFetcher
     {
-        HttpClient client;
-        public string HTMLcode { get; set; }
-       
+        private HttpClient client;       
 
         public HTMLFetcher(string port)
         {
@@ -23,21 +21,21 @@ namespace YoCode
             return client.GetStringAsync("/");
         }
 
-        public async void GetHTMLCodeAsString()
+        public string GetHTMLCodeAsString()
         {
-            HTMLcode = GetHTMLCodeAsTask().Result;
+            return GetHTMLCodeAsTask().Result;
         }
 
         public async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<string> texts, List<string> actions)
         {
             var actual = new List<UnitConverterResults>();
 
-            for (int i = 0; i < texts.Count; i++)
+            for (var i = 0; i < texts.Count; i++)
             {
                 UnitConverterResults tempActual = new UnitConverterResults();
                 tempActual.input = texts[i];
 
-                for (int j = 0; j < actions.Count; j++)
+                for (var j = 0; j < actions.Count; j++)
                 {
                     tempActual.action = actions[i];
 

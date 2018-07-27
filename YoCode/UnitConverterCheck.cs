@@ -9,6 +9,10 @@ namespace YoCode
     class UnitConverterCheck
     {
         Dictionary<List<string>,List<double>> KeywordMap;
+
+        List<UnitConverterResults> actual;
+        List<UnitConverterResults> expected;
+
         List<string> texts;
         List<string> actions;
            
@@ -23,14 +27,9 @@ namespace YoCode
         List<string> InToCmKeys;
         List<string> MiToKmKeys;
         List<string> YdToMeKeys;
-       
-        List<UnitConverterResults> actual;
-        List<UnitConverterResults> expected;
-        
+              
         string from = "value=\"";
         string to = "\"";
-
-        HttpClient client;
 
         private string HTMLcode;
 
@@ -44,11 +43,10 @@ namespace YoCode
             {
                 try
                 {
-                    HTMLFetcher fetcher = new HTMLFetcher(port);
+                    var fetcher = new HTMLFetcher(port);
                     UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
 
-                    fetcher.GetHTMLCodeAsString();
-                    HTMLcode = fetcher.HTMLcode;
+                    HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
                     actual = fetcher.GetActualValues(texts, actions);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();    
@@ -85,17 +83,16 @@ namespace YoCode
             KeywordMap.Add(YdToMeKeys, YardsToMeters);
 
             InitializeExpectedValues();
-
         }
 
         private void InitializeExpectedValues()
         {
-            UnitConverterResults ToBeAdded = new UnitConverterResults();
-            for (int x = 0; x < texts.Count; x++)
+            var ToBeAdded = new UnitConverterResults();
+            for (var x = 0; x < texts.Count; x++)
             {
-                for (int y = 0; y < actions.Count; y++)
+                for (var y = 0; y < actions.Count; y++)
                 {
-                    List<double> outputsForThisAction = CheckActions(actions[y]);
+                    var outputsForThisAction = CheckActions(actions[y]);
 
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
@@ -106,46 +103,46 @@ namespace YoCode
             }
         }
 
-        public List<string> GetActionLines(string file)
+        private List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
 
-        public List<string> GetListOfActions(string HTMLfile)
+        private List<string> GetListOfActions(string HTMLfile)
         {
             var actionlines = GetActionLines(HTMLfile);
             return ExtractActionsFromList(actionlines);
         }
 
-        public List<string> ExtractActionsFromList(List<string> actionLines)
+        private List<string> ExtractActionsFromList(List<string> actionLines)
         {
             var list = new List<string>();
 
-            foreach (string line in actionLines)
+            foreach (var line in actionLines)
             {
-                string res = line.GetStringBetweenStrings(from, to);
+                var res = line.GetStringBetweenStrings(from, to);
 
                 list.Add(res);
             }
             return list;
         }
 
-        public List<double> MakeConversion(List<string> inputs, double mult)
+        private List<double> MakeConversion(List<string> inputs, double mult)
         {
             var list = new List<double>();
-            foreach (string x in inputs)
+            foreach (var x in inputs)
             {
                 list.Add(Double.Parse(x) * mult);
             }
             return list;
         }
 
-        public List<string> GetActionKeywords()
+        private List<string> GetActionKeywords()
         {
             return new List<string> { "action", "value" };
         }
 
-        public List<double> CheckActions(string action)
+        private List<double> CheckActions(string action)
         {
                 foreach (var keywords in KeywordMap)
                 {
@@ -157,21 +154,21 @@ namespace YoCode
             return new List<double>{0.1};
         }
 
-        public (double,double) StringToDouble(string a, string b)
+        private (double,double) StringToDouble(string a, string b)
         {
-            return (Double.Parse(a), Double.Parse(b));
+            return (double.Parse(a), double.Parse(b));
         }
 
-        public bool OutputsAreEqual()
+        private bool OutputsAreEqual()
         {
-            bool ret = true;
+            var ret = true;
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
 
                 for (int i = 0; i < actual.Count; i++)
                 {
-                    (double a,double  b) = StringToDouble(actual[i].output, expected[i].output);                    
+                    (var a,var b) = StringToDouble(actual[i].output, expected[i].output);                    
 
                     var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", b, a, a.ApproximatelyEquals(b));
                     UnitConverterCheckEvidence.GiveEvidence(x);
