@@ -3,8 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using LibGit2Sharp;
-using System.Resources;
+using System.Threading;
 
 namespace YoCode
 {
@@ -16,10 +15,9 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-            
+            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
-            var consoleOutput = new Output(new ConsoleWriter());
-            consoleOutput.PrintIntroduction();
+            var compositeOutput = new Output(new CompositeWriter(outputs));
 
             try
             {
@@ -29,22 +27,24 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                consoleOutput.ShowSettingHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
+
+            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
-                consoleOutput.ShowHelp();
+                compositeOutput.ShowHelp();
                 return;
             }
 
             if (result.HasErrors)
             {
-                consoleOutput.ShowErrors(result.errors);
+                compositeOutput.ShowInputErrors(result.errors);
                 return;
             }
 
@@ -55,17 +55,18 @@ namespace YoCode
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
-                consoleOutput.ShowDirEmptyMsg();
+                compositeOutput.ShowDirEmptyMsg();
                 return;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
-                consoleOutput.ShowLaziness();
+                compositeOutput.ShowLaziness();
                 return;
             }
-
-            consoleOutput.PrintFinalResults(PerformChecks(dir));
+            
+            var implementedFeatureList = PerformChecks(dir);
+            compositeOutput.PrintFinalResults(implementedFeatureList);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -73,9 +74,17 @@ namespace YoCode
             var checkList = new List<FeatureEvidence>();
 
             var fileCheck = new FileChangeChecker(dir);
+            
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+                // Duplication check
+                var dupFinderThread = new Thread(() =>
+                {
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                });
+                dupFinderThread.Start();
+
                 checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
@@ -97,20 +106,19 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                // Duplication check
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-
-
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 // Project run test
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
+                // Unit converter test
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
-                pr.KillProject();         
+                pr.KillProject();
+
+                dupFinderThread.Join();
             }
             return checkList;
         }
