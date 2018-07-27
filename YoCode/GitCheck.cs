@@ -40,7 +40,7 @@ namespace YoCode
 
             if (GitEvidence.FeatureImplemented)
             {
-                GitEvidence.GiveEvidence($"Commits:" + Environment.NewLine + output);
+                GitEvidence.GiveEvidence("Commits:" + Environment.NewLine + output);
             }
         }
 
