@@ -19,9 +19,9 @@ namespace YoCode
         List<double> MilesToKilometres;
         List<double> YardsToMeters;
 
-        double InToCm = 2.54;
-        double MiToKm = 1.60934;
-        double YdToMe = 0.9144;
+        const double InToCm = 2.54;
+        const double MiToKm = 1.60934;
+        const double YdToMe = 0.9144;
 
         List<string> InToCmKeys;
         List<string> MiToKmKeys;
@@ -36,7 +36,6 @@ namespace YoCode
         HttpClient client;
 
         private string HTMLcode;
-        string tempResultStorage;
 
         public UnitConverterCheck(string port)
         {
@@ -49,86 +48,63 @@ namespace YoCode
             {
                 UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
                 client = new HttpClient { BaseAddress = new Uri(port) };
-                Setup();
-                RunTheCheck();
-                UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
-            }
-        }        
-        // setup and run
-
-        private void Setup()
-        {
-            GetHTMLCodeAsString();
-            InitializeLists();
-        }
-
-        private void RunTheCheck()
-        {
-            var task = GetActionNamesViaHTTP();
-            task.Wait();
-            actual = task.Result;
-        }
-
-        public void InitializeLists()
-        {
-            KeywordMap = new Dictionary<List<string>, List<double>>();
-
-            actual = new List<UnitConverterResults>();
-            expected = new List<UnitConverterResults>();
-
-            texts = new List<string> { "5", "25", "125" };
-
-            InchesToCentimetres = MakeConversion(texts, InToCm);
-            MilesToKilometres = MakeConversion(texts, MiToKm);
-            YardsToMeters = MakeConversion(texts, YdToMe);
-
-            InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
-            MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
-            YdToMeKeys = new List<string> {"yards","yard","yardstometers","tometers"  };
+                GetHTMLCodeAsString();
                 
-            actions = GetActions(HTMLcode);
+                KeywordMap = new Dictionary<List<string>, List<double>>();
 
-            FillMap();
-            InitializeExpectedValues();
-        }
+                actual = new List<UnitConverterResults>();
+                expected = new List<UnitConverterResults>();
 
-        // Work with Data
+                texts = new List<string> { "5", "25", "125" };
 
-        public void FillMap()
-        {
-            KeywordMap.Add(InToCmKeys, InchesToCentimetres);
-            KeywordMap.Add(MiToKmKeys, MilesToKilometres);
-            KeywordMap.Add(YdToMeKeys, YardsToMeters);
-        }
+                InchesToCentimetres = MakeConversion(texts, InToCm);
+                MilesToKilometres = MakeConversion(texts, MiToKm);
+                YardsToMeters = MakeConversion(texts, YdToMe);
 
-        public void InitializeExpectedValues()
-        {
-            UnitConverterResults ToBeAdded = new UnitConverterResults();
-            for(int x=0;x<texts.Count;x++)
-            {
-                for(int y=0;y<actions.Count;y++)
+                InToCmKeys = new List<string> {"inc","in","inch","inches","cm","centimetres","centimetre" };
+                MiToKmKeys = new List<string> {"miles","mi","mile","kilo","kilometres","kilometre"};
+                YdToMeKeys = new List<string> {"yards","yard","yardstometers","tometers"  };
+                
+                actions = GetListOfActions(HTMLcode);
+
+                KeywordMap.Add(InToCmKeys, InchesToCentimetres);
+                KeywordMap.Add(MiToKmKeys, MilesToKilometres);
+                KeywordMap.Add(YdToMeKeys, YardsToMeters);
+
+                UnitConverterResults ToBeAdded = new UnitConverterResults();
+                for(int x=0;x<texts.Count;x++)
                 {
+                    for(int y=0;y<actions.Count;y++)
+                    {
                     List<double> outputsForThisAction = CheckActions(actions[y]);
+
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
                     ToBeAdded.output = outputsForThisAction[x].ToString();
+
                     expected.Add(ToBeAdded);
+                    }
                 }
+           
+                var task = GetActionNamesViaHTTP();
+                task.Wait();
+                actual = task.Result;
+                UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
             }
-        }
+        }        
 
         public List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
 
-        public List<string> GetActions(string HTMLfile)
+        public List<string> GetListOfActions(string HTMLfile)
         {
             var actionlines = GetActionLines(HTMLfile);
-            return ExtractActions(actionlines);
+            return ExtractActionsFromList(actionlines);
         }
 
-        public List<string> ExtractActions(List<string> actionLines)
+        public List<string> ExtractActionsFromList(List<string> actionLines)
         {
             var list = new List<string>();
 
@@ -151,11 +127,6 @@ namespace YoCode
             return list;
         }
 
-        public List<double> ConvertAnswersToDouble(List<String> strings)
-        {
-            return strings.Select(s => double.Parse(s)).ToList();
-        }
-
         public List<string> GetActionKeywords()
         {
             return new List<string> { "action", "value" };
@@ -173,9 +144,37 @@ namespace YoCode
             return new List<double>{0.1};
         }
 
-        public (double,double) ToDouble(string a, string b)
+        public (double,double) StringToDouble(string a, string b)
         {
             return (Double.Parse(a), Double.Parse(b));
+        }
+
+        public bool OutputsAreEqual()
+        {
+            bool ret = false;
+            try
+            {
+                UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
+
+                for (int i = 0; i < actual.Count; i++)
+                {
+                    (double a,double  b) = StringToDouble(actual[i].output, expected[i].output);                    
+
+                    var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", b, a, a.ApproximatelyEquals(b));
+                    UnitConverterCheckEvidence.GiveEvidence(x);
+
+                    if (!a.ApproximatelyEquals(b))
+                    {
+                        ret = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                UnitConverterCheckEvidence.SetFailed("Unit converting has failed");
+                ret = false;
+            }
+            return ret;
         }
 
         // HTML stuff
@@ -223,31 +222,6 @@ namespace YoCode
         private static Task<string> GetResponseAsTaskAsync(HttpResponseMessage bar)
         {
             return bar.Content.ReadAsStringAsync();
-        }
-
-        public async void GetResponseAsString(Task<string> bar)
-        {
-            tempResultStorage = bar.Result;
-        }
-
-        public bool OutputsAreEqual()
-        {
-            UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
-            bool ret = true;
-
-            for(int i = 0; i < actual.Count; i++)
-            {
-                (var a, var b) = ToDouble(actual[i].output, expected[i].output);
-
-                var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", a, b, a.ApproximatelyEquals(b));
-                UnitConverterCheckEvidence.GiveEvidence(x);
-
-                if (!a.ApproximatelyEquals(b))
-                {
-                    ret = false;
-                }
-            }
-            return ret;
         }
 
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
