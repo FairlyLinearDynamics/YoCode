@@ -17,8 +17,6 @@ namespace YoCode
 
         public void ExecuteTheCheck()
         {
-            // TODO: Check if the base path is the same as working dir (git rev-parse --show-toplevel) or libgit2sharp
-
             if(Repository.IsValid(repositoryPath))
             {
                 var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
