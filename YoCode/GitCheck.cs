@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using LibGit2Sharp;
 
 namespace YoCode
@@ -12,43 +14,59 @@ namespace YoCode
         {
             repositoryPath = path;
             GitEvidence.FeatureTitle = "Git was used";
-            ExecuteTheCheck();
+
+            if (Repository.IsValid(repositoryPath))
+            {
+                ExecuteTheCheck();
+            }
         }
 
         public void ExecuteTheCheck()
         {
-            if(Repository.IsValid(repositoryPath))
+            var output = new List<string>();
+            using (var repo = new Repository(repositoryPath))
             {
-                var processDetails = new ProcessDetails("git.exe", repositoryPath, "log");
+                var commitLog = repo.Commits;
 
-                var evidence = new FeatureRunner().Execute(processDetails);
-                if (evidence.FeatureFailed)
-                {
-                    return;
-                }
+                var Output = CollectGitLogOutput(output, commitLog);
 
-                var lastAuthor = evidence.Output.GetLineWithAllKeywords(GetKeyWords());
-                GitEvidence.FeatureImplemented = GitHasBeenUsed(lastAuthor);
-
-                if (GitEvidence.FeatureImplemented)
-                {
-                    GitEvidence.GiveEvidence($"Commit outputs: \n{evidence.Output}\nLast {lastAuthor}");
-                }
+                FillInEvidence(commitLog, Output);
             }
         }
 
-        public static bool GitHasBeenUsed(string lastAuthor)
+        private void FillInEvidence(IQueryableCommitLog commitLog, string output)
         {
-            if (lastAuthor.ContainsAny(GetHostDomains()) || string.IsNullOrEmpty(lastAuthor))
+            GitEvidence.FeatureImplemented = LastCommitWasByNonEmployee(commitLog);
+
+            if (GitEvidence.FeatureImplemented)
             {
-                return false;
+                GitEvidence.GiveEvidence($"Commits:" + Environment.NewLine + output);
             }
-            return true;
         }
 
-        public static List<string> GetKeyWords()
+        private static string CollectGitLogOutput(List<string> output, IQueryableCommitLog commitLog)
         {
-            return new List<string> { "Author:", "<", ">", "@", "." };
+            const string RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
+
+            foreach (Commit c in commitLog)
+            {
+                output.Add(string.Format("commit {0}", c.Id));
+
+                if (c.Parents.Count() > 1)
+                {
+                    output.Add($"Merge: {string.Join(" ", c.Parents.Select(p => p.Id.Sha.Substring(0, 7)).ToArray())}");
+                }
+
+                output.Add(string.Format("Author: {0} <{1}>", c.Author.Name, c.Author.Email));
+                output.Add($"Date:   {c.Author.When.ToString(RFC2822Format, CultureInfo.InvariantCulture)}" + Environment.NewLine);
+                output.Add(c.Message + Environment.NewLine);
+            }
+            return string.Join(Environment.NewLine, output);
+        }
+
+        public bool LastCommitWasByNonEmployee(IQueryableCommitLog c)
+        {
+            return !c.First().Author.Email.ContainsAny(GetHostDomains());
         }
 
         public static List<string> GetHostDomains()
