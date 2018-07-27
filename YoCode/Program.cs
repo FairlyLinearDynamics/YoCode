@@ -78,47 +78,54 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                // Duplication check
-                var dupFinderThread = new Thread(() =>
+                var SeleniumThread = new Thread(() =>
                 {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                    checkList.Add(new FrontEndCheck().FrontEndEvidence);
                 });
-                dupFinderThread.Start();
+                SeleniumThread.Start();
 
-                checkList.Add(fileCheck.FileChangeEvidence);
+                //// Duplication check
+                //var dupFinderThread = new Thread(() =>
+                //{
+                //    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                //});
+                //dupFinderThread.Start();
 
-                // UI test
-                var keyWords = new[] { "miles", "kilometers", "km" };
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+                //checkList.Add(fileCheck.FileChangeEvidence);
 
-                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                //// UI test
+                //var keyWords = new[] { "miles", "kilometers", "km" };
+                //var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
-                // Solution file exists
-                checkList.Add(new FeatureEvidence()
-                {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureImplemented = true,
-                });
+                //checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
-                // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                //// Solution file exists
+                //checkList.Add(new FeatureEvidence()
+                //{
+                //    FeatureTitle = "Solution File Exists",
+                //    FeatureImplemented = true,
+                //});
 
-                // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                //// Git repo used
+                //checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
-                // Project run test
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-                checkList.Add(pr.ProjectRunEvidence);
+                //// Project build
+                //checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                //// Project run test
+                //var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                //checkList.Add(pr.ProjectRunEvidence);
 
-                // Unit converter test
-                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+                //// Unit test test
+                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-                pr.KillProject();
+                //// Unit converter test
+                //checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
-                dupFinderThread.Join();
+                //pr.KillProject();
+
+                //dupFinderThread.Join();
+                SeleniumThread.Join();
             }
             return checkList;
         }
