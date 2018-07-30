@@ -58,15 +58,14 @@ namespace YoCode
             task.Wait();
             return task.Result;
         }
-
-
+        
         private FormUrlEncodedContent GetEncodedContent(string i, string j)
         {
             return new FormUrlEncodedContent(new[]
             {
                         new KeyValuePair<string,string>("text",i),
                         new KeyValuePair<string, string>("action",j)
-                    });
+            });
         }
 
         private static Task<string> GetResponseAsTaskAsync(HttpResponseMessage bar)

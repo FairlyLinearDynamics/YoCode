@@ -8,15 +8,15 @@ namespace YoCode_XUnit
 {
     public class UnitConverterCheckTests
     {
+        public UnitConverterCheck test;
+
         public List<double> expectedConversionResults;
         public List<double> expectedConversionInputs;
         public double mult;
-        public UnitConverterCheck test;
 
         List<string> expectedActionLines;
         List<string> expectedActionLinesResult;
         public string sampleHTMLFile;
-
 
         public UnitConverterCheckTests()
         {
@@ -32,7 +32,6 @@ namespace YoCode_XUnit
             };
 
             expectedActionLinesResult = new List<string> { "Yards to meters", "Inches to centimeters", "Miles to kilometers" };
-
         }
 
         [Fact]
@@ -61,10 +60,7 @@ namespace YoCode_XUnit
             "Inches to centimeters".ToLower().ContainsAny(testInToCmKeys).Should().BeTrue("testInToCmKeys failed");
             "Yards to meters".ToLower().ContainsAny(testYdToMeKeys).Should().BeTrue("testYdToMeKeys failed");
             "Miles to kilometers".ToLower().ContainsAny(testMiToKmKeys).Should().BeTrue("testMiToKmKeys failed");
-        }
-
-
-
+        }    
     }
 
  }

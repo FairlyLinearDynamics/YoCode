@@ -181,8 +181,7 @@ namespace YoCode
                 ret = false;
             }
             return ret;
-        }
-         
+        }        
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
     }
 }
