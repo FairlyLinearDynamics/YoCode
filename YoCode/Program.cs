@@ -51,6 +51,9 @@ namespace YoCode
             var modifiedTestDirPath = result.modifiedFilePath;
             var originalTestDirPath = result.originalFilePath;
 
+            ProjectBuilder.CleanBuildOutput(originalTestDirPath);
+            ProjectBuilder.CleanBuildOutput(modifiedTestDirPath);
+
             var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
