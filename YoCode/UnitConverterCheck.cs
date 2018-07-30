@@ -187,8 +187,6 @@ namespace YoCode
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
-
-   
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
     }
 }

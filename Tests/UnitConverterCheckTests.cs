@@ -107,9 +107,6 @@ namespace YoCode_XUnit
             actualElem3.Should().BeEquivalentTo(UnitConverterCheck.FindActualResultForExpectation(testElem1, listOfActualResults));
 
         }
-
-
-
     }
 
  }
