@@ -23,7 +23,7 @@ namespace YoCodeAutomatedTests
 
             helper.WriteToFile(actualPath, actualOutput);
 
-            helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse();
+            helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
         }
     }
 }
