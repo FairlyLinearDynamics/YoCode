@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
 using System.IO;
 using YoCode;
 
@@ -44,7 +43,7 @@ namespace YoCodeAutomatedTests
         public string RunProcess(string processName, string workingDir, string arguments)
         {
             ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
-            pr.ExecuteTheCheck("Minimum test count:");
+            pr.ExecuteTheCheck("Duplicate cost:");
 
             return pr.Output;
         }
