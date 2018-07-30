@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YoCode
 {
-    class UnitConverterCheck
+    public class UnitConverterCheck
     {
         Dictionary<List<string>,List<double>> KeywordMap;
 
@@ -127,7 +127,7 @@ namespace YoCode
             return list;
         }
 
-        private List<double> MakeConversion(List<string> inputs, double mult)
+        public List<double> MakeConversion(List<string> inputs, double mult)
         {
             var list = new List<double>();
             foreach (var x in inputs)
