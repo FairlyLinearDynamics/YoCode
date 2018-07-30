@@ -24,8 +24,6 @@ namespace YoCode
         const double MiToKm = 1.60934;
         const double YdToMe = 0.9144;
 
-        public List<double> actualOutputs;
-
         public List<string> InToCmKeys { get; set; }
         public List<string> MiToKmKeys { get; set; }
         public List<string> YdToMeKeys { get; set; }        
@@ -50,7 +48,7 @@ namespace YoCode
 
                     HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
-                    actualOutputs = fetcher.GetActualOutputs(texts, actions);
+                    actual = fetcher.GetActualValues(texts, actions);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();    
                 }
                 catch (Exception)
@@ -94,11 +92,11 @@ namespace YoCode
             {
                 for (var y = 0; y < actions.Count; y++)
                 {
-                    var outputsForThisAction = CheckActions(actions[y]);
+                    var OutputsForThisAction = CheckActions(actions[y]);
 
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
-                    ToBeAdded.output = outputsForThisAction[x];
+                    ToBeAdded.output = OutputsForThisAction[x];
 
                     expected.Add(ToBeAdded);
                 }
@@ -165,7 +163,7 @@ namespace YoCode
 
                 for (int i = 0; i < actual.Count; i++)
                 {
-                    var a = actualOutputs[i];
+                    var a = actual[i].output;
                     var b = expected[i].output;
 
                     var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", b, a, a.ApproximatelyEquals(b));

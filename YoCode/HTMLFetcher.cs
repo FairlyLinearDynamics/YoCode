@@ -26,26 +26,33 @@ namespace YoCode
             return GetHTMLCodeAsTask().Result;
         }
 
-        public async Task<List<double>> GetActionNamesAndOutputsViaHTTP(List<double> texts, List<string> actions)
+        public async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<double> texts, List<string> actions)
         {
-            var actualOutputs = new List<double>();
+            var actual = new List<UnitConverterResults>();
 
             for (var i = 0; i < texts.Count; i++)
             {
+                UnitConverterResults tempActual = new UnitConverterResults();
+                tempActual.input = Double.Parse(texts[i].ToString());
+
                 for (var j = 0; j < actions.Count; j++)
                 {
+                    tempActual.action = actions[i];
+
                     var formContent = GetEncodedContent(texts[i].ToString(), actions[j]);
 
                     var bar = await client.PostAsync("/Home/Convert", formContent);
 
                     string tempOutput = await GetResponseAsTaskAsync(bar);
-                    actualOutputs.Add(Double.Parse(tempOutput));
+                    tempActual.output = Double.Parse(tempOutput);
+
+                    actual.Add(tempActual);
                 }
             }
-            return actualOutputs;
+            return actual;
         }
 
-        public List<double> GetActualOutputs(List<double> texts, List<string> actions)
+        public List<UnitConverterResults> GetActualValues(List<double> texts, List<string> actions)
         {
             var task = GetActionNamesAndOutputsViaHTTP(texts, actions);
             task.Wait();
