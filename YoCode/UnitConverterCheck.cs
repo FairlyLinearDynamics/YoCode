@@ -13,7 +13,7 @@ namespace YoCode
         List<UnitConverterResults> actual;
         List<UnitConverterResults> expected;
 
-        List<string> texts;
+        List<double> texts;
         List<string> actions;
            
         List<double> InchesToCentimetres;
@@ -24,10 +24,10 @@ namespace YoCode
         const double MiToKm = 1.60934;
         const double YdToMe = 0.9144;
 
-        List<string> InToCmKeys;
-        List<string> MiToKmKeys;
-        List<string> YdToMeKeys;
-              
+        public List<string> InToCmKeys { get; set; }
+        public List<string> MiToKmKeys { get; set; }
+        public List<string> YdToMeKeys { get; set; }        
+        
         string from = "value=\"";
         string to = "\"";
 
@@ -66,7 +66,7 @@ namespace YoCode
             actual = new List<UnitConverterResults>();
             expected = new List<UnitConverterResults>();
 
-            texts = new List<string> { "5", "25", "125" };
+            texts = new List<double> { 5, 25, 125};
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
@@ -96,14 +96,14 @@ namespace YoCode
 
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
-                    ToBeAdded.output = outputsForThisAction[x].ToString();
+                    ToBeAdded.output = outputsForThisAction[x];
 
                     expected.Add(ToBeAdded);
                 }
             }
         }
 
-        private List<string> GetActionLines(string file)
+        public List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
@@ -114,7 +114,7 @@ namespace YoCode
             return ExtractActionsFromList(actionlines);
         }
 
-        private List<string> ExtractActionsFromList(List<string> actionLines)
+        public List<string> ExtractActionsFromList(List<string> actionLines)
         {
             var list = new List<string>();
 
@@ -127,12 +127,12 @@ namespace YoCode
             return list;
         }
 
-        public List<double> MakeConversion(List<string> inputs, double mult)
+        public List<double> MakeConversion(List<double> inputs, double mult)
         {
             var list = new List<double>();
             foreach (var x in inputs)
             {
-                list.Add(Double.Parse(x) * mult);
+                list.Add(x * mult);
             }
             return list;
         }
@@ -154,11 +154,6 @@ namespace YoCode
             return new List<double>{0.1};
         }
 
-        private (double,double) StringToDouble(string a, string b)
-        {
-            return (double.Parse(a), double.Parse(b));
-        }
-
         private bool OutputsAreEqual()
         {
             var ret = true;
@@ -168,7 +163,8 @@ namespace YoCode
 
                 for (int i = 0; i < actual.Count; i++)
                 {
-                    (var a,var b) = StringToDouble(actual[i].output, expected[i].output);                    
+                    var a = actual[i].output;
+                    var b = expected[i].output;
 
                     var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", b, a, a.ApproximatelyEquals(b));
                     UnitConverterCheckEvidence.GiveEvidence(x);

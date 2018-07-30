@@ -91,7 +91,7 @@ namespace YoCode
 
         public static bool ApproximatelyEquals(this double a, double b)
         {
-            return (Math.Abs(a-b) <= 0.0001);
+            return (Math.Abs(a-b) <= 0.001);
         }
 
     }
