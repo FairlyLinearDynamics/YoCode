@@ -77,7 +77,6 @@ namespace YoCode
             var checkList = new List<FeatureEvidence>();
 
             var fileCheck = new FileChangeChecker(dir);
-            
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
@@ -87,9 +86,13 @@ namespace YoCode
                 var dupFinderThread = new Thread(() =>
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+
                 });
                 dupFinderThread.Start();
 
+
+
+                // Files changed check
                 checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
@@ -111,30 +114,25 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                // Project run test
+
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                checkList.Add(new FrontEndCheck(pr.GetPort()).FrontEndEvidence);
+
+
+                // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
-                // Selenium tests
-                var SeleniumThread = new Thread(() =>
-                {
-                    checkList.Add(new FrontEndCheck(pr.GetPort()).FrontEndEvidence);
-                });
-                SeleniumThread.Start();
+                // Unit test test
+                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-
-                //Unit test test
-                  checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
-
-                //Unit converter test
-                  checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+                // Unit converter test
+                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
 
 
                 dupFinderThread.Join();
-                SeleniumThread.Join();
+                //SeleniumThread.Join();
                 pr.KillProject();
-
             }
             return checkList;
         }
