@@ -5,6 +5,7 @@ using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
+using System.IO;
 
 namespace YoCode
 {
@@ -13,16 +14,17 @@ namespace YoCode
         IWebDriver browser;
         string port;
 
-        public FrontEndCheck(string port)
+        public FrontEndCheck(string applicantsWebPort)
         {
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
-            var foxService = FirefoxDriverService.CreateDefaultService(@"C:\Users\ukekar\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1\");
+            var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
             foxService.HideCommandPromptWindow = true;
-            this.port = port;
+            port = applicantsWebPort;
+
             try
             {
                 browser = new FirefoxDriver(foxService, new FirefoxOptions());
-                browser.Navigate().GoToUrl("");
+                browser.Navigate().GoToUrl(port);
 
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature();
 
@@ -38,13 +40,18 @@ namespace YoCode
 
                 testInput.ForEach(a => InputData(a));
 
+                if (!FrontEndEvidence.Evidence.Any())
+                {
+                    FrontEndEvidence.GiveEvidence("Could not input any data");
+                }
+
                 browser.Dispose();
             }
-            catch (WebDriverException)
+            catch (WebDriverException e)
             {
                 browser.Dispose();
 
-                FrontEndEvidence.SetFailed("Check could not be executed");
+                FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
             }
         }
 
@@ -89,7 +96,6 @@ namespace YoCode
             }
 
             browser.Navigate().GoToUrl(port);
-            // TODO: Check if output is number
         }
 
         private void InputData(string applicantTestInput)
