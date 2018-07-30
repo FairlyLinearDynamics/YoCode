@@ -30,21 +30,20 @@ namespace YoCode
         {
             var actual = new List<UnitConverterResults>();
 
-            for (var i = 0; i < texts.Count; i++)
+            foreach (var input in texts)
             {
-                UnitConverterResults tempActual = new UnitConverterResults();
-                tempActual.input = Double.Parse(texts[i].ToString());
+                var tempActual = new UnitConverterResults {input = double.Parse(input.ToString())};
 
-                for (var j = 0; j < actions.Count; j++)
+                foreach (var action in actions)
                 {
-                    tempActual.action = actions[i];
+                    tempActual.action = action;
 
-                    var formContent = GetEncodedContent(texts[i].ToString(), actions[j]);
+                    var formContent = GetEncodedContent(input.ToString(), action);
 
-                    var bar = await client.PostAsync("/Home/Convert", formContent);
+                    var response = await client.PostAsync("/Home/Convert", formContent);
 
-                    string tempOutput = await GetResponseAsTaskAsync(bar);
-                    tempActual.output = Double.Parse(tempOutput);
+                    var tempOutput = await GetResponseAsTaskAsync(response);
+                    tempActual.output = double.Parse(tempOutput);
 
                     actual.Add(tempActual);
                 }

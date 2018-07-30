@@ -159,17 +159,17 @@ namespace YoCode
             var ret = true;
             try
             {
-                UnitConverterCheckEvidence.GiveEvidence(String.Format("{0,-9} {1,10}", "Expected", "Actual"));
+                UnitConverterCheckEvidence.GiveEvidence(string.Format("{0,-9} {1,10}", "Expected", "Actual"));
 
-                for (int i = 0; i < actual.Count; i++)
+                foreach (var expectation in expected)
                 {
-                    var a = actual[i].output;
-                    var b = expected[i].output;
+                    var expectedOutput = expectation.output;
+                    var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
-                    var x = String.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", b, a, a.ApproximatelyEquals(b));
+                    var x = string.Format("{0,-9} and {1,-9} Are equal: {2,-4} ", expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
                     UnitConverterCheckEvidence.GiveEvidence(x);
 
-                    if (!a.ApproximatelyEquals(b))
+                    if (!actualOutput.ApproximatelyEquals(expectedOutput))
                     {
                         ret = false;
                     }
@@ -181,7 +181,14 @@ namespace YoCode
                 ret = false;
             }
             return ret;
-        }        
+        }
+
+        private static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
+        {
+            return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
+        }
+
+   
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
     }
 }
