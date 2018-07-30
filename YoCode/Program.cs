@@ -80,39 +80,39 @@ namespace YoCode
             {
 
 
-                //// Duplication check
-                //var dupFinderThread = new Thread(() =>
-                //{
-                //    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-                //});
-                //dupFinderThread.Start();
+                // Duplication check
+                var dupFinderThread = new Thread(() =>
+                {
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                });
+                dupFinderThread.Start();
 
-                //checkList.Add(fileCheck.FileChangeEvidence);
+                checkList.Add(fileCheck.FileChangeEvidence);
 
-                //// UI test
-                //var keyWords = new[] { "miles", "kilometers", "km" };
-                //var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+                // UI test
+                var keyWords = new[] { "miles", "kilometers", "km" };
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
-                //checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
-                //// Solution file exists
-                //checkList.Add(new FeatureEvidence()
-                //{
-                //    FeatureTitle = "Solution File Exists",
-                //    FeatureImplemented = true,
-                //});
+                // Solution file exists
+                checkList.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "Solution File Exists",
+                    FeatureImplemented = true,
+                });
 
-                //// Git repo used
-                //checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                // Git repo used
+                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
-                //// Project build
-                //checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                // Project build
+                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 // Project run test
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-              //  checkList.Add(pr.ProjectRunEvidence);
+                checkList.Add(pr.ProjectRunEvidence);
 
-                
+                // Selenium tests
                 var SeleniumThread = new Thread(() =>
                 {
                     checkList.Add(new FrontEndCheck(pr.GetPort()).FrontEndEvidence);
@@ -120,15 +120,15 @@ namespace YoCode
                 SeleniumThread.Start();
 
 
-                // Unit test test
-              //  checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                //Unit test test
+                  checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-                // Unit converter test
-              //  checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+                //Unit converter test
+                  checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
 
 
-                //dupFinderThread.Join();
+                dupFinderThread.Join();
                 SeleniumThread.Join();
                 pr.KillProject();
 

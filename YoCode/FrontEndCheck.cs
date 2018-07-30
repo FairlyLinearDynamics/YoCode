@@ -87,11 +87,11 @@ namespace YoCode
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
             if (exception.Any())
             {
-                FrontEndEvidence.SetFailed($"Exception with \"{testData}\" input not handled");
+                FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
             }
             else
             {
-                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData}\" input");
+                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
 
             }
 
