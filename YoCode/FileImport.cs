@@ -17,7 +17,7 @@ namespace YoCode
             {
                 var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
 
-                AddFileInfoToList(files, fileinfo);
+                AddFileInfoToList(files, fileinfo, path);
 
                 return files;
             }
@@ -27,10 +27,20 @@ namespace YoCode
             }
         }
 
-        //Helper method to convert FileInfo[] elements to string and add them to a list 
-        public static void AddFileInfoToList(List<string> files, IEnumerable<FileInfo> fileinfo)
+        public static void AddFileInfoToList(List<string> files, IEnumerable<FileInfo> fileinfo, string path)
         {
-            files.AddRange(fileinfo.Select(fi => fi.ToString()));
+            foreach (var f in fileinfo)
+            {
+                if (FileIsNotInBuildDirectory(path, f))
+                {
+                    files.Add(f.ToString());
+                }
+            }
+        }
+
+        private static bool FileIsNotInBuildDirectory(string path, FileInfo fileinfo)
+        {
+            return !Path.GetRelativePath(path, fileinfo.DirectoryName).Contains("obj") && !Path.GetRelativePath(path, fileinfo.DirectoryName).Contains("bin");
         }
 
         public FileStream GetFileStream(string path)

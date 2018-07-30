@@ -74,7 +74,7 @@ namespace YoCode
             var files = new List<string>();
             var di = new DirectoryInfo(PATH);
 
-            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories));
+            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), PATH);
             return files;
         }
     }
