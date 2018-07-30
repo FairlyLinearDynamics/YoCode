@@ -14,7 +14,7 @@ namespace YoCode
         IWebDriver browser;
         string port;
 
-        public FrontEndCheck(string applicantsWebPort)
+        public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
             var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
@@ -26,7 +26,7 @@ namespace YoCode
                 browser = new FirefoxDriver(foxService, new FirefoxOptions());
                 browser.Navigate().GoToUrl(port);
 
-                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature();
+                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
                 var testInput = new List<string>()
                 {
@@ -55,11 +55,11 @@ namespace YoCode
             }
         }
 
-        private bool CheckIfUIContainsFeature()
+        private bool CheckIfUIContainsFeature(string[] keyWords)
         {
             foreach(HtmlTags tag in Enum.GetValues(typeof(HtmlTags)))
             {
-                if (SearchForElement(tag, "Yard"))
+                if (SearchForElement(tag, keyWords))
                 {
                     return true;
                 }
@@ -67,13 +67,12 @@ namespace YoCode
             return false;
         }
 
-        private bool SearchForElement(HtmlTags htmlTag, string keyWord)
+        private bool SearchForElement(HtmlTags htmlTag, string[] keyWords)
         {
             var tags = browser.FindElements(By.CssSelector(htmlTag.ToString()));
             foreach (var tag in tags)
             {
-                var tagText = tag.Text;
-                if (tagText.Equals(keyWord))
+                if (keyWords.Any(a => tag.Text.ToLower().Equals(a.ToLower())))
                 {
                     return true;
                 }

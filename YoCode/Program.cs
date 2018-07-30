@@ -11,7 +11,8 @@ namespace YoCode
     {
         public static IConfiguration Configuration;
 
-        private static string CMDToolsPath;
+        static string CMDToolsPath;
+        readonly static string[] keyWords = { "miles", "kilometres", "mile", "kilometre", "kilometers", "kilometer", "km", "mi" };
 
         static void Main(string[] args)
         {
@@ -90,13 +91,11 @@ namespace YoCode
                 });
                 dupFinderThread.Start();
 
-
-
                 // Files changed check
                 checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
-                var keyWords = new[] { "miles", "kilometers", "km" };
+
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
                 checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
@@ -114,10 +113,8 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-                checkList.Add(new FrontEndCheck(pr.GetPort()).FrontEndEvidence);
-
+                checkList.Add(new FrontEndCheck(pr.GetPort(), keyWords).FrontEndEvidence);
 
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
@@ -128,10 +125,7 @@ namespace YoCode
                 // Unit converter test
                 checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
-
-
                 dupFinderThread.Join();
-                //SeleniumThread.Join();
                 pr.KillProject();
             }
             return checkList;
