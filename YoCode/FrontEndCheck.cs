@@ -11,28 +11,45 @@ namespace YoCode
     class FrontEndCheck
     {
         IWebDriver browser;
+        string port;
 
-        IWebElement tagOfInterest;
-
-        public FrontEndCheck()
+        public FrontEndCheck(string port)
         {
-            FrontEndEvidence.FeatureTitle = "Front End Contains new feature and works correctly";
-
+            FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
             var foxService = FirefoxDriverService.CreateDefaultService(@"C:\Users\ukekar\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1\");
             foxService.HideCommandPromptWindow = true;
-            browser = new FirefoxDriver(foxService,new FirefoxOptions());
-            browser.Navigate().GoToUrl("http://localhost:5000/");
-            FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature();
-            InputData();
-            OutputCheck();
-            
-            //FrontEndEvidence.GiveEvidence(InputData());
-            browser.Close();
+            this.port = port;
+            try
+            {
+                browser = new FirefoxDriver(foxService, new FirefoxOptions());
+                browser.Navigate().GoToUrl("");
+
+                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature();
+
+                var testInput = new List<string>()
+                {
+                    "",
+                    Environment.NewLine,
+                    $"{Environment.NewLine}5",
+                    $"5{Environment.NewLine}{Environment.NewLine}5",
+                    $"5{Environment.NewLine}{Environment.NewLine}",
+                    "a b c"
+                };
+
+                testInput.ForEach(a => InputData(a));
+
+                browser.Dispose();
+            }
+            catch (WebDriverException)
+            {
+                browser.Dispose();
+
+                FrontEndEvidence.SetFailed("Check could not be executed");
+            }
         }
 
         private bool CheckIfUIContainsFeature()
         {
-            //var 
             foreach(HtmlTags tag in Enum.GetValues(typeof(HtmlTags)))
             {
                 if (SearchForElement(tag, "Yard"))
@@ -48,8 +65,6 @@ namespace YoCode
             var tags = browser.FindElements(By.CssSelector(htmlTag.ToString()));
             foreach (var tag in tags)
             {
-                tagOfInterest = tag;
-
                 var tagText = tag.Text;
                 if (tagText.Equals(keyWord))
                 {
@@ -60,23 +75,24 @@ namespace YoCode
 
         }
 
-        private void OutputCheck()
+        private void OutputCheck(string testData)
         { 
-            // TODO: Check for thrown exceptions
-            var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred ')]"));
+            var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
             if (exception.Any())
             {
-                FrontEndEvidence.SetFailed("Exception not handled");
+                FrontEndEvidence.SetFailed($"Exception with \"{testData}\" input not handled");
             }
             else
             {
-                FrontEndEvidence.GiveEvidence("No exceptions found");
+                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData}\" input");
+
             }
 
+            browser.Navigate().GoToUrl(port);
             // TODO: Check if output is number
         }
 
-        private void InputData()
+        private void InputData(string applicantTestInput)
         {
             var forms = browser.FindElements(By.CssSelector("form"));
 
@@ -91,50 +107,48 @@ namespace YoCode
                     var selectors = form.FindElements(By.CssSelector("select"));
                     if (selectors.Count > 1)
                     {
-                        SelectElement clicker;
+                        string selectedElem = null;
+
                         foreach (var select in selectors)
                         {
-                            clicker = new SelectElement(select);
-                            clicker.SelectByText(clicker.SelectedOption.Text.Contains("Yard") ? "Meter" : "Yard");
+                            SelectElement clicker = new SelectElement(select);
+                            clicker.SelectByText((clicker.Options.Where(a=>!a.Text.Equals(selectedElem))).Last().Text);
+                            selectedElem = clicker.SelectedOption.Text;
                         }
 
-                        // TODO: Find and enter something in textfield
                         var textFields = form.FindElements(By.CssSelector("textarea"));
                         foreach (var textField in textFields)
                         {
-                            textField.SendKeys("");
+                            textField.SendKeys(applicantTestInput);
                         }
 
-                        // TODO: Submit form
                         form.FindElement(By.CssSelector("input")).Click();
+                        OutputCheck(applicantTestInput);
                     }
                     else if (selectors.Count == 1)
                     {
-                        // Only one drop down, check if it has Yards And Meters
-                        // TODO: Select proper option
                         SelectElement selectFromDropDown = new SelectElement(selectors.First());
                         selectFromDropDown.SelectByIndex(1);
 
-                        // TODO: Find and enter something in textfield
                         var textFields = form.FindElements(By.CssSelector("textarea"));
                         foreach (var textField in textFields)
                         {
-                            textField.SendKeys("");
+                            textField.SendKeys(applicantTestInput);
                         }
 
-                        // TODO: Submit form
                         form.FindElement(By.CssSelector("input")).Click();
+                        OutputCheck(applicantTestInput);
                     }
                     else
                     {
-                        // No dropdown, check for other type of input
                         var textFields = form.FindElements(By.CssSelector("textarea"));
                         foreach (var textField in textFields)
                         {
-                            textField.SendKeys("");
+                            textField.SendKeys(applicantTestInput);
                         }
 
                         form.FindElement(By.CssSelector("input")).Click();
+                        OutputCheck(applicantTestInput);
                     }
                 }
                 catch (Exception) { }

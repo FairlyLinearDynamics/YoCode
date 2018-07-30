@@ -78,11 +78,7 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                var SeleniumThread = new Thread(() =>
-                {
-                    checkList.Add(new FrontEndCheck().FrontEndEvidence);
-                });
-                SeleniumThread.Start();
+
 
                 //// Duplication check
                 //var dupFinderThread = new Thread(() =>
@@ -112,22 +108,30 @@ namespace YoCode
                 //// Project build
                 //checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                //// Project run test
-                //var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-                //checkList.Add(pr.ProjectRunEvidence);
+                // Project run test
+                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+              //  checkList.Add(pr.ProjectRunEvidence);
 
-                //// Unit test test
-                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                
+                var SeleniumThread = new Thread(() =>
+                {
+                    checkList.Add(new FrontEndCheck(pr.GetPort()).FrontEndEvidence);
+                });
+                SeleniumThread.Start();
 
-                //// Unit converter test
-                //checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
 
-                //pr.KillProject();
+                // Unit test test
+              //  checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+
+                // Unit converter test
+              //  checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+
+
 
                 //dupFinderThread.Join();
                 SeleniumThread.Join();
+                pr.KillProject();
 
-                
             }
             return checkList;
         }
