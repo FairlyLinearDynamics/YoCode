@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,17 +39,42 @@ namespace YoCode
                 {
                     tempActual.action = action;
 
-                    var formContent = GetEncodedContent(input.ToString(), action);
+                    var response = SubmitForm(input.ToString(), action);
+                    response.Wait();
 
-                    var response = await client.PostAsync("/Home/Convert", formContent);
-
-                    var tempOutput = await GetResponseAsTaskAsync(response);
+                    var tempOutput = await GetResponseAsTaskAsync(response.Result);
                     tempActual.output = double.Parse(tempOutput);
-
+                   
                     actual.Add(tempActual);
                 }
             }
             return actual;
+        }
+
+        public  Task<HttpResponseMessage> SubmitForm(string inputForm,string action)
+        {
+            var formContent = GetEncodedContent(inputForm, action);
+
+            return client.PostAsync("/Home/Convert", formContent);
+        }
+
+
+        public bool FixedBadInputs(List<string> inputs, List<string> actions)
+        {
+            foreach (var input in inputs)
+            {
+                foreach (var action in actions)
+                {
+                    var x = SubmitForm(input, action);
+                    x.Wait();
+
+                    if(x.Result.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         public List<UnitConverterResults> GetActualValues(List<double> texts, List<string> actions)
@@ -58,6 +84,11 @@ namespace YoCode
             return task.Result;
         }
         
+        public List<string> GetInternalServerErrorKeywords()
+        {
+            return new List<String> { "Internal "};
+        }
+
         private FormUrlEncodedContent GetEncodedContent(string i, string j)
         {
             return new FormUrlEncodedContent(new[]

@@ -116,8 +116,12 @@ namespace YoCode
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
+                UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
+
                 // Unit converter test
-                checkList.Add(new UnitConverterCheck(pr.GetPort()).UnitConverterCheckEvidence);
+                checkList.Add(ucc.UnitConverterCheckEvidence);
+
+                checkList.Add(ucc.BadInputCheckEvidence);
 
                 pr.KillProject();
 

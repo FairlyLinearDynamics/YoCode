@@ -14,6 +14,7 @@ namespace YoCode
         List<UnitConverterResults> expected;
 
         List<double> texts;
+        List<string> badTexts;
         List<string> actions;
            
         List<double> InchesToCentimetres;
@@ -28,6 +29,7 @@ namespace YoCode
         public List<string> MiToKmKeys { get; set; }
         public List<string> YdToMeKeys { get; set; }        
         
+
         string from = "value=\"";
         string to = "\"";
 
@@ -35,6 +37,9 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
+            BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
+
+
             if (String.IsNullOrEmpty(port))
             {
                 UnitConverterCheckEvidence.SetFailed("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
@@ -49,13 +54,16 @@ namespace YoCode
                     HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
                     actual = fetcher.GetActualValues(texts, actions);
-                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();    
+
+                    BadInputCheckEvidence.FeatureImplemented = fetcher.FixedBadInputs(badTexts, actions);
+
+                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+
                 }
                 catch (Exception)
                 {
                     UnitConverterCheckEvidence.SetFailed("The program could not check this feature");
                 }
-
             }
         }
 
@@ -67,6 +75,8 @@ namespace YoCode
             expected = new List<UnitConverterResults>();
 
             texts = new List<double> { 5, 25, 125};
+
+            badTexts = new List<string> { "Y..@","112","*" };
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
@@ -187,6 +197,8 @@ namespace YoCode
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
+
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
+        public FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
     }
 }
