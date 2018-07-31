@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
+
 
 namespace YoCode
 {
@@ -18,12 +20,14 @@ namespace YoCode
         {
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
             var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+            var phantomService = PhantomJSDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
             foxService.HideCommandPromptWindow = true;
             port = applicantsWebPort;
 
             try
             {
-                browser = new FirefoxDriver(foxService, new FirefoxOptions());
+                browser = new PhantomJSDriver(Directory.GetCurrentDirectory());
+                //browser = new FirefoxDriver(foxService, new FirefoxOptions());
                 browser.Navigate().GoToUrl(port);
 
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
@@ -45,11 +49,11 @@ namespace YoCode
                     FrontEndEvidence.GiveEvidence("Could not input any data");
                 }
 
-                browser.Dispose();
+                //browser.Dispose();
             }
             catch (WebDriverException e)
             {
-                browser.Dispose();
+                //browser.Dispose();
 
                 FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
             }
