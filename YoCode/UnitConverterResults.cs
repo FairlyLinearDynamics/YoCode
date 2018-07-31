@@ -6,8 +6,8 @@ namespace YoCode
 {
     public struct UnitConverterResults
     {
-        public string input;
+        public double input;
         public string action;
-        public string output;
+        public double output;
     };
 }
