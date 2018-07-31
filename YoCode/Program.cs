@@ -66,7 +66,7 @@ namespace YoCode
             }
             
             var implementedFeatureList = PerformChecks(dir);
-            compositeOutput.PrintFinalResults(implementedFeatureList);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)

@@ -22,7 +22,7 @@ namespace YoCode
             outputWriter.WriteReport();
         }
 
-        public void PrintFinalResults(List<FeatureEvidence> featureList)
+        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList)
         {
             foreach (var feature in featureList)
             {
