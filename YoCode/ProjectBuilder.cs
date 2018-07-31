@@ -10,6 +10,8 @@ namespace YoCode
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
+            CleanBuildOutput(workingDir);
+
             ProjectBuilderEvidence.FeatureTitle = "Project build";
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
@@ -72,7 +74,7 @@ namespace YoCode
             return numbers.Count > 0 ? numbers[0] : -1;
         }
 
-        public static void CleanBuildOutput(string workingDir)
+        private static void CleanBuildOutput(string workingDir)
         {
             var pr = new ProcessRunner("dotnet", workingDir, "clean");
             pr.ExecuteTheCheck();
