@@ -150,7 +150,6 @@ namespace YoCode
             using (var mos = new ManagementObjectSearcher(string.Format(CultureInfo.InvariantCulture,
                   "Select * From Win32_Process Where ParentProcessID={0}", pid)))
             {
-                var list = new List<Process>();
                 foreach (var mo in mos.Get())
                 {
                     try
