@@ -7,7 +7,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
-
+using OpenQA.Selenium.Remote;
 
 namespace YoCode
 {
@@ -22,14 +22,26 @@ namespace YoCode
 
             try
             {
+                try
+                {
+                    var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    foxService.HideCommandPromptWindow = true;
+                    port = applicantsWebPort;
+                    var options = new FirefoxOptions();
+                    options.AddArgument("--headless");
 
-                var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-                foxService.HideCommandPromptWindow = true;
-                port = applicantsWebPort;
-                var options = new FirefoxOptions();
-                options.AddArgument("--headless");
+                    browser = new FirefoxDriver(foxService, options);
+                }
+                catch (Exception)
+                {
+                    var chromeService = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    chromeService.HideCommandPromptWindow = true;
+                    port = applicantsWebPort;
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArgument("--headless");
 
-                browser = new FirefoxDriver(foxService, options);
+                    browser = new ChromeDriver(chromeService, chromeOptions);
+                };
 
                 browser.Navigate().GoToUrl(port);
 
