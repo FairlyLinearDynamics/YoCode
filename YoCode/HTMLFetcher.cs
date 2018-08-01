@@ -59,22 +59,21 @@ namespace YoCode
         }
 
 
-        public bool FixedBadInputs(List<string> inputs, List<string> actions)
+        public List<string> GetBadInputs(Dictionary<string,string> inputs, string action)
         {
+            var ReturnDictionary = new List<string>();
+
             foreach (var input in inputs)
             {
-                foreach (var action in actions)
-                {
-                    var x = SubmitForm(input, action);
+                    var x = SubmitForm(input.Value, action);
                     x.Wait();
 
                     if(x.Result.StatusCode == HttpStatusCode.InternalServerError)
                     {
-                        return false;
+                        ReturnDictionary.Add(input.Key);
                     }
-                }
             }
-            return true;
+            return ReturnDictionary;       
         }
 
         public List<UnitConverterResults> GetActualValues(List<double> texts, List<string> actions)
@@ -84,11 +83,6 @@ namespace YoCode
             return task.Result;
         }
         
-        public List<string> GetInternalServerErrorKeywords()
-        {
-            return new List<String> { "Internal "};
-        }
-
         private FormUrlEncodedContent GetEncodedContent(string i, string j)
         {
             return new FormUrlEncodedContent(new[]
