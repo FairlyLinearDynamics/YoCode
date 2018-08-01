@@ -155,6 +155,7 @@ namespace YoCode
                     try
                     {
                         var processById = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
+                        FindAndKillChildProcesses(processById.Id);
                         KillLiveProcess(processById);
                     }
                     catch (ArgumentException) { }
