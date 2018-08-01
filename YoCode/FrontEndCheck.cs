@@ -19,41 +19,34 @@ namespace YoCode
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
-            var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-            var phantomService = PhantomJSDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-            foxService.HideCommandPromptWindow = true;
-            port = applicantsWebPort;
 
             try
             {
-                browser = new PhantomJSDriver(Directory.GetCurrentDirectory());
-                //browser = new FirefoxDriver(foxService, new FirefoxOptions());
+
+                var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                foxService.HideCommandPromptWindow = true;
+                port = applicantsWebPort;
+                var options = new FirefoxOptions();
+                options.AddArgument("--headless");
+
+                browser = new FirefoxDriver(foxService, options);
+
                 browser.Navigate().GoToUrl(port);
 
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
-                var testInput = new List<string>()
-                {
-                    "",
-                    Environment.NewLine,
-                    $"{Environment.NewLine}5",
-                    $"5{Environment.NewLine}{Environment.NewLine}5",
-                    $"5{Environment.NewLine}{Environment.NewLine}",
-                    "a b c"
-                };
-
-                testInput.ForEach(a => InputData(a));
+                UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputData(a));
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
                     FrontEndEvidence.GiveEvidence("Could not input any data");
                 }
 
-                //browser.Dispose();
+                browser.Dispose();
             }
             catch (WebDriverException e)
             {
-                //browser.Dispose();
+                browser.Dispose();
 
                 FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
             }

@@ -12,7 +12,6 @@ namespace YoCode
         public static IConfiguration Configuration;
 
         static string CMDToolsPath;
-        readonly static string[] keyWords = { "miles", "kilometres", "mile", "kilometre", "kilometers", "kilometer", "km", "mi" };
 
         static void Main(string[] args)
         {
@@ -95,7 +94,7 @@ namespace YoCode
 
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
-                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
                 // Solution file exists
                 checkList.Add(new FeatureEvidence()
@@ -111,7 +110,7 @@ namespace YoCode
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-                checkList.Add(new FrontEndCheck(pr.GetPort(), keyWords).FrontEndEvidence);
+                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
