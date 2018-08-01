@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,17 +39,41 @@ namespace YoCode
                 {
                     tempActual.action = action;
 
-                    var formContent = GetEncodedContent(input.ToString(), action);
+                    var response = SubmitForm(input.ToString(), action);
+                    response.Wait();
 
-                    var response = await client.PostAsync("/Home/Convert", formContent);
-
-                    var tempOutput = await GetResponseAsTaskAsync(response);
+                    var tempOutput = await GetResponseAsTaskAsync(response.Result);
                     tempActual.output = double.Parse(tempOutput);
-
+                   
                     actual.Add(tempActual);
                 }
             }
             return actual;
+        }
+
+        public  Task<HttpResponseMessage> SubmitForm(string inputForm,string action)
+        {
+            var formContent = GetEncodedContent(inputForm, action);
+
+            return client.PostAsync("/Home/Convert", formContent);
+        }
+
+
+        public List<string> GetBadInputs(Dictionary<string,string> inputs, string action)
+        {
+            var ReturnDictionary = new List<string>();
+
+            foreach (var input in inputs)
+            {
+                    var x = SubmitForm(input.Value, action);
+                    x.Wait();
+
+                    if(x.Result.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        ReturnDictionary.Add(input.Key);
+                    }
+            }
+            return ReturnDictionary;       
         }
 
         public List<UnitConverterResults> GetActualValues(List<double> texts, List<string> actions)

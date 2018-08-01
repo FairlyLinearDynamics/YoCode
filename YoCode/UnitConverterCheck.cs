@@ -9,11 +9,15 @@ namespace YoCode
     public class UnitConverterCheck
     {
         Dictionary<List<string>,List<double>> KeywordMap;
+        Dictionary<string, string> badInputs;
 
+        List<string> badInputResults;
+    
         List<UnitConverterResults> actual;
         List<UnitConverterResults> expected;
 
         List<double> texts;
+        
         List<string> actions;
            
         List<double> InchesToCentimetres;
@@ -35,6 +39,9 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
+            BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
+
+
             if (String.IsNullOrEmpty(port))
             {
                 UnitConverterCheckEvidence.SetFailed("The unit converter check was not implemented: could not retrieve the port number\nAnother program might be using it.");
@@ -49,13 +56,15 @@ namespace YoCode
                     HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
                     actual = fetcher.GetActualValues(texts, actions);
-                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();    
+
+                    badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);                    
+                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+                    BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
                 }
                 catch (Exception)
                 {
                     UnitConverterCheckEvidence.SetFailed("The program could not check this feature");
                 }
-
             }
         }
 
@@ -67,6 +76,14 @@ namespace YoCode
             expected = new List<UnitConverterResults>();
 
             texts = new List<double> { 5, 25, 125};
+
+            badInputs = new Dictionary<string, string>();
+            badInputs.Add("Empty input", " ");
+            badInputs.Add("Blank lines at the start", "\n 10");
+            badInputs.Add("Blank lines at the middle", "10   10");
+            badInputs.Add("Blank lines at the end", "10 \n");
+            badInputs.Add("Not numbers", "Y..@");
+
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
@@ -159,14 +176,13 @@ namespace YoCode
             var ret = true;
             try
             {
-                UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,-12}", "Action", "Input","Expected", "Actual", "Are equal\n"));
-
+                UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input","Expected", "Actual", "Are equal\n"));
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
-                    var x = string.Format("{0,-24} {1,-10} {2,-13} {3,-10} {4} ", expectation.action,expectation.input,expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
+                    var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action,expectation.input,expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
                     UnitConverterCheckEvidence.GiveEvidence(x);
 
                     if (!actualOutput.ApproximatelyEquals(expectedOutput))
@@ -183,10 +199,33 @@ namespace YoCode
             return ret;
         }
 
+        public bool BadInputsAreFixed()
+        {
+            bool ret = true;
+
+            BadInputCheckEvidence.GiveEvidence(string.Format("\n{0,-30} {1,-10}", "Input name", "FIXED"));
+            BadInputCheckEvidence.GiveEvidence(messages.Divider);
+
+            foreach(var a in badInputs)
+            {
+                bool isFixed = !badInputResults.Contains(a.Key);
+
+                if (!isFixed)
+                {
+                    ret = false;
+                }
+
+                BadInputCheckEvidence.GiveEvidence(string.Format("{0,-30} {1,-10}", a.Key,isFixed));                
+            }
+            return ret;
+        }
+
         public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
+
         public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
+        public FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
     }
 }
