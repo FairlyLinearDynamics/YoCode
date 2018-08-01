@@ -87,40 +87,40 @@ namespace YoCode
 
                 checkList.Add(fileCheck.FileChangeEvidence);
 
-                // UI test
-                var keyWords = new[] { "miles", "kilometers", "km" };
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+                //// UI test
+                //var keyWords = new[] { "miles", "kilometers", "km" };
+                //var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
-                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                //checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
 
-                // Solution file exists
-                checkList.Add(new FeatureEvidence()
-                {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureImplemented = true,
-                });
+                //// Solution file exists
+                //checkList.Add(new FeatureEvidence()
+                //{
+                //    FeatureTitle = "Solution File Exists",
+                //    FeatureImplemented = true,
+                //});
 
-                // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                //// Git repo used
+                //checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
 
-                // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                //// Project build
+                //checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                // Project run test
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
-                checkList.Add(pr.ProjectRunEvidence);
+                //// Project run test
+                //var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                //checkList.Add(pr.ProjectRunEvidence);
 
-                // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                //// Unit test test
+                //checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-                UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
+                //UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
-                // Unit converter test
-                checkList.Add(ucc.UnitConverterCheckEvidence);
+                //// Unit converter test
+                //checkList.Add(ucc.UnitConverterCheckEvidence);
 
-                checkList.Add(ucc.BadInputCheckEvidence);
+                //checkList.Add(ucc.BadInputCheckEvidence);
 
-                pr.KillProject();
+                //pr.KillProject();
 
                 dupFinderThread.Join();
             }
