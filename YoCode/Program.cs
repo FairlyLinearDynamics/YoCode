@@ -78,7 +78,6 @@ namespace YoCode
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
 
-
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
