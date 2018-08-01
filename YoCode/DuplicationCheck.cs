@@ -21,6 +21,8 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
+        private const int VARIABLE_REPETITION_TRESHOLD = 1;
+
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
             this.dir = dir;
@@ -65,41 +67,34 @@ namespace YoCode
 
         private void SpecialDuplicatuib()
         {
-            // TODO: get a list of cs files excluding ones from Unit Test
             var csUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath,FileTypes.cs);
 
             var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests"));
 
-            csUrisWithoutUnitTests.ToList().ForEach(Console.WriteLine);
-
-            string regexForNumbers = "[0-9]+\\.?[0-9]*";
-            string regexForText = "Yards to meters";
-
-            var yardCount = 0;
-            var inchCount = 0;
-            var mileCount = 0;
-            var stringCount = 0;
-
             foreach (var csFile in csUrisWithoutUnitTests)
             {
                 var file = File.ReadAllText(csFile);
-                yardCount += CountRepetition(regexForNumbers, "0.914", file);
-                inchCount += CountRepetition(regexForNumbers, "2.54", file);
-                mileCount += CountRepetition(regexForNumbers, "1.609", file);
-                stringCount += CountRepetition(regexForText, regexForText, file);
 
+                if (CountRepetition("0.9144", file) > VARIABLE_REPETITION_TRESHOLD)
+                {
+                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("0.9144", file)} times in file: {csFile}");
+                }
+                if (CountRepetition("2.54", file) > VARIABLE_REPETITION_TRESHOLD)
+                {
+                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("2.54", file)} times in file: {csFile}");
+                }
+                if (CountRepetition("1.609", file) > VARIABLE_REPETITION_TRESHOLD)
+                {
+                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("1.609", file)} times in file: {csFile}");
+                }
             }
-
-            DuplicationEvidence.GiveEvidence($"Number 0.914 repeated: {yardCount}");
-            DuplicationEvidence.GiveEvidence($"Number 2.54 repeated: {yardCount}");
-            DuplicationEvidence.GiveEvidence($"Number 1.609 repeated: {yardCount}");
-            DuplicationEvidence.GiveEvidence($"Number string repeated: {stringCount}");
-
             // TODO: Check for duplication of "Yards to meters"
         }
 
-        private int CountRepetition(string regexPattern, string valueToCheckAgainst ,string fileToReadFrom)
+        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom)
         {
+            string regexPattern = "[0-9]+\\.?[0-9]*";
+
             var elements = Regex.Matches(fileToReadFrom, regexPattern);
             return elements.Where(element => element.Value.Contains(valueToCheckAgainst)).Count();
         }
