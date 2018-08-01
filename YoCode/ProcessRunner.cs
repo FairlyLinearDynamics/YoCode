@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Management;
 using System.Threading;
 
 namespace YoCode
@@ -25,7 +27,7 @@ namespace YoCode
 
         private bool ProcessShouldFinishAutomatically(string message) => string.IsNullOrWhiteSpace(message);
 
-        public void ExecuteTheCheck(string waitForMessage = null, bool kill=true)
+        public void ExecuteTheCheck(string waitForMessage = null, bool kill = true)
         {
             p = new Process();
             p.StartInfo = SetProcessStartInfo(procinfo);
@@ -38,10 +40,11 @@ namespace YoCode
 
             if (ProcessShouldFinishAutomatically(waitForMessage))
             {
-                WaitForProcessToFinish(p);
-            } else
+                WaitForProcessToFinish();
+            }
+            else
             {
-                WaitForExitCondition(p, waitForMessage, kill);
+                WaitForExitCondition(waitForMessage, kill);
             }
 
             Output = string.Join(Environment.NewLine, output);
@@ -53,16 +56,16 @@ namespace YoCode
             return output.ListContainsAnyKeywords(outputStopWords) || errorOutput.ListContainsAnyKeywords(errorStopWords);
         }
 
-        private void WaitForProcessToFinish(Process p)
+        private void WaitForProcessToFinish()
         {
             if (!p.WaitForExit((int)timeout.TotalMilliseconds))
             {
                 TimedOut = true;
             }
-            KillLiveProcess();
+            KillProcessWithChildren();
         }
 
-        private void WaitForExitCondition(Process p, string wait, bool kill)
+        private void WaitForExitCondition(string wait, bool kill)
         {
             var keywords = ExpectedStopConditions(wait);
             var errorKeywords = ExpectedErrorStopConditions();
@@ -80,11 +83,11 @@ namespace YoCode
             }
 
             TimedOut = numberOfRetries == numberOfTimesToRetry;
-            if(kill)
+            if (kill)
             {
-                KillLiveProcess();
+                KillProcessWithChildren();
             }
-            
+
         }
 
         private List<string> ExpectedStopConditions(string extraCondition) => new List<string>
@@ -133,13 +136,37 @@ namespace YoCode
             errorOutput.Add(e.Data);
         }
 
-        public void KillLiveProcess()
+        private static void KillLiveProcess(Process p)
         {
             if (!p.HasExited)
             {
                 p.Kill();
                 p.Dispose();
             }
+        }
+
+        private static void FindAndKillChildProcesses(int pid)
+        {
+            using (var mos = new ManagementObjectSearcher(string.Format(CultureInfo.InvariantCulture,
+                  "Select * From Win32_Process Where ParentProcessID={0}", pid)))
+            {
+                var list = new List<Process>();
+                foreach (var mo in mos.Get())
+                {
+                    try
+                    {
+                        var processById = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
+                        KillLiveProcess(processById);
+                    }
+                    catch (ArgumentException) { }
+                }
+            }
+        }
+
+        public void KillProcessWithChildren()
+        {
+            FindAndKillChildProcesses(p.Id);
+            KillLiveProcess(p);
         }
     }
 }
