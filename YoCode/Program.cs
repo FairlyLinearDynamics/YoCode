@@ -11,7 +11,7 @@ namespace YoCode
     {
         public static IConfiguration Configuration;
 
-        private static string CMDToolsPath;
+        static string CMDToolsPath;
 
         static void Main(string[] args)
         {
@@ -74,24 +74,26 @@ namespace YoCode
             var checkList = new List<FeatureEvidence>();
 
             var fileCheck = new FileChangeChecker(dir);
-            
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+
                 });
                 dupFinderThread.Start();
 
+                // Files changed check
                 checkList.Add(fileCheck.FileChangeEvidence);
 
                 // UI test
-                var keyWords = new[] { "miles", "kilometers", "km" };
+
                 var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
 
-                checkList.Add(new UICheck(modifiedHtmlFiles, keyWords).UIEvidence);
+                checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
                 // Solution file exists
                 checkList.Add(new FeatureEvidence()
@@ -106,8 +108,10 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                // Project run test
                 var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
+
+                // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
@@ -120,9 +124,8 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                pr.KillProject();
-
                 dupFinderThread.Join();
+                pr.KillProject();
             }
             return checkList;
         }
