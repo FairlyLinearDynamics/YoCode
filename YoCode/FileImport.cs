@@ -45,8 +45,7 @@ namespace YoCode
 
         public FileStream GetFileStream(string path)
         {
-            var fs = new FileStream(path,FileMode.Open);
-            return fs; 
+            return new FileStream(path,FileMode.Open);
         }
     }
 }
