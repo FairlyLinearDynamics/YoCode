@@ -79,8 +79,6 @@ namespace YoCode
             var htmlUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
             htmlUris.ForEach(a => csUrisWithoutUnitTests.Add(a));
 
-            csUrisWithoutUnitTests.ToList().ForEach(Console.WriteLine);
-
             var stringRep = 0;
 
             string regexPatternForInts = "[0-9]+\\.?[0-9]*";
@@ -113,8 +111,6 @@ namespace YoCode
             {
                 DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
             }
-
-            // TODO: Check for duplication of "Yards to meters"
         }
 
 
