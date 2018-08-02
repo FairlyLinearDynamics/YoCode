@@ -42,7 +42,5 @@ namespace YoCode_XUnit
 
             evidence.FeatureTitle.Should().NotBeEmpty();
         }
-        // TODO: Add tests for: Multiple files with one line of keywords; 
-        // multiple files with multiple lines of keywords; one file with multiple lines of keywords
     }
 }

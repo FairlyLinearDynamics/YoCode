@@ -23,6 +23,11 @@ namespace YoCode
 
         private const int VARIABLE_REPETITION_TRESHOLD = 1;
 
+        private const string yardsToMeters = "0.914";
+        private const string inchToCentimeter = "2.54";
+        private const string mileToKilometer = "1.60934";
+        private const string stringCheck = "Yards to meters";
+
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
             this.dir = dir;
@@ -35,7 +40,7 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
-                SpecialDuplicatuib();
+                CheckForSpecialRepetition();
             }
             catch(Exception e)
             {
@@ -65,36 +70,57 @@ namespace YoCode
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
-        private void SpecialDuplicatuib()
+        private void CheckForSpecialRepetition()
         {
             var csUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath,FileTypes.cs);
 
-            var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests"));
+            var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests")).ToList();
+
+            var htmlUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+            htmlUris.ForEach(a => csUrisWithoutUnitTests.Add(a));
+
+            csUrisWithoutUnitTests.ToList().ForEach(Console.WriteLine);
+
+            var stringRep = 0;
+
+            string regexPatternForInts = "[0-9]+\\.?[0-9]*";
 
             foreach (var csFile in csUrisWithoutUnitTests)
             {
                 var file = File.ReadAllText(csFile);
 
-                if (CountRepetition("0.9144", file) > VARIABLE_REPETITION_TRESHOLD)
+                var yradRepetitions = CountRepetition(yardsToMeters, file, regexPatternForInts);
+                var inchRepetition = CountRepetition(inchToCentimeter, file, regexPatternForInts);
+                var mileRepetition = CountRepetition(mileToKilometer, file, regexPatternForInts);
+
+                if (yradRepetitions > VARIABLE_REPETITION_TRESHOLD)
                 {
-                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("0.9144", file)} times in file: {csFile}");
+                    DuplicationEvidence.GiveEvidence($"Number {yardsToMeters} duplicated {yradRepetitions} times in file: {csFile}");
                 }
-                if (CountRepetition("2.54", file) > VARIABLE_REPETITION_TRESHOLD)
+                if (inchRepetition > VARIABLE_REPETITION_TRESHOLD)
                 {
-                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("2.54", file)} times in file: {csFile}");
+                    DuplicationEvidence.GiveEvidence($"Number {inchToCentimeter} duplicated {inchRepetition} times in file: {csFile}");
                 }
-                if (CountRepetition("1.609", file) > VARIABLE_REPETITION_TRESHOLD)
+                if (mileRepetition > VARIABLE_REPETITION_TRESHOLD)
                 {
-                    DuplicationEvidence.GiveEvidence($"Number \"0.9144\" duplicated {CountRepetition("1.609", file)} times in file: {csFile}");
+                    DuplicationEvidence.GiveEvidence($"Number {mileToKilometer} duplicated {mileRepetition} times in file: {csFile}");
                 }
+
+                stringRep += CountRepetition(stringCheck, file, stringCheck);
             }
+
+            if (stringRep > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
+            }
+
             // TODO: Check for duplication of "Yards to meters"
         }
 
-        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom)
-        {
-            string regexPattern = "[0-9]+\\.?[0-9]*";
 
+
+        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
+        {
             var elements = Regex.Matches(fileToReadFrom, regexPattern);
             return elements.Where(element => element.Value.Contains(valueToCheckAgainst)).Count();
         }
