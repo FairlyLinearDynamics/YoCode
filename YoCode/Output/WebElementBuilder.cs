@@ -21,6 +21,8 @@ namespace YoCode
         const string LIST_ELEM_OPEN = "<li>";
         const string LIST_ELEM_CLSOE = "</li>";
         const string LINE_BREAK = "<br/>";
+        const string SPAN_OPEN = "<span>";
+        const string SPAN_CLOSE = "</span>";
 
         const string ESCAPE_AND = "&amp";
         const string ESCAPE_LESS = "&lt";
@@ -45,9 +47,9 @@ namespace YoCode
 
             foreach(var line in lines)
             {
-                par.Append(line + LINE_BREAK);
+                par.Append(SPAN_OPEN + line + SPAN_CLOSE);
             }
-            return PARAGRAPH_OPEN + par.ToString() + PARAGRAPH_CLOSE;
+            return par.ToString();
         }
 
         public static string FormatHeader(string text)
@@ -67,9 +69,14 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormatCheckIcont(bool checkMark)
+        public static string FormaFeatureTitle(string title, bool featurePassed = false)
         {
-            return checkMark ? "<i class=\"fa fa-check-circle-o\"></i>" : "<i class=\"fa fa-times-circle-o\"></i>";
+            return FormatCheckIcont(featurePassed) + "<span class=\"accordion-title\">" + title + "</span>";
+        }
+
+        private static string FormatCheckIcont(bool checkMark)
+        {
+            return checkMark ? "<span class=\"fa fa-check-circle-o\"></span>" : "<span class=\"fa fa-times-circle-o\"></span>";
         }
 
         public static string FormatLink(string url, string title)
