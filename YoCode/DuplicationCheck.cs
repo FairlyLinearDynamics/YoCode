@@ -77,43 +77,44 @@ namespace YoCode
             var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests")).ToList();
 
             var htmlUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
-            htmlUris.ForEach(a => csUrisWithoutUnitTests.Add(a));
+
+            var combinedList = csUrisWithoutUnitTests.Concat(htmlUris);
 
             var stringRep = 0;
+            var yardRepetition = 0;
+            var inchRepetition = 0;
+            var mileRepetition = 0;
 
             string regexPatternForInts = "[0-9]+\\.?[0-9]*";
 
-            foreach (var csFile in csUrisWithoutUnitTests)
+            foreach (var csFile in combinedList)
             {
                 var file = File.ReadAllText(csFile);
 
-                var yradRepetitions = CountRepetition(yardsToMeters, file, regexPatternForInts);
-                var inchRepetition = CountRepetition(inchToCentimeter, file, regexPatternForInts);
-                var mileRepetition = CountRepetition(mileToKilometer, file, regexPatternForInts);
-
-                if (yradRepetitions > VARIABLE_REPETITION_TRESHOLD)
-                {
-                    DuplicationEvidence.GiveEvidence($"Number {yardsToMeters} duplicated {yradRepetitions} times in file: {csFile}");
-                }
-                if (inchRepetition > VARIABLE_REPETITION_TRESHOLD)
-                {
-                    DuplicationEvidence.GiveEvidence($"Number {inchToCentimeter} duplicated {inchRepetition} times in file: {csFile}");
-                }
-                if (mileRepetition > VARIABLE_REPETITION_TRESHOLD)
-                {
-                    DuplicationEvidence.GiveEvidence($"Number {mileToKilometer} duplicated {mileRepetition} times in file: {csFile}");
-                }
+                yardRepetition += CountRepetition(yardsToMeters, file, regexPatternForInts);
+                inchRepetition += CountRepetition(inchToCentimeter, file, regexPatternForInts);
+                mileRepetition += CountRepetition(mileToKilometer, file, regexPatternForInts);
 
                 stringRep += CountRepetition(stringCheck, file, stringCheck);
             }
 
+            if (yardRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {yardsToMeters} duplicated {yardRepetition} times");
+            }
+            if (inchRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {inchToCentimeter} duplicated {inchRepetition} times");
+            }
+            if (mileRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {mileToKilometer} duplicated {mileRepetition} times");
+            }
             if (stringRep > VARIABLE_REPETITION_TRESHOLD)
             {
                 DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
             }
         }
-
-
 
         private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {
