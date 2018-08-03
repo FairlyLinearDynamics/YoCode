@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
@@ -8,10 +7,10 @@ namespace YoCode
 {
     public class PathManager : IPathManager
     {
-        const string HTML = "*.cshtml";
-        const string CSS = "*.css";
-        const string CS = "*.cs";
-        const string SLN = "*.sln";
+        private const string HTML = "*.cshtml";
+        private const string CSS = "*.css";
+        private const string CS = "*.cs";
+        private const string SLN = "*.sln";
 
         public string originalTestDirPath { get; set; }
         public string modifiedTestDirPath { get; set; }

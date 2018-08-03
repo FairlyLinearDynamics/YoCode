@@ -69,11 +69,5 @@ namespace YoCode_XUnit
         {
             a.ApproximatelyEquals(b).Should().BeTrue();
         }
-        
-        
-
-
-
-
     }
 }
