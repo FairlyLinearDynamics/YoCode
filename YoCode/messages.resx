@@ -147,146 +147,319 @@ After you downloaded it please specify its location in appsettings.json file, wh
 Possible commands: --{0}; --{1}; --{2}
 Example use: --{0}=&lt;path-to-original-test&gt; --{1}
 =&lt;path-to-modified-test&gt;
-</value >
-</data >
-<data name="Welcome" xml:space="preserve" >
-<value > Welcome to YoCode!
+</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value> Welcome to YoCode!
 
-</value >
-</data >
-<data name="AskForHelp" xml:space="preserve" >
-<value > If you would like to see list of commands, type: --help</value >
-</data >
-<data name="AppsettingsHelp" xml:space="preserve" >
-<value > appsettings.json file missing. Please make sure to create the file as specified in the README</value >
-</data >
-<data name="HtmlTemplate" xml:space="preserve" >
-<value > &lt;!DOCTYPE html&gt;
+</value>
+  </data>
+  <data name="AskForHelp" xml:space="preserve">
+    <value> If you would like to see list of commands, type: --help</value>
+  </data>
+  <data name="AppsettingsHelp" xml:space="preserve">
+    <value> appsettings.json file missing. Please make sure to create the file as specified in the README</value>
+  </data>
+  <data name="HtmlTemplate" xml:space="preserve">
+    <value>
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 
-&lt;head&gt;
-&lt;meta charset="utf-8"&gt;
-&lt;meta http-equiv="x-ua-compatible" content="ie=edge"&gt;
-&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="x-ua-compatible" content="ie=edge"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
 
-&lt;title&gt;YoCode Report&lt;/title&gt;
+    &lt;title&gt;YoCode Report&lt;/title&gt;
 
-&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
-&lt;style&gt;
-body {
-    margin: 0;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 15px;
-}
+    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
+    &lt;style&gt;
+      :root{
+        --console-bg: #222121;
+        --console-text: #c0c0c0;
+        --green-bg: #3bc511;
+        --red-bg: #eb4b4b;
+        --green-bg-transparent: #70eb4b3a;
+        --red-bg-transparent: #eb4b4b3a;
+        --main-bg: #d6cbda;
+        --panel-bg: #f4eef8;
+        --panel-text: #3b3838;
+        --toolbar-bg: #8B2C87;
+        --toolbar-text: #e2d7d7;
+        --element-underlining: #c1b8c9;
+      }
 
-.accordion {
-    grid-column: 1/4;
-    display: grid;
-    position: relative;
-    grid-template-columns: 50px auto;
-    background-color: #e7e7e7;
-    color: #222121;
-    cursor: pointer;
-    height: auto;
-    border: none;
-    outline: none;
-    transition: 0.4s;
-    border-bottom: 1px solid #cccccc;
-    text-align: left;
-    padding: 0;
-    text-align: unset;
-}
+      body {
+        background-color: var(--main-bg);
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
 
-.active, .accordion:hover {
-    background-color: #ccc;
-}
+      .toolbar{
+        font-weight: 600;
+        grid-column: 1/4;
+        height: 20px;
+        background-color: var(--toolbar-bg);
+        color: var(--toolbar-text);
+        padding: 15px;
+        border-bottom: 2px solid var(--element-underlining);
+      }
 
-.panel {
-    grid-column: 1/4;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
+      .sections-wrapper{
+        display: grid;
+        grid-template-columns: repeat(3,auto);
+        column-gap: 15px;
+        padding: 15px;
+        color:var(--panel-text);
+      }
 
-.panel-content {
-    padding: 10px;
-    font-family: consolas;
-    background-color: #222121;
-    color: #c0c0c0;
-    margin: 0px;
-    counter-reset: line;
-}
+      .section{
+        display: grid;
+        grid-template-rows: repeat(3,auto);
+        background-color: var(--panel-bg);
+        padding: 15px;
+        height: 80px;
+        border-bottom: 2px solid var(--element-underlining);
+      }
 
-.panel-content ul {
-    list-style-type: none;
-    padding: 0;
-}
+      .passed-tests{
+        grid-column: 1/2;
+      }
 
-.green-text {
-    color: #3c922b;
-}
+      .failed-tests{
+        grid-column: 2/3;
+      }
 
-.red-text {
-    color: #922b2b;
-}
+      .score{
+        grid-column: 3/4;
+      }
 
-.accordion-title {
-    grid-column: 2/2;
-    text-align: left;
-    font-size: 100%;
-    padding: 15px 15px;
-    font-weight: 400;
-    font-size: 25px;
-}
+      @media (max-width: 400px) {
+        .sections-wrapper {
+          grid-template-columns: auto;
+          grid-template-rows: repeat(3, auto);
+          grid-row-gap: 8px;
+        }
 
-.fa-times-circle-o {
-    grid-column: 1/1;
-    background-color: #cc444444;
-    color: #cc4444;
-    text-align: center;
-    padding-top: 40%;
-    padding-bottom: 25%;
-    font-size: 130%;
-}
+        .passed-tests{
+          grid-row: 1/2;
+          grid-column: 1;
+        }
+
+        .failed-tests{
+          grid-row: 2/3;
+          grid-column: 1;
+        }
+
+        .score{
+          grid-row: 3/4;
+          grid-column: 1;
+        }
+      }
+
+      .report-wrapper{
+        grid-column: 1/4;
+        padding: 15px;
+      }
+
+      .section-title{
+        grid-row: 1/2;
+      }
+
+      .test-bar-number{
+        margin-top: 5px;
+        grid-row: 2/3;
+      }
+
+      .bar-container{
+        grid-row: 3/4;
+        width: auto;
+        height: 2px;
+        margin-top: 5px;
+        background-color: #ddd;
+      }
+
+      .tests-bar{
+        text-align: right;
+        height: 100%;
+        color:inherit;
+      }
+
+      .passed{width: 50%;background-color: var(--green-bg);}
+      .failed{width: 50%;background-color: var(--red-bg);}
+
+      .accordion {
+        width: 100%;
+        display: grid;
+        position: relative;
+        grid-template-columns: 50px auto;
+        background-color: var(--panel-bg);
+        color: var(--panel-text);
+        cursor: pointer;
+        height: auto;
+        border: none;
+        outline: none;
+        transition: 0.4s;
+        border-bottom: 2px solid var(--element-underlining);
+        text-align: left;
+        padding: 0;
+      }
+
+      .active, .accordion:hover {
+        background-color: #e4dfe8;
+      }
+
+      .panel {
+        grid-column: 1/4;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        margin-bottom: 3px;
+      }
+
+      .panel-content {
+        padding: 10px;
+        font-family: consolas;
+        background-color: var(--console-bg);
+        color: var(--console-text);
+        margin: 0px;
+        counter-reset: line;
+      }
+
+      .panel-content ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .green-text {
+        color: var(--green-bg);
+      }
+
+      .red-text {
+        color: var(--red-bg);
+      }
+
+      .accordion-title {
+        grid-column: 2/2;
+        text-align: left;
+        font-size: 100%;
+        padding: 15px 15px;
+        font-weight: 400;
+        font-size: 25px;
+      }
+
+      @media (max-width: 400px) {
+        .accordion-title {
+          font-size: 18px;
+        }
+      }
+
+      .accordion-icon {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        justify-content: center;
+      }
+
+      .accordion-icon-pass {
+        background-color: var(--green-bg-transparent);
+      }
+
+      .accordion-icon-fail {
+        background-color: var(--red-bg-transparent);
+      }
+
+        .fa-check-circle-o,
+        .fa-times-circle-o {
+        text-align: center;
+        font-size: 130%;   
+      }
 
 
-.fa-check-circle-o {
-    grid-column: 1/1;
-    background-color: #64cc4444;
-    color: #64cc44;
-    text-align: center;
-    padding-top: 40%;
-    padding-bottom: 25%;
-    font-size: 130%;
-}
-        &lt;/style&gt;
-    &lt;/head&gt;
+      .fa-times-circle-o {
+        color: var(--red-bg);
+      }
 
-    &lt;body&gt;
-        {FEATURE}
 
-        &lt;script&gt;
-            var acc = document.getElementsByClassName("accordion");
+      .fa-check-circle-o {
+        color: var(--green-bg);
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
 
-            for (var i = 0; i &lt; acc.length; i++) {
-                acc[i].addEventListener("click", function() 
-                {
-                    this.classList.toggle("active");
+  &lt;body&gt;
+    &lt;div class="toolbar"&gt;
+      YoCode
+    &lt;/div&gt;
 
-                    var panel = this.nextElementSibling;
-                    if (!this.classList.contains("active"))
-                    {
-                        panel.style.maxHeight = null;
-                    } 
-                    else 
-                    {
-                        panel.style.maxHeight = panel.scrollHeight + "px";
-                    }
-                });
-            }
-        &lt;/script&gt;
-    &lt;/body&gt;
+    &lt;div class="sections-wrapper"&gt;
+      &lt;div class="section passed-tests"&gt;
+        &lt;span class="section-title"&gt;Total tests passed&lt;/span&gt; 
+        &lt;span id="js-passed-number" class="test-bar-number"&gt;5&lt;/span&gt;
+
+        &lt;div class="bar-container"&gt;
+          &lt;div id="js-test-bar-passed" class="tests-bar passed" syle="width:80%"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="section failed-tests"&gt;
+        &lt;span class="section-title"&gt;Total tests failed&lt;/span&gt; 
+        &lt;span id="js-failed-number" class="test-bar-number"&gt;5&lt;/span&gt;
+
+        &lt;div class="bar-container"&gt;
+          &lt;div id="js-test-bar-failed" class="tests-bar failed"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="section score"&gt;
+        YoScore
+      &lt;/div&gt;
+    &lt;/div&gt;
+        
+    &lt;div class="report-wrapper"&gt;
+      {FEATURE}
+    &lt;/div&gt;
+
+    &lt;script&gt;
+      var acc = document.getElementsByClassName("accordion");
+
+      for (var i = 0; i &lt; acc.length; i++) 
+      {
+      acc[i].addEventListener("click", function() 
+      {
+          this.classList.toggle("active");
+
+          var panel = this.nextElementSibling;
+
+          if (!this.classList.contains("active"))
+          {
+            panel.style.maxHeight = null;
+          } 
+          else 
+          {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          }
+        });
+      }
+
+      var totalPassed = document.getElementsByClassName('accordion-icon-pass').length;
+      var totalFailed = document.getElementsByClassName('accordion-icon-fail').length;
+      var total = totalPassed + totalFailed;
+
+      var percentPassed = Math.ceil((totalPassed * 100) / total);
+      var percentFailed = Math.ceil((totalFailed * 100) / total);
+
+      document.getElementById('js-passed-number').innerText = totalPassed;
+      document.getElementById('js-failed-number').innerText = totalFailed;
+
+      document.getElementById('js-test-bar-passed').style.width = percentPassed+"%";
+      document.getElementById('js-test-bar-failed').style.width = percentFailed+"%";
+
+      var acc = document.getElementsByClassName(".accordion")
+    &lt;/script&gt;
+  &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
   <data name="ListElementTemplate" xml:space="preserve">

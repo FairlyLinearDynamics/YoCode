@@ -25,7 +25,7 @@ namespace YoCode
 
         public void AddIntro(string text)
         {
-            introduction = WebElementBuilder.FormatParagraph(text);
+            // No intro for web report :(
         }
 
         public void AddErrs(IEnumerable<string> errs)

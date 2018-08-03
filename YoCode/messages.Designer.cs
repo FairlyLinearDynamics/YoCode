@@ -135,28 +135,27 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  &lt;!DOCTYPE html&gt;
+        ///   Looks up a localized string similar to 
+        ///&lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///
-        ///&lt;head&gt;
-        ///&lt;meta charset=&quot;utf-8&quot;&gt;
-        ///&lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
-        ///&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///  &lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///
-        ///&lt;title&gt;YoCode Report&lt;/title&gt;
+        ///    &lt;title&gt;YoCode Report&lt;/title&gt;
         ///
-        ///&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
-        ///&lt;style&gt;
-        ///body {
-        ///    margin: 0;
-        ///    display: grid;
-        ///    grid-template-columns: auto auto auto;
-        ///    padding: 15px;
-        ///}
+        ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+        ///    &lt;style&gt;
+        ///      body{
+        ///        margin: 0;
+        ///        display: grid;
+        ///        grid-template-columns: auto auto auto;
+        ///        padding: 15px;
+        ///      }
         ///
-        ///.accordion {
-        ///    grid-column: 1/4;
-        ///    display: grid [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string HtmlTemplate {
             get {

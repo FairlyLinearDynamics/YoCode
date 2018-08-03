@@ -76,7 +76,8 @@ namespace YoCode
 
         private static string FormatCheckIcont(bool checkMark)
         {
-            return checkMark ? "<span class=\"fa fa-check-circle-o\"></span>" : "<span class=\"fa fa-times-circle-o\"></span>";
+            return checkMark ? "<span class=\"accordion-icon accordion-icon-pass\"><span class=\"fa fa-check-circle-o\"></span></span>" 
+                : "<span class=\"accordion-icon accordion-icon-fail\"><span class=\"fa fa-times-circle-o\"></span></span>";
         }
 
         public static string FormatLink(string url, string title)
