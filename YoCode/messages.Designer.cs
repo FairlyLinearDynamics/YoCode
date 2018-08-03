@@ -61,7 +61,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to appsettings.json file missing. Please make sure to create the file as specified in the README.
+        ///   Looks up a localized string similar to  appsettings.json file missing. Please make sure to create the file as specified in the README.
         /// </summary>
         public static string AppsettingsHelp {
             get {
@@ -70,7 +70,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you would like to see list of commands, type: --help.
+        ///   Looks up a localized string similar to  If you would like to see list of commands, type: --help.
         /// </summary>
         public static string AskForHelp {
             get {
@@ -124,7 +124,8 @@ namespace YoCode {
         /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
         ///Possible commands: --{0}; --{1}; --{2}
-        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
+        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}
+        ///=&lt;path-to-modified-test&gt;
         ///.
         /// </summary>
         public static string HelpMessage {
@@ -134,23 +135,27 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///   Looks up a localized string similar to 
+        ///&lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///
-        ///    &lt;head&gt;
-        ///        &lt;meta charset=&quot;utf-8&quot;&gt;
-        ///        &lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
-        ///        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///        
-        ///        &lt;title&gt;YoCode Report&lt;/title&gt;
+        ///  &lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///
-        ///        &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
-        ///        &lt;style&gt;
-        ///            body{
-        ///                margin: 0;
-        ///            }
-        ///            .accordion {
-        ///                back [rest of string was truncated]&quot;;.
+        ///    &lt;title&gt;YoCode Report&lt;/title&gt;
+        ///
+        ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+        ///    &lt;style&gt;
+        ///      body{
+        ///        margin: 0;
+        ///        display: grid;
+        ///        grid-template-columns: auto auto auto;
+        ///        padding: 15px;
+        ///      }
+        ///
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string HtmlTemplate {
             get {
@@ -159,10 +164,14 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;button class=&quot;accordion&quot;&gt;{TITLE}&lt;/button&gt;
-        ///&lt;div class=&quot;panel&quot;&gt;
-        ///    {CONTENT}
-        ///&lt;/div&gt;.
+        ///   Looks up a localized string similar to &lt;button class=&quot;accordion&quot;&gt;
+        ///                    {TITLE}
+        ///                &lt;/button&gt;
+        ///                &lt;div class=&quot;panel&quot;&gt;
+        ///                    &lt;div class=&quot;panel-content&quot;&gt;
+        ///                        {CONTENT}
+        ///                    &lt;/div&gt;
+        ///                &lt;/div&gt;.
         /// </summary>
         public static string ListElementTemplate {
             get {
@@ -171,7 +180,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to YoCode!
+        ///   Looks up a localized string similar to  Welcome to YoCode!
         ///
         ///.
         /// </summary>
