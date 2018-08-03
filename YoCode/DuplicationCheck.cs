@@ -20,7 +20,6 @@ namespace YoCode
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
-
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             this.dupFinder = dupFinder;
 
@@ -36,7 +35,6 @@ namespace YoCode
                 DuplicationEvidence.FeatureImplemented = false;
                 DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" +e);
             }
-
         }
 
         private void ExecuteTheCheck() {

@@ -11,9 +11,9 @@ namespace YoCode
     {
         public static IConfiguration Configuration;
 
-        static string CMDToolsPath;
+        private static string CMDToolsPath;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
@@ -64,7 +64,7 @@ namespace YoCode
                 compositeOutput.ShowLaziness();
                 return;
             }
-            
+
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
@@ -77,13 +77,8 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-
                 // Duplication check
-                var dupFinderThread = new Thread(() =>
-                {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-
-                });
+                var dupFinderThread = new Thread(() => checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence));
                 dupFinderThread.Start();
 
                 // Files changed check

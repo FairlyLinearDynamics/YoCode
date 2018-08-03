@@ -5,7 +5,7 @@ namespace YoCode
 {
     public class FeatureRunner
     {
-        ProcessRunner pr;
+        private ProcessRunner pr;
 
         public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill =true)
         {

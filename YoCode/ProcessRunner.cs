@@ -87,7 +87,6 @@ namespace YoCode
             {
                 KillProcessWithChildren();
             }
-
         }
 
         private List<string> ExpectedStopConditions(string extraCondition) => new List<string>

@@ -13,7 +13,7 @@ namespace YoCode
         private string Argument { get; set; } = @"bin\Debug\";
         private string ErrorOutput { get; }
         private const string projectFolder = @"\UnitConverterWebApp";
-        private FeatureRunner featureRunner;
+        private readonly FeatureRunner featureRunner;
 
         public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {
