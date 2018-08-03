@@ -13,7 +13,6 @@ namespace YoCode
 
         private static string CMDToolsPath;
         private static string dotCoverDir;
-        private static string dotnetDir;
 
         static void Main(string[] args)
         {
@@ -27,7 +26,6 @@ namespace YoCode
                 Configuration = builder.Build();
                 CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
                 dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
-                dotnetDir = Configuration["dotnetSetup:dotnetexeDir"];
             }
             catch (FileNotFoundException)
             {
@@ -128,7 +126,8 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, dotnetDir, new FeatureRunner()).CodeCoverageEvidence);
+                //Code Coverage
+                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
 
                 dupFinderThread.Join();
                 pr.KillProject();

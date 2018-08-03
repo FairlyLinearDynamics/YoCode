@@ -13,7 +13,7 @@ namespace YoCode
         private string ReportName { get; } = "report.json";
         private string FullReportPath { get; }
 
-        public CodeCoverageCheck(string dotCoverDir, string workingDir, string dotnetDir, FeatureRunner featureRunner)
+        public CodeCoverageCheck(string dotCoverDir, string workingDir, FeatureRunner featureRunner)
         {
             CodeCoverageEvidence.FeatureTitle = "Code Coverage";
 
@@ -27,7 +27,7 @@ namespace YoCode
                 return;
             }
 
-            Argument = CreateArgument(dotnetDir, targetWorkingDir);
+            Argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
 
             var evidence = featureRunner.Execute(CreateProcessDetails(dotCoverDir));
 
