@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace YoCode
 {
@@ -51,8 +52,9 @@ namespace YoCode
         private static bool ContainsKeyWord(string line, IEnumerable<string> keyWords)
         {
             //Console.WriteLine(keyWords.Select(key => line.ToLower().Contains(key)));
-            
-            return keyWords.Any(key => line.ToLower().Contains(key));
+            var words = Regex.Split(line, "[^A-Za-z0-9]").ToList();
+
+            return words.Any(word => keyWords.ToList().Any(keyword => word.ToLower().Equals(keyword.ToLower())));
         }
 
         // -------------------------------------------------------------------------------------------- Return methods
