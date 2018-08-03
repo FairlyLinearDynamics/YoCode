@@ -11,5 +11,7 @@ namespace YoCode
 
         IEnumerable<FileContent> ReturnModifiedPathFileStream();
         IEnumerable<FileContent> ReturnOriginalPathFileStream();
+
+        IEnumerable<string> GetFilesInDirectory(string PATH, FileTypes type);
     }
 }

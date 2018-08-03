@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace YoCode
 {
@@ -11,6 +13,7 @@ namespace YoCode
         private readonly string modifiedSolutionPath;
         private readonly string originalSolutionPath;
         private readonly IDupFinder dupFinder;
+        private readonly IPathManager dir;
 
         private int ModiCodeBaseCost { get; set; }
         private int ModiDuplicateCost { get; set; }
@@ -18,8 +21,16 @@ namespace YoCode
         private int OrigCodeBaseCost { get; set; }
         private int OrigDuplicateCost { get; set; }
 
+        private const int VARIABLE_REPETITION_TRESHOLD = 1;
+
+        private const string yardsToMeters = "0.914";
+        private const string inchToCentimeter = "2.54";
+        private const string mileToKilometer = "1.60934";
+        private const string stringCheck = "Yards to meters";
+
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
+            this.dir = dir;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             this.dupFinder = dupFinder;
 
@@ -29,6 +40,7 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
+                CheckForSpecialRepetition();
             }
             catch(Exception e)
             {
@@ -55,6 +67,58 @@ namespace YoCode
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
+        }
+
+        private void CheckForSpecialRepetition()
+        {
+            var csUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath,FileTypes.cs);
+
+            var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests")).ToList();
+
+            var htmlUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+
+            var combinedList = csUrisWithoutUnitTests.Concat(htmlUris);
+
+            var stringRep = 0;
+            var yardRepetition = 0;
+            var inchRepetition = 0;
+            var mileRepetition = 0;
+
+            string regexPatternForInts = "[0-9]+\\.?[0-9]*";
+
+            foreach (var csFile in combinedList)
+            {
+                var file = File.ReadAllText(csFile);
+
+                yardRepetition += CountRepetition(yardsToMeters, file, regexPatternForInts);
+                inchRepetition += CountRepetition(inchToCentimeter, file, regexPatternForInts);
+                mileRepetition += CountRepetition(mileToKilometer, file, regexPatternForInts);
+
+                stringRep += CountRepetition(stringCheck, file, stringCheck);
+            }
+
+            if (yardRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {yardsToMeters} duplicated {yardRepetition} times");
+            }
+            if (inchRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {inchToCentimeter} duplicated {inchRepetition} times");
+            }
+            if (mileRepetition > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"Number {mileToKilometer} duplicated {mileRepetition} times");
+            }
+            if (stringRep > VARIABLE_REPETITION_TRESHOLD)
+            {
+                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
+            }
+        }
+
+        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
+        {
+            var elements = Regex.Matches(fileToReadFrom, regexPattern);
+            return elements.Where(element => element.Value.Contains(valueToCheckAgainst)).Count();
         }
 
         private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath, string whichDir)
