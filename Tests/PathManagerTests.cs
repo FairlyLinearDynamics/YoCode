@@ -9,7 +9,6 @@ namespace YoCode_XUnit
 {
     public class PathManagerTests
     {
-        // TODO: fix test, need to somehow mock file path instead of passing null
         [Fact]
         public void GetFilesInDirectoryCorrectlyReturnsListOfFiles()
         {
