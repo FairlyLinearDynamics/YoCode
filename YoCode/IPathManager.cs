@@ -2,10 +2,10 @@
 
 namespace YoCode
 {
-    public interface IPathManager
+    internal interface IPathManager
     {
-        string originalTestDirPath { get; set; }
-        string modifiedTestDirPath { get; set; }
+        string OriginalTestDirPath { get; set; }
+        string ModifiedTestDirPath { get; set; }
         IEnumerable<string> ModifiedPaths { get; }
         IEnumerable<string> OriginalPaths { get; }
 

@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-
-namespace YoCode
+﻿namespace YoCode
 {
-    public class FeatureRunner
+    internal class FeatureRunner
     {
         private ProcessRunner pr;
 

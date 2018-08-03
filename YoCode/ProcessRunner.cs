@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace YoCode
 {
-    public class ProcessRunner
+    internal class ProcessRunner
     {
         internal bool TimedOut { get; private set; }
 

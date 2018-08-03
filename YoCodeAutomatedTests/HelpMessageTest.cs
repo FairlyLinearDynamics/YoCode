@@ -1,6 +1,5 @@
 using Xunit;
 using FluentAssertions;
-using YoCode;
 using System.IO;
 
 namespace YoCodeAutomatedTests

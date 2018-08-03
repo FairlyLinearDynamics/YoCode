@@ -1,6 +1,6 @@
 ﻿namespace YoCode
 {
-    public class ProcessDetails
+    internal class ProcessDetails
     {
         public ProcessDetails(string processName, string workingDir, string arguments)
         {

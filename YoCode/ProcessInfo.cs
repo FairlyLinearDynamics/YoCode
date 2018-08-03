@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace YoCode
+﻿namespace YoCode
 {
-    public struct ProcessInfo
+    internal struct ProcessInfo
     {
         public string processName;
         public string arguments;
-        public string workingDir; 
+        public string workingDir;
     };
 }

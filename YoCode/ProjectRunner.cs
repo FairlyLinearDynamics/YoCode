@@ -5,7 +5,7 @@ using System.IO;
 namespace YoCode
 {
     // TODO: find other way of running .dll file instead of hardcoding the name 
-    public class ProjectRunner
+    internal class ProjectRunner
     {
         internal string Output { get; }
 

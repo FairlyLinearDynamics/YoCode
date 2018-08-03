@@ -6,9 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    public static class HelperMethods
+    internal static class HelperMethods
     {
-
         public static bool ContainsAny(this string line, IEnumerable<string> keywords)
         {
             return keywords.Any(line.Contains);
@@ -41,8 +40,7 @@ namespace YoCode
             var list = new List<int>();
             for (int i = 0; i < numbers.Length; i++)
             {
-                int temp;
-                if (Int32.TryParse(numbers[i], out temp))
+                if (Int32.TryParse(numbers[i], out int temp))
                 {
                     list.Add(temp);
                 }
@@ -92,8 +90,7 @@ namespace YoCode
 
         public static bool ApproximatelyEquals(this double a, double b)
         {
-            return (Math.Abs(a - b) <= 0.001);
+            return Math.Abs(a - b) <= 0.001;
         }
-
     }
 }

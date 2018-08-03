@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace YoCode
 {
-    public class FeatureEvidence
+    internal class FeatureEvidence
     {
         public string FeatureTitle { get; set; }
         public bool FeatureImplemented { get; set; }

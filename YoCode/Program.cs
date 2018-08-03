@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +6,7 @@ using System.Threading;
 
 namespace YoCode
 {
-    public static class Program
+    internal static class Program
     {
         public static IConfiguration Configuration;
 
@@ -88,7 +87,7 @@ namespace YoCode
 
                 // UI test
 
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
                 checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
@@ -100,19 +99,19 @@ namespace YoCode
                 });
 
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
                 // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                var pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
                 checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
                 UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
@@ -122,7 +121,7 @@ namespace YoCode
                 checkList.Add(ucc.BadInputCheckEvidence);
 
                 //Code Coverage
-                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
 
                 dupFinderThread.Join();
                 pr.KillProject();
