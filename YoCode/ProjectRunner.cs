@@ -7,22 +7,30 @@ namespace YoCode
     // TODO: find other way of running .dll file instead of hardcoding the name 
     public class ProjectRunner
     {
-        internal string Output { get; }
+        internal string Output { get; set; }
 
         private string Process { get; } = "dotnet";
         private string Argument { get; set; } = @"bin\Debug\";
-        private string ErrorOutput { get; }
+        private string ErrorOutput { get; set;}
         private const string projectFolder = @"\UnitConverterWebApp";
         private FeatureRunner featureRunner;
+        private string workingDir;
 
         public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
-            workingDir += projectFolder;
-            if (!Directory.Exists(workingDir))
+            this.workingDir = workingDir + projectFolder;
+            if (!Directory.Exists(this.workingDir))
             {
                 ProjectRunEvidence.SetFailed("UnitConverterWebApp not found");
+            }
+        }
+
+        public void Execute()
+        {
+            if(ProjectRunEvidence.FeatureFailed)
+            {
                 return;
             }
 

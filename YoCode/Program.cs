@@ -4,15 +4,23 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace YoCode
 {
-    public static class Program
+    public static partial class Program
     {
+        [DllImport("Kernel32")]
+        private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
+
+        private delegate bool SetConsoleCtrlEventHandler(CtrlType sig);
+
         public static IConfiguration Configuration;
 
         private static string CMDToolsPath;
         private static string dotCoverDir;
+        private static ProjectRunner pr;
 
         static void Main(string[] args)
         {
@@ -67,8 +75,12 @@ namespace YoCode
                 return;
             }
 
+            pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+
+            SetConsoleCtrlHandler(Handler, true);
+
             var implementedFeatureList = PerformChecks(dir);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -79,7 +91,6 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
@@ -116,7 +127,8 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                pr.Execute();
+
                 checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 // Project run test
@@ -137,6 +149,37 @@ namespace YoCode
                 pr.KillProject();
             }
             return checkList;
+        }
+
+        private static bool Handler(CtrlType signal)
+        {
+            switch (signal)
+            {
+                case CtrlType.CTRL_BREAK_EVENT:
+                case CtrlType.CTRL_C_EVENT:
+                case CtrlType.CTRL_LOGOFF_EVENT:
+                case CtrlType.CTRL_SHUTDOWN_EVENT:
+                case CtrlType.CTRL_CLOSE_EVENT:
+                    Console.WriteLine("Closing");
+
+                    try
+                    {
+                        pr.KillProject();
+
+                        if (Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver") != null)
+                        {
+                            var process = Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver");
+                            ProcessRunner.KillProcessWithChildren(process);
+                        }
+                    }
+                    catch (NullReferenceException) { }
+
+                    Environment.Exit(0);
+                    return false;
+
+                default:
+                    return false;
+            }
         }
     }
 }
