@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System.Diagnostics;
 
 namespace YoCode
 {
@@ -16,6 +17,9 @@ namespace YoCode
 
         static void Main(string[] args)
         {
+
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
@@ -69,6 +73,8 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            watch.Stop();
+            Console.WriteLine(watch.Elapsed);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -80,11 +86,17 @@ namespace YoCode
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
 
+                //Code Coverage
+                var codeCoverageThread = new Thread(() =>
+                {
+                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                });
+                codeCoverageThread.Start();
+
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-
                 });
                 dupFinderThread.Start();
 
@@ -126,9 +138,7 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                //Code Coverage
-                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-
+                codeCoverageThread.Join();
                 dupFinderThread.Join();
                 pr.KillProject();
             }
