@@ -89,8 +89,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///To run this application you will have to install Command Line Tools by Jetbrains
+        ///   Looks up a localized string similar to To run this application you will have to install Command Line Tools by Jetbrains
         ///Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&amp;code=RSCLT
         ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
         /// </summary>
@@ -124,13 +123,22 @@ namespace YoCode {
         /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
         ///Possible commands: --{0}; --{1}; --{2}
-        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}
-        ///=&lt;path-to-modified-test&gt;
-        ///.
+        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;.
         /// </summary>
         public static string HelpMessage {
             get {
                 return ResourceManager.GetString("HelpMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;paragraph-block&quot;&gt;
+        ///  {CONTENT}
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string HtmlParagraphBlock {
+            get {
+                return ResourceManager.GetString("HtmlParagraphBlock", resourceCulture);
             }
         }
         
@@ -158,6 +166,32 @@ namespace YoCode {
         public static string HtmlTemplate {
             get {
                 return ResourceManager.GetString("HtmlTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///
+        ///  &lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;ie=edge&quot;&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///
+        ///    &lt;title&gt;YoCode Report&lt;/title&gt;
+        ///
+        ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+        ///    &lt;style&gt;
+        ///      :root{
+        ///        --console-bg: #222121;
+        ///        --console-text: #c0c0c0;
+        ///        --green-bg: #3bc511;
+        ///        --red-bg: #eb4b4b;
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string HtmlTemplate_WithoutFeatures {
+            get {
+                return ResourceManager.GetString("HtmlTemplate_WithoutFeatures", resourceCulture);
             }
         }
         

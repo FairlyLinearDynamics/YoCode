@@ -14,7 +14,6 @@ namespace YoCode
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
-        string introduction;
 
         public WebWriter()
         {
@@ -53,7 +52,12 @@ namespace YoCode
         private string BuildReport()
         {
             var report = new StringBuilder();
-            report.Append(introduction);
+            if (features.Length == 0)
+            {
+                report.Append(errors.ToString());
+                report.Append(msg);
+                return messages.HtmlTemplate_WithoutFeatures.Replace(FEATURE_TAG, report.ToString());
+            }
             report.Append(features.ToString());
             report.Append(errors.ToString());
             report.Append(msg);

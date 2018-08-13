@@ -8,7 +8,7 @@ namespace YoCode
     {
         void AddIntro(string intro);
         void AddFeature(FeatureData data);
-        void AddMessage(string msg);
+        void AddMessage(string message);
         void AddErrs(IEnumerable<string> errors);
         void WriteReport();
     }
