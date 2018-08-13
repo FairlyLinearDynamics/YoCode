@@ -4,7 +4,6 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
-using System.Diagnostics;
 
 namespace YoCode
 {
@@ -17,9 +16,6 @@ namespace YoCode
 
         static void Main(string[] args)
         {
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
@@ -73,8 +69,6 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
-            watch.Stop();
-            Console.WriteLine(watch.Elapsed);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
