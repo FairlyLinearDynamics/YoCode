@@ -52,7 +52,14 @@ namespace YoCode
 
         public static string GetLineWithOneKeyword(this string line, string keyword)
         {
-            return line.GetLineWithAllKeywords(new List<string> { keyword });
+            if(!String.IsNullOrEmpty(line))
+            {
+                return line.GetLineWithAllKeywords(new List<string> { keyword });
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static bool ListContainsAnyKeywords(this List<string> list, IEnumerable<string> keywords)

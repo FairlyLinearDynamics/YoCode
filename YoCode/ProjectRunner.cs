@@ -23,7 +23,7 @@ namespace YoCode
             this.workingDir = workingDir + projectFolder;
             if (!Directory.Exists(this.workingDir))
             {
-                ProjectRunEvidence.SetFailed("UnitConverterWebApp not found");
+                ProjectRunEvidence.SetFailed($"{this.workingDir} not found");
             }
         }
 
@@ -76,7 +76,11 @@ namespace YoCode
 
         public void KillProject()
         {
-            featureRunner.EndProcess();
+            try
+            {
+                featureRunner.EndProcess();
+            }
+            catch(NullReferenceException) { }
         }
 
         public FeatureEvidence ProjectRunEvidence { get; } = new FeatureEvidence();

@@ -128,14 +128,14 @@ namespace YoCode
                 checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 pr.Execute();
-
-                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
-
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+
+                //Front End Check
+                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
@@ -144,9 +144,10 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
+                pr.KillProject();
+
                 codeCoverageThread.Join();
                 dupFinderThread.Join();
-                pr.KillProject();
             }
             return checkList;
         }
