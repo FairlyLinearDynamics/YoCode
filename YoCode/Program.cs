@@ -80,11 +80,17 @@ namespace YoCode
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
 
+                //Code Coverage
+                var codeCoverageThread = new Thread(() =>
+                {
+                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                });
+                codeCoverageThread.Start();
+
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
-
                 });
                 dupFinderThread.Start();
 
@@ -126,9 +132,7 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                //Code Coverage
-                checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-
+                codeCoverageThread.Join();
                 dupFinderThread.Join();
                 pr.KillProject();
             }

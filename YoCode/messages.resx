@@ -330,6 +330,11 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
         padding: 0;
       }
 
+      .panel-content li{
+        margin-top: 0px;
+        white-space: pre;
+      }
+
       .green-text {
         color: var(--green-bg);
       }
@@ -424,7 +429,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
     &lt;script&gt;
       var acc = document.getElementsByClassName("accordion");
 
-      for (var i = 0; i &lt; acc.length; i++) 
+      for (let i = 0; i &lt; acc.length; i++) 
       {
       acc[i].addEventListener("click", function() 
       {
