@@ -79,6 +79,16 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
+        ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
+        /// </summary>
+        public static string CodeCoverageHelp {
+            get {
+                return ResourceManager.GetString("CodeCoverageHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ==========================================================
         ///.
         /// </summary>
@@ -89,8 +99,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///To run this application you will have to install Command Line Tools by Jetbrains
+        ///   Looks up a localized string similar to To run this application you will have to install Command Line Tools by Jetbrains
         ///Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&amp;code=RSCLT
         ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
         /// </summary>

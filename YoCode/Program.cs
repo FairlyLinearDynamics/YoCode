@@ -27,34 +27,45 @@ namespace YoCode
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
+            List<string> errs = new List<string>();
 
             try
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
                 Configuration = builder.Build();
-                CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
-                dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
             }
             catch (FileNotFoundException)
             {
-                compositeOutput.ShowHelp();
+                errs.Add("Did not find appsettings file");
+                compositeOutput.ShowInputErrors(errs);
+                return;
+            }
+            catch (FormatException)
+            {
+                errs.Add("Error reading JSON file");
+                compositeOutput.ShowInputErrors(errs);
                 return;
             }
 
-            compositeOutput.PrintIntroduction();
+            CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
+            dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
+            CheckToolDirectory(errs, CMDToolsPath);
+            CheckToolDirectory(errs, dotCoverDir);
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
             if (result.helpAsked)
             {
+                compositeOutput.PrintIntroduction();
                 compositeOutput.ShowHelp();
                 return;
             }
 
-            if (result.HasErrors)
+            if (result.HasErrors || errs.Any())
             {
-                compositeOutput.ShowInputErrors(result.errors);
+                errs.AddRange(result.errors);
+                compositeOutput.ShowInputErrors(errs);
                 return;
             }
 
@@ -75,12 +86,22 @@ namespace YoCode
                 return;
             }
 
+            compositeOutput.PrintIntroduction();
+
             pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
 
             SetConsoleCtrlHandler(Handler, true);
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
+        }
+
+        private static void CheckToolDirectory(List<string> errs, string path)
+        {
+            if (!Directory.Exists(path) || String.IsNullOrEmpty(path))
+            {
+                errs.Add($"{path} is not a valid directory");
+            }
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)

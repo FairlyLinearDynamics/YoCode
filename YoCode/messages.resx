@@ -118,8 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DupFinderHelp" xml:space="preserve">
-    <value>
-To run this application you will have to install Command Line Tools by Jetbrains
+    <value>To run this application you will have to install Command Line Tools by Jetbrains
 Direct download link here: https://www.jetbrains.com/resharper/download/download-thanks.html?platform=windows&amp;code=RSCLT
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
@@ -475,5 +474,9 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
                         {CONTENT}
                     &lt;/div&gt;
                 &lt;/div&gt;</value>
+  </data>
+  <data name="CodeCoverageHelp" xml:space="preserve">
+    <value>Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
+After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
 </root>

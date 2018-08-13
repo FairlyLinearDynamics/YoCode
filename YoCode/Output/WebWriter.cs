@@ -30,7 +30,7 @@ namespace YoCode
 
         public void AddErrs(IEnumerable<string> errs)
         {
-            errors.Append(WebElementBuilder.FormatAccordionElement("Errors present",
+            errors.Append(WebElementBuilder.FormatAccordionElement(WebElementBuilder.FormaFeatureTitle("Errors present"),
                 WebElementBuilder.FormatListOfStrings(errs)));
         }
 
