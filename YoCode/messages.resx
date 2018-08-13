@@ -145,8 +145,7 @@ After you downloaded it please specify its location in appsettings.json file, wh
   <data name="HelpMessage" xml:space="preserve">
     <value>Application takes 2 parameters: path to original test directory and path to modified test directory
 Possible commands: --{0}; --{1}; --{2}
-Example use: --{0}=&lt;path-to-original-test&gt; --{1}
-=&lt;path-to-modified-test&gt;
+Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
 </value>
   </data>
   <data name="Welcome" xml:space="preserve">
