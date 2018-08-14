@@ -13,6 +13,8 @@ namespace YoCode
             CleanBuildOutput(workingDir);
 
             ProjectBuilderEvidence.FeatureTitle = "Project build";
+            ProjectBuilderEvidence.FeatureWeighting = 1;
+
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);
@@ -26,6 +28,8 @@ namespace YoCode
                 return;
             }
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
+            ProjectBuilderEvidence.FeatureRating = BuildSuccessful() ? 1 : 0;
+
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {

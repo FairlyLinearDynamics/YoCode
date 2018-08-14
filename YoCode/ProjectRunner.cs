@@ -19,6 +19,8 @@ namespace YoCode
         {
             this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
+            ProjectRunEvidence.FeatureWeighting = 1;
+
             workingDir += projectFolder;
             if (!Directory.Exists(workingDir))
             {
@@ -35,6 +37,7 @@ namespace YoCode
             ErrorOutput = evidence.ErrorOutput;
 
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
+            ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
 
             if (ProjectRunEvidence.FeatureImplemented)
             {

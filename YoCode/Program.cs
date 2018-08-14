@@ -69,6 +69,7 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
@@ -135,6 +136,10 @@ namespace YoCode
                 codeCoverageThread.Join();
                 dupFinderThread.Join();
                 pr.KillProject();
+
+                Console.WriteLine("The final score is " + new Rating(checkList).FinalScore);
+
+
             }
             return checkList;
         }

@@ -22,10 +22,12 @@ namespace YoCode
         {
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
+            UnitTestEvidence.FeatureWeighting = 1.355;
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
             ExecuteTheCheck();
+            UnitTestEvidence.FeatureRating = GetRating();
         }
 
         public void ExecuteTheCheck()
@@ -61,6 +63,7 @@ namespace YoCode
             else
             {
                 UnitTestEvidence.SetFailed("Couldn't get information about tests");
+                UnitTestEvidence.FeatureRating = 0;
             }
         }
 
@@ -68,6 +71,12 @@ namespace YoCode
         {
             return new List<string> { "Total tests:" };
         }
+
+        public double GetRating()
+        {
+            return stats.testsPassed / stats.totalTests;
+        }
+
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
     }

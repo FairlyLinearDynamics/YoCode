@@ -12,6 +12,9 @@ namespace YoCode
         public string ErrorOutput { get; set; }
         public bool FeatureFailed { get; private set; }
 
+        public double FeatureRating { get; set; }
+        public double FeatureWeighting { get; set; }
+
         public List<string> Evidence { get; set; } = new List<string>();
 
         public void GiveEvidence(string evidence)
