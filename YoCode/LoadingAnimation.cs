@@ -13,14 +13,15 @@ namespace YoCode
             var cursorPos = Console.CursorTop;
             Console.WriteLine(messages.Fireplace);
             Console.WriteLine(messages.ParagraphDivider);
-            Console.WriteLine($"Get comfortable, YoCode is about to finish gathering{Environment.NewLine}your results");
+            Console.WriteLine($"Get comfortable, YoCode is gathering your results");
             Console.WriteLine(messages.ParagraphDivider);
+            Console.WriteLine();
 
             while (true)
             {
+                Console.CursorTop--;
                 ClearLine();
-                Console.Write(String.Format("-----------------------[Loading{0,-3}]----------------------", dots));
-                Console.CursorLeft = 0;
+                Console.WriteLine(String.Format("Loading{0,-3}", dots));
                 dots += ".";
                 if (dots.Equals("...."))
                 {
