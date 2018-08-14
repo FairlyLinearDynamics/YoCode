@@ -73,6 +73,7 @@ namespace YoCode
         public void WriteReport()
         {
             File.WriteAllText(OUTPUT_PATH, BuildReport());
+            HtmlReportLauncher.LaunchReport("YoCodeReport.html");
         }
     }
 }

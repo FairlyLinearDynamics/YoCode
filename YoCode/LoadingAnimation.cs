@@ -11,7 +11,7 @@ namespace YoCode
         public static void RunLoading()
         {
             var cursorPos = Console.CursorTop;
-            Console.WriteLine(messages.Fireplace);
+            Console.WriteLine(messages.ConsoleFireplaceBanner);
             Console.WriteLine(messages.ParagraphDivider);
             Console.WriteLine($"Get comfortable, YoCode is gathering your results");
             Console.WriteLine(messages.ParagraphDivider);
