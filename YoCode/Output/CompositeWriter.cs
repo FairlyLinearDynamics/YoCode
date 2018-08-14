@@ -45,6 +45,14 @@ namespace YoCode
             }
         }
 
+        public void AddBanner()
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddBanner();
+            }
+        }
+
         public void WriteReport()
         {
             foreach(var writer in writers)

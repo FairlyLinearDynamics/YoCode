@@ -10,6 +10,7 @@ namespace YoCode
         void AddFeature(FeatureData data);
         void AddMessage(string message);
         void AddErrs(IEnumerable<string> errors);
+        void AddBanner();
         void WriteReport();
     }
 }

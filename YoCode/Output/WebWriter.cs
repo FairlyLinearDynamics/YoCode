@@ -49,6 +49,11 @@ namespace YoCode
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
 
+        public void AddBanner()
+        {
+            msg.Append(messages.HtmlFireplaceBanner);
+        }
+
         private string BuildReport()
         {
             var report = new StringBuilder();

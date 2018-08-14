@@ -41,6 +41,7 @@ namespace YoCode
             if (result.helpAsked)
             {
                 compositeOutput.ShowHelp();
+                htmlReportLaunched = HtmlReportLauncher.LaunchReport("YoCodeReport.html");
                 return;
             }
 

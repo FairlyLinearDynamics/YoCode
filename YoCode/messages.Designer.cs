@@ -79,6 +79,27 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///   _|__ _________________ __|__
+        ///  _|___||               ||_|__
+        ///  ___|_||       )  &apos;    ||___|_
+        ///   _|__||    ( ()\(     ||_|___
+        ///  ___|_||  ( ,|,(X)&apos;    ||___#_
+        ///  _|___|| /,)/|`\``\\\  |||__/\
+        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///       . - ------------ . #/      |
+        ///     (( (((  (( ))) ))))  )\      |
+        ///       `  -   ----  __ -/\  `.__.-#
+        ///                  C(__)`\ \____
+        ///                      /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBanner {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBanner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ==========================================================
         ///.
         /// </summary>
@@ -100,27 +121,6 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ___________________________
-        ///   _|__ _________________ __|__
-        ///  _|___||               ||_|__
-        ///  ___|_||       )  &apos;    ||___|_
-        ///   _|__||    ( ()\(     ||_|___
-        ///  ___|_||  ( ,|,(X)&apos;    ||___#_
-        ///  _|___|| /,)/|`\``\\\  |||__/\
-        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
-        ///       . - ------------ . #/      |
-        ///     (( (((  (( ))) ))))  )\      |
-        ///       `  -   ----  __ -/\  `.__.-#
-        ///                  C(__)`\ \____
-        ///                      /_`\/___/.
-        /// </summary>
-        public static string Fireplace {
-            get {
-                return ResourceManager.GetString("Fireplace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
         ///Possible commands: --{0}; --{1}; --{2}
         ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;.
@@ -128,6 +128,17 @@ namespace YoCode {
         public static string HelpMessage {
             get {
                 return ResourceManager.GetString("HelpMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;paragraph-banner&quot;&gt;
+        ///          &lt;iframe src=&quot;https://giphy.com/embed/Hj7mksbFWIOdO&quot; width=&quot;480&quot; height=&quot;317&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;
+        ///      &lt;/div&gt;.
+        /// </summary>
+        public static string HtmlFireplaceBanner {
+            get {
+                return ResourceManager.GetString("HtmlFireplaceBanner", resourceCulture);
             }
         }
         

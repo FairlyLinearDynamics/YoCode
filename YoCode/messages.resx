@@ -126,7 +126,7 @@ After you downloaded it please specify its location in appsettings.json file, wh
     <value>==========================================================
 </value>
   </data>
-  <data name="Fireplace" xml:space="preserve">
+  <data name="ConsoleFireplaceBanner" xml:space="preserve">
     <value>___________________________
    _|__ _________________ __|__
   _|___||               ||_|__
@@ -255,41 +255,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
       }
 
       .report-wrapper{
-        display: grid;
-        grid-template-columns: min-content auto;
-        grid-auto-flow: dense;
-        grid-column-gap: 15px;
         padding: 15px;
-      }
-
-      .paragraph-block{
-        background-color: var(--panel-bg);
-        padding: 15px;
-        margin-bottom: 10px;
-        height: 80px;
-        border-bottom: 2px solid var(--element-underlining);
-        height: auto;
-      }
-
-      .paragraph-banner{
-        background-color: var(--panel-bg);
-        padding: 15px;
-        margin-bottom: 10px;
-        height: 80px;
-        width: 480px;
-        border-bottom: 2px solid var(--element-underlining);
-        height: auto;
-        grid-column: 1;
-        grid-row: 1/3;
-      }
-
-      .paragraph-block{
-        background-color: var(--panel-bg);
-        padding: 15px;
-        margin-bottom: 10px;
-        height: 80px;
-        border-bottom: 2px solid var(--element-underlining);
-        height: auto;
       }
 
       .section-title{
@@ -462,7 +428,11 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
       &lt;/div&gt;
 
       &lt;div class="section score"&gt;
-        YoScore
+        &lt;span class="section-title"&gt;YoScore&lt;/span&gt; 
+        &lt;span id="js-score" class="test-bar-number"&gt;0.0&lt;/span&gt;
+
+        &lt;div class="bar-container"&gt;
+        &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
         
@@ -650,15 +620,6 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
         grid-row: 1/3;
       }
 
-      .paragraph-block{
-        background-color: var(--panel-bg);
-        padding: 15px;
-        margin-bottom: 10px;
-        height: 80px;
-        border-bottom: 2px solid var(--element-underlining);
-        height: auto;
-      }
-
       .section-title{
         grid-row: 1/2;
       }
@@ -807,9 +768,6 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
       YoCode
     &lt;/div&gt;
     &lt;div class="report-wrapper"&gt;
-      &lt;div class="paragraph-banner"&gt;
-          &lt;iframe src="https://giphy.com/embed/Hj7mksbFWIOdO" width="480" height="317" frameBorder="0"&gt;&lt;/iframe&gt;
-      &lt;/div&gt;
       {FEATURE}
     &lt;/div&gt;
 
@@ -852,5 +810,10 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</value>
+  </data>
+  <data name="HtmlFireplaceBanner" xml:space="preserve">
+    <value>&lt;div class="paragraph-banner"&gt;
+          &lt;iframe src="https://giphy.com/embed/Hj7mksbFWIOdO" width="480" height="317" frameBorder="0"&gt;&lt;/iframe&gt;
+      &lt;/div&gt;</value>
   </data>
 </root>

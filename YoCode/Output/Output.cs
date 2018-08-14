@@ -44,7 +44,7 @@ namespace YoCode
 
         public void ShowHelp()
         {
-            //ShowBanner();
+            ShowBanner();
             ShowHelpMsg();
             ShowDupfinderHelp();
             outputWriter.WriteReport();
@@ -52,7 +52,7 @@ namespace YoCode
 
         private void ShowBanner()
         {
-            outputWriter.AddMessage(messages.Fireplace);
+            outputWriter.AddBanner();
         }
 
         private void ShowHelpMsg()
