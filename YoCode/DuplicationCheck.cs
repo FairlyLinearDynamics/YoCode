@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    public class DuplicationCheck
+    internal class DuplicationCheck
     {
         private readonly string fileNameChecked = "UnitConverterWebApp.sln";
 
@@ -34,8 +34,8 @@ namespace YoCode
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             this.dupFinder = dupFinder;
 
-            modifiedSolutionPath = Path.Combine(dir.modifiedTestDirPath, fileNameChecked);
-            originalSolutionPath = Path.Combine(dir.originalTestDirPath, fileNameChecked);
+            modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
+            originalSolutionPath = Path.Combine(dir.OriginalTestDirPath, fileNameChecked);
 
             try
             {
@@ -47,7 +47,6 @@ namespace YoCode
                 DuplicationEvidence.FeatureImplemented = false;
                 DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" +e);
             }
-
         }
 
         private void ExecuteTheCheck() {
@@ -72,11 +71,11 @@ namespace YoCode
 
         private void CheckForSpecialRepetition()
         {
-            var csUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath,FileTypes.cs);
+            var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath,FileTypes.cs);
 
             var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests")).ToList();
 
-            var htmlUris = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+            var htmlUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
             var combinedList = csUrisWithoutUnitTests.Concat(htmlUris);
 
@@ -119,7 +118,7 @@ namespace YoCode
         private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {
             var elements = Regex.Matches(fileToReadFrom, regexPattern);
-            return elements.Where(element => element.Value.Contains(valueToCheckAgainst)).Count();
+            return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
         }
 
         private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath, string whichDir)

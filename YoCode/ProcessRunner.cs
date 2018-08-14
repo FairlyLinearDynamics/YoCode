@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace YoCode
 {
-    public class ProcessRunner
+    internal class ProcessRunner
     {
         internal bool TimedOut { get; private set; }
 
@@ -87,7 +87,6 @@ namespace YoCode
             {
                 KillProcessWithChildren();
             }
-
         }
 
         private List<string> ExpectedStopConditions(string extraCondition) => new List<string>
