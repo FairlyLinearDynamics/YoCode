@@ -45,7 +45,7 @@ namespace YoCode
 
             ConsoleCloseHandler.StartHandler(pr);
 
-            var implementedFeatureList = PerformChecks(dir);
+            var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
             htmlReportLaunched = HtmlReportLauncher.LaunchReport("YoCodeReport.html");
         }
