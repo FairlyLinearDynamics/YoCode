@@ -1,19 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 
 namespace YoCode
 {
-    public static partial class Program
+    public static class Program
     {
-        [DllImport("Kernel32")]
-        private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
-
-        private delegate bool SetConsoleCtrlEventHandler(CtrlType sig);
-
         private static ProjectRunner pr;
 
         static void Main(string[] args)
@@ -50,7 +42,7 @@ namespace YoCode
 
             pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
 
-            SetConsoleCtrlHandler(Handler, true);
+            ConsoleCloseHandler.StartHandler(pr);
 
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
@@ -123,37 +115,6 @@ namespace YoCode
                 dupFinderThread.Join();
             }
             return checkList;
-        }
-
-        private static bool Handler(CtrlType signal)
-        {
-            switch (signal)
-            {
-                case CtrlType.CTRL_BREAK_EVENT:
-                case CtrlType.CTRL_C_EVENT:
-                case CtrlType.CTRL_LOGOFF_EVENT:
-                case CtrlType.CTRL_SHUTDOWN_EVENT:
-                case CtrlType.CTRL_CLOSE_EVENT:
-                    Console.WriteLine("Closing");
-
-                    try
-                    {
-                        pr.KillProject();
-
-                        if (Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver") != null)
-                        {
-                            var process = Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver");
-                            ProcessRunner.KillProcessWithChildren(process);
-                        }
-                    }
-                    catch (NullReferenceException) { }
-
-                    Environment.Exit(0);
-                    return false;
-
-                default:
-                    return false;
-            }
         }
     }
 }
