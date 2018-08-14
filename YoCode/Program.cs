@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace YoCode
 {
@@ -14,6 +15,7 @@ namespace YoCode
 
         private static string CMDToolsPath;
         private static string dotCoverDir;
+        private static bool htmlReportLaunched;
 
         static void Main(string[] args)
         {
@@ -70,7 +72,7 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
-            Process.Start(@"C:\Program Files\Mozilla Firefox\firefox.exe", @"C:\Users\ukekar\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1\YoCodeReport.html");
+            htmlReportLaunched = HtmlReportLauncher.LaunchReport("YoCodeReport.html");
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
