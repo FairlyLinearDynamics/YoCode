@@ -49,8 +49,8 @@ namespace YoCode
 
             CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
             dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
-            CheckToolDirectory(errs, CMDToolsPath);
-            CheckToolDirectory(errs, dotCoverDir);
+            CheckToolDirectory(errs, CMDToolsPath, "CMDtoolsDir");
+            CheckToolDirectory(errs, dotCoverDir, "dotCoverDir");
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -96,12 +96,17 @@ namespace YoCode
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
         }
 
-        private static void CheckToolDirectory(List<string> errs, string path)
+        private static void CheckToolDirectory(List<string> errs, string path, string checkName)
         {
-            if (!Directory.Exists(path) || String.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(path))
             {
-                errs.Add($"{path} is not a valid directory");
+                errs.Add($"{checkName} cannot be empty");
             }
+            else if (!Directory.Exists(path))
+            {
+                errs.Add($"invalid directory provided for {checkName}");
+            }
+
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
