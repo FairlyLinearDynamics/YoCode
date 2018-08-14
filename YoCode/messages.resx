@@ -147,7 +147,7 @@ Possible commands: --{0}; --{1}; --{2}
 Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value> Welcome to YoCode!
+    <value>Welcome to YoCode!
 
 </value>
   </data>
