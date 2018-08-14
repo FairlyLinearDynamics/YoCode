@@ -202,7 +202,7 @@ namespace YoCode
             bool ret = true;
 
             BadInputCheckEvidence.GiveEvidence(string.Format("\n{0,-30} {1,-10}", "Input name", "FIXED"));
-            BadInputCheckEvidence.GiveEvidence(messages.Divider);
+            BadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
             {

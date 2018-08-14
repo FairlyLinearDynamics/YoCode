@@ -255,6 +255,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
       }
 
       .report-wrapper{
+        grid-column: 1/4;
         padding: 15px;
       }
 
