@@ -25,7 +25,7 @@ namespace YoCode
 
         public void AddIntro(string text)
         {
-            introduction = WebElementBuilder.FormatParagraph(text);
+            // No intro for web report :(
         }
 
         public void AddErrs(IEnumerable<string> errs)
@@ -45,7 +45,7 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
 
-            var featureTitle = data.title + WebElementBuilder.FormatCheckIcont(data.featurePass);
+            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass);
 
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
