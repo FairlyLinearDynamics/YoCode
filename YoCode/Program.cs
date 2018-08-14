@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -16,10 +14,6 @@ namespace YoCode
 
         private delegate bool SetConsoleCtrlEventHandler(CtrlType sig);
 
-        public static IConfiguration Configuration;
-
-        private static string CMDToolsPath;
-        private static string dotCoverDir;
         private static ProjectRunner pr;
 
         static void Main(string[] args)
@@ -27,45 +21,17 @@ namespace YoCode
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
-            List<string> errs = new List<string>();
-
-            try
-            {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-                Configuration = builder.Build();
-            }
-            catch (FileNotFoundException)
-            {
-                errs.Add("Did not find appsettings file");
-                compositeOutput.ShowInputErrors(errs);
-                return;
-            }
-            catch (FormatException)
-            {
-                errs.Add("Error reading JSON file");
-                compositeOutput.ShowInputErrors(errs);
-                return;
-            }
-
-            CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
-            dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
-            CheckToolDirectory(errs, CMDToolsPath, "CMDtoolsDir");
-            CheckToolDirectory(errs, dotCoverDir, "dotCoverDir");
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
-            if (result.helpAsked)
+            var parameters = new RunParameterChecker(compositeOutput, result);
+            if(parameters.NeedToReturn)
             {
-                compositeOutput.PrintIntroduction();
-                compositeOutput.ShowHelp();
-                return;
-            }
-
-            if (result.HasErrors || errs.Any())
-            {
-                errs.AddRange(result.errors);
-                compositeOutput.ShowInputErrors(errs);
+                if(!result.helpAsked)
+                {
+                    compositeOutput.ShowInputErrors(parameters.errs);
+                }
                 return;
             }
 
@@ -74,15 +40,9 @@ namespace YoCode
 
             var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
+            var failedToReadFiles = parameters.FilesReadCorrectly(dir);
+            if (failedToReadFiles)
             {
-                compositeOutput.ShowDirEmptyMsg();
-                return;
-            }
-
-            if (!dir.ModifiedPaths.Any())
-            {
-                compositeOutput.ShowLaziness();
                 return;
             }
 
@@ -92,24 +52,11 @@ namespace YoCode
 
             SetConsoleCtrlHandler(Handler, true);
 
-            var implementedFeatureList = PerformChecks(dir);
+            var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
         }
 
-        private static void CheckToolDirectory(List<string> errs, string path, string checkName)
-        {
-            if (String.IsNullOrEmpty(path))
-            {
-                errs.Add($"{checkName} cannot be empty");
-            }
-            else if (!Directory.Exists(path))
-            {
-                errs.Add($"invalid directory provided for {checkName}");
-            }
-
-        }
-
-        private static List<FeatureEvidence> PerformChecks(PathManager dir)
+        private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
             var checkList = new List<FeatureEvidence>();
 
@@ -120,14 +67,14 @@ namespace YoCode
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
-                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
                 });
                 codeCoverageThread.Start();
 
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
                 });
                 dupFinderThread.Start();
 
