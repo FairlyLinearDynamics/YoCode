@@ -10,12 +10,16 @@ namespace YoCode
         static string dots;
         public static void RunLoading()
         {
+            var cursorPos = Console.CursorTop;
+            Console.WriteLine(messages.Fireplace);
+            Console.WriteLine(messages.ParagraphDivider);
+            Console.WriteLine($"Get comfortable, YoCode is about to finish gathering{Environment.NewLine}your results");
+            Console.WriteLine(messages.ParagraphDivider);
+
             while (true)
             {
-                Thread.Sleep(1000);
-
                 ClearLine();
-                Console.Write($"[Loading{dots}]");
+                Console.Write(String.Format("-----------------------[Loading{0,-3}]----------------------", dots));
                 Console.CursorLeft = 0;
                 dots += ".";
                 if (dots.Equals("...."))
@@ -25,8 +29,14 @@ namespace YoCode
                 if (LoadingFinished)
                 {
                     ClearLine();
+                    while (Console.CursorTop > cursorPos)
+                    {
+                        Console.CursorTop--;
+                        ClearLine();
+                    }
                     break;
                 }
+                Thread.Sleep(1000);
             }
         }
 

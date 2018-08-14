@@ -77,19 +77,23 @@ namespace YoCode
 
             var fileCheck = new FileChangeChecker(dir);
 
-            var loadingFinished = false;
+            var workThreads = new List<Thread>();
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                Thread loading = new Thread(LoadingAnimation.RunLoading);
-                loading.IsBackground = true;
-                loading.Start();
+                Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                {
+                    IsBackground = true
+                };
+                workThreads.Add(loadingThread);
+                loadingThread.Start();
 
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
                     checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
                 });
+                workThreads.Add(codeCoverageThread);
                 codeCoverageThread.Start();
 
                 // Duplication check
@@ -97,6 +101,7 @@ namespace YoCode
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
                 });
+                workThreads.Add(dupFinderThread);
                 dupFinderThread.Start();
 
                 // Files changed check
@@ -137,10 +142,9 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                codeCoverageThread.Join();
-                dupFinderThread.Join();
-                pr.KillProject();
                 LoadingAnimation.LoadingFinished = true;
+                workThreads.ForEach(a=> a.Join());
+                pr.KillProject();
             }
             return checkList;
         }

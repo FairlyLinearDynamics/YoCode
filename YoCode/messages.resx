@@ -477,4 +477,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}
                     &lt;/div&gt;
                 &lt;/div&gt;</value>
   </data>
+  <data name="ParagraphDivider" xml:space="preserve">
+    <value>---------------------------------------------------------</value>
+  </data>
 </root>
