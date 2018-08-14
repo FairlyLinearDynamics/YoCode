@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using YoCode;
 
@@ -9,8 +6,8 @@ namespace YoCode_XUnit
 {
     public class UICheckTests
     {
-        readonly string fakeFilePath = @"..\..\..\TestData\MockHTML.cshtml";
-        readonly string[] keyWords = { "miles", "kilometer" };
+        private readonly string fakeFilePath = @"..\..\..\TestData\MockHTML.cshtml";
+        private readonly string[] keyWords = { "miles", "kilometer" };
 
         // Write better testing mehod
         [Fact]

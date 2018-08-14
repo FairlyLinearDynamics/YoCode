@@ -1,20 +1,17 @@
 ﻿using Xunit;
-using Xunit.Abstractions;
 using FluentAssertions;
 using System.IO;
 using YoCode;
-using System.Text;
 using Moq;
-using System.Collections.Generic;
 
 namespace YoCode_XUnit
 {
     public class DuplicationCheckTests
     {
-        IPathManager fakeDir;
-        IDupFinder fakeDupFinder;
+        private readonly IPathManager fakeDir;
+        private readonly IDupFinder fakeDupFinder;
 
-        DuplicationCheck dupCheck;
+        private readonly DuplicationCheck dupCheck;
 
         public DuplicationCheckTests()
         {
@@ -29,8 +26,8 @@ namespace YoCode_XUnit
 
             var fileNameChecked = "UnitConverterWebApp.sln";
 
-            mockDir.Setup(w => w.originalTestDirPath).Returns(fakeOriginal);
-            mockDir.Setup(w => w.modifiedTestDirPath).Returns(fakeModified);
+            mockDir.Setup(w => w.OriginalTestDirPath).Returns(fakeOriginal);
+            mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
 
             mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeOriginal, fileNameChecked)))
                 .Returns(SetUpFeatureEvidence(fakeOriginalCodeScore));

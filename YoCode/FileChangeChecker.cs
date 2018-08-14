@@ -2,11 +2,10 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Linq;
-using System.Diagnostics;
 
 namespace YoCode
 {
-    public class FileChangeChecker
+    internal class FileChangeChecker
     {
         private readonly IPathManager directory;
 
@@ -31,8 +30,8 @@ namespace YoCode
             {
                 foreach (var modified in modifiedFileStreams)
                 {
-                    var similar = originalFileStreams.Where(a => Path.GetRelativePath(directory.originalTestDirPath,a.path).Equals(
-                        Path.GetRelativePath(directory.modifiedTestDirPath,modified.path)));
+                    var similar = originalFileStreams.Where(a => Path.GetRelativePath(directory.OriginalTestDirPath,a.path).Equals(
+                        Path.GetRelativePath(directory.ModifiedTestDirPath,modified.path)));
 
                     if (similar.Any())
                     {

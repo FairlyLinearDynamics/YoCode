@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Linq;
 
 namespace YoCode
 {
-    public class FileImport
+    internal class FileImport
     {
         //Will return a list of all files from a directory
         public static IEnumerable<string> GetAllFilesInDirectory(string path)
@@ -45,7 +43,7 @@ namespace YoCode
 
         public FileStream GetFileStream(string path)
         {
-            return new FileStream(path,FileMode.Open);
+            return new FileStream(path, FileMode.Open);
         }
     }
 }

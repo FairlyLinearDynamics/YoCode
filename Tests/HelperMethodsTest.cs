@@ -8,7 +8,7 @@ namespace YoCode_XUnit
     public class HelperMethodsTest
     {
         private readonly string testLine, testString;
-        List<string> keywords;
+        private readonly List<string> keywords;
 
         public HelperMethodsTest()
         {
@@ -19,14 +19,12 @@ namespace YoCode_XUnit
 
             testLine = "Author: matas.zilaitis < matas.zilaitis@gmail.com > ";
             keywords = new List<string> { "<", ">", "@", "Author: ", "a", };
-
         }
 
         [Fact]
         public void Test_ContainsAny()
         {
             testLine.ContainsAny(keywords).Should().Be(true);
-
         }
 
         [Fact]
@@ -46,7 +44,7 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_GetNumbersInALine()
         {
-            string actual = "Lorem2 0 ipsum dolor 17sit amet, consectetur189 adipiscing elit303. Sed id gravida mi.";
+            const string actual = "Lorem2 0 ipsum dolor 17sit amet, consectetur189 adipiscing elit303. Sed id gravida mi.";
             var expected = new List<int>
             {
                 2,
@@ -59,21 +57,15 @@ namespace YoCode_XUnit
         }
 
         [Theory]
-        [InlineData (20,20.0000002)]
-        [InlineData (19.6666,19.666600668)]
-        [InlineData (0,0.00000001)]
-        [InlineData (49.20,49.200001)]
-        [InlineData (20.20,20.2000002002)]
-        
-        public void Test_SubjectivelyEqual(double a,double b)
+        [InlineData(20, 20.0000002)]
+        [InlineData(19.6666, 19.666600668)]
+        [InlineData(0, 0.00000001)]
+        [InlineData(49.20, 49.200001)]
+        [InlineData(20.20, 20.2000002002)]
+
+        public void Test_SubjectivelyEqual(double a, double b)
         {
             a.ApproximatelyEquals(b).Should().BeTrue();
         }
-        
-        
-
-
-
-
     }
 }
