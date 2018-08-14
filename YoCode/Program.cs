@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
-using Microsoft.Win32;
 
 namespace YoCode
 {
