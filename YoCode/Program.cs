@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
@@ -69,6 +70,7 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            Process.Start(@"C:\Program Files\Mozilla Firefox\firefox.exe", @"C:\Users\ukekar\source\repos\YoCode\YoCode\bin\Debug\netcoreapp2.1\YoCodeReport.html");
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
