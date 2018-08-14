@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    public class DupFinder : IDupFinder
+    internal class DupFinder : IDupFinder
     {
         private readonly string CMDtoolsDir;
         private readonly string CMDtoolFileName = "dupfinder.exe";

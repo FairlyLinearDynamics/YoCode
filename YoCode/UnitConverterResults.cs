@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace YoCode
+﻿namespace YoCode
 {
-    public struct UnitConverterResults
+    internal struct UnitConverterResults
     {
         public double input;
         public string action;
         public double output;
-    };
+    }
 }

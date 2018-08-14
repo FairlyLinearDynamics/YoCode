@@ -2,24 +2,25 @@
 using FluentAssertions;
 using YoCode;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace YoCode_XUnit
 {
     public class UnitConverterCheckTests
     {
-        public UnitConverterCheck test;
+        internal UnitConverterCheck test;
 
         public List<double> expectedConversionResults;
         public List<double> expectedConversionInputs;
         public double mult;
 
-        List<string> expectedActionLines;
-        List<string> expectedActionLinesResult;
+        private readonly List<string> expectedActionLines;
+        private readonly List<string> expectedActionLinesResult;
+
+        internal UnitConverterCheck Test { get => test; set => test = value; }
 
         public UnitConverterCheckTests()
         {
-            test = new UnitConverterCheck("fake port");
+            Test = new UnitConverterCheck("fake port");
 
             expectedActionLines = new List<string>
             {
@@ -38,13 +39,13 @@ namespace YoCode_XUnit
             expectedConversionInputs = new List<double> { 1, 2, 5, 10, 20, 50 };
             mult = 2.54;
 
-            expectedConversionResults.Should().BeEquivalentTo(test.MakeConversion(expectedConversionInputs, mult));
+            expectedConversionResults.Should().BeEquivalentTo(Test.MakeConversion(expectedConversionInputs, mult));
         }
 
         [Fact]
         public void Test_ExtractActionsFromList()
         {
-            expectedActionLinesResult.Should().BeEquivalentTo(test.ExtractActionsFromList(expectedActionLines));
+            expectedActionLinesResult.Should().BeEquivalentTo(Test.ExtractActionsFromList(expectedActionLines));
         }
 
         [Fact]
@@ -107,5 +108,4 @@ namespace YoCode_XUnit
             actualElem3.Should().BeEquivalentTo(UnitConverterCheck.FindActualResultForExpectation(testElem1, listOfActualResults));
         }
     }
-
- }
+}

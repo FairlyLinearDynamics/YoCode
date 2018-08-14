@@ -1,5 +1,4 @@
-﻿using Moq;
-using Xunit;
+﻿using Xunit;
 using YoCode;
 using FluentAssertions;
 using System;
@@ -9,6 +8,7 @@ namespace YoCode_XUnit
     public class ProjectBuilderTests
     {
         private string sampleOutput;
+
         [Fact]
         public void CheckIfCorrectlySetsErrorOutputToEmpty()
         {
