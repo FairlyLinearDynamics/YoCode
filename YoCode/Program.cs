@@ -77,8 +77,13 @@ namespace YoCode
 
             var fileCheck = new FileChangeChecker(dir);
 
+            var loadingFinished = false;
+
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+                Thread loading = new Thread(LoadingAnimation.RunLoading);
+                loading.IsBackground = true;
+                loading.Start();
 
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
@@ -135,6 +140,7 @@ namespace YoCode
                 codeCoverageThread.Join();
                 dupFinderThread.Join();
                 pr.KillProject();
+                LoadingAnimation.LoadingFinished = true;
             }
             return checkList;
         }
