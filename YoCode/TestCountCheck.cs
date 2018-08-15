@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -55,7 +56,7 @@ namespace YoCode
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
                 stats.testsSkipped = tempStats[3];    
-                UnitTestEvidence.FeatureRating = GetRating();
+                UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
             }
             else
@@ -70,9 +71,19 @@ namespace YoCode
             return new List<string> { "Total tests:" };
         }
 
-        public double GetRating()
+        public double GetTestCountCheckRating()
         {
-            return stats.testsPassed / stats.totalTests;
+            double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
+
+            if(stats.totalTests >= TestCountTreshold)
+            {
+                return rating;
+            }
+            else
+            {
+                double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+                return rating - deduction;
+            }
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

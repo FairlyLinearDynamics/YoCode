@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System;
 
 namespace YoCode
 {
@@ -145,7 +146,7 @@ namespace YoCode
                 workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
 
-                Console.WriteLine("The final score is " + new Rating(checkList).FinalScore);
+                Console.WriteLine("The final score is " + new Rating(checkList).FinalScore + "\n");
             }
             return checkList;
         }

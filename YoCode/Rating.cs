@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace YoCode
 {
@@ -16,10 +15,10 @@ namespace YoCode
             {
                 elem.FeatureWeighting = 1;
 
-                elem.FeatureRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting),2);
+                elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting),2);
 
                 Console.WriteLine("Feature: " + elem.FeatureTitle + " Score: " + elem.FeatureRating);
-                FinalScore += elem.FeatureRating;   
+                FinalScore += elem.WeightedRating;   
             }
         }
     }
