@@ -223,6 +223,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ---------------------------------------------------------.
+        /// </summary>
+        public static string ParagraphDivider {
+            get {
+                return ResourceManager.GetString("ParagraphDivider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to YoCode!
         ///
         ///.

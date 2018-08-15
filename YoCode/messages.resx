@@ -817,4 +817,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
           &lt;iframe src="https://giphy.com/embed/Hj7mksbFWIOdO" width="480" height="317" frameBorder="0"&gt;&lt;/iframe&gt;
       &lt;/div&gt;</value>
   </data>
+  <data name="ParagraphDivider" xml:space="preserve">
+    <value>---------------------------------------------------------</value>
+  </data>
 </root>
