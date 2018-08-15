@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace YoCode
 {
-    public class InputResult
+    public class InputResult : IInputResult
     {
-        public List<string> errors;
-        public bool HasErrors => errors.Any();
-        public bool helpAsked;
+        public List<string> Errors { get; set; }
+        public bool HasErrors => Errors.Any();
+        public bool HelpAsked { get; set; }
         public string originalFilePath;
         public string modifiedFilePath;
     }

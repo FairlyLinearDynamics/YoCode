@@ -23,7 +23,7 @@
 
         public void EndProcess()
         {
-            pr.KillProcessWithChildren();
+            pr.KillCurrentProcessWithChildren();
         }
     }
 }

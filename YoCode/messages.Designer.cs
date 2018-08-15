@@ -100,6 +100,16 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
+        ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
+        /// </summary>
+        public static string CodeCoverageHelp {
+            get {
+                return ResourceManager.GetString("CodeCoverageHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ==========================================================
         ///.
         /// </summary>

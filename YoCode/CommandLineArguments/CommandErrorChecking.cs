@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace YoCode
 {
-    class CommandErrorChecking
+    internal static class CommandErrorChecking
     {
         public static List<string> ContainsErrors(List<SplitArg> currentCommands,List<string> implementedCommands)
         {
@@ -30,7 +29,7 @@ namespace YoCode
             {
                 errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
             }
-            
+
             foreach (SplitArg arg in currentCommands)
             {
                 if (!Directory.Exists(arg.data) && arg.command == CommandNames.MODIFIED)

@@ -62,7 +62,7 @@ namespace YoCode
             {
                 TimedOut = true;
             }
-            KillProcessWithChildren();
+            KillProcessWithChildren(p);
         }
 
         private void WaitForExitCondition(string wait, bool kill)
@@ -85,7 +85,7 @@ namespace YoCode
             TimedOut = numberOfRetries == numberOfTimesToRetry;
             if (kill)
             {
-                KillProcessWithChildren();
+                KillProcessWithChildren(p);
             }
         }
 
@@ -162,7 +162,13 @@ namespace YoCode
             }
         }
 
-        public void KillProcessWithChildren()
+        public static void KillProcessWithChildren(Process p)
+        {
+            FindAndKillChildProcesses(p.Id);
+            KillLiveProcess(p);
+        }
+
+        public void KillCurrentProcessWithChildren()
         {
             FindAndKillChildProcesses(p.Id);
             KillLiveProcess(p);

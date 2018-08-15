@@ -38,6 +38,7 @@ namespace YoCode
         public UnitConverterCheck(string port)
         {
             BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
+            UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
 
             if (String.IsNullOrEmpty(port))
             {
@@ -48,7 +49,6 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
-                    UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
 
                     HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
