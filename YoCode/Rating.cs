@@ -14,7 +14,9 @@ namespace YoCode
 
             foreach(var elem in list)
             {
-                elem.FeatureRating *= elem.FeatureWeighting;
+                elem.FeatureWeighting = 1;
+
+                elem.FeatureRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting),2);
 
                 Console.WriteLine("Feature: " + elem.FeatureTitle + " Score: " + elem.FeatureRating);
                 FinalScore += elem.FeatureRating;   

@@ -13,7 +13,6 @@ namespace YoCode
             CleanBuildOutput(workingDir);
 
             ProjectBuilderEvidence.FeatureTitle = "Project build";
-            ProjectBuilderEvidence.FeatureWeighting = 1;
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 

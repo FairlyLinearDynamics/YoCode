@@ -30,7 +30,10 @@ namespace YoCode
 
         public List<string> InToCmKeys { get; set; }
         public List<string> MiToKmKeys { get; set; }
-        public List<string> YdToMeKeys { get; set; }        
+        public List<string> YdToMeKeys { get; set; }
+
+        List<bool> BadInputBoolResults;
+        List<bool> UnitConverterBoolResults;
         
         string from = "value=\"";
         string to = "\"";
@@ -40,7 +43,6 @@ namespace YoCode
         public UnitConverterCheck(string port)
         {
             BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
-
 
             if (String.IsNullOrEmpty(port))
             {
@@ -59,7 +61,10 @@ namespace YoCode
 
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);                    
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+
                     BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
+                    BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
                 catch (Exception)
                 {
@@ -84,7 +89,6 @@ namespace YoCode
             badInputs.Add("Blank lines at the end", "10 \n");
             badInputs.Add("Not numbers", "Y..@");
 
-
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
             YardsToMeters = MakeConversion(texts, YdToMe);
@@ -100,6 +104,9 @@ namespace YoCode
             KeywordMap.Add(YdToMeKeys, YardsToMeters);
 
             InitializeExpectedValues();
+
+            BadInputBoolResults = new List<bool>();
+            UnitConverterBoolResults = new List<bool>();
         }
 
         private void InitializeExpectedValues()
@@ -185,6 +192,8 @@ namespace YoCode
                     var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action,expectation.input,expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
                     UnitConverterCheckEvidence.GiveEvidence(x);
 
+                    UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
+
                     if (!actualOutput.ApproximatelyEquals(expectedOutput))
                     {
                         ret = false;
@@ -209,6 +218,7 @@ namespace YoCode
             foreach(var a in badInputs)
             {
                 bool isFixed = !badInputResults.Contains(a.Key);
+                BadInputBoolResults.Add(isFixed);
 
                 if (!isFixed)
                 {
@@ -219,6 +229,39 @@ namespace YoCode
             }
             return ret;
         }
+
+        public double GetBadInputCheckRating()
+        {
+            double sum = 0;
+
+            foreach(var elem in BadInputBoolResults)
+            {
+                if(elem)
+                {
+                    var temp = 1 / Convert.ToDouble(badInputs.Count);
+                    sum += temp;
+                }
+            }
+
+            return sum;
+        }
+
+        public double GetUnitConverterCheckRating()
+        {
+            double sum = 0;
+
+            foreach(var elem in UnitConverterBoolResults)
+            {
+                if (elem)
+                {
+                    var temp = 1 / Convert.ToDouble(expected.Count);
+                    sum += temp;
+                }
+            }
+            return sum;
+        }
+
+
 
         public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
         {

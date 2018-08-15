@@ -109,6 +109,7 @@ namespace YoCode
                 {
                     FeatureTitle = "Solution File Exists",
                     FeatureImplemented = true,
+                    FeatureRating = 1
                 });
 
                 // Git repo used
