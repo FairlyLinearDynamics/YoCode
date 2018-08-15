@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    public struct FileContent
+    internal struct FileContent
     {
         public string path;
         public Stream content;

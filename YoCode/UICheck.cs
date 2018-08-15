@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    public class UICheck
+    internal class UICheck
     {
         // -------------------------------------------------------------------------------------------- Constructors
         public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
@@ -16,7 +15,7 @@ namespace YoCode
             UIEvidence.FeatureTitle = "Evidence present in UI";
         }
 
-        public UICheck(string userFilePath, string[] keyWords) : this( new List<string> { userFilePath }, keyWords)
+        public UICheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
         {
             UIContainsFeature(userFilePath, keyWords);
         }
@@ -28,13 +27,12 @@ namespace YoCode
 
             //ListOfMatches.add
 
-            for(var i=0; i<userFile.Length; i++)
+            for (var i = 0; i < userFile.Length; i++)
             {
-                if (ContainsKeyWord(userFile[i], keyWords)) 
+                if (ContainsKeyWord(userFile[i], keyWords))
                 {
                     UIEvidence.FeatureImplemented = true;
-                    UIEvidence.GiveEvidence($"Found  on line {i+1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
-
+                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                 }
             }
         }
@@ -54,10 +52,10 @@ namespace YoCode
             //Console.WriteLine(keyWords.Select(key => line.ToLower().Contains(key)));
             var words = Regex.Split(line, "[^A-Za-z0-9]").ToList();
 
-            return words.Any(word => keyWords.ToList().Any(keyword => word.ToLower().Equals(keyword.ToLower())));
+            return words.Any(word => keyWords.ToList().Any(keyword => word.Equals(keyword, StringComparison.OrdinalIgnoreCase)));
         }
 
         // -------------------------------------------------------------------------------------------- Return methods
-        public FeatureEvidence UIEvidence { get; private set; } = new FeatureEvidence();
+        public FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
     }
 }

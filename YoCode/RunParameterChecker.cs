@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,90 +7,89 @@ namespace YoCode
 {
     internal class RunParameterChecker
     {
-        private static IConfiguration Configuration;
         private readonly Output compositeOutput;
+        private readonly IInputResult result;
+        private readonly IAppSettingsBuilder appsettingsBuilder;
 
-        public List<string> errs = new List<string>();
-        public string CMDToolsPath { get; }
-        public string DotCoverDir { get; }
-        public bool NeedToReturn { get; set; }
+        public List<string> Errs= new List<string>();
+        public string CMDToolsPath { get; set; }
+        public string DotCoverDir { get; set; }
 
-        public RunParameterChecker(Output compositeOutput, InputResult result)
+        public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
             this.compositeOutput = compositeOutput;
+            this.result = result;
+            this.appsettingsBuilder = appsettingsBuilder;
+        }
 
-            if (result.helpAsked)
+        public bool ParametersAreValid()
+        {
+            if (result.HelpAsked)
             {
                 compositeOutput.PrintIntroduction();
                 compositeOutput.ShowHelp();
-                NeedToReturn = true;
-                return;
+                return false;
             }
-            if (result.HasErrors || errs.Any())
+            if (result.HasErrors)
             {
-                errs.AddRange(result.errors);
-                NeedToReturn = true;
-                return;
+                Errs.AddRange(result.Errors);
+                return false;
             }
 
             try
             {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-                Configuration = builder.Build();
+                appsettingsBuilder.ReadJSONFile();
+
+                CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
+                DotCoverDir = appsettingsBuilder.GetDotCoverDir();
             }
             catch (FileNotFoundException)
             {
-                errs.Add("Did not find appsettings file");
-                NeedToReturn = true;
-                return;
+                return SetError("Did not find appsettings file");
             }
             catch (FormatException)
             {
-                errs.Add("Error reading JSON file");
-                NeedToReturn = true;
-                return;
+                return SetError("Error reading JSON file");
             }
 
-            CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
-            DotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
-
-            CheckToolDirectory(errs, CMDToolsPath, "CMDtoolsDir");
-            CheckToolDirectory(errs, DotCoverDir, "dotCoverDir");
-
-            if(NeedToReturn)
+            if (!CheckToolDirectory(CMDToolsPath, "CMDtoolsDir") || !CheckToolDirectory(DotCoverDir, "dotCoverDir"))
             {
-                return;
+                return false;
             }
 
-            CheckIfToolExecutablesExist();
+            return CheckIfToolExecutablesExist();
         }
 
-        private void CheckIfToolExecutablesExist()
+        private bool SetError(string errorMessage)
+        {
+            Errs.Add(errorMessage);
+            return false;
+        }
+
+        private bool CheckIfToolExecutablesExist()
         {
             if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
             {
-                errs.Add("dupfinder.exe not found in specified directory");
-                NeedToReturn = true;
+                return SetError("dupfinder.exe not found in specified directory");
             }
             if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
             {
-                errs.Add("dotCover.exe not found in specified directory");
-                NeedToReturn = true;
+                return SetError("dotCover.exe not found in specified directory");
             }
+            return true;
         }
 
-        private void CheckToolDirectory(List<string> errs, string path, string checkName)
+        private bool CheckToolDirectory(string path, string checkName)
         {
             if (String.IsNullOrEmpty(path))
             {
-                errs.Add($"{checkName} cannot be empty");
-                NeedToReturn = true;
+                return SetError($"{checkName} cannot be empty");
             }
             else if (!Directory.Exists(path))
             {
-                errs.Add($"invalid directory provided for {checkName}");
-                NeedToReturn = true;
+                return SetError($"invalid directory provided for {checkName}");
             }
+            return true;
         }
 
         public bool FilesReadCorrectly(PathManager dir)
@@ -99,15 +97,15 @@ namespace YoCode
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
                 compositeOutput.ShowDirEmptyMsg();
-                return true;
+                return false;
             }
 
             if (!dir.ModifiedPaths.Any())
             {
                 compositeOutput.ShowLaziness();
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }

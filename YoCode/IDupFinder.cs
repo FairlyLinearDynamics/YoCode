@@ -1,6 +1,6 @@
 ﻿namespace YoCode
 {
-    public interface IDupFinder
+    internal interface IDupFinder
     {
         FeatureEvidence Execute(string solutionTitle, string solutionPath);
     }
