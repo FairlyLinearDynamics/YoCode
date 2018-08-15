@@ -124,7 +124,7 @@ Direct download link here: https://www.jetbrains.com/resharper/download/download
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
   <data name="Divider" xml:space="preserve">
-    <value>==========================================================
+    <value>=========================================================================
 </value>
   </data>
   <data name="Fireplace" xml:space="preserve">
@@ -333,7 +333,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}
 
       .panel-content li{
         margin-top: 0px;
-        white-space: pre;
+        white-space: pre-wrap;
       }
 
       .green-text {
@@ -399,7 +399,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}
 
     &lt;div class="sections-wrapper"&gt;
       &lt;div class="section passed-tests"&gt;
-        &lt;span class="section-title"&gt;Total tests passed&lt;/span&gt; 
+        &lt;span class="section-title"&gt;Total checks passed&lt;/span&gt; 
         &lt;span id="js-passed-number" class="test-bar-number"&gt;5&lt;/span&gt;
 
         &lt;div class="bar-container"&gt;
@@ -409,7 +409,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}
       &lt;/div&gt;
 
       &lt;div class="section failed-tests"&gt;
-        &lt;span class="section-title"&gt;Total tests failed&lt;/span&gt; 
+        &lt;span class="section-title"&gt;Total checks failed&lt;/span&gt; 
         &lt;span id="js-failed-number" class="test-bar-number"&gt;5&lt;/span&gt;
 
         &lt;div class="bar-container"&gt;
@@ -478,6 +478,6 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}
                 &lt;/div&gt;</value>
   </data>
   <data name="ParagraphDivider" xml:space="preserve">
-    <value>---------------------------------------------------------</value>
+    <value>------------------------------------------------------------------------</value>
   </data>
 </root>

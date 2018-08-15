@@ -31,7 +31,7 @@ namespace YoCode
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
         {
             this.dir = dir;
-            DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.FeatureTitle = "Code quality improved";
             this.dupFinder = dupFinder;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);

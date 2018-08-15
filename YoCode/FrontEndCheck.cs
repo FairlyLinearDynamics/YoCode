@@ -17,6 +17,12 @@ namespace YoCode
         {
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
 
+            if (String.IsNullOrEmpty(applicantsWebPort))
+            {
+                FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+                return;
+            }
+
             try
             {
                 try

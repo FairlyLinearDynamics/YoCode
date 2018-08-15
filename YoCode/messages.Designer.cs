@@ -79,7 +79,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ==========================================================
+        ///   Looks up a localized string similar to =========================================================================
         ///.
         /// </summary>
         public static string Divider {
@@ -178,7 +178,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ---------------------------------------------------------.
+        ///   Looks up a localized string similar to ------------------------------------------------------------------------.
         /// </summary>
         public static string ParagraphDivider {
             get {

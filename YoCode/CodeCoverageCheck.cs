@@ -9,13 +9,15 @@ namespace YoCode
     {
         private string Argument { get; }
         private string ProcessName { get; } = "dotCover.exe";
-        private const string testFolder = "UnitConverterTests";
+        
         private string ReportName { get; } = "report.json";
         private string FullReportPath { get; }
+        private const int passPerc = 30;
+        private const string testFolder = "UnitConverterTests";
 
         public CodeCoverageCheck(string dotCoverDir, string workingDir, FeatureRunner featureRunner)
         {
-            CodeCoverageEvidence.FeatureTitle = "Code Coverage";
+            CodeCoverageEvidence.FeatureTitle = $"Tests cover over {passPerc}% of code";
 
             FullReportPath = Path.Combine(dotCoverDir, ReportName);
 
@@ -46,7 +48,7 @@ namespace YoCode
             }
             else
             {
-                CodeCoverageEvidence.FeatureImplemented = true;
+                CodeCoverageEvidence.FeatureImplemented = (coverage > passPerc) ? true : false;
                 CodeCoverageEvidence.GiveEvidence($"Code Coverage: {coverage}%");
             }
         }
