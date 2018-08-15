@@ -7,7 +7,7 @@ namespace YoCode
         private readonly string CMDtoolsDir;
         private readonly string CMDtoolFileName = "dupfinder.exe";
         private readonly string outputFile = "report.xml";
-        private readonly string outputArg = " -o=\"";
+        private readonly string outputArg = " --discard-cost=5 -o=\"";
         private readonly string processName;
         private readonly string workingDir;
 

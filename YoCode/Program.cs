@@ -139,8 +139,6 @@ namespace YoCode
                 pr.KillProject();
 
                 Console.WriteLine("The final score is " + new Rating(checkList).FinalScore);
-
-
             }
             return checkList;
         }
