@@ -24,8 +24,7 @@ namespace YoCode
 
         public void AddErrs(IEnumerable<string> errs)
         {
-            errors.Append(WebElementBuilder.FormatAccordionElement(WebElementBuilder.FormaFeatureTitle("Errors present",false),
-                WebElementBuilder.FormatListOfStrings(errs)));
+            /* HTML does not support error output */
         }
 
         public void AddMessage(string message)
@@ -54,11 +53,6 @@ namespace YoCode
             if (features.Length == 0 && errors.Length == 0)
             {
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
-            }
-
-            else if (errors.Length>0)
-            {
-                return messages.HtmlTemplate_ErrorPage.Replace(FEATURE_TAG, errors.Append(msg).ToString());
             }
 
             else
