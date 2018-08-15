@@ -26,7 +26,6 @@ namespace YoCode
         {
             if (result.HelpAsked)
             {
-                
                 return false;
             }
             if (result.HasErrors)
@@ -93,7 +92,7 @@ namespace YoCode
             return true;
         }
 
-        public bool FilesReadCorrectly(PathManager dir)
+        public bool FilesReadCorrectly(IPathManager dir)
         {
             if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
             {
