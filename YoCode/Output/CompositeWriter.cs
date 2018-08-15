@@ -29,19 +29,19 @@ namespace YoCode
             }
         }
 
-        public void AddIntro(string intro)
-        {
-            foreach(var writer in writers)
-            {
-                writer.AddIntro(intro);
-            }
-        }
-
         public void AddMessage(string msg)
         {
             foreach(var writer in writers)
             {
                 writer.AddMessage(msg);
+            }
+        }
+
+        public void AddBanner()
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddBanner();
             }
         }
 

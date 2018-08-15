@@ -10,12 +10,16 @@ namespace YoCode
         static string dots;
         public static void RunLoading()
         {
+            PrintIntro();
             var cursorPos = Console.CursorTop;
-            Console.WriteLine(messages.Fireplace);
-            Console.WriteLine(messages.ParagraphDivider);
-            Console.WriteLine($"Get comfortable, YoCode is gathering your results");
-            Console.WriteLine(messages.ParagraphDivider);
-            Console.WriteLine();
+            var loadingBanner = new StringBuilder();
+            loadingBanner.AppendLine(messages.ConsoleFireplaceBanner);
+            loadingBanner.AppendLine(messages.ParagraphDivider);
+            loadingBanner.AppendLine(messages.LoadingMessage);
+            loadingBanner.AppendLine(messages.ParagraphDivider);
+            loadingBanner.AppendLine();
+
+            Console.Write(loadingBanner);
 
             while (true)
             {
@@ -46,6 +50,15 @@ namespace YoCode
             Console.CursorLeft = 0;
             Console.Write(new string(' ', Console.WindowWidth));
             Console.CursorTop--;
+        }
+
+        private static void PrintIntro()
+        {
+            var intro = new StringBuilder();
+            intro.Append(messages.Welcome);
+            intro.Append(messages.Divider);
+            Console.Write(intro);
+
         }
 
         public static bool LoadingFinished { get; set; } = false;

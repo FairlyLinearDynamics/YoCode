@@ -5,34 +5,32 @@ namespace YoCode
 {
     static class HtmlReportLauncher
     {
-        public static bool LaunchReport(string nameOfReportFile)
+        public static void LaunchReport(string nameOfReportFile)
         {
             try
             {
                 Process.Start(nameOfReportFile);
-                return true;
             }
             catch
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     Process.Start(new ProcessStartInfo("cmd", $"/c start {nameOfReportFile}") { CreateNoWindow = true });
-                    return true;
+                    return;
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     Process.Start("xdg-open", nameOfReportFile);
-                    return true;
+                    return;
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     Process.Start("open", nameOfReportFile);
-                    return true;
+                    return;
                 }
                 else
                 {
-                    return false;
-                    throw;
+                    return;
                 }
             }
         }
