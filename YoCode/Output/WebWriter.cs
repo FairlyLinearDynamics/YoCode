@@ -14,7 +14,6 @@ namespace YoCode
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
-        string introduction;
 
         public WebWriter()
         {
@@ -23,14 +22,9 @@ namespace YoCode
             msg = new StringBuilder();
         }
 
-        public void AddIntro(string text)
-        {
-            // No intro for web report :(
-        }
-
         public void AddErrs(IEnumerable<string> errs)
         {
-            errors.Append(WebElementBuilder.FormatAccordionElement("Errors present",
+            errors.Append(WebElementBuilder.FormatAccordionElement(WebElementBuilder.FormaFeatureTitle("Errors present",false),
                 WebElementBuilder.FormatListOfStrings(errs)));
         }
 
@@ -50,20 +44,33 @@ namespace YoCode
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
 
+        public void AddBanner()
+        {
+            msg.Append(messages.HtmlFireplaceBanner);
+        }
+
         private string BuildReport()
         {
-            var report = new StringBuilder();
-            report.Append(introduction);
-            report.Append(features.ToString());
-            report.Append(errors.ToString());
-            report.Append(msg);
+            if (features.Length == 0 && errors.Length == 0)
+            {
+                return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
+            }
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG,report.ToString());
+            else if (errors.Length>0)
+            {
+                return messages.HtmlTemplate_ErrorPage.Replace(FEATURE_TAG, errors.Append(msg).ToString());
+            }
+
+            else
+            {
+                return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString());
+            }
         }
 
         public void WriteReport()
         {
             File.WriteAllText(OUTPUT_PATH, BuildReport());
+            HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
         }
     }
 }

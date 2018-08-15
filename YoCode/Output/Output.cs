@@ -16,12 +16,6 @@ namespace YoCode
             featData = new FeatureData();
         }
 
-        public void PrintIntroduction()
-        {
-            outputWriter.AddIntro(messages.Welcome);
-            outputWriter.WriteReport();
-        }
-
         public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList)
         {
             foreach (var feature in featureList)
@@ -52,7 +46,7 @@ namespace YoCode
 
         private void ShowBanner()
         {
-            outputWriter.AddMessage(messages.Fireplace);
+            outputWriter.AddBanner();
         }
 
         private void ShowHelpMsg()

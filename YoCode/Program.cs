@@ -12,7 +12,6 @@ namespace YoCode
 
         private static string CMDToolsPath;
         private static string dotCoverDir;
-        private static bool htmlReportLaunched;
 
         private static void Main(string[] args)
         {
@@ -32,8 +31,6 @@ namespace YoCode
                 compositeOutput.ShowHelp();
                 return;
             }
-
-            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -69,7 +66,6 @@ namespace YoCode
 
             var implementedFeatureList = PerformChecks(dir);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
-            htmlReportLaunched = HtmlReportLauncher.LaunchReport("YoCodeReport.html");
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir)
