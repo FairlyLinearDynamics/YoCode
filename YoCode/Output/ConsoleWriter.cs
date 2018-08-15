@@ -29,15 +29,19 @@ namespace YoCode
             consoleReport.AppendLine(messages.Divider);
         }
 
-        public void AddIntro(string intro)
-        {
-            consoleReport.AppendLine(intro);
-            consoleReport.AppendLine(messages.Divider);
-        }
-
         public void AddMessage(string msg)
         {
-            consoleReport.AppendLine(msg);
+            AddNewBlock(msg);
+        }
+
+        public void AddBanner()
+        {
+            AddNewBlock(messages.ConsoleFireplaceBanner);
+        }
+
+        private void AddNewBlock(string text)
+        {
+            consoleReport.AppendLine(text);
             consoleReport.AppendLine(messages.Divider);
         }
 

@@ -44,12 +44,14 @@ namespace YoCode
 
             var lines = text.Split(Environment.NewLine);
             var par = new StringBuilder();
-
+            par.Append(SPAN_OPEN);
             foreach(var line in lines)
             {
-                par.Append(SPAN_OPEN + line + SPAN_CLOSE);
+                par.Append(line+LINE_BREAK);
             }
-            return par.ToString();
+            par.Append(SPAN_CLOSE);
+            return messages.HtmlParagraphBlock
+                .Replace(CONTENT_TAG, par.ToString());
         }
 
         public static string FormatHeader(string text)

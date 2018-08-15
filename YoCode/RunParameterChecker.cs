@@ -26,8 +26,7 @@ namespace YoCode
         {
             if (result.HelpAsked)
             {
-                compositeOutput.PrintIntroduction();
-                compositeOutput.ShowHelp();
+                
                 return false;
             }
             if (result.HasErrors)
@@ -52,7 +51,9 @@ namespace YoCode
                 return SetError("Error reading JSON file");
             }
 
-            if (!CheckToolDirectory(CMDToolsPath, "CMDtoolsDir") || !CheckToolDirectory(DotCoverDir, "dotCoverDir"))
+            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
+            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            if (!CMDPathExists || !dotCoverPathExists)
             {
                 return false;
             }

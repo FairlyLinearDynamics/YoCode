@@ -25,6 +25,10 @@ namespace YoCode
                 {
                     compositeOutput.ShowInputErrors(parameters.Errs);
                 }
+                else
+                {
+                    compositeOutput.ShowHelp();
+                }
                 return;
             }
 
@@ -38,15 +42,12 @@ namespace YoCode
                 return;
             }
 
-            compositeOutput.PrintIntroduction();
-
             pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
 
             ConsoleCloseHandler.StartHandler(pr);
 
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
-            htmlReportLaunched = HtmlReportLauncher.LaunchReport("YoCodeReport.html");
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
@@ -55,13 +56,23 @@ namespace YoCode
 
             var fileCheck = new FileChangeChecker(dir);
 
+            var workThreads = new List<Thread>();
+
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+                Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                {
+                    IsBackground = true
+                };
+                workThreads.Add(loadingThread);
+                loadingThread.Start();
+
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
                     checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
                 });
+                workThreads.Add(codeCoverageThread);
                 codeCoverageThread.Start();
 
                 // Duplication check
@@ -69,6 +80,7 @@ namespace YoCode
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
                 });
+                workThreads.Add(dupFinderThread);
                 dupFinderThread.Start();
 
                 // Files changed check
@@ -110,10 +122,9 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
+                LoadingAnimation.LoadingFinished = true;
+                workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
-
-                codeCoverageThread.Join();
-                dupFinderThread.Join();
             }
             return checkList;
         }
