@@ -14,18 +14,12 @@ namespace YoCode
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
-        string introduction;
 
         public WebWriter()
         {
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
-        }
-
-        public void AddIntro(string text)
-        {
-            // No intro for web report :(
         }
 
         public void AddErrs(IEnumerable<string> errs)
@@ -50,10 +44,20 @@ namespace YoCode
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
 
+        public void AddBanner()
+        {
+            msg.Append(messages.HtmlFireplaceBanner);
+        }
+
         private string BuildReport()
         {
             var report = new StringBuilder();
-            report.Append(introduction);
+            if (features.Length == 0)
+            {
+                report.Append(errors.ToString());
+                report.Append(msg);
+                return messages.HtmlTemplate_WithoutFeatures.Replace(FEATURE_TAG, report.ToString());
+            }
             report.Append(features.ToString());
             report.Append(errors.ToString());
             report.Append(msg);
@@ -64,6 +68,7 @@ namespace YoCode
         public void WriteReport()
         {
             File.WriteAllText(OUTPUT_PATH, BuildReport());
+            HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
         }
     }
 }

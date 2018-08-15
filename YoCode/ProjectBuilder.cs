@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    public class ProjectBuilder
+    internal class ProjectBuilder
     {
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";

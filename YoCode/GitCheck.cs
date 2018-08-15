@@ -6,7 +6,7 @@ using LibGit2Sharp;
 
 namespace YoCode
 {
-    public class GitCheck
+    internal class GitCheck
     {
         private readonly string repositoryPath;
 

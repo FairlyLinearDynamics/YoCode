@@ -2,7 +2,6 @@
 using FluentAssertions;
 using YoCode;
 using System.Collections.Generic;
-using System;
 using Moq;
 
 namespace YoCode_XUnit
@@ -15,12 +14,12 @@ namespace YoCode_XUnit
             Mock<IPathManager> mock = new Mock<IPathManager>();
             var fakeDir = mock.Object;
 
-            string fakeList1 = @"\";
-            string fakeList2 = @"\";
+            const string fakeList1 = @"\";
+            const string fakeList2 = @"\";
 
             PathManager dir = new PathManager(fakeList1, fakeList2);
 
-            string path = @"..\..\..\TestData\";
+            const string path = @"..\..\..\TestData\";
 
             List<string> result = new List<string>();
 

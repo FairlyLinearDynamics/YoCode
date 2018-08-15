@@ -5,7 +5,7 @@ using System.IO;
 namespace YoCode
 {
     // TODO: find other way of running .dll file instead of hardcoding the name 
-    public class ProjectRunner
+    internal class ProjectRunner
     {
         internal string Output { get; }
 
@@ -13,7 +13,7 @@ namespace YoCode
         private string Argument { get; set; } = @"bin\Debug\";
         private string ErrorOutput { get; }
         private const string projectFolder = @"\UnitConverterWebApp";
-        private FeatureRunner featureRunner;
+        private readonly FeatureRunner featureRunner;
 
         public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {

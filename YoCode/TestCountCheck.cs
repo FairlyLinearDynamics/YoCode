@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace YoCode
 {
-    public class TestCountCheck
+    internal class TestCountCheck
     {
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
-        private FeatureRunner featureRunner;
+        private readonly FeatureRunner featureRunner;
 
         public string StatLine { get; set; }
         public string Output { get; set; }
 
-        private int TestCountTreshold = 10;
+        private readonly int TestCountTreshold = 10;
 
         private TestStats stats;
         private List<int> tempStats;
@@ -42,11 +41,10 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.percentagePassed == 100 && stats.totalTests > TestCountTreshold;
+            UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
             UnitTestEvidence.GiveEvidence(StatLine);
-            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.percentagePassed).ToString());
+            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.PercentagePassed).ToString());
             UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
-
         }
 
         public void StoreCalculations(List<int> tempStats)

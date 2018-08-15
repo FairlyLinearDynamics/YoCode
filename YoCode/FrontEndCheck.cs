@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
@@ -10,10 +8,10 @@ using System.IO;
 
 namespace YoCode
 {
-    class FrontEndCheck
+    internal class FrontEndCheck
     {
-        IWebDriver browser;
-        string port;
+        private readonly IWebDriver browser;
+        private readonly string port;
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
@@ -40,13 +38,13 @@ namespace YoCode
                     chromeOptions.AddArgument("--headless");
 
                     browser = new ChromeDriver(chromeService, chromeOptions);
-                };
+                }
 
                 browser.Navigate().GoToUrl(port);
 
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
-                UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputData(a));
+                UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
@@ -77,16 +75,14 @@ namespace YoCode
 
         private bool SearchForElement(HtmlTags htmlTag, string[] keyWords)
         {
-            var tags = browser.FindElements(By.CssSelector(htmlTag.ToString()));
-            foreach (var tag in tags)
+            foreach (var tag in browser.FindElements(By.CssSelector(htmlTag.ToString())))
             {
-                if (keyWords.Any(a => tag.Text.ToLower().Equals(a.ToLower())))
+                if (keyWords.Any(a => tag.Text.Equals(a, StringComparison.OrdinalIgnoreCase)))
                 {
                     return true;
                 }
             }
             return false;
-
         }
 
         private void OutputCheck(string testData)
@@ -99,7 +95,6 @@ namespace YoCode
             else
             {
                 FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
-
             }
 
             browser.Navigate().GoToUrl(port);
@@ -125,12 +120,11 @@ namespace YoCode
                         foreach (var select in selectors)
                         {
                             SelectElement clicker = new SelectElement(select);
-                            clicker.SelectByText((clicker.Options.Where(a=>!a.Text.Equals(selectedElem))).Last().Text);
+                            clicker.SelectByText(clicker.Options.Last(a=>!a.Text.Equals(selectedElem)).Text);
                             selectedElem = clicker.SelectedOption.Text;
                         }
 
-                        var textFields = form.FindElements(By.CssSelector("textarea"));
-                        foreach (var textField in textFields)
+                        foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
                             textField.SendKeys(applicantTestInput);
                         }
@@ -143,8 +137,7 @@ namespace YoCode
                         SelectElement selectFromDropDown = new SelectElement(selectors.First());
                         selectFromDropDown.SelectByIndex(1);
 
-                        var textFields = form.FindElements(By.CssSelector("textarea"));
-                        foreach (var textField in textFields)
+                        foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
                             textField.SendKeys(applicantTestInput);
                         }
@@ -154,8 +147,7 @@ namespace YoCode
                     }
                     else
                     {
-                        var textFields = form.FindElements(By.CssSelector("textarea"));
-                        foreach (var textField in textFields)
+                        foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
                             textField.SendKeys(applicantTestInput);
                         }
@@ -166,10 +158,8 @@ namespace YoCode
                 }
                 catch (Exception) { }
             }
-
         }
 
-        public FeatureEvidence FrontEndEvidence { get; private set; } = new FeatureEvidence();
-
+        public FeatureEvidence FrontEndEvidence { get; } = new FeatureEvidence();
     }
 }

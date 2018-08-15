@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace YoCode
 {
-    public class UnitConverterCheck
+    internal class UnitConverterCheck
     {
-        Dictionary<List<string>,List<double>> KeywordMap;
-        Dictionary<string, string> badInputs;
+        private Dictionary<List<string>, List<double>> KeywordMap;
+        private Dictionary<string, string> badInputs;
 
-        List<string> badInputResults;
-    
-        List<UnitConverterResults> actual;
-        List<UnitConverterResults> expected;
+        private readonly List<string> badInputResults;
 
-        List<double> texts;
-        
-        List<string> actions;
-           
-        List<double> InchesToCentimetres;
-        List<double> MilesToKilometres;
-        List<double> YardsToMeters;
+        private List<UnitConverterResults> actual;
+        private List<UnitConverterResults> expected;
 
-        const double InToCm = 2.54;
-        const double MiToKm = 1.60934;
-        const double YdToMe = 0.9144;
+        private List<double> texts;
+
+        private List<string> actions;
+
+        private List<double> InchesToCentimetres;
+        private List<double> MilesToKilometres;
+        private List<double> YardsToMeters;
+
+        private const double InToCm = 2.54;
+        private const double MiToKm = 1.60934;
+        private const double YdToMe = 0.9144;
 
         public List<string> InToCmKeys { get; set; }
         public List<string> MiToKmKeys { get; set; }
@@ -38,7 +36,7 @@ namespace YoCode
         string from = "value=\"";
         string to = "\"";
 
-        private string HTMLcode;
+        private readonly string HTMLcode;
 
         public UnitConverterCheck(string port)
         {
@@ -59,7 +57,7 @@ namespace YoCode
                     InitializeDataStructures();
                     actual = fetcher.GetActualValues(texts, actions);
 
-                    badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);                    
+                    badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
@@ -80,14 +78,7 @@ namespace YoCode
             actual = new List<UnitConverterResults>();
             expected = new List<UnitConverterResults>();
 
-            texts = new List<double> { 5, 25, 125};
-
-            badInputs = new Dictionary<string, string>();
-            badInputs.Add("Empty input", " ");
-            badInputs.Add("Blank lines at the start", "\n 10");
-            badInputs.Add("Blank lines at the middle", "10   10");
-            badInputs.Add("Blank lines at the end", "10 \n");
-            badInputs.Add("Not numbers", "Y..@");
+            texts = new List<double> { 5, 25, 125 };
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
@@ -168,14 +159,14 @@ namespace YoCode
 
         private List<double> CheckActions(string action)
         {
-                foreach (var keywords in KeywordMap)
+            foreach (var keywords in KeywordMap)
+            {
+                if (action.ToLower().ContainsAny(keywords.Key))
                 {
-                    if (action.ToLower().ContainsAny(keywords.Key))
-                    {
-                        return keywords.Value;
-                    }
+                    return keywords.Value;
                 }
-            return new List<double>{0.1};
+            }
+            return new List<double> { 0.1 };
         }
 
         private bool OutputsAreEqual()
@@ -183,13 +174,13 @@ namespace YoCode
             var ret = true;
             try
             {
-                UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input","Expected", "Actual", "Are equal\n"));
+                UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
-                    var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action,expectation.input,expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
+                    var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
                     UnitConverterCheckEvidence.GiveEvidence(x);
 
                     UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
@@ -213,9 +204,9 @@ namespace YoCode
             bool ret = true;
 
             BadInputCheckEvidence.GiveEvidence(string.Format("\n{0,-30} {1,-10}", "Input name", "FIXED"));
-            BadInputCheckEvidence.GiveEvidence(messages.Divider);
+            BadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
 
-            foreach(var a in badInputs)
+            foreach (var a in badInputs)
             {
                 bool isFixed = !badInputResults.Contains(a.Key);
                 BadInputBoolResults.Add(isFixed);
@@ -225,7 +216,7 @@ namespace YoCode
                     ret = false;
                 }
 
-                BadInputCheckEvidence.GiveEvidence(string.Format("{0,-30} {1,-10}", a.Key,isFixed));                
+                BadInputCheckEvidence.GiveEvidence(string.Format("{0,-30} {1,-10}", a.Key, isFixed));
             }
             return ret;
         }

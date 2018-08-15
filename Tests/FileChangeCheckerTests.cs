@@ -1,39 +1,37 @@
 ﻿using Xunit;
-using Xunit.Abstractions;
 using FluentAssertions;
 using System.IO;
-using YoCode;
 using System.Text;
 using Moq;
 using System.Collections.Generic;
+using YoCode;
 
 namespace YoCode_XUnit
 {
     public class FileChangeCheckerTests
     {
+        private readonly Mock<IPathManager> mock = new Mock<IPathManager>();
 
-        Mock<IPathManager> mock = new Mock<IPathManager>();
+        private readonly List<string> fakePaths1 = new List<string>() { @"\one", @"\two" };
+        private readonly List<string> fakePaths2 = new List<string>() { @"\one", @"\two", @"\three" };
 
-        List<string> fakePaths1 = new List<string>() { @"\one", @"\two" };
-        List<string> fakePaths2 = new List<string>() { @"\one", @"\two", @"\three" };
+        private readonly string fakeOriginal = @"C:\Users\ukekar\Downloads\junior-test";
+        private readonly string fakeModified = @"C:\Users\ukekar\Downloads\drew-gibbon";
 
-        string fakeOriginal = @"C:\Users\ukekar\Downloads\junior-test";
-        string fakeModified = @"C:\Users\ukekar\Downloads\drew-gibbon";
-
-        IPathManager fakeDir;
+        private readonly IPathManager fakeDir;
 
         public FileChangeCheckerTests()
         {
             fakeDir = mock.Object;
 
-            mock.Setup(w => w.originalTestDirPath).Returns(fakeOriginal);
-            mock.Setup(w => w.modifiedTestDirPath).Returns(fakeModified);
+            mock.Setup(w => w.OriginalTestDirPath).Returns(fakeOriginal);
+            mock.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
         }
 
         private FileContent CreateFakeStream(int i)
         {
             var fakeStream = new MemoryStream();
-            fakeStream.Write(Encoding.ASCII.GetBytes("thing "+ i +" that gets hashed"));
+            fakeStream.Write(Encoding.ASCII.GetBytes("thing " + i + " that gets hashed"));
             fakeStream.Position = 0;
             return new FileContent { path = "thing " + i + " that gets hashed", content = fakeStream };
         }
@@ -41,7 +39,7 @@ namespace YoCode_XUnit
         private List<FileContent> FakeListOfFileContent(int listLength)
         {
             var fileContent = new List<FileContent>();
-            for(int i=0; i<listLength; ++i)
+            for (int i = 0; i < listLength; ++i)
             {
                 fileContent.Add(CreateFakeStream(i));
             }
@@ -74,7 +72,6 @@ namespace YoCode_XUnit
             mock.Setup(w => w.ReturnModifiedPathFileStream()).Returns(revertedFakeFileContents);
 
             new FileChangeChecker(fakeDir).FileChangeEvidence.FeatureImplemented.Should().BeFalse();
-
         }
     }
 }

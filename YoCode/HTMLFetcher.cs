@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace YoCode
 {
-    class HTMLFetcher
+    internal class HTMLFetcher
     {
-        private HttpClient client;       
+        private readonly HttpClient client;
 
         public HTMLFetcher(string port)
         {
@@ -33,7 +32,7 @@ namespace YoCode
 
             foreach (var input in texts)
             {
-                var tempActual = new UnitConverterResults {input = double.Parse(input.ToString())};
+                var tempActual = new UnitConverterResults { input = double.Parse(input.ToString()) };
 
                 foreach (var action in actions)
                 {
@@ -44,36 +43,35 @@ namespace YoCode
 
                     var tempOutput = await GetResponseAsTaskAsync(response.Result);
                     tempActual.output = double.Parse(tempOutput);
-                   
+
                     actual.Add(tempActual);
                 }
             }
             return actual;
         }
 
-        public  Task<HttpResponseMessage> SubmitForm(string inputForm,string action)
+        public Task<HttpResponseMessage> SubmitForm(string inputForm, string action)
         {
             var formContent = GetEncodedContent(inputForm, action);
 
             return client.PostAsync("/Home/Convert", formContent);
         }
 
-
-        public List<string> GetBadInputs(Dictionary<string,string> inputs, string action)
+        public List<string> GetBadInputs(Dictionary<string, string> inputs, string action)
         {
             var ReturnDictionary = new List<string>();
 
             foreach (var input in inputs)
             {
-                    var x = SubmitForm(input.Value, action);
-                    x.Wait();
+                var x = SubmitForm(input.Value, action);
+                x.Wait();
 
-                    if(x.Result.StatusCode == HttpStatusCode.InternalServerError)
-                    {
-                        ReturnDictionary.Add(input.Key);
-                    }
+                if (x.Result.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    ReturnDictionary.Add(input.Key);
+                }
             }
-            return ReturnDictionary;       
+            return ReturnDictionary;
         }
 
         public List<UnitConverterResults> GetActualValues(List<double> texts, List<string> actions)
@@ -82,7 +80,7 @@ namespace YoCode
             task.Wait();
             return task.Result;
         }
-        
+
         private FormUrlEncodedContent GetEncodedContent(string i, string j)
         {
             return new FormUrlEncodedContent(new[]
@@ -96,6 +94,5 @@ namespace YoCode
         {
             return bar.Content.ReadAsStringAsync();
         }
-
     }
 }

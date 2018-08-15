@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -7,14 +6,14 @@ using System.Threading;
 
 namespace YoCode
 {
-    public static class Program
+    internal static class Program
     {
         public static IConfiguration Configuration;
 
         private static string CMDToolsPath;
         private static string dotCoverDir;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
@@ -32,8 +31,6 @@ namespace YoCode
                 compositeOutput.ShowHelp();
                 return;
             }
-
-            compositeOutput.PrintIntroduction();
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -78,14 +75,23 @@ namespace YoCode
 
             var fileCheck = new FileChangeChecker(dir);
 
+            var workThreads = new List<Thread>();
+
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
+                Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                {
+                    IsBackground = true
+                };
+                workThreads.Add(loadingThread);
+                loadingThread.Start();
 
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
-                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.modifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
                 });
+                workThreads.Add(codeCoverageThread);
                 codeCoverageThread.Start();
 
                 // Duplication check
@@ -93,6 +99,7 @@ namespace YoCode
                 {
                     checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
                 });
+                workThreads.Add(dupFinderThread);
                 dupFinderThread.Start();
 
                 // Files changed check
@@ -100,7 +107,7 @@ namespace YoCode
 
                 // UI test
 
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.modifiedTestDirPath, FileTypes.html).ToList();
+                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
                 checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
@@ -113,19 +120,19 @@ namespace YoCode
                 });
 
                 // Git repo used
-                checkList.Add(new GitCheck(dir.modifiedTestDirPath).GitEvidence);
+                checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
                 // Project build
-                checkList.Add(new ProjectBuilder(dir.modifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                var pr = new ProjectRunner(dir.modifiedTestDirPath, new FeatureRunner());
+                var pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
                 checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
-                checkList.Add(new TestCountCheck(dir.modifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
                 UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
@@ -134,8 +141,8 @@ namespace YoCode
 
                 checkList.Add(ucc.BadInputCheckEvidence);
 
-                codeCoverageThread.Join();
-                dupFinderThread.Join();
+                LoadingAnimation.LoadingFinished = true;
+                workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
 
                 Console.WriteLine("The final score is " + new Rating(checkList).FinalScore);
