@@ -29,11 +29,6 @@ namespace YoCode
             consoleReport.AppendLine(messages.Divider);
         }
 
-        public void AddIntro(string intro)
-        {
-            AddNewBlock(intro);
-        }
-
         public void AddMessage(string msg)
         {
             AddNewBlock(msg);

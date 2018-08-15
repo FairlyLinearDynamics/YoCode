@@ -820,4 +820,7 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
   <data name="ParagraphDivider" xml:space="preserve">
     <value>---------------------------------------------------------</value>
   </data>
+  <data name="LoadingMessage" xml:space="preserve">
+    <value>Get comfortable, YoCode is gathering your results</value>
+  </data>
 </root>

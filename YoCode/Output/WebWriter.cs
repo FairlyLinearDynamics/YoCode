@@ -22,11 +22,6 @@ namespace YoCode
             msg = new StringBuilder();
         }
 
-        public void AddIntro(string text)
-        {
-            // No intro for web report :(
-        }
-
         public void AddErrs(IEnumerable<string> errs)
         {
             errors.Append(WebElementBuilder.FormatAccordionElement("Errors present",
@@ -73,7 +68,7 @@ namespace YoCode
         public void WriteReport()
         {
             File.WriteAllText(OUTPUT_PATH, BuildReport());
-            HtmlReportLauncher.LaunchReport("YoCodeReport.html");
+            HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
         }
     }
 }

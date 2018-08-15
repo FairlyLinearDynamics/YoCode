@@ -223,6 +223,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get comfortable, YoCode is gathering your results.
+        /// </summary>
+        public static string LoadingMessage {
+            get {
+                return ResourceManager.GetString("LoadingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ---------------------------------------------------------.
         /// </summary>
         public static string ParagraphDivider {
