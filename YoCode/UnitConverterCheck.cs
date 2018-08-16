@@ -264,8 +264,6 @@ namespace YoCode
             return sum;
         }
 
-
-
         public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
