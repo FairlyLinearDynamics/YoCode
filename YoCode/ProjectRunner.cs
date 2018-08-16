@@ -22,8 +22,6 @@ namespace YoCode
             ProjectRunEvidence.FeatureTitle = "Project Run";
             ProjectRunEvidence.Feature = Feature.ProjectRunner;
 
-            workingDir += projectFolder;
-            if (!Directory.Exists(workingDir))
             this.workingDir = workingDir + projectFolder;
             if (!Directory.Exists(this.workingDir))
             {
