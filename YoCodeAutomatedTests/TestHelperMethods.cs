@@ -43,7 +43,7 @@ namespace YoCodeAutomatedTests
         public string RunProcess(string processName, string workingDir, string arguments)
         {
             ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
-            pr.ExecuteTheCheck("Duplicate cost:");
+            pr.ExecuteTheCheck("Units were converted successfully");
 
             return pr.Output;
         }
