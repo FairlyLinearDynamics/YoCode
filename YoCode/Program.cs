@@ -7,7 +7,6 @@ namespace YoCode
     internal static class Program
     {
         private static ProjectRunner pr;
-        private static bool htmlReportLaunched;
 
         private static void Main(string[] args)
         {
