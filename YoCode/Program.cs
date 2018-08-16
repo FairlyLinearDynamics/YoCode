@@ -7,7 +7,7 @@ namespace YoCode
     internal static class Program
     {
         private static ProjectRunner pr;
-        private static bool htmlReportLaunched;
+        private static bool showLoadingAnim;
 
         private static void Main(string[] args)
         {
@@ -46,6 +46,7 @@ namespace YoCode
 
             ConsoleCloseHandler.StartHandler(pr);
 
+            showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
@@ -60,12 +61,15 @@ namespace YoCode
 
             if (fileCheck.FileChangeEvidence.FeatureImplemented)
             {
-                Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                if (showLoadingAnim)
                 {
-                    IsBackground = true
-                };
-                workThreads.Add(loadingThread);
-                loadingThread.Start();
+                    Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                    {
+                        IsBackground = true
+                    };
+                    workThreads.Add(loadingThread);
+                    loadingThread.Start();
+                }
 
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
