@@ -8,7 +8,8 @@ namespace YoCode
 {
     public class CommandLineParser
     {
-        List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP, CommandNames.NOLOADINGSCREEN };
+        List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP,
+            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT };
         private List<SplitArg> currentCommands;
         
         public CommandLineParser(string[] args)

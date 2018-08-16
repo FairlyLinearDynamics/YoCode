@@ -47,9 +47,12 @@ namespace YoCode
             ConsoleCloseHandler.StartHandler(pr);
 
             showLoadingAnim = !result.NoLoadingScreen;
+            OpenHTMLOnFinish = !result.Silent;
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
+
+        public static bool OpenHTMLOnFinish { get; set; }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
