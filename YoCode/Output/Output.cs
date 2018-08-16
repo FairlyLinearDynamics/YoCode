@@ -31,9 +31,10 @@ namespace YoCode
 
         public void ShowInputErrors(List<string> errs)
         {
-            outputWriter.AddErrs(errs);
-            outputWriter.AddMessage(messages.AskForHelp);
-            outputWriter.WriteReport();
+            var console = new ConsoleWriter();
+            console.AddErrs(errs);
+            console.AddMessage(messages.AskForHelp);
+            console.WriteReport();
         }
 
         public void ShowHelp()
