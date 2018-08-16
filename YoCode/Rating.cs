@@ -62,7 +62,7 @@ namespace YoCode
                 Feature.ProjectBuilder, 
                 new FeatureDetails {
                     FeatureTitle = "Project Build",
-                    FeatureWeighting = 1 });
+                    FeatureWeighting = 1000 });
 
             JuniorTestDetails.Add(
                 Feature.ProjectRunner, 
@@ -97,12 +97,11 @@ namespace YoCode
 
         public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
         {
-    
             foreach(var elem in list)
             {
                 foreach(var featuredetail in xTestDetails)
                 {
-                    if(elem.FeatureTitle.Equals(featuredetail.Value.FeatureTitle))
+                    if(elem.Feature == featuredetail.Key)
                     {
                         elem.FeatureWeighting = featuredetail.Value.FeatureWeighting;
                     }

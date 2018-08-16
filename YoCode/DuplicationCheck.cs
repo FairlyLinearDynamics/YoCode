@@ -32,6 +32,7 @@ namespace YoCode
         {
             this.dir = dir;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.Feature = Feature.DuplicationCheck;
             this.dupFinder = dupFinder;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);

@@ -6,6 +6,8 @@ namespace YoCode
     internal class FeatureEvidence
     {
         public string FeatureTitle { get; set; }
+        public Feature Feature { get; set; }
+
         public bool FeatureImplemented { get; set; }
         public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }

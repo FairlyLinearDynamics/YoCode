@@ -13,6 +13,7 @@ namespace YoCode
         {
             UIContainsFeature(userFilePaths, keyWords);
             UIEvidence.FeatureTitle = "Evidence present in UI";
+            UIEvidence.Feature = Feature.UICheck;
         }
 
         public UICheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
