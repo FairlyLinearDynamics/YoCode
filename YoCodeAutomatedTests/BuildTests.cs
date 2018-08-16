@@ -16,7 +16,7 @@ namespace YoCodeAutomatedTests
             var helper = new TestHelperMethods();
 
             string argument = $"YoCode.dll --original={helper.TestPath}\\TestProjects\\junior-test " +
-                $"--modified={helper.TestPath}\\TestProjects{project}";
+                $"--modified={helper.TestPath}\\TestProjects{project} --noloading";
 
             var Output = helper.RunProcess("dotnet", helper.DllPath, argument);
 
