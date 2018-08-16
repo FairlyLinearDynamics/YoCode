@@ -13,7 +13,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.WrongCommand));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongCommand));
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.NoArguments));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.NoArguments));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.helpAsked.Should().Be(true);
+            cmdResult.HelpAsked.Should().Be(true);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
         }
     }
 }

@@ -31,12 +31,12 @@ namespace YoCode
                         ires.modifiedFilePath = arg.data;
                         break;
                     case CommandNames.HELP:
-                        ires.helpAsked = arg.command == CommandNames.HELP;
+                        ires.HelpAsked = arg.command == CommandNames.HELP;
                         break;
                 }
             }
 
-            ires.errors = CommandErrorChecking.ContainsErrors(currentCommands, implementedCommands);
+            ires.Errors = CommandErrorChecking.ContainsErrors(currentCommands, implementedCommands);
             return ires;
         }
     }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace YoCode
             {
                 CodeCoverageEvidence.SetFailed("Code Coverage Not Found");
             }
-            else if(coverage == -1)
+            else if (coverage == -1)
             {
                 CodeCoverageEvidence.SetFailed("Failed to Generate/Read Report");
             }
@@ -69,9 +70,16 @@ namespace YoCode
 
         private string ReadReport()
         {
-            using (StreamReader sr = File.OpenText(FullReportPath))
+            if (File.Exists(FullReportPath))
             {
-                return sr.ReadToEnd();
+                using (StreamReader sr = File.OpenText(FullReportPath))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -87,6 +95,10 @@ namespace YoCode
             }
             catch (ArgumentNullException) { }
             /*If YoCode times out then dotCover also fails and ArgumentNullException occurs*/
+
+            catch (JsonReaderException) { }
+            /*If ReadReport method doesn't find a report file to read then it returns
+             * an empty string and GetCodeCoverage returns JsonReaderException*/
 
             return -1;
         }
