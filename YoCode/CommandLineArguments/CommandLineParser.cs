@@ -8,7 +8,8 @@ namespace YoCode
 {
     public class CommandLineParser
     {
-        List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP };
+        List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP,
+            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT };
         private List<SplitArg> currentCommands;
         
         public CommandLineParser(string[] args)
@@ -32,6 +33,12 @@ namespace YoCode
                         break;
                     case CommandNames.HELP:
                         ires.HelpAsked = arg.command == CommandNames.HELP;
+                        break;
+                    case CommandNames.SILENTREPORT:
+                        ires.Silent = arg.command == CommandNames.SILENTREPORT;
+                        break;
+                    case CommandNames.NOLOADINGSCREEN:
+                        ires.NoLoadingScreen = arg.command == CommandNames.NOLOADINGSCREEN;
                         break;
                 }
             }
