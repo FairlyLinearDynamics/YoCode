@@ -45,15 +45,17 @@ namespace YoCode
 
             ConsoleCloseHandler.StartHandler(pr);
 
-            var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            var p = new FileChangeFinder(modifiedTestDirPath);
+
+            //var implementedFeatureList = PerformChecks(dir, parameters);
+            //compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
             var checkList = new List<FeatureEvidence>();
 
-            var fileCheck = new FileChangeChecker(dir);
+            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
 
             var workThreads = new List<Thread>();
 
