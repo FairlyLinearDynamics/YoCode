@@ -40,6 +40,11 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
+            UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
+            UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+
+            BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
+            BadInputCheckEvidence.Feature = Feature.BadInputCheck;
 
             if (String.IsNullOrEmpty(port))
             {
@@ -50,11 +55,6 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
-                    UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
-                    UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
-
-                    BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
-                    BadInputCheckEvidence.Feature = Feature.BadInputCheck;
 
                     HTMLcode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures();
@@ -82,6 +82,15 @@ namespace YoCode
             expected = new List<UnitConverterResults>();
 
             texts = new List<double> { 5, 25, 125 };
+
+            badInputs = new Dictionary<string, string>
+            {
+                { "Empty input", " " },
+                { "Blank lines at the start", "\n 10" },
+                { "Blank lines at the middle", "10   10" },
+                { "Blank lines at the end", "10 \n" },
+                { "Not numbers", "Y..@" }
+            };
 
             InchesToCentimetres = MakeConversion(texts, InToCm);
             MilesToKilometres = MakeConversion(texts, MiToKm);
