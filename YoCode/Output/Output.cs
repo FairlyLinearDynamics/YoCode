@@ -42,6 +42,7 @@ namespace YoCode
             ShowBanner();
             ShowHelpMsg();
             ShowDupfinderHelp();
+            ShowCodeCoverageHelp();
             outputWriter.WriteReport();
         }
 
@@ -58,6 +59,11 @@ namespace YoCode
         private void ShowDupfinderHelp()
         {
             outputWriter.AddMessage(messages.DupFinderHelp);
+        }
+
+        private void ShowCodeCoverageHelp()
+        {
+            outputWriter.AddMessage(messages.CodeCoverageHelp);
         }
 
         public void ShowLaziness()

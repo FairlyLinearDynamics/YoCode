@@ -42,10 +42,11 @@ namespace YoCode
                 ExecuteTheCheck();
                 CheckForSpecialRepetition();
             }
-            catch(Exception e)
+            catch (FileNotFoundException) { }
+            catch (Exception e)
             {
                 DuplicationEvidence.FeatureImplemented = false;
-                DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" +e);
+                DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" + e);
             }
         }
 

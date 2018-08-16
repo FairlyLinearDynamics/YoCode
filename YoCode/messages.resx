@@ -582,4 +582,9 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
   <data name="LoadingMessage" xml:space="preserve">
     <value>Get comfortable, YoCode is gathering your results</value>
   </data>
+  
+  <data name="CodeCoverageHelp" xml:space="preserve">
+    <value>Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
+After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
+  </data>
 </root>

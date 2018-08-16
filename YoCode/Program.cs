@@ -1,17 +1,13 @@
 ﻿using System.Linq;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using System.Threading;
 
 namespace YoCode
 {
     internal static class Program
     {
-        public static IConfiguration Configuration;
-
-        private static string CMDToolsPath;
-        private static string dotCoverDir;
+        private static ProjectRunner pr;
+        private static bool htmlReportLaunched;
 
         private static void Main(string[] args)
         {
@@ -19,31 +15,20 @@ namespace YoCode
 
             var compositeOutput = new Output(new CompositeWriter(outputs));
 
-            try
-            {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-                Configuration = builder.Build();
-                CMDToolsPath = Configuration["duplicationCheckSetup:CMDtoolsDir"];
-                dotCoverDir = Configuration["codeCoverageCheckSetup:dotCoverDir"];
-            }
-            catch (FileNotFoundException)
-            {
-                compositeOutput.ShowHelp();
-                return;
-            }
-
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
 
-            if (result.helpAsked)
+            var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
+            if(!parameters.ParametersAreValid())
             {
-                compositeOutput.ShowHelp();
-                return;
-            }
-
-            if (result.HasErrors)
-            {
-                compositeOutput.ShowInputErrors(result.errors);
+                if(!result.HelpAsked)
+                {
+                    compositeOutput.ShowInputErrors(parameters.Errs);
+                }
+                else
+                {
+                    compositeOutput.ShowHelp();
+                }
                 return;
             }
 
@@ -52,23 +37,20 @@ namespace YoCode
 
             var dir = new PathManager(originalTestDirPath, modifiedTestDirPath);
 
-            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
+            if (!parameters.FilesReadCorrectly(dir))
             {
-                compositeOutput.ShowDirEmptyMsg();
                 return;
             }
 
-            if (!dir.ModifiedPaths.Any())
-            {
-                compositeOutput.ShowLaziness();
-                return;
-            }
+            pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
 
-            var implementedFeatureList = PerformChecks(dir);
+            ConsoleCloseHandler.StartHandler(pr);
+
+            var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
         }
 
-        private static List<FeatureEvidence> PerformChecks(PathManager dir)
+        private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
             var checkList = new List<FeatureEvidence>();
 
@@ -88,7 +70,7 @@ namespace YoCode
                 //Code Coverage
                 var codeCoverageThread = new Thread(() =>
                 {
-                    checkList.Add(new CodeCoverageCheck(dotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
                 });
                 workThreads.Add(codeCoverageThread);
                 codeCoverageThread.Start();
@@ -96,7 +78,7 @@ namespace YoCode
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(CMDToolsPath)).DuplicationEvidence);
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
                 });
                 workThreads.Add(dupFinderThread);
                 dupFinderThread.Start();
@@ -123,14 +105,15 @@ namespace YoCode
                 // Project build
                 checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
-                var pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
-                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
-
+                pr.Execute();
                 // Project run test
                 checkList.Add(pr.ProjectRunEvidence);
 
                 // Unit test test
                 checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+
+                //Front End Check
+                checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
                 UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
