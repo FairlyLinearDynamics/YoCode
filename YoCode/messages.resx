@@ -486,9 +486,9 @@ Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{4}</value>
 &lt;/html&gt;</value>
   </data>
   <data name="ListElementTemplate" xml:space="preserve">
-    <value>&lt;button class="accordion"&gt;
+    <value>&lt;div class="accordion"&gt;
                     {TITLE}
-                &lt;/button&gt;
+                &lt;/div&gt;
                 &lt;div class="panel"&gt;
                     &lt;div class="panel-content"&gt;
                         {CONTENT}
