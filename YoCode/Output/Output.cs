@@ -53,7 +53,8 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP));
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, 
+                CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
         }
 
         private void ShowDupfinderHelp()

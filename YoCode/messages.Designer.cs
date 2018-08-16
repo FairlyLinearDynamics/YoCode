@@ -79,6 +79,16 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
+        ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
+        /// </summary>
+        public static string CodeCoverageHelp {
+            get {
+                return ResourceManager.GetString("CodeCoverageHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ___________________________
         ///   _|__ _________________ __|__
         ///  _|___||               ||_|__
@@ -96,16 +106,6 @@ namespace YoCode {
         public static string ConsoleFireplaceBanner {
             get {
                 return ResourceManager.GetString("ConsoleFireplaceBanner", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
-        ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
-        /// </summary>
-        public static string CodeCoverageHelp {
-            get {
-                return ResourceManager.GetString("CodeCoverageHelp", resourceCulture);
             }
         }
         
@@ -133,7 +133,11 @@ namespace YoCode {
         /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
         ///Possible commands: --{0}; --{1}; --{2}
-        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;.
+        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
+        ///To disable loading animation, append --{3} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{3}
+        ///To disable automatic HTML report opening, append --{4} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{4}.
         /// </summary>
         public static string HelpMessage {
             get {
