@@ -146,7 +146,7 @@ namespace YoCode
                 workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
 
-                Console.WriteLine("The final score is " + new Rating(checkList).FinalScore + "\n");
+                Console.WriteLine("The final score is " + new Results(checkList).FinalScore + "\n");
             }
             return checkList;
         }

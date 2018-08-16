@@ -12,7 +12,7 @@ namespace YoCode
         {
             CleanBuildOutput(workingDir);
 
-            ProjectBuilderEvidence.FeatureTitle = "Project build";
+            ProjectBuilderEvidence.FeatureTitle = "Project Build";
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
