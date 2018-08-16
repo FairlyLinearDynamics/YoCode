@@ -8,11 +8,22 @@ namespace YoCode
     class Output
     {
         IPrint outputWriter;
+        IErrorReporter errOutput;
         FeatureData featData;
 
-        public Output(IPrint printTo)
+        public Output(IPrint printTo, IErrorReporter errorReporter = null)
         {
             outputWriter = printTo;
+
+            if (errorReporter == null)
+            {
+                errOutput = new NullErrorObject();
+            }
+            else
+            {
+                errOutput = errorReporter;
+            }
+
             featData = new FeatureData();
         }
 
@@ -31,10 +42,7 @@ namespace YoCode
 
         public void ShowInputErrors(List<string> errs)
         {
-            var console = new ConsoleWriter();
-            console.AddErrs(errs);
-            console.AddMessage(messages.AskForHelp);
-            console.WriteReport();
+            errOutput.PrintErrors(errs);
         }
 
         public void ShowHelp()
