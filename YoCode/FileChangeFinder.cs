@@ -14,28 +14,22 @@ namespace YoCode
 
         public FileChangeFinder(string path)
         {
-            Repo = new Repository(path);
-            GetAddedAndModifiedFiles(path);
-            FileList.ForEach(Console.WriteLine);
-
-            GetUncommitedFiles(path);
-
             FileChangeEvidence.FeatureTitle = "Files changed";
 
+            Repo = new Repository(path);
+
             GetFileDifferences();
+            GetUncommitedFiles(path);
 
-            //Console.WriteLine();
-            //Console.WriteLine(BuildFileChangeOutput());
-
-            //if(FileList.Any())
-            //{
-            //    FileChangeEvidence.FeatureImplemented = true;
-            //    FileChangeEvidence.GiveEvidence(GetChangedFiles());
-            //}
-            //else
-            //{
-            //    FileChangeEvidence.SetFailed("No Files Changed");
-            //}
+            if (FileList.Any() || UncommitedFiles.Any())
+            {
+                FileChangeEvidence.FeatureImplemented = true;
+                FileChangeEvidence.GiveEvidence(BuildFileChangeOutput());
+            }
+            else
+            {
+                FileChangeEvidence.SetFailed("No Files Changed");
+            }
         }
 
         private void GetUncommitedFiles(string path)
@@ -44,50 +38,10 @@ namespace YoCode
             {
                 foreach (var item in repository.RetrieveStatus(new StatusOptions()))
                 {
-                    if(item.State == FileStatus.NewInIndex)
+                    if (item.State == FileStatus.NewInIndex)
                     {
                         UncommitedFiles.Add(item.FilePath);
-                        Console.WriteLine(item.FilePath + "    " + item.State);
                     }
-                    
-                }
-            }
-        }
-
-        private void GetAddedAndModifiedFiles(string path)
-        {
-
-            //make not check every commit but only the ones we need
-            var repo = new Repository(path);
-            foreach (Commit commit in repo.Commits.Reverse())
-            {
-                foreach (var parent in commit.Parents.Where(a => !a.Author.Email.ContainsAny(ignoredAuthorEmails)))
-                {
-                    foreach (TreeEntryChanges change in repo.Diff.Compare<TreeChanges>(parent.Tree,
-                    commit.Tree))
-                    {
-                        if (!FileList.Contains($"{change.Status} : {change.Path}"))
-                        {
-                            FileList.Add($"{change.Status} : {change.Path}");
-                        }
-
-                        if (change.Status == ChangeKind.Deleted)
-                        {
-                            FixChangeList(change);
-                        }
-                    }
-                }
-                
-            }
-        }
-
-        private void FixChangeList(TreeEntryChanges change)
-        {
-            for (int i = 0; i < FileList.Count; i++)
-            {
-                if (FileList[i].Contains(change.Path))
-                {
-                    FileList.RemoveAt(i);
                 }
             }
         }
@@ -99,23 +53,20 @@ namespace YoCode
             Tree lastNonlinearCommit = Repo.Head.Commits.ToList().First
                 (a => a.Author.Email.ContainsAny(ignoredAuthorEmails)).Tree;
 
-            foreach (var pec in Repo.Diff.Compare<Patch>(head, lastNonlinearCommit))
+            foreach (var pec in Repo.Diff.Compare<Patch>(lastNonlinearCommit, head))
             {
                 var lineDifference = pec.LinesAdded + pec.LinesDeleted;
-
-                foreach (var item in FileList)
-                {
-                    if (item.Contains(pec.Path))
-                    {
-                        //item.Append
-                    }
-                }
-                FileList.Add($"{pec.Path} = {lineDifference} ({pec.LinesAdded}+ and {pec.LinesDeleted}-)");
+                FileList.Add($"{pec.Status} : {pec.Path} = {lineDifference} ({pec.LinesAdded}+ and {pec.LinesDeleted}-)");
             }
         }
 
         public string BuildFileChangeOutput()
         {
+            FileList.Add(String.Empty);
+            FileList.Add("Untracked/Uncommited Files:");
+            FileList.Add(String.Empty);
+            FileList.AddRange(UncommitedFiles);
+
             return String.Join(Environment.NewLine, FileList);
         }
 

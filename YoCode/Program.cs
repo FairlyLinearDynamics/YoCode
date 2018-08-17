@@ -45,10 +45,8 @@ namespace YoCode
 
             ConsoleCloseHandler.StartHandler(pr);
 
-            var p = new FileChangeFinder(modifiedTestDirPath);
-
-            //var implementedFeatureList = PerformChecks(dir, parameters);
-            //compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            var implementedFeatureList = PerformChecks(dir, parameters);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
