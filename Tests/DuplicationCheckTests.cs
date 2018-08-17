@@ -18,18 +18,13 @@ namespace YoCode_XUnit
             var mockDir = new Mock<IPathManager>();
             var mockDupFinder = new Mock<IDupFinder>();
 
-            var fakeOriginal = @"\fake\original\dir";
             var fakeModified = @"\fake\modified\dir";
 
-            var fakeOriginalCodeScore = "<CodebaseCost>50 <TotalDuplicatesCost>50";
             var fakeModifiedCodeScore = "<CodebaseCost>10 <TotalDuplicatesCost>10";
 
             var fileNameChecked = "UnitConverterWebApp.sln";
 
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
-
-            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeOriginal, fileNameChecked)))
-                .Returns(SetUpFeatureEvidence(fakeOriginalCodeScore));
 
             mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeModified, fileNameChecked)))
                 .Returns(SetUpFeatureEvidence(fakeModifiedCodeScore));
