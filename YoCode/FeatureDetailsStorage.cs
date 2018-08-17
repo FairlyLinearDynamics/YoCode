@@ -6,7 +6,6 @@ namespace YoCode
 {
     class FeatureDetailsStorage
     {
-
         public Dictionary<Feature,FeatureDetails> InitializeJuniorDetails()
         {
             var JuniorTestDetails = new Dictionary<Feature, FeatureDetails>();
@@ -169,8 +168,5 @@ namespace YoCode
         {
             return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();  
         }
-
-
-
     }
 }
