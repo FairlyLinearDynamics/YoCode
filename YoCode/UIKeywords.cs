@@ -8,5 +8,7 @@ namespace YoCode
 
         public static string[] GARBAGE_INPUT = { "", Environment.NewLine, $"{Environment.NewLine}5",
             $"5{Environment.NewLine}{Environment.NewLine}5", $"5{Environment.NewLine}{Environment.NewLine}", "a b c"};
+
+        public static string[] PROPER_INPUT = { "0", "1", "2", "3" };
     }
 }

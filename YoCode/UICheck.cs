@@ -1,61 +1,52 @@
 ﻿using System;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System.Collections.Generic;
+using System.Text;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    internal class UICheck
+    class UICheck 
     {
-        // -------------------------------------------------------------------------------------------- Constructors
-        public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
+        private readonly IWebDriver browser;
+
+        public UICheck(string port)
         {
-            UIContainsFeature(userFilePaths, keyWords);
-            UIEvidence.FeatureTitle = "Evidence present in UI";
-        }
-
-        public UICheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
-        {
-            UIContainsFeature(userFilePath, keyWords);
-        }
-
-        // -------------------------------------------------------------------------------------------- Single UI check
-        private void UIContainsFeature(string userFilePath, string[] keyWords)
-        {
-            var userFile = File.ReadAllLines(userFilePath);
-
-            //ListOfMatches.add
-
-            for (var i = 0; i < userFile.Length; i++)
+            try
             {
-                if (ContainsKeyWord(userFile[i], keyWords))
+                try
                 {
-                    UIEvidence.FeatureImplemented = true;
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
+                    var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    foxService.HideCommandPromptWindow = true;
+                    var options = new FirefoxOptions();
+                    options.AddArgument("--headless");
+
+                    browser = new FirefoxDriver(foxService, options);
                 }
-            }
-        }
+                catch (Exception)
+                {
+                    var chromeService = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    chromeService.HideCommandPromptWindow = true;
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArgument("--headless");
 
-        // -------------------------------------------------------------------------------------------- List of UI to check
-        private void UIContainsFeature(IEnumerable<string> userFilePaths, string[] keyWords)
-        {
-            foreach (var path in userFilePaths)
+                    browser = new ChromeDriver(chromeService, chromeOptions);
+                }
+
+                browser.Navigate().GoToUrl(port);
+            }
+            finally
             {
-                UIContainsFeature(path, keyWords);
+                //Console.WriteLine(browser.FindElement(By.CssSelector("input")).GetAttribute("value"));
+                UIFeatureEvidences.Add(new FeaturePresentInUI(browser, UIKeywords.UNIT_KEYWORDS).FeatureInUIEvidence);
+                UIFeatureEvidences.Add(new UIBadInputChecker(browser).UIBadInputEvidence);
+                UIFeatureEvidences.Add(new UIInputCheck(browser).UIInputEvidence);
             }
         }
 
-        // -------------------------------------------------------------------------------------------- Check logic
-        private static bool ContainsKeyWord(string line, IEnumerable<string> keyWords)
-        {
-            //Console.WriteLine(keyWords.Select(key => line.ToLower().Contains(key)));
-            var words = Regex.Split(line, "[^A-Za-z0-9]").ToList();
-
-            return words.Any(word => keyWords.ToList().Any(keyword => word.Equals(keyword, StringComparison.OrdinalIgnoreCase)));
-        }
-
-        // -------------------------------------------------------------------------------------------- Return methods
-        public FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
+        public List<FeatureEvidence> UIFeatureEvidences { get; } = new List<FeatureEvidence>();
     }
 }
