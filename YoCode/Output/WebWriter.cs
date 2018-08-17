@@ -10,6 +10,7 @@ namespace YoCode
     {
         const string OUTPUT_PATH = @"YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
+        const string SCORE_TAG = "{SCORE}";
 
         StringBuilder features;
         StringBuilder errors;
@@ -62,7 +63,8 @@ namespace YoCode
             report.Append(errors.ToString());
             report.Append(msg);
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG,report.ToString());
+            var score = 0.0;
+            return messages.HtmlTemplate.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
         }
 
         public void WriteReport()
