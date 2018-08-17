@@ -16,6 +16,12 @@ namespace YoCode
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
 
+            if(!Repository.IsValid(path))
+            {
+                FileChangeEvidence.SetFailed("Git Repository Not Found");
+                return;
+            }
+
             Repo = new Repository(path);
 
             GetFileDifferences();
@@ -62,11 +68,13 @@ namespace YoCode
 
         public string BuildFileChangeOutput()
         {
-            FileList.Add(String.Empty);
-            FileList.Add("Untracked/Uncommited Files:");
-            FileList.Add(String.Empty);
-            FileList.AddRange(UncommitedFiles);
-
+            if (UncommitedFiles.Any())
+            {
+                FileList.Add(String.Empty);
+                FileList.Add("Untracked/Uncommited Files:");
+                FileList.Add(String.Empty);
+                FileList.AddRange(UncommitedFiles);
+            }
             return String.Join(Environment.NewLine, FileList);
         }
 

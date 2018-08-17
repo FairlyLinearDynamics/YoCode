@@ -94,7 +94,7 @@ namespace YoCode
 
         public bool FilesReadCorrectly(IPathManager dir)
         {
-            if (dir.ModifiedPaths == null || dir.OriginalPaths == null)
+            if (dir.ModifiedPaths == null)
             {
                 compositeOutput.ShowDirEmptyMsg();
                 return false;

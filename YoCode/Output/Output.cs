@@ -52,7 +52,7 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, 
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.MODIFIED, 
                 CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
         }
 

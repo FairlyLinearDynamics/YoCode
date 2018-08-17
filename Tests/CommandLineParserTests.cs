@@ -57,16 +57,6 @@ namespace YoCode_XUnit
         }
 
         [Fact]
-        public void CommandLineParser_ExpectedOriginalFilePath()
-        {
-            var cmd = new CommandLineParser(new string[] { "--original=/" });
-
-            var cmdResult = cmd.Parse();
-
-            cmdResult.originalFilePath.Should().Be("/");
-        }
-
-        [Fact]
         public void CommandLineParser_ExpectedModifiedFilepath()
         {
             var cmd = new CommandLineParser(new string[] { "--modified=/" });
