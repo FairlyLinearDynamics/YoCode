@@ -20,6 +20,8 @@ namespace YoCode
             {
                 ExecuteTheCheck();
             }
+
+            GitEvidence.GiveEvidence("Feature Rating: " + (GitEvidence.FeatureRating * 100) + "%");
         }
 
         public void ExecuteTheCheck()

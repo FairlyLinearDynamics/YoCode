@@ -63,9 +63,11 @@ namespace YoCode
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+                    UnitConverterCheckEvidence.GiveEvidence("Feature Rating: " + (UnitConverterCheckEvidence.FeatureRating*100) + "%");
 
                     BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
+                    BadInputCheckEvidence.GiveEvidence("Feature Rating: " + (BadInputCheckEvidence.FeatureRating*100) + "%");                    
                 }
                 catch (Exception)
                 {

@@ -42,6 +42,7 @@ namespace YoCode
             {
                 ExecuteTheCheck();
                 CheckForSpecialRepetition();
+                DuplicationEvidence.GiveEvidence("Feature Rating: " + (DuplicationEvidence.FeatureRating * 100) + "%");
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
