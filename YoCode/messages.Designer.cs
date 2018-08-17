@@ -221,9 +221,23 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;button class=&quot;accordion&quot;&gt;
+        ///   Looks up a localized string similar to &lt;span class=&quot;accordion-icon {0}&quot;&gt;
+        ///    &lt;span class=&quot;fa {1}&quot;&gt;&lt;/span&gt;
+        ///  &lt;/span&gt;
+        ///  &lt;span class=&quot;accordion-score-holder&quot;&gt;
+        ///    &lt;span class=&quot;accordion-score&quot;&gt;{2}&lt;/span&gt;
+        ///  &lt;/span&gt;&lt;span class=&quot;accordion-title&quot;&gt;{3}&lt;/span&gt;.
+        /// </summary>
+        public static string HtmlTitleTemplate {
+            get {
+                return ResourceManager.GetString("HtmlTitleTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;accordion&quot;&gt;
         ///                    {TITLE}
-        ///                &lt;/button&gt;
+        ///                &lt;/div&gt;
         ///                &lt;div class=&quot;panel&quot;&gt;
         ///                    &lt;div class=&quot;panel-content&quot;&gt;
         ///                        {CONTENT}
