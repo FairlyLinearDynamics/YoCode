@@ -32,7 +32,7 @@ namespace YoCode_XUnit
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
 
-            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, false);
+            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, true);
         }
 
         private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)
