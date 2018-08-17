@@ -144,7 +144,11 @@ After you downloaded it please specify its location in appsettings.json file, wh
   <data name="HelpMessage" xml:space="preserve">
     <value>Application takes 2 parameters: path to original test directory and path to modified test directory
 Possible commands: --{0}; --{1}; --{2}
-Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;</value>
+Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
+To disable loading animation, append --{3} at the end of command line
+Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{3}
+To disable automatic HTML report opening, append --{4} at the end of command line
+Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{4}</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome to YoCode!
@@ -482,9 +486,9 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
 &lt;/html&gt;</value>
   </data>
   <data name="ListElementTemplate" xml:space="preserve">
-    <value>&lt;button class="accordion"&gt;
+    <value>&lt;div class="accordion"&gt;
                     {TITLE}
-                &lt;/button&gt;
+                &lt;/div&gt;
                 &lt;div class="panel"&gt;
                     &lt;div class="panel-content"&gt;
                         {CONTENT}
@@ -823,7 +827,6 @@ Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test
   <data name="LoadingMessage" xml:space="preserve">
     <value>Get comfortable, YoCode is gathering your results</value>
   </data>
-  
   <data name="CodeCoverageHelp" xml:space="preserve">
     <value>Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>

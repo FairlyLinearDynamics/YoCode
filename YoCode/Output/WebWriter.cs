@@ -68,7 +68,10 @@ namespace YoCode
         public void WriteReport()
         {
             File.WriteAllText(OUTPUT_PATH, BuildReport());
-            HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+            if (Program.OpenHTMLOnFinish)
+            {
+                HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+            }
         }
     }
 }
