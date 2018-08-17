@@ -20,7 +20,6 @@ namespace YoCode
         public void InitializeDataStructures()
         {
             JuniorTestDetails = new Dictionary<Feature, FeatureDetails>();
-            OriginalTestDetails = new Dictionary<Feature, FeatureDetails>();
 
             JuniorTestDetails.Add(
                 Feature.BadInputCheck, 
@@ -93,6 +92,80 @@ namespace YoCode
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
                     FeatureWeighting = 1.09 });
+
+            OriginalTestDetails = new Dictionary<Feature, FeatureDetails>();
+
+            OriginalTestDetails.Add(
+                Feature.BadInputCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Bad input crashes have been fixed",
+                    FeatureWeighting = 2.39 });
+
+            OriginalTestDetails.Add(
+                Feature.CodeCoverageCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Code Coverage",
+                    FeatureWeighting = 1 });
+
+            OriginalTestDetails.Add(
+                Feature.DuplicationCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Code quality improvement",
+                    FeatureWeighting = 1.4172 });
+
+            OriginalTestDetails.Add(
+                Feature.FilesChangedCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Files changed",
+                    FeatureWeighting = 0 });
+
+            OriginalTestDetails.Add(
+                Feature.FrontEndCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "New feature found in front-end implementation",
+                    FeatureWeighting = 1 });
+
+            OriginalTestDetails.Add(
+                Feature.GitCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Git was used",
+                    FeatureWeighting = 1 });
+
+            OriginalTestDetails.Add(
+                Feature.ProjectBuilder, 
+                new FeatureDetails {
+                    FeatureTitle = "Project Build",
+                    FeatureWeighting = 1.107 });
+
+            OriginalTestDetails.Add(
+                Feature.ProjectRunner, 
+                new FeatureDetails {
+                    FeatureTitle = "Project Run",
+                    FeatureWeighting = 1.033 });
+
+            OriginalTestDetails.Add(
+                Feature.SolutionFileExists, 
+                new FeatureDetails {
+                    FeatureTitle = "Solution File Exists",
+                    FeatureWeighting = 0 });
+
+            OriginalTestDetails.Add(
+                Feature.TestCountCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "All unit tests have passed",
+                    FeatureWeighting = 1.355 });
+
+            OriginalTestDetails.Add(
+                Feature.UICheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Evidence present in UI",
+                    FeatureWeighting = 1.03 });
+
+            OriginalTestDetails.Add(
+                Feature.UnitConverterCheck, 
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully",
+                    FeatureWeighting = 1.09 });
         }
 
         public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
@@ -122,6 +195,5 @@ namespace YoCode
                 FinalScore += elem.WeightedRating;
             }
         }
-
     }
 }
