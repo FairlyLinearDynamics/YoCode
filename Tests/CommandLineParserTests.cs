@@ -7,16 +7,6 @@ namespace YoCode_XUnit
     public class CommandLineParserTests
     {
         [Fact]
-        public void CommandLineParser_WrongOriginalPathInput()
-        {
-            var cmd = new CommandLineParser(new string[] { "--original=WRONGPATH" });
-
-            var cmdResult = cmd.Parse();
-
-            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
-        }
-
-        [Fact]
         public void CommandLineParser_WrongModifiedPathInput()
         {
             var cmd = new CommandLineParser(new string[] { "--modified=WRONGPATH" });
@@ -77,13 +67,13 @@ namespace YoCode_XUnit
         }
 
         [Fact]
-        public void CommandLineParser_OnlyModifiedFileParsingCommand()
+        public void CommandLineParser_JuniorTest()
         {
-            var cmd = new CommandLineParser(new string[] { "--modified=/" });
+            var cmd = new CommandLineParser(new string[] { "--junior" });
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongOriginalDirectory));
+            cmdResult.JuniorTest.Should().BeTrue();
         }
     }
 }

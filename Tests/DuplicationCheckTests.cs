@@ -26,7 +26,6 @@ namespace YoCode_XUnit
 
             var fileNameChecked = "UnitConverterWebApp.sln";
 
-            mockDir.Setup(w => w.OriginalTestDirPath).Returns(fakeOriginal);
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
 
             mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeOriginal, fileNameChecked)))
@@ -38,7 +37,7 @@ namespace YoCode_XUnit
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
 
-            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder);
+            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, false);
         }
 
         private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)

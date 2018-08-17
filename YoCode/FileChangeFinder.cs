@@ -16,7 +16,7 @@ namespace YoCode
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
 
-            if(!Repository.IsValid(path))
+            if (!Repository.IsValid(path))
             {
                 FileChangeEvidence.SetFailed("Git Repository Not Found");
                 return;
@@ -25,8 +25,14 @@ namespace YoCode
             Repo = new Repository(path);
 
             GetFileDifferences();
+
             GetUncommitedFiles(path);
 
+            FillInEvidence();
+        }
+
+        private void FillInEvidence()
+        {
             if (FileList.Any() || UncommitedFiles.Any())
             {
                 FileChangeEvidence.FeatureImplemented = true;
