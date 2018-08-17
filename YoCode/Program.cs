@@ -136,7 +136,7 @@ namespace YoCode
                 workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
 
-                Console.WriteLine("The final score is " + new Results(checkList).FinalScore + "\n");
+                Console.WriteLine("The final score is " + new Results(checkList,TestType.Original).FinalScore + "\n");
             }
             return checkList;
         }
