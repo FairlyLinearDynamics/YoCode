@@ -13,6 +13,8 @@ namespace YoCode
         {
             UIContainsFeature(userFilePaths, keyWords);
             UIEvidence.FeatureTitle = "Evidence present in UI";
+            UIEvidence.Feature = Feature.UICheck;
+            UIEvidence.GiveEvidence("Feature Rating: " + (UIEvidence.FeatureRating * 100) + "%");
         }
 
         public UICheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
@@ -32,7 +34,9 @@ namespace YoCode
                 if (ContainsKeyWord(userFile[i], keyWords))
                 {
                     UIEvidence.FeatureImplemented = true;
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
+                    UIEvidence.FeatureRating = 1;
+
+                    UIEvidence.GiveEvidence($"Found  on line {i+1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                 }
             }
         }

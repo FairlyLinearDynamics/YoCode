@@ -32,6 +32,7 @@ namespace YoCode
         {
             this.dir = dir;
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.Feature = Feature.DuplicationCheck;
             this.dupFinder = dupFinder;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
@@ -41,6 +42,7 @@ namespace YoCode
             {
                 ExecuteTheCheck();
                 CheckForSpecialRepetition();
+                DuplicationEvidence.GiveEvidence("Feature Rating: " + (DuplicationEvidence.FeatureRating * 100) + "%");
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
@@ -67,6 +69,8 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
+            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
+
             DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
@@ -115,6 +119,16 @@ namespace YoCode
                 DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
             }
         }
+
+        public double GetDuplicationCheckRating()
+        {
+            double UpperBound = 628;
+            double LowerBound = 174;
+            double range = UpperBound - LowerBound;
+
+            return ModiDuplicateCost >= UpperBound ? 0 : 1-Math.Round((ModiDuplicateCost - LowerBound) / range,2);
+        }
+
 
         private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {

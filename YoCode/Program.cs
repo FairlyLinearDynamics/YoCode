@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace YoCode
 {
@@ -50,6 +51,7 @@ namespace YoCode
             OpenHTMLOnFinish = !result.Silent;
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+
         }
 
         public static bool OpenHTMLOnFinish { get; set; }
@@ -104,6 +106,7 @@ namespace YoCode
                 {
                     FeatureTitle = "Solution File Exists",
                     FeatureImplemented = true,
+                    FeatureRating = 1
                 });
 
                 // Git repo used
@@ -132,6 +135,8 @@ namespace YoCode
                 LoadingAnimation.LoadingFinished = true;
                 workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
+
+                Console.WriteLine("The final score is " + new Results(checkList).FinalScore + "\n");
             }
             return checkList;
         }

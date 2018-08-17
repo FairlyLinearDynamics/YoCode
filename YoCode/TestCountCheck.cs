@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -21,10 +22,12 @@ namespace YoCode
         {
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
+            UnitTestEvidence.Feature = Feature.TestCountCheck;
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
             ExecuteTheCheck();
+            UnitTestEvidence.GiveEvidence("Feature Rating: " + (UnitTestEvidence.FeatureRating * 100) + "%");
         }
 
         public void ExecuteTheCheck()
@@ -54,17 +57,35 @@ namespace YoCode
                 stats.totalTests = tempStats[0];
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
-                stats.testsSkipped = tempStats[3];
+                stats.testsSkipped = tempStats[3];    
+                UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
+
             }
             else
             {
                 UnitTestEvidence.SetFailed("Couldn't get information about tests");
+                UnitTestEvidence.FeatureRating = 0;
             }
         }
 
         public static List<string> GetTestKeyWords()
         {
             return new List<string> { "Total tests:" };
+        }
+
+        public double GetTestCountCheckRating()
+        {
+            double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
+
+            if(stats.totalTests >= TestCountTreshold)
+            {
+                return rating;
+            }
+            else
+            {
+                double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+                return rating - deduction;
+            }
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
