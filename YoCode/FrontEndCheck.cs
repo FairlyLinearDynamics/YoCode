@@ -5,6 +5,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
+using Microsoft.Win32;
 
 namespace YoCode
 {
@@ -12,53 +13,60 @@ namespace YoCode
     {
         private readonly IWebDriver browser;
         private readonly string port;
+        private const string CHROME = "Google Chrome";
+        private const string FIREFOX = "Firefox";
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
+            if (string.IsNullOrEmpty(applicantsWebPort))
+            {
+                FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+            }
+
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
 
-            try
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+            var browsers = key.GetSubKeyNames();
+
+            browsers.ToList().ForEach(Console.WriteLine);
+
+            if (browsers.Contains(FIREFOX))
             {
-                try
-                {
-                    var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-                    foxService.HideCommandPromptWindow = true;
-                    port = applicantsWebPort;
-                    var options = new FirefoxOptions();
-                    options.AddArgument("--headless");
+                var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                foxService.HideCommandPromptWindow = true;
+                port = applicantsWebPort;
+                var options = new FirefoxOptions();
+                options.AddArgument("--headless");
 
-                    browser = new FirefoxDriver(foxService, options);
-                }
-                catch (Exception)
-                {
-                    var chromeService = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-                    chromeService.HideCommandPromptWindow = true;
-                    port = applicantsWebPort;
-                    var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArgument("--headless");
-
-                    browser = new ChromeDriver(chromeService, chromeOptions);
-                }
-
-                browser.Navigate().GoToUrl(port);
-
-                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
-
-                UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
-
-                if (!FrontEndEvidence.Evidence.Any())
-                {
-                    FrontEndEvidence.GiveEvidence("Could not input any data");
-                }
-
-                browser.Dispose();
+                browser = new FirefoxDriver(foxService, options);
             }
-            catch (WebDriverException e)
+            else if (browsers.Contains(CHROME))
             {
-                browser.Dispose();
+                var chromeService = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                chromeService.HideCommandPromptWindow = true;
+                port = applicantsWebPort;
+                var chromeOptions = new ChromeOptions();
+                chromeOptions.AddArgument("--headless");
 
-                FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
+                browser = new ChromeDriver(chromeService, chromeOptions);
             }
+            else
+            {
+                FrontEndEvidence.SetFailed($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser");
+            }
+
+            browser.Navigate().GoToUrl(port);
+
+            FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
+
+            UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
+
+            if (!FrontEndEvidence.Evidence.Any())
+            {
+                FrontEndEvidence.GiveEvidence("Could not input any data");
+            }
+
+            browser.Dispose();
         }
 
         private bool CheckIfUIContainsFeature(string[] keyWords)
