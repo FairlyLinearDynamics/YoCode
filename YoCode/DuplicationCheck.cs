@@ -115,7 +115,7 @@ namespace YoCode
             }
             if (stringRep > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
+                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep} times");
             }
         }
 
