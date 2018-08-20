@@ -11,10 +11,13 @@ namespace YoCode
 {
     internal class FrontEndCheck
     {
-        private readonly IWebDriver browser;
+        private static IWebDriver browser;
+        private static DriverService service;
         private readonly string port;
         private const string CHROME = "Google Chrome";
         private const string FIREFOX = "Firefox";
+
+        public static bool running;
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
@@ -22,51 +25,78 @@ namespace YoCode
             {
                 FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
             }
-
+            running = true;
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
             var browsers = key.GetSubKeyNames();
-
-            browsers.ToList().ForEach(Console.WriteLine);
-
-            if (browsers.Contains(FIREFOX))
+            
+            if (browsers.Any(a=>a.Contains(FIREFOX)))
             {
-                var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-                foxService.HideCommandPromptWindow = true;
-                port = applicantsWebPort;
-                var options = new FirefoxOptions();
-                options.AddArgument("--headless");
-
-                browser = new FirefoxDriver(foxService, options);
+                try
+                {
+                    service = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    service.HideCommandPromptWindow = true;
+                    port = applicantsWebPort;
+                    var options = new FirefoxOptions();
+                    options.AddArgument("--headless");
+                    browser = new FirefoxDriver((FirefoxDriverService)service, options);
+                }
+                catch { };
             }
-            else if (browsers.Contains(CHROME))
+            else if (browsers.Any(a=>a.Contains(CHROME)))
             {
-                var chromeService = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
-                chromeService.HideCommandPromptWindow = true;
-                port = applicantsWebPort;
-                var chromeOptions = new ChromeOptions();
-                chromeOptions.AddArgument("--headless");
+                try
+                {
+                    service = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    service.HideCommandPromptWindow = true;
+                    port = applicantsWebPort;
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArgument("--headless");
 
-                browser = new ChromeDriver(chromeService, chromeOptions);
+                    browser = new ChromeDriver((ChromeDriverService)service, chromeOptions);
+                }
+                catch { };
             }
             else
             {
                 FrontEndEvidence.SetFailed($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser");
             }
 
-            browser.Navigate().GoToUrl(port);
+            try
+            {
+                browser.Navigate().GoToUrl(port);
 
-            FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
+                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
-            UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
+                UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
+            }
+            catch { return; }
 
             if (!FrontEndEvidence.Evidence.Any())
             {
                 FrontEndEvidence.GiveEvidence("Could not input any data");
             }
 
-            browser.Dispose();
+            CloseBrowser();
+        }
+
+        public static bool CloseBrowser()
+        {
+            if (browser != null)
+            {
+                Console.WriteLine("browser closed");
+                browser.Dispose();
+                browser.Quit();
+                running = false;
+                return true;
+            }
+            if(running)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool CheckIfUIContainsFeature(string[] keyWords)
