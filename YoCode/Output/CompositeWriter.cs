@@ -52,5 +52,13 @@ namespace YoCode
                 writer.WriteReport();
             }
         }
+
+        public void AddFinalScore(double score)
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddFinalScore(score);
+            }
+        }
     }
 }

@@ -16,6 +16,8 @@ namespace YoCode
         StringBuilder errors;
         StringBuilder msg;
 
+        private double score;
+
         public WebWriter()
         {
             features = new StringBuilder();
@@ -40,7 +42,7 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
 
-            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass);
+            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass,data.score);
 
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
@@ -48,6 +50,11 @@ namespace YoCode
         public void AddBanner()
         {
             msg.Append(messages.HtmlFireplaceBanner);
+        }
+
+        public void AddFinalScore(double score)
+        {
+            this.score = score;
         }
 
         private string BuildReport()
@@ -63,7 +70,6 @@ namespace YoCode
             report.Append(errors.ToString());
             report.Append(msg);
 
-            var score = 0.0;
             return messages.HtmlTemplate.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
         }
 

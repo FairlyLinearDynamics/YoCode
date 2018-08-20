@@ -58,7 +58,7 @@ namespace YoCode
             var dotnetExecutablePath = Path.Combine(dotnetDir, "dotnet.exe");
 
             return $"analyse /TargetExecutable=\"{dotnetExecutablePath}\" /TargetArguments=\"test\" /TargetWorkingDir=\"{targetWorkingDir}\"" +
-                $" /ReportType=\"JSON\" /Output=\"{ReportName}\"";
+                $" /ReportType=\"JSON\" /Output=\"{ReportName}\" /Filters=\"-:UnitConverterTests;-:..\\UnitConverterWebApp\\Startup.cs\"";
         }
 
         private ProcessDetails CreateProcessDetails(string dotCoverDir)

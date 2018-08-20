@@ -50,7 +50,7 @@ namespace YoCode
             showLoadingAnim = !result.NoLoadingScreen;
             OpenHTMLOnFinish = !result.Silent;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle));
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
 
         }
 
@@ -135,8 +135,6 @@ namespace YoCode
                 LoadingAnimation.LoadingFinished = true;
                 workThreads.ForEach(a=> a.Join());
                 pr.KillProject();
-
-                Console.WriteLine("The final score is " + new Results(checkList,TestType.Original).FinalScore + "\n");
             }
             return checkList;
         }

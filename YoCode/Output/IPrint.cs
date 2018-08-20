@@ -11,5 +11,6 @@ namespace YoCode
         void AddErrs(IEnumerable<string> errors);
         void AddBanner();
         void WriteReport();
+        void AddFinalScore(double score);
     }
 }

@@ -71,7 +71,7 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormaFeatureTitle(string title, bool featurePassed = false, double score = 0.855f)
+        public static string FormaFeatureTitle(string title, bool featurePassed = false, double score = 0.0)
         {
             var passIcon = "accordion-icon-pass";
             var failIcon = "accordion-icon-fail";
