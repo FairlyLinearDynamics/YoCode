@@ -13,7 +13,6 @@ namespace YoCode
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
             FileChangeEvidence.Feature = Feature.FilesChangedCheck;
-
             directory = dir;
             ProjectIsModified();
         }
