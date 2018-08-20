@@ -20,6 +20,8 @@ namespace YoCode
         {
             this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
+            ProjectRunEvidence.Feature = Feature.ProjectRunner;
+
             this.workingDir = workingDir + projectFolder;
             if (!Directory.Exists(this.workingDir))
             {
@@ -43,6 +45,7 @@ namespace YoCode
             ErrorOutput = evidence.ErrorOutput;
 
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
+            ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
 
             if (ProjectRunEvidence.FeatureImplemented)
             {
@@ -52,6 +55,7 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
+
         }
 
         private string CreateArgument(string workingDir)

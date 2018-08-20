@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace YoCode
 {
@@ -46,7 +47,8 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
+
         }
 
         public static bool OpenHTMLOnFinish { get; set; }
@@ -97,12 +99,13 @@ namespace YoCode
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
-            });
+                // Solution file exists
+                checkList.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "Solution File Exists",
+                    FeatureImplemented = true,
+                    FeatureRating = 1
+                });
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);

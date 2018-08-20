@@ -19,6 +19,12 @@ namespace YoCode
             WriteReport();
         }
 
+        public void AddFinalScore(double score)
+        {
+            consoleReport.AppendLine("Total Score: "+score);
+            consoleReport.AppendLine(messages.Divider);
+        }
+
         public void AddFeature(FeatureData data)
         {
             consoleReport.AppendLine(data.title);

@@ -6,6 +6,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
 using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -15,6 +16,7 @@ namespace YoCode
         private readonly string port;
         private const string CHROME = "Google Chrome";
         private const string FIREFOX = "Firefox";
+        private List<bool> ratingsList = new List<bool>();
 
         public static bool running;
 
@@ -130,10 +132,12 @@ namespace YoCode
             if (exception.Any())
             {
                 FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
+                ratingsList.Add(false);
             }
             else
             {
                 FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
+                ratingsList.Add(true);
             }
 
             browser.Navigate().GoToUrl(port);

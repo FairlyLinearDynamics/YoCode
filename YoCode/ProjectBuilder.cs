@@ -12,7 +12,9 @@ namespace YoCode
         {
             CleanBuildOutput(workingDir);
 
-            ProjectBuilderEvidence.FeatureTitle = "Project build";
+            ProjectBuilderEvidence.FeatureTitle = "Project Build";
+            ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
+
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);
@@ -26,6 +28,8 @@ namespace YoCode
                 return;
             }
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
+            ProjectBuilderEvidence.FeatureRating = BuildSuccessful() ? 1 : 0;
+
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}{Environment.NewLine}Error count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {

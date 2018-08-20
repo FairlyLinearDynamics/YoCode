@@ -10,10 +10,13 @@ namespace YoCode
     {
         const string OUTPUT_PATH = @"YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
+        const string SCORE_TAG = "{SCORE}";
 
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
+
+        private double score;
 
         public WebWriter()
         {
@@ -33,7 +36,7 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
 
-            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass);
+            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass,data.score);
 
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
@@ -43,6 +46,11 @@ namespace YoCode
             msg.Append(messages.HtmlFireplaceBanner);
         }
 
+        public void AddFinalScore(double score)
+        {
+            this.score = score;
+        }
+
         private string BuildReport()
         {
             if (features.Length == 0 && errors.Length == 0)
@@ -50,10 +58,7 @@ namespace YoCode
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
 
-            else
-            {
-                return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString());
-            }
+            return messages.HtmlTemplate.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
         }
 
         public void WriteReport()

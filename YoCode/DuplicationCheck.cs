@@ -40,6 +40,7 @@ namespace YoCode
                 OrigDuplicateCost = 611;
             }
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.Feature = Feature.DuplicationCheck;
 
             this.dir = dir;
             this.dupFinder = dupFinder;
@@ -72,6 +73,8 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
+            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
+
             DuplicationEvidence.GiveEvidence(modEvidence);
         }
 
@@ -121,7 +124,17 @@ namespace YoCode
             }
         }
 
-        private int CountRepetition(string valueToCheckAgainst, string fileToReadFrom, string regexPattern)
+        public double GetDuplicationCheckRating()
+        {
+            double UpperBound = 628;
+            double LowerBound = 174;
+            double range = UpperBound - LowerBound;
+
+            return ModiDuplicateCost >= UpperBound ? 0 : 1-Math.Round((ModiDuplicateCost - LowerBound) / range,2);
+        }
+
+
+        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {
             var elements = Regex.Matches(fileToReadFrom, regexPattern);
             return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
