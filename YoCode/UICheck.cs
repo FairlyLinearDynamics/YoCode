@@ -41,8 +41,8 @@ namespace YoCode
             finally
             {
                 //Console.WriteLine(browser.FindElement(By.CssSelector("input")).GetAttribute("value"));
-                UIFeatureEvidences.Add(new FeaturePresentInUI(browser, UIKeywords.UNIT_KEYWORDS).FeatureInUIEvidence);
-                UIFeatureEvidences.Add(new UIBadInputChecker(browser).UIBadInputEvidence);
+                //UIFeatureEvidences.Add(new FeaturePresentInUI(browser, UIKeywords.UNIT_KEYWORDS).FeatureInUIEvidence);
+                //UIFeatureEvidences.Add(new UIBadInputChecker(browser).UIBadInputEvidence);
                 UIFeatureEvidences.Add(new UIInputCheck(browser).UIInputEvidence);
             }
         }

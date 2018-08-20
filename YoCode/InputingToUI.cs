@@ -10,10 +10,12 @@ namespace YoCode
     class InputingToUI
     {
         IWebDriver browser;
+        string startPage;
 
-        public InputingToUI(IWebDriver browser)
+        public InputingToUI(IWebDriver browser, string startPage)
         {
             this.browser = browser;
+            this.startPage = startPage;
         }
 
         public void InputData(string applicantTestInput)
@@ -46,6 +48,7 @@ namespace YoCode
                         }
 
                         form.FindElement(By.CssSelector("input")).Click();
+                        //OutputCheck(applicantTestInput);
                     }
                     else if (selectors.Count == 1)
                     {
@@ -58,6 +61,7 @@ namespace YoCode
                         }
 
                         form.FindElement(By.CssSelector("input")).Click();
+                        //OutputCheck(applicantTestInput);
                     }
                     else
                     {
@@ -66,11 +70,28 @@ namespace YoCode
                             textField.SendKeys(applicantTestInput);
                         }
 
-                        form.FindElement(By.CssSelector("input")).Click();
+                        form.FindElements(By.XPath("//input[@*='Miles to kilometers']")).ToList().ForEach(a=>Console.WriteLine(a.GetAttribute("value")));
+                        
+                        //OutputCheck(applicantTestInput);
                     }
                 }
                 catch (Exception) { }
             }
+        }
+        private void OutputCheck(string testData)
+        {
+            var exception = browser.FindElements(By.XPath($"//*[contains(text(),{testData})]"));
+            Console.WriteLine($"{exception.First(a => a.TagName.Equals("pre")).Text} with data: {testData}");
+            if (exception.Any())
+            {
+
+            }
+            else
+            {
+
+            }
+
+            browser.Navigate().GoToUrl(startPage);
         }
     }
 }

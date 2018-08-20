@@ -74,48 +74,48 @@ namespace YoCode
                     loadingThread.Start();
                 }
 
-                //Code Coverage
-                var codeCoverageThread = new Thread(() =>
-                {
-                    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-                });
-                workThreads.Add(codeCoverageThread);
-                codeCoverageThread.Start();
+                ////Code Coverage
+                //var codeCoverageThread = new Thread(() =>
+                //{
+                //    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                //});
+                //workThreads.Add(codeCoverageThread);
+                //codeCoverageThread.Start();
 
-                // Duplication check
-                var dupFinderThread = new Thread(() =>
-                {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
-                });
-                workThreads.Add(dupFinderThread);
-                dupFinderThread.Start();
+                //// Duplication check
+                //var dupFinderThread = new Thread(() =>
+                //{
+                //    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
+                //});
+                //workThreads.Add(dupFinderThread);
+                //dupFinderThread.Start();
 
-                // Files changed check
-                checkList.Add(fileCheck.FileChangeEvidence);
+                //// Files changed check
+                //checkList.Add(fileCheck.FileChangeEvidence);
 
-                // UI test
+                //// UI test
 
-                var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
+                //var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
-                // Solution file exists
-                checkList.Add(new FeatureEvidence()
-                {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureImplemented = true,
-                });
+                //// Solution file exists
+                //checkList.Add(new FeatureEvidence()
+                //{
+                //    FeatureTitle = "Solution File Exists",
+                //    FeatureImplemented = true,
+                //});
 
-                // Git repo used
-                checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
+                //// Git repo used
+                //checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
-                // Project build
-                checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+                //// Project build
+                //checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
                 pr.Execute();
-                // Project run test
-                checkList.Add(pr.ProjectRunEvidence);
+                //// Project run test
+                //checkList.Add(pr.ProjectRunEvidence);
 
-                // Unit test test
-                checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+                //// Unit test test
+                //checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
                 //Front End Check
                 checkList.AddRange(new UICheck(pr.GetPort()).UIFeatureEvidences);

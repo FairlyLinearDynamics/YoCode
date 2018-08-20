@@ -16,7 +16,7 @@ namespace YoCode
         {
             UIBadInputEvidence.FeatureTitle = "Applicant handled bad input cases in user interface";
             this.browser = browser;
-            var uiInputhandler = new InputingToUI(browser);
+            var uiInputhandler = new InputingToUI(browser, browser.Url);
             UIKeywords.GARBAGE_INPUT.ToList().ForEach(a=> {
                 uiInputhandler.InputData(a);
                 OutputCheck(a);
