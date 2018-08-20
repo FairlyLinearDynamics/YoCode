@@ -1,30 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace YoCode
 {
     internal class FileImport
     {
-        //Will return a list of all files from a directory
-        public static IEnumerable<string> GetAllFilesInDirectory(string path)
-        {
-            var files = new List<string>();
-            var di = new DirectoryInfo(path);
-            try
-            {
-                var fileinfo = di.GetFiles("*", SearchOption.AllDirectories);
-
-                AddFileInfoToList(files, fileinfo, path);
-
-                return files;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         public static void AddFileInfoToList(List<string> files, IEnumerable<FileInfo> fileinfo, string path)
         {
             foreach (var f in fileinfo)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -61,7 +58,7 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, 
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.MODIFIED, 
                 CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
         }
 
@@ -73,18 +70,6 @@ namespace YoCode
         private void ShowCodeCoverageHelp()
         {
             outputWriter.AddMessage(messages.CodeCoverageHelp);
-        }
-
-        public void ShowLaziness()
-        {
-            outputWriter.AddMessage("Project unmodified");
-            outputWriter.WriteReport();
-        }
-
-        public void ShowDirEmptyMsg()
-        {
-            outputWriter.AddMessage("Specified directory inaccessible");
-            outputWriter.WriteReport();
         }
 
         public void AppsettingsHelp()
