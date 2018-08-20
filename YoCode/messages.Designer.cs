@@ -70,7 +70,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  If you would like to see list of commands, type: --help.
+        ///   Looks up a localized string similar to If you would like to see list of commands, type: --help.
         /// </summary>
         public static string AskForHelp {
             get {
@@ -110,7 +110,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ==========================================================
+        ///   Looks up a localized string similar to =========================================================================
         ///.
         /// </summary>
         public static string Divider {
@@ -204,26 +204,29 @@ namespace YoCode {
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///
         ///    &lt;title&gt;YoCode Report&lt;/title&gt;
-        ///
-        ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
         ///    &lt;style&gt;
         ///      :root{
-        ///        --console-bg: #222121;
-        ///        --console-text: #c0c0c0;
-        ///        --green-bg: #3bc511;
-        ///        --red-bg: #eb4b4b;
-        ///     [rest of string was truncated]&quot;;.
+        ///        --main-bg: #d6cbda;
+        ///        --panel-bg: #f4eef8;
+        ///        --panel-text: #3b3838;
+        ///        --toolbar-bg: #8B2C87;
+        ///        --toolbar-text: #e2d7d7;
+        ///        --element-underlining: #c1b8c9;
+        ///      }
+        ///
+        ///      body {
+        ///        background-color:  [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string HtmlTemplate_WithoutFeatures {
+        public static string HtmlTemplate_HelpPage {
             get {
-                return ResourceManager.GetString("HtmlTemplate_WithoutFeatures", resourceCulture);
+                return ResourceManager.GetString("HtmlTemplate_HelpPage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;button class=&quot;accordion&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;accordion&quot;&gt;
         ///                    {TITLE}
-        ///                &lt;/button&gt;
+        ///                &lt;/div&gt;
         ///                &lt;div class=&quot;panel&quot;&gt;
         ///                    &lt;div class=&quot;panel-content&quot;&gt;
         ///                        {CONTENT}
@@ -246,7 +249,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ---------------------------------------------------------.
+        ///   Looks up a localized string similar to ------------------------------------------------------------------------.
         /// </summary>
         public static string ParagraphDivider {
             get {

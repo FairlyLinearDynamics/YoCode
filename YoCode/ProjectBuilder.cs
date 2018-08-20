@@ -26,7 +26,7 @@ namespace YoCode
                 return;
             }
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
-            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
+            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}{Environment.NewLine}Error count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {
                 ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");

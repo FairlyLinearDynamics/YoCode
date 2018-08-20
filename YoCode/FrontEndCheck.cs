@@ -23,6 +23,7 @@ namespace YoCode
             if (string.IsNullOrEmpty(applicantsWebPort))
             {
                 FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+                return;
             }
             running = true;
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";

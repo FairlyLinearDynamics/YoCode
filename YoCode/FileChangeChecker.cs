@@ -11,7 +11,7 @@ namespace YoCode
 
         public FileChangeChecker(IPathManager dir)
         {
-            FileChangeEvidence.FeatureTitle = "Files changed";
+            FileChangeEvidence.FeatureTitle = "Files changed or added";
             directory = dir;
             ProjectIsModified();
         }
