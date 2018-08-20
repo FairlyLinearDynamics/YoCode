@@ -29,6 +29,7 @@ namespace YoCode
             }
             running = true;
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
+            FrontEndEvidence.Feature = Feature.FrontEndCheck;
             DriverService service;
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
@@ -38,6 +39,8 @@ namespace YoCode
             {
                 try
                 {
+                    FrontEndEvidence.GiveEvidence(string.Format("\n{0,-40} {1,-10}", "Input name", "FIXED"));
+                    FrontEndEvidence.GiveEvidence(messages.ParagraphDivider);
                     service = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     port = applicantsWebPort;
@@ -51,6 +54,8 @@ namespace YoCode
             {
                 try
                 {
+                    FrontEndEvidence.GiveEvidence(string.Format("\n{0,-40} {1,-10}", "Input name", "FIXED"));
+                    FrontEndEvidence.GiveEvidence(messages.ParagraphDivider);
                     service = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     port = applicantsWebPort;
@@ -64,15 +69,16 @@ namespace YoCode
             else
             {
                 FrontEndEvidence.SetFailed($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser");
+                return;
             }
 
             try
             {
                 browser.Navigate().GoToUrl(port);
 
-                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
-
                 UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
+                FrontEndEvidence.FeatureRating = GetOutputCheckRating();
+                FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false);
             }
             catch { return; }
 
@@ -80,6 +86,7 @@ namespace YoCode
             {
                 FrontEndEvidence.GiveEvidence("Could not input any data");
             }
+
 
             CloseBrowser();
         }
@@ -126,20 +133,37 @@ namespace YoCode
         }
 
         private void OutputCheck(string testData)
-        { 
+        {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
             if (exception.Any())
             {
-                FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
+                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
+                FrontEndEvidence.SetFailed(string.Format("{0,-40} {1,-10}", x, false));
                 ratingsList.Add(false);
             }
             else
             {
-                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
+                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
+                FrontEndEvidence.GiveEvidence(string.Format("{0,-40} {1,-10}", x, true));
                 ratingsList.Add(true);
             }
 
             browser.Navigate().GoToUrl(port);
+        }
+
+        public double GetOutputCheckRating()
+        {
+            double sum = 0;
+
+            foreach(var elem in ratingsList)
+            {
+                if(elem)
+                {
+                    var temp = 1 / Convert.ToDouble(ratingsList.Count);
+                    sum += temp;
+                }
+            }
+            return sum;
         }
 
         private void InputData(string applicantTestInput)

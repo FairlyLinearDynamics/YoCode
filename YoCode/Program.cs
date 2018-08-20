@@ -78,21 +78,13 @@ namespace YoCode
                 loadingThread.Start();
             }
 
-            //Code Coverage
-            var codeCoverageThread = new Thread(() =>
-            {
-                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-            });
-            workThreads.Add(codeCoverageThread);
-            codeCoverageThread.Start();
-
-            // Duplication check
-            var dupFinderThread = new Thread(() =>
-            {
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), isJunior).DuplicationEvidence);
-            });
-            workThreads.Add(dupFinderThread);
-            dupFinderThread.Start();
+                // Duplication check
+                var dupFinderThread = new Thread(() =>
+                {
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath),isJunior).DuplicationEvidence);
+                });
+                workThreads.Add(dupFinderThread);
+                dupFinderThread.Start();
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();

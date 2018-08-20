@@ -189,7 +189,7 @@ namespace YoCode
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
-                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider + ("---------------"));
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;

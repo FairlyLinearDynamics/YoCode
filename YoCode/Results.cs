@@ -6,6 +6,7 @@ namespace YoCode
     class Results
     {
         public double FinalScore { get; set; }
+        public double MaximumScore { get; set;}
 
         public Results(List<FeatureEvidence> list,TestType mode)
         {
@@ -15,6 +16,7 @@ namespace YoCode
 
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
+            CalculateFinalScore();
         }
 
         public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
@@ -36,10 +38,17 @@ namespace YoCode
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
+                MaximumScore += elem.FeatureWeighting;
 
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
         }
+
+        public void CalculateFinalScore()
+        {
+            FinalScore = Math.Round((FinalScore / MaximumScore) * 100);
+        }
+
     }
 }
