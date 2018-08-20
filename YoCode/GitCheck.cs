@@ -20,7 +20,6 @@ namespace YoCode
             {
                 ExecuteTheCheck();
             }
-
         }
 
         public void ExecuteTheCheck()
