@@ -56,6 +56,13 @@ namespace YoCode
 
             var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
 
+            // Files changed check
+            checkList.Add(fileCheck.FileChangeEvidence);
+
+            if(fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
+            {
+                return checkList;
+            }
             var workThreads = new List<Thread>();
 
             if (showLoadingAnim)
@@ -83,9 +90,6 @@ namespace YoCode
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
-
-            // Files changed check
-            checkList.Add(fileCheck.FileChangeEvidence);
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
