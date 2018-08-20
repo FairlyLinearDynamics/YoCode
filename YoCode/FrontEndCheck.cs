@@ -88,7 +88,6 @@ namespace YoCode
         {
             if (browser != null)
             {
-                Console.WriteLine("browser closed");
                 browser.Dispose();
                 browser.Quit();
                 running = false;

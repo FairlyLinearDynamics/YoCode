@@ -53,12 +53,18 @@ namespace YoCode
 
         private string BuildReport()
         {
-            if (features.Length == 0 && errors.Length == 0)
+            var report = new StringBuilder();
+            if (features.Length == 0)
             {
-                return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
+                report.Append(errors.ToString());
+                report.Append(msg);
+                return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, report.ToString());
             }
+            report.Append(features.ToString());
+            report.Append(errors.ToString());
+            report.Append(msg);
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
+            return messages.HtmlTemplate_FeaturePage.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
         }
 
         public void WriteReport()

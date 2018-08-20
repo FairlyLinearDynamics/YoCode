@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YoCode
-{
-
-
+namespace YoCode {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -188,9 +188,9 @@ namespace YoCode
         ///        --red-bg: #eb4b4b;
         ///   [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string HtmlTemplate {
+        public static string HtmlTemplate_FeaturePage {
             get {
-                return ResourceManager.GetString("HtmlTemplate", resourceCulture);
+                return ResourceManager.GetString("HtmlTemplate_FeaturePage", resourceCulture);
             }
         }
         

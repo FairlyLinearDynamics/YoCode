@@ -161,7 +161,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
   <data name="AppsettingsHelp" xml:space="preserve">
     <value> appsettings.json file missing. Please make sure to create the file as specified in the README</value>
   </data>
-  <data name="HtmlTemplate" xml:space="preserve">
+  <data name="HtmlTemplate_FeaturePage" xml:space="preserve">
     <value>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
