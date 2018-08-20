@@ -41,7 +41,9 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
+                StructuredOutput();
                 CheckForSpecialRepetition();
+
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
@@ -69,8 +71,6 @@ namespace YoCode
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
-
-            DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
         }
 
         private void CheckForSpecialRepetition()
@@ -143,9 +143,17 @@ namespace YoCode
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
 
-            evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
-
             return (evidence, codebaseCost, duplicateCost);
+        }
+
+
+        public void StructuredOutput()
+        {
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            DuplicationEvidence.GiveEvidence(messages.ParagraphDivider);
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
+            DuplicationEvidence.GiveEvidence(Environment.NewLine);
         }
 
         private FeatureEvidence RunOneCheck(string solutionPath)

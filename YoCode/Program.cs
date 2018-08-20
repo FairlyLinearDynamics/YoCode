@@ -76,14 +76,6 @@ namespace YoCode
                     loadingThread.Start();
                 }
 
-                //Code Coverage
-                var codeCoverageThread = new Thread(() =>
-                {
-                    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-                });
-                workThreads.Add(codeCoverageThread);
-                codeCoverageThread.Start();
-
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {

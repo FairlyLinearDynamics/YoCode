@@ -17,12 +17,14 @@ namespace YoCode
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
-            FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
-
+            FrontEndEvidence.FeatureTitle = "Bad input exceptions fixed in UI";
+            FrontEndEvidence.Feature = Feature.FrontEndCheck;
             try
             {
                 try
                 {
+                    FrontEndEvidence.GiveEvidence(string.Format("\n{0,-40} {1,-10}", "Input name", "FIXED"));
+                    FrontEndEvidence.GiveEvidence(messages.ParagraphDivider);
                     var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     foxService.HideCommandPromptWindow = true;
                     port = applicantsWebPort;
@@ -44,15 +46,15 @@ namespace YoCode
 
                 browser.Navigate().GoToUrl(port);
 
-                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
-
                 UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
-                ratingsList.ForEach(Console.WriteLine);
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
                     FrontEndEvidence.GiveEvidence("Could not input any data");
                 }
+
+                FrontEndEvidence.FeatureRating = GetOutputCheckRating();
+                FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false);
 
                 browser.Dispose();
             }
@@ -89,20 +91,37 @@ namespace YoCode
         }
 
         private void OutputCheck(string testData)
-        { 
+        {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
             if (exception.Any())
             {
-                FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
+                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
+                FrontEndEvidence.SetFailed(string.Format("{0,-40} {1,-10}", x, false));
                 ratingsList.Add(false);
             }
             else
             {
-                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
+                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
+                FrontEndEvidence.GiveEvidence(string.Format("{0,-40} {1,-10}", x, true));
                 ratingsList.Add(true);
             }
 
             browser.Navigate().GoToUrl(port);
+        }
+
+        public double GetOutputCheckRating()
+        {
+            double sum = 0;
+
+            foreach(var elem in ratingsList)
+            {
+                if(elem)
+                {
+                    var temp = 1 / Convert.ToDouble(ratingsList.Count);
+                    sum += temp;
+                }
+            }
+            return sum;
         }
 
         private void InputData(string applicantTestInput)
