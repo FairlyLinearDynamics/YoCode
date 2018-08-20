@@ -39,9 +39,9 @@ namespace YoCode
                 OrigCodeBaseCost = 2305;
                 OrigDuplicateCost = 611;
             }
+            DuplicationEvidence.FeatureTitle = "Code quality improvement";
 
             this.dir = dir;
-            DuplicationEvidence.FeatureTitle = "Code quality improvement";
             this.dupFinder = dupFinder;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
@@ -134,8 +134,6 @@ namespace YoCode
             var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
-            var parameters = new AppSettingsBuilder();
-            parameters.ReadJSONFile();
 
             evidence.GiveEvidence(BuildEvidenceString(whichDir, codebaseCost, duplicateCost));
 

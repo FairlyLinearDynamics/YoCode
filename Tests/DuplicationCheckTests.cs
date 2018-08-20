@@ -42,7 +42,7 @@ namespace YoCode_XUnit
 
             dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, true);
 
-            dupCheck.DuplicationEvidence.FeatureImplemented.Should().BeTrue();
+            dupCheck.DuplicationEvidence.FeatureImplemented.Should().BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.FeatureImplemented}");
         }
     }
 }
