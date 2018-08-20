@@ -22,11 +22,6 @@ namespace YoCode
             msg = new StringBuilder();
         }
 
-        public void AddErrs(IEnumerable<string> errs)
-        {
-            /* HTML does not support error output */
-        }
-
         public void AddMessage(string message)
         {
             msg.Append(WebElementBuilder.FormatParagraph(message));
