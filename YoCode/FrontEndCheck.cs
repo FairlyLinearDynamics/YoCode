@@ -5,6 +5,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -12,6 +13,7 @@ namespace YoCode
     {
         private readonly IWebDriver browser;
         private readonly string port;
+        private List<bool> ratingsList = new List<bool>();
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
@@ -45,6 +47,7 @@ namespace YoCode
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
                 UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
+                ratingsList.ForEach(Console.WriteLine);
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
@@ -91,10 +94,12 @@ namespace YoCode
             if (exception.Any())
             {
                 FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
+                ratingsList.Add(false);
             }
             else
             {
                 FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
+                ratingsList.Add(true);
             }
 
             browser.Navigate().GoToUrl(port);
