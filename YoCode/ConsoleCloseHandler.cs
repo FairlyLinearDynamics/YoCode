@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace YoCode
 {
     internal static class ConsoleCloseHandler
     {
+        private static int sleepTimer = 100;
+
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
 
@@ -29,19 +32,16 @@ namespace YoCode
                 case CtrlType.CTRL_SHUTDOWN_EVENT:
                 case CtrlType.CTRL_CLOSE_EVENT:
                     Console.WriteLine("Closing");
-
                     try
                     {
                         Pr.KillProject();
-
-                        if (Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver") != null)
-                        {
-                            var process = Array.Find(Process.GetProcesses(), x => x.ProcessName == "geckodriver");
-                            ProcessRunner.KillProcessWithChildren(process);
-                        }
+                        
                     }
                     catch (NullReferenceException) { }
-
+                    while (!FrontEndCheck.CloseBrowser())
+                    {
+                        Thread.Sleep(sleepTimer);
+                    }
                     Environment.Exit(0);
                     return false;
 
