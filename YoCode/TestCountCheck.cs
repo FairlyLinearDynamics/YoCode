@@ -27,7 +27,6 @@ namespace YoCode
             workingDir = repositoryPath;
             arguments = "test";
             ExecuteTheCheck();
-            UnitTestEvidence.GiveEvidence("Feature Rating: " + (UnitTestEvidence.FeatureRating * 100) + "%");
         }
 
         public void ExecuteTheCheck()

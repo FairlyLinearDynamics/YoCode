@@ -20,13 +20,13 @@ namespace YoCode
                 Feature.CodeCoverageCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Code Coverage",
-                    FeatureWeighting = 1 });
+                    FeatureWeighting = 0 });
 
             JuniorTestDetails.Add(
                 Feature.DuplicationCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Code quality improvement",
-                    FeatureWeighting = 1.4172 });
+                    FeatureWeighting = 1.69 });
 
             JuniorTestDetails.Add(
                 Feature.FilesChangedCheck, 

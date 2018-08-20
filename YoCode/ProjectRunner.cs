@@ -55,7 +55,6 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
-            ProjectRunEvidence.GiveEvidence("Feature Rating: " + (ProjectRunEvidence.FeatureRating * 100) + "%");
 
         }
 

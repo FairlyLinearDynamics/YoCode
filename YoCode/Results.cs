@@ -37,12 +37,8 @@ namespace YoCode
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
 
-                Console.WriteLine("Feature: " + elem.FeatureTitle);
-                Console.WriteLine("Rating: " + elem.FeatureRating);
-                Console.WriteLine("Weighted Rating: " + elem.WeightedRating);
-                Console.WriteLine(messages.Divider);
                 FinalScore += elem.WeightedRating;
-                elem.FeatureRating *= 100;
+                elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
         }
     }

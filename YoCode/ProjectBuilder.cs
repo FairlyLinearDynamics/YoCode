@@ -35,10 +35,6 @@ namespace YoCode
             {
                 ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");
             }
-
-            ProjectBuilderEvidence.GiveEvidence("Feature Rating: " + (ProjectBuilderEvidence.FeatureRating * 100) + "%");
-
-
         }
 
         public static string GetErrorOutput(string output)
