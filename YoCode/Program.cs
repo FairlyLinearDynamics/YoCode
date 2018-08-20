@@ -38,11 +38,6 @@ namespace YoCode
 
             var dir = new PathManager(modifiedTestDirPath);
 
-            if (!parameters.FilesReadCorrectly(dir))
-            {
-                return;
-            }
-
             pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
 
             ConsoleCloseHandler.StartHandler(pr);
@@ -93,7 +88,6 @@ namespace YoCode
             checkList.Add(fileCheck.FileChangeEvidence);
 
             // UI test
-
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);

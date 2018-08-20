@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace YoCode
 {
@@ -88,22 +87,6 @@ namespace YoCode
             else if (!Directory.Exists(path))
             {
                 return SetError($"invalid directory provided for {checkName}");
-            }
-            return true;
-        }
-
-        public bool FilesReadCorrectly(IPathManager dir)
-        {
-            if (dir.ModifiedPaths == null)
-            {
-                compositeOutput.ShowDirEmptyMsg();
-                return false;
-            }
-
-            if (!dir.ModifiedPaths.Any())
-            {
-                compositeOutput.ShowLaziness();
-                return false;
             }
             return true;
         }
