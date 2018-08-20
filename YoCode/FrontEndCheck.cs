@@ -47,7 +47,6 @@ namespace YoCode
                 FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
 
                 UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
-                ratingsList.ForEach(Console.WriteLine);
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
