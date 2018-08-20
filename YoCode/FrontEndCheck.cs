@@ -12,7 +12,6 @@ namespace YoCode
     internal class FrontEndCheck
     {
         private static IWebDriver browser;
-        private static DriverService service;
         private readonly string port;
         private const string CHROME = "Google Chrome";
         private const string FIREFOX = "Firefox";
@@ -27,6 +26,7 @@ namespace YoCode
             }
             running = true;
             FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
+            DriverService service;
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
             var browsers = key.GetSubKeyNames();
