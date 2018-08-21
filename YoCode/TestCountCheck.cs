@@ -58,7 +58,7 @@ namespace YoCode
             }
             else
             {
-                UnitTestEvidence.SetFailed("Couldn't get information about tests");
+                UnitTestEvidence.SetFailed("Could not get information about tests");
             }
         }
 

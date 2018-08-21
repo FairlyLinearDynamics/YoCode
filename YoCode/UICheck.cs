@@ -32,7 +32,7 @@ namespace YoCode
                 if (ContainsKeyWord(userFile[i], keyWords))
                 {
                     UIEvidence.FeatureImplemented = true;
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
+                    UIEvidence.GiveEvidence($"Reference found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                 }
             }
         }
