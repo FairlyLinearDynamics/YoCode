@@ -18,6 +18,9 @@ namespace YoCode
         private TestStats stats;
         private List<int> tempStats;
 
+        private const int TitleColumnFormatter = -25;
+
+
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
@@ -44,9 +47,7 @@ namespace YoCode
             StoreCalculations(tempStats);
 
             UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
-            UnitTestEvidence.GiveEvidence(StatLine);
-            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.PercentagePassed).ToString());
-            UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
+            StructuredOutput();
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -82,6 +83,18 @@ namespace YoCode
             }
             double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
             return rating - deduction;
+        }
+
+        public void StructuredOutput()
+        {
+            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
