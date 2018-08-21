@@ -64,7 +64,7 @@ namespace YoCode
             report.Append(errors.ToString());
             report.Append(msg);
 
-            return messages.HtmlTemplate_FeaturePage.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
+            return messages.HtmlTemplate_FeaturePage.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString()+"%");
         }
 
         public void WriteReport()
