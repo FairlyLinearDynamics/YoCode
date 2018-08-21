@@ -10,22 +10,19 @@ namespace YoCode
     {
         const string OUTPUT_PATH = @"YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
+        const string SCORE_TAG = "{SCORE}";
 
         StringBuilder features;
         StringBuilder errors;
         StringBuilder msg;
+
+        private double score;
 
         public WebWriter()
         {
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
-        }
-
-        public void AddErrs(IEnumerable<string> errs)
-        {
-            errors.Append(WebElementBuilder.FormatAccordionElement(WebElementBuilder.FormaFeatureTitle("Errors present"),
-                WebElementBuilder.FormatListOfStrings(errs)));
         }
 
         public void AddMessage(string message)
@@ -39,7 +36,7 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
 
-            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass);
+            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass,data.score);
 
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
@@ -49,6 +46,11 @@ namespace YoCode
             msg.Append(messages.HtmlFireplaceBanner);
         }
 
+        public void AddFinalScore(double score)
+        {
+            this.score = score;
+        }
+
         private string BuildReport()
         {
             var report = new StringBuilder();
@@ -56,13 +58,13 @@ namespace YoCode
             {
                 report.Append(errors.ToString());
                 report.Append(msg);
-                return messages.HtmlTemplate_WithoutFeatures.Replace(FEATURE_TAG, report.ToString());
+                return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, report.ToString());
             }
             report.Append(features.ToString());
             report.Append(errors.ToString());
             report.Append(msg);
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG,report.ToString());
+            return messages.HtmlTemplate_FeaturePage.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString()+"%");
         }
 
         public void WriteReport()

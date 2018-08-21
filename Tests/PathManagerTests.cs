@@ -14,10 +14,9 @@ namespace YoCode_XUnit
             Mock<IPathManager> mock = new Mock<IPathManager>();
             var fakeDir = mock.Object;
 
-            const string fakeList1 = @"\";
             const string fakeList2 = @"\";
 
-            PathManager dir = new PathManager(fakeList1, fakeList2);
+            PathManager dir = new PathManager(fakeList2);
 
             const string path = @"..\..\..\TestData\";
 

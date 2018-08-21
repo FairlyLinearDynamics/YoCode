@@ -13,14 +13,6 @@ namespace YoCode
             this.writers = writers;
         }
 
-        public void AddErrs(IEnumerable<string> errors)
-        {
-            foreach(var writer in writers)
-            {
-                writer.AddErrs(errors);
-            }
-        }
-
         public void AddFeature(FeatureData data)
         {
             foreach(var writer in writers)
@@ -50,6 +42,14 @@ namespace YoCode
             foreach(var writer in writers)
             {
                 writer.WriteReport();
+            }
+        }
+
+        public void AddFinalScore(double score)
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddFinalScore(score);
             }
         }
     }

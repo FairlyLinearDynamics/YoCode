@@ -70,7 +70,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  If you would like to see list of commands, type: --help.
+        ///   Looks up a localized string similar to If you would like to see list of commands, type: --help.
         /// </summary>
         public static string AskForHelp {
             get {
@@ -89,7 +89,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ___________________________
+        ///   Looks up a localized string similar to _____________________________
         ///   _|__ _________________ __|__
         ///  _|___||               ||_|__
         ///  ___|_||       )  &apos;    ||___|_
@@ -103,14 +103,56 @@ namespace YoCode {
         ///                  C(__)`\ \____
         ///                      /_`\/___/.
         /// </summary>
-        public static string ConsoleFireplaceBanner {
+        public static string ConsoleFireplaceBannerFrame1 {
             get {
-                return ResourceManager.GetString("ConsoleFireplaceBanner", resourceCulture);
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame1", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ==========================================================
+        ///   Looks up a localized string similar to ___________________________
+        ///   _|__ _________________ __|__
+        ///  _|___||    ,          ||_|__
+        ///  ___|_||     )    (    ||___|_
+        ///   _|__||  ,) ,() (     ||_|___
+        ///  ___|_|| )  )|,(X)&apos;    ||___#_
+        ///  _|___|| /,)/|`\``\\\  |||__/\
+        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///       . - ------------ . #/      |
+        ///     (( (((  (( ))) ))))  )\      |
+        ///       `  -   ----  __ -/\  `.__.-#
+        ///                  C(__)`\ \____
+        ///                      /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame2 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///   _|__ _________________ __|__
+        ///  _|___||               ||_|__
+        ///  ___|_||  )     (      ||___|_
+        ///   _|__||   ) ,())  ,   ||_|___
+        ///  ___|_||   ,)|,(X)&apos;    ||___#_
+        ///  _|___|| /,)/|`\``\\\  |||__/\
+        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///       . - ------------ . #/      |
+        ///     (( (((  (( ))) ))))  )\      |
+        ///       `  -   ----  __ -/\  `.__.-#
+        ///                  C(__)`\ \____
+        ///                      /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame3 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to =========================================================================
         ///.
         /// </summary>
         public static string Divider {
@@ -132,12 +174,12 @@ namespace YoCode {
         
         /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
-        ///Possible commands: --{0}; --{1}; --{2}
-        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
-        ///To disable loading animation, append --{3} at the end of command line
-        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{3}
-        ///To disable automatic HTML report opening, append --{4} at the end of command line
-        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{4}.
+        ///Possible commands: --{0}; --{1}
+        ///Example use: --{0}=&lt;path-to-modified-test&gt;
+        ///To disable loading animation, append --{2} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{2}
+        ///To disable automatic HTML report opening, append --{3} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{3}.
         /// </summary>
         public static string HelpMessage {
             get {
@@ -188,9 +230,9 @@ namespace YoCode {
         ///        --red-bg: #eb4b4b;
         ///   [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string HtmlTemplate {
+        public static string HtmlTemplate_FeaturePage {
             get {
-                return ResourceManager.GetString("HtmlTemplate", resourceCulture);
+                return ResourceManager.GetString("HtmlTemplate_FeaturePage", resourceCulture);
             }
         }
         
@@ -204,26 +246,43 @@ namespace YoCode {
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///
         ///    &lt;title&gt;YoCode Report&lt;/title&gt;
-        ///
-        ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
         ///    &lt;style&gt;
         ///      :root{
-        ///        --console-bg: #222121;
-        ///        --console-text: #c0c0c0;
-        ///        --green-bg: #3bc511;
-        ///        --red-bg: #eb4b4b;
-        ///     [rest of string was truncated]&quot;;.
+        ///        --main-bg: #d6cbda;
+        ///        --panel-bg: #f4eef8;
+        ///        --panel-text: #3b3838;
+        ///        --toolbar-bg: #8B2C87;
+        ///        --toolbar-text: #e2d7d7;
+        ///        --element-underlining: #c1b8c9;
+        ///      }
+        ///
+        ///      body {
+        ///        background-color:  [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string HtmlTemplate_WithoutFeatures {
+        public static string HtmlTemplate_HelpPage {
             get {
-                return ResourceManager.GetString("HtmlTemplate_WithoutFeatures", resourceCulture);
+                return ResourceManager.GetString("HtmlTemplate_HelpPage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;button class=&quot;accordion&quot;&gt;
+        ///   Looks up a localized string similar to &lt;span class=&quot;accordion-icon {0}&quot;&gt;
+        ///    &lt;span class=&quot;fa {1}&quot;&gt;&lt;/span&gt;
+        ///  &lt;/span&gt;
+        ///  &lt;span class=&quot;accordion-score-holder&quot;&gt;
+        ///    &lt;span class=&quot;accordion-score&quot;&gt;{2}&lt;/span&gt;
+        ///  &lt;/span&gt;&lt;span class=&quot;accordion-title&quot;&gt;{3}&lt;/span&gt;.
+        /// </summary>
+        public static string HtmlTitleTemplate {
+            get {
+                return ResourceManager.GetString("HtmlTitleTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;accordion&quot;&gt;
         ///                    {TITLE}
-        ///                &lt;/button&gt;
+        ///                &lt;/div&gt;
         ///                &lt;div class=&quot;panel&quot;&gt;
         ///                    &lt;div class=&quot;panel-content&quot;&gt;
         ///                        {CONTENT}
@@ -246,7 +305,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ---------------------------------------------------------.
+        ///   Looks up a localized string similar to ------------------------------------------------------------------------.
         /// </summary>
         public static string ParagraphDivider {
             get {

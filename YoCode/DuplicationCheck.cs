@@ -11,15 +11,14 @@ namespace YoCode
         private readonly string fileNameChecked = "UnitConverterWebApp.sln";
 
         private readonly string modifiedSolutionPath;
-        private readonly string originalSolutionPath;
         private readonly IDupFinder dupFinder;
         private readonly IPathManager dir;
 
         private int ModiCodeBaseCost { get; set; }
         private int ModiDuplicateCost { get; set; }
 
-        private int OrigCodeBaseCost { get; set; }
-        private int OrigDuplicateCost { get; set; }
+        private int OrigCodeBaseCost { get; }
+        private int OrigDuplicateCost { get; }
 
         private const int VARIABLE_REPETITION_TRESHOLD = 1;
 
@@ -28,51 +27,60 @@ namespace YoCode
         private const string mileToKilometer = "1.60934";
         private const string stringCheck = "Yards to meters";
 
-        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder)
+        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, bool isJunior)
         {
-            this.dir = dir;
+            if (isJunior)
+            {
+                OrigCodeBaseCost = 2381;
+                OrigDuplicateCost = 628;
+            }
+            else
+            {
+                OrigCodeBaseCost = 2305;
+                OrigDuplicateCost = 611;
+            }
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.Feature = Feature.DuplicationCheck;
+
+            this.dir = dir;
             this.dupFinder = dupFinder;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
-            originalSolutionPath = Path.Combine(dir.OriginalTestDirPath, fileNameChecked);
 
             try
             {
                 ExecuteTheCheck();
+                StructuredOutput();
                 CheckForSpecialRepetition();
+
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
             {
-                DuplicationEvidence.FeatureImplemented = false;
-                DuplicationEvidence.GiveEvidence(messages.DupFinderHelp + "\n" + e);
+                DuplicationEvidence.SetFailed(messages.DupFinderHelp + "\n" + e);
             }
         }
 
-        private void ExecuteTheCheck() {
-            (var origEvidence, var origCodeBaseCost, var origDuplicateCost) = RunAndGatherEvidence(originalSolutionPath,"Original");
-            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath,"Modified");
+        private void ExecuteTheCheck()
+        {
+            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
 
-            if (origEvidence.FeatureFailed || modEvidence.FeatureFailed)
+            if (modEvidence.FeatureFailed)
             {
-                DuplicationEvidence.SetFailed($"Failed: Original={origEvidence.FeatureFailed}, Modified={modEvidence.FeatureFailed}");
+                DuplicationEvidence.SetFailed($"Failed: {modEvidence.FeatureFailed}");
                 return;
             }
-
-            OrigCodeBaseCost = origCodeBaseCost;
-            OrigDuplicateCost = origDuplicateCost;
 
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.GiveEvidence(origEvidence, modEvidence);
+            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
         }
 
         private void CheckForSpecialRepetition()
         {
-            var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath,FileTypes.cs);
+            var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.cs);
 
             var csUrisWithoutUnitTests = csUris.Where(a => !a.Contains("UnitConverterTests")).ToList();
 
@@ -85,7 +93,7 @@ namespace YoCode
             var inchRepetition = 0;
             var mileRepetition = 0;
 
-            string regexPatternForInts = "[0-9]+\\.?[0-9]*";
+            const string regexPatternForInts = "[0-9]+\\.?[0-9]*";
 
             foreach (var csFile in combinedList)
             {
@@ -112,9 +120,19 @@ namespace YoCode
             }
             if (stringRep > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
+                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep} times");
             }
         }
+
+        public double GetDuplicationCheckRating()
+        {
+            double UpperBound = 628;
+            double LowerBound = 174;
+            double range = UpperBound - LowerBound;
+
+            return ModiDuplicateCost >= UpperBound ? 0 : 1-Math.Round((ModiDuplicateCost - LowerBound) / range,2);
+        }
+
 
         private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {
@@ -130,14 +148,29 @@ namespace YoCode
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
 
-            evidence.GiveEvidence(whichDir + $"\nCodebase cost: {codebaseCost}\nDuplicate cost: {duplicateCost}");
-
+            evidence.GiveEvidence(BuildEvidenceString(whichDir, codebaseCost, duplicateCost));
             return (evidence, codebaseCost, duplicateCost);
+        }
+
+        public void StructuredOutput()
+        {
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            DuplicationEvidence.GiveEvidence(messages.ParagraphDivider);
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
+            DuplicationEvidence.GiveEvidence(Environment.NewLine);
+        }
+
+        private string BuildEvidenceString(string whichDir, int codebaseCost, int duplicateCost)
+        {
+            return "Original" + Environment.NewLine + "Codebase cost: " + OrigCodeBaseCost + Environment.NewLine +
+                   "Duplicate cost: " + OrigDuplicateCost + Environment.NewLine + whichDir + Environment.NewLine +
+                   $"Codebase cost: {codebaseCost} {Environment.NewLine}Duplicate cost: {duplicateCost}";
         }
 
         private FeatureEvidence RunOneCheck(string solutionPath)
         {
-            return dupFinder.Execute("Dup check",solutionPath);
+            return dupFinder.Execute("Dup check", solutionPath);
         }
 
         private bool HasTheCodeImproved()
