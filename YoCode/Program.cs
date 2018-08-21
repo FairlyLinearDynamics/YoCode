@@ -74,52 +74,55 @@ namespace YoCode
                 loadingThread.Start();
             }
 
-            ////Code Coverage
-            //var codeCoverageThread = new Thread(() =>
-            //{
-            //    checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-            //});
-            //workThreads.Add(codeCoverageThread);
-            //codeCoverageThread.Start();
+            //Code Coverage
+            var codeCoverageThread = new Thread(() =>
+            {
+                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+            });
+            workThreads.Add(codeCoverageThread);
+            codeCoverageThread.Start();
 
-            //// Duplication check
-            //var dupFinderThread = new Thread(() =>
-            //{
-            //    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), isJunior).DuplicationEvidence);
-            //});
-            //workThreads.Add(dupFinderThread);
-            //dupFinderThread.Start();
+            // Duplication check
+            var dupFinderThread = new Thread(() =>
+            {
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), isJunior).DuplicationEvidence);
+            });
+            workThreads.Add(dupFinderThread);
+            dupFinderThread.Start();
+
+            // UI test
+            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
 
-            //// Solution file exists
-            //checkList.Add(new FeatureEvidence()
-            //{
-            //    FeatureTitle = "Solution File Exists",
-            //    FeatureImplemented = true,
-            //});
+            // Solution file exists
+            checkList.Add(new FeatureEvidence()
+            {
+                FeatureTitle = "Solution File Exists",
+                FeatureImplemented = true,
+            });
 
-            //// Git repo used
-            //checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
+            // Git repo used
+            checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
-            //// Project build
-            //checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
+            // Project build
+            checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
 
             pr.Execute();
             // Project run test
-            //checkList.Add(pr.ProjectRunEvidence);
+            checkList.Add(pr.ProjectRunEvidence);
 
             // Unit test test
-            //checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+            checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
             //UI testing
             checkList.AddRange(new UICheck(pr.GetPort()).UIFeatureEvidences);
 
-            //UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
+            UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
-            //// Unit converter test
-            //checkList.Add(ucc.UnitConverterCheckEvidence);
+            // Unit converter test
+            checkList.Add(ucc.UnitConverterCheckEvidence);
 
-            //checkList.Add(ucc.BadInputCheckEvidence);
+            checkList.Add(ucc.BadInputCheckEvidence);
 
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
