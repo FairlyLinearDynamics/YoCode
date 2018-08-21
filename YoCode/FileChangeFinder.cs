@@ -26,7 +26,7 @@ namespace YoCode
 
             GetFileDifferences();
 
-            GetUncommitedFiles(path);
+            UncommitedFiles = GetUncommitedFiles(path);
 
             FillInEvidence();
         }
@@ -44,17 +44,13 @@ namespace YoCode
             }
         }
 
-        private void GetUncommitedFiles(string path)
+        private List<string> GetUncommitedFiles(string path)
         {
             using (var repository = new Repository(path))
             {
-                foreach (var item in repository.RetrieveStatus(new StatusOptions()))
-                {
-                    if (item.State == FileStatus.NewInIndex)
-                    {
-                        UncommitedFiles.Add(item.FilePath);
-                    }
-                }
+                RepositoryStatus repositoryStatus = repository.RetrieveStatus(new StatusOptions());
+
+                return repositoryStatus.Untracked.Select(a => a.FilePath).ToList();
             }
         }
 
