@@ -12,14 +12,7 @@ namespace YoCode
         {
             outputWriter = printTo;
 
-            if (errorReporter == null)
-            {
-                errOutput = new NullErrorObject();
-            }
-            else
-            {
-                errOutput = errorReporter;
-            }
+            errOutput = errorReporter ?? new NullErrorObject();
 
             featData = new FeatureData();
         }
