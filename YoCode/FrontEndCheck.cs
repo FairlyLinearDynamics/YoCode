@@ -15,6 +15,9 @@ namespace YoCode
         private readonly string port;
         private List<bool> ratingsList = new List<bool>();
 
+        private const int TitleColumnFormatter = -40;
+        private const int ValueColumnFormatter = -10;
+
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
             FrontEndEvidence.FeatureTitle = "Bad input exceptions fixed in UI";
@@ -99,16 +102,15 @@ namespace YoCode
         private void OutputCheck(string testData)
         {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
+            var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
             if (exception.Any())
             {
-                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
-                FrontEndEvidence.SetFailed(string.Format("{0,-40} {1,-10}", x, false));
+                FrontEndEvidence.SetFailed(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
                 ratingsList.Add(false);
             }
             else
             {
-                var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
-                FrontEndEvidence.GiveEvidence(string.Format("{0,-40} {1,-10}", x, true));
+                FrontEndEvidence.GiveEvidence(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}"));
                 ratingsList.Add(true);
             }
 

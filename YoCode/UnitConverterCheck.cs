@@ -38,6 +38,9 @@ namespace YoCode
 
         private readonly string HTMLcode;
 
+        private const int TitleColumnFormatter = -30;
+        private const int ValueColumnFormatter = -10;
+
         public UnitConverterCheck(string port)
         {
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
@@ -218,7 +221,7 @@ namespace YoCode
         {
             bool ret = true;
 
-            BadInputCheckEvidence.GiveEvidence(string.Format("\n{0,-30} {1,-10}", "Input name", "FIXED"));
+            BadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
             BadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
@@ -231,7 +234,7 @@ namespace YoCode
                     ret = false;
                 }
 
-                BadInputCheckEvidence.GiveEvidence(string.Format("{0,-30} {1,-10}", a.Key, isFixed));
+                BadInputCheckEvidence.GiveEvidence(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
             }
             return ret;
         }
