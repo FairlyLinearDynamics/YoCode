@@ -25,5 +25,10 @@
         {
             pr.KillCurrentProcessWithChildren();
         }
+
+        public void FindLeftOverProcess()
+        {
+            pr.FindLeftOverProcess();
+        }
     }
 }

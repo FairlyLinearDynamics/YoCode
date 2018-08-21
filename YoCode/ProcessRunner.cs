@@ -13,6 +13,7 @@ namespace YoCode
 
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
+        public int Pid { get; set; }
 
         public ProcessInfo procinfo;
         private readonly TimeSpan timeout = TimeSpan.FromSeconds(40);
@@ -35,6 +36,7 @@ namespace YoCode
             p.OutputDataReceived += DataReceived;
             p.ErrorDataReceived += ErrorDataReceived;
             p.Start();
+            Pid = p.Id;
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
 
@@ -172,6 +174,14 @@ namespace YoCode
         {
             FindAndKillChildProcesses(p.Id);
             KillLiveProcess(p);
+        }
+
+        public void FindLeftOverProcess()
+        {
+            if (!Process.GetProcessById(Pid).HasExited)
+            {
+                Console.WriteLine("Left Over Process Detected");
+            }
         }
     }
 }
