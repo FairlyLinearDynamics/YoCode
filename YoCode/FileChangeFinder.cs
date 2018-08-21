@@ -15,6 +15,7 @@ namespace YoCode
         public FileChangeFinder(string path)
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
+            FileChangeEvidence.Feature = Feature.FilesChangedCheck;
 
             if (!Repository.IsValid(path))
             {
@@ -36,6 +37,7 @@ namespace YoCode
             if (FileList.Any() || UncommitedFiles.Any())
             {
                 FileChangeEvidence.FeatureImplemented = true;
+                FileChangeEvidence.FeatureRating = 1;
                 FileChangeEvidence.GiveEvidence(BuildFileChangeOutput());
             }
             else

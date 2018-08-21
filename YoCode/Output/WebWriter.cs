@@ -58,7 +58,7 @@ namespace YoCode
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG, report.ToString()).Replace(SCORE_TAG, score.ToString());
+            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString()).Replace(SCORE_TAG, score+"%");
         }
 
         public void WriteReport()

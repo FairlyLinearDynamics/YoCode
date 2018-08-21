@@ -21,6 +21,7 @@ namespace YoCode
             var result = commandLinehandler.Parse();
 
             var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
+            OpenHTMLOnFinish = !result.Silent;
             isJunior = result.JuniorTest;
             if (!parameters.ParametersAreValid())
             {
@@ -79,7 +80,7 @@ namespace YoCode
                 // Duplication check
                 var dupFinderThread = new Thread(() =>
                 {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath)).DuplicationEvidence);
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath),isJunior).DuplicationEvidence);
                 });
                 workThreads.Add(dupFinderThread);
                 dupFinderThread.Start();

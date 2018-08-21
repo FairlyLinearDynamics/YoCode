@@ -60,7 +60,7 @@ namespace YoCode
                 }
 
                 FrontEndEvidence.FeatureRating = GetOutputCheckRating();
-                FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false);
+                FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
 
                 browser.Dispose();
             }
@@ -117,17 +117,7 @@ namespace YoCode
 
         public double GetOutputCheckRating()
         {
-            double sum = 0;
-
-            foreach(var elem in ratingsList)
-            {
-                if(elem)
-                {
-                    var temp = 1 / Convert.ToDouble(ratingsList.Count);
-                    sum += temp;
-                }
-            }
-            return sum;
+            return HelperMethods.GetRatingFromBoolList(ratingsList);
         }
 
         private void InputData(string applicantTestInput)

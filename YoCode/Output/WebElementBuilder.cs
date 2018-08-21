@@ -78,7 +78,7 @@ namespace YoCode
             var passIconStyle = "fa-check-circle-o";
             var failIconStyle = "fa-times-circle-o";
 
-            return String.Format(messages.HtmlTitleTemplate, (featurePassed == true) ? passIcon : failIcon, (featurePassed == true) ? passIconStyle : failIconStyle, score,title);
+            return String.Format(messages.HtmlTitleTemplate, featurePassed ? passIcon : failIcon, featurePassed ? passIconStyle : failIconStyle, score,title);
         }
 
         private static string FormatCheckIcont(bool checkMark)
