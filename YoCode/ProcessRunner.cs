@@ -178,10 +178,14 @@ namespace YoCode
 
         public void FindLeftOverProcess()
         {
-            if (!Process.GetProcessById(Pid).HasExited)
+            try
             {
-                Console.WriteLine("Left Over Process Detected");
+                if (!Process.GetProcessById(Pid).HasExited)
+                {
+                    Console.WriteLine("Left Over Process Detected");
+                }
             }
+            catch (ArgumentException) { }
         }
     }
 }
