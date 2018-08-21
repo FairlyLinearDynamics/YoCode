@@ -77,6 +77,7 @@ namespace YoCode
             {
                 browser.Dispose();
                 Running = false;
+                browser = null;
                 return true;
             }
 
