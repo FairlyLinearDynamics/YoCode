@@ -34,15 +34,47 @@ namespace YoCode
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
+
         {
+
+            double applyWeighting = 0;
+
+
+
             foreach (var elem in list)
+
             {
+
+                if (elem.Feature == Feature.BadInputCheck && elem.FeatureRating == 0)
+
+                {
+
+                    applyWeighting = elem.FeatureWeighting;
+
+                }
+
+                if (elem.Feature == Feature.FrontEndCheck)
+
+                {
+
+                    elem.FeatureWeighting = applyWeighting;
+
+                }
+
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
+
                 MaximumScore += elem.FeatureWeighting;
 
+
+
                 FinalScore += elem.WeightedRating;
+
+
+
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
+
             }
+
         }
 
         public void CalculateFinalScore()
