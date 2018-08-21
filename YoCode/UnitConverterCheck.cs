@@ -236,33 +236,12 @@ namespace YoCode
 
         public double GetBadInputCheckRating()
         {
-            double sum = 0;
-
-            foreach(var elem in BadInputBoolResults)
-            {
-                if(elem)
-                {
-                    var temp = 1 / Convert.ToDouble(badInputs.Count);
-                    sum += temp;
-                }
-            }
-
-            return sum;
+            return HelperMethods.GetRatingFromBoolList(BadInputBoolResults);
         }
 
         public double GetUnitConverterCheckRating()
         {
-            double sum = 0;
-
-            foreach(var elem in UnitConverterBoolResults)
-            {
-                if (elem)
-                {
-                    var temp = 1 / Convert.ToDouble(expected.Count);
-                    sum += temp;
-                }
-            }
-            return sum;
+            return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
         }
 
         public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)

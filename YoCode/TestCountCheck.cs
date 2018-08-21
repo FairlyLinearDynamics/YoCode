@@ -80,11 +80,8 @@ namespace YoCode
             {
                 return rating;
             }
-            else
-            {
-                double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
-                return rating - deduction;
-            }
+            double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+            return rating - deduction;
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

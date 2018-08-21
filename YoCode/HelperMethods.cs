@@ -99,5 +99,11 @@ namespace YoCode
         {
             return Math.Abs(a - b) <= 0.001;
         }
+
+        public static double GetRatingFromBoolList(List<bool> boolList)
+        {
+            return boolList.Count(e => e) / (double)boolList.Count;
+        }
+
     }
 }

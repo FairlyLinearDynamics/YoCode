@@ -135,7 +135,7 @@ namespace YoCode
                 Feature.ProjectRunner, 
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
-                    FeatureWeighting = 1000.033 });
+                    FeatureWeighting = 1.033 });
 
             OriginalTestDetails.Add(
                 Feature.SolutionFileExists, 
