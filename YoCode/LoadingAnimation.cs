@@ -7,25 +7,33 @@ namespace YoCode
     public static class LoadingAnimation
     {
         private static string dots;
+        static int cursorStartPos;
+        static int cursorStopPos;
 
         public static void RunLoading()
         {
             PrintIntro();
-            var cursorPos = Console.CursorTop;
-            var loadingBanner = new StringBuilder();
-            loadingBanner.AppendLine(messages.ConsoleFireplaceBanner);
-            loadingBanner.AppendLine(messages.ParagraphDivider);
-            loadingBanner.AppendLine(messages.LoadingMessage);
-            loadingBanner.AppendLine(messages.ParagraphDivider);
-            loadingBanner.AppendLine();
+            cursorStartPos = Console.CursorTop;
 
-            Console.Write(loadingBanner);
+            var loadingBanner = new StringBuilder();
+            var fireplaceFrames = new string[] { messages.ConsoleFireplaceBannerFrame1,
+                messages.ConsoleFireplaceBannerFrame2, messages.ConsoleFireplaceBannerFrame3};
+
+            var fireplaceInd = 0;
 
             while (true)
             {
-                Console.CursorTop--;
-                ClearLine();
-                Console.WriteLine(String.Format("Loading{0,-3}", dots));
+                Console.CursorTop = cursorStartPos;
+                Console.WriteLine(fireplaceFrames[fireplaceInd]);
+                Console.WriteLine(messages.ParagraphDivider);
+                Console.WriteLine(messages.LoadingMessage);
+                Console.WriteLine(messages.ParagraphDivider);
+                Console.WriteLine();
+
+                //Console.Write(loadingBanner);
+
+                Console.Write(String.Format("Loading{0,-3}", dots));
+                cursorStopPos = Console.CursorTop;
                 dots += ".";
                 if (dots.Equals("...."))
                 {
@@ -34,12 +42,17 @@ namespace YoCode
                 if (LoadingFinished)
                 {
                     ClearLine();
-                    while (Console.CursorTop > cursorPos)
-                    {
-                        Console.CursorTop--;
-                        ClearLine();
-                    }
+                    Console.CursorTop = cursorStartPos;
                     break;
+                }
+
+                if (fireplaceInd > 1)
+                {
+                    fireplaceInd = 0;
+                }
+                else
+                {
+                    fireplaceInd++;
                 }
                 Thread.Sleep(1000);
             }
@@ -47,9 +60,14 @@ namespace YoCode
 
         private static void ClearLine()
         {
-            Console.CursorLeft = 0;
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.CursorTop--;
+            Console.CursorTop = cursorStopPos;
+            while (Console.CursorTop >= cursorStartPos)
+            {
+                Console.CursorLeft = 0;
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorTop--;
+                Console.CursorTop--;
+            }
         }
 
         private static void PrintIntro()

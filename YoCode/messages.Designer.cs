@@ -89,7 +89,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ___________________________
+        ///   Looks up a localized string similar to _____________________________
         ///   _|__ _________________ __|__
         ///  _|___||               ||_|__
         ///  ___|_||       )  &apos;    ||___|_
@@ -103,9 +103,51 @@ namespace YoCode {
         ///                  C(__)`\ \____
         ///                      /_`\/___/.
         /// </summary>
-        public static string ConsoleFireplaceBanner {
+        public static string ConsoleFireplaceBannerFrame1 {
             get {
-                return ResourceManager.GetString("ConsoleFireplaceBanner", resourceCulture);
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///   _|__ _________________ __|__
+        ///  _|___||    ,          ||_|__
+        ///  ___|_||     )    (    ||___|_
+        ///   _|__||  ,) ,() (     ||_|___
+        ///  ___|_|| )  )|,(X)&apos;    ||___#_
+        ///  _|___|| /,)/|`\``\\\  |||__/\
+        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///       . - ------------ . #/      |
+        ///     (( (((  (( ))) ))))  )\      |
+        ///       `  -   ----  __ -/\  `.__.-#
+        ///                  C(__)`\ \____
+        ///                      /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame2 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///   _|__ _________________ __|__
+        ///  _|___||               ||_|__
+        ///  ___|_||  )     (      ||___|_
+        ///   _|__||   ) ,())  ,   ||_|___
+        ///  ___|_||   ,)|,(X)&apos;    ||___#_
+        ///  _|___|| /,)/|`\``\\\  |||__/\
+        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///       . - ------------ . #/      |
+        ///     (( (((  (( ))) ))))  )\      |
+        ///       `  -   ----  __ -/\  `.__.-#
+        ///                  C(__)`\ \____
+        ///                      /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame3 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame3", resourceCulture);
             }
         }
         

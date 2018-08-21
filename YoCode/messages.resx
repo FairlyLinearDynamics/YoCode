@@ -126,8 +126,8 @@ After you downloaded it please specify its location in appsettings.json file, wh
     <value>=========================================================================
 </value>
   </data>
-  <data name="ConsoleFireplaceBanner" xml:space="preserve">
-    <value>___________________________
+  <data name="ConsoleFireplaceBannerFrame1" xml:space="preserve">
+    <value>_____________________________
    _|__ _________________ __|__
   _|___||               ||_|__
   ___|_||       )  '    ||___|_
@@ -610,5 +610,35 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
   &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame2" xml:space="preserve">
+    <value>___________________________
+   _|__ _________________ __|__
+  _|___||    ,          ||_|__
+  ___|_||     )    (    ||___|_
+   _|__||  ,) ,() (     ||_|___
+  ___|_|| )  )|,(X)'    ||___#_
+  _|___|| /,)/|`\``\\\  |||__/\
+       ''---------------''  /  `--#
+       . - ------------ . #/      |
+     (( (((  (( ))) ))))  )\      |
+       `  -   ----  __ -/\  `.__.-#
+                  C(__)`\ \____
+                      /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame3" xml:space="preserve">
+    <value>___________________________
+   _|__ _________________ __|__
+  _|___||               ||_|__
+  ___|_||  )     (      ||___|_
+   _|__||   ) ,())  ,   ||_|___
+  ___|_||   ,)|,(X)'    ||___#_
+  _|___|| /,)/|`\``\\\  |||__/\
+       ''---------------''  /  `--#
+       . - ------------ . #/      |
+     (( (((  (( ))) ))))  )\      |
+       `  -   ----  __ -/\  `.__.-#
+                  C(__)`\ \____
+                      /_`\/___/</value>
   </data>
 </root>
