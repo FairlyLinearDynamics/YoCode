@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
 namespace YoCode
 {
-    public class LoadingAnimation
+    public static class LoadingAnimation
     {
-        static string dots;
+        private static string dots;
+
         public static void RunLoading()
         {
             PrintIntro();

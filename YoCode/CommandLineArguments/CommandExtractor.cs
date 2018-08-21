@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 
 namespace YoCode
 {
-    class CommandExtractor
+    static class CommandExtractor
     {
         public static SplitArg ArgsSplitter(string arg)
         {

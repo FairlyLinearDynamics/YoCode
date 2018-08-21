@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YoCode {
-    using System;
-    
-    
+namespace YoCode
+{
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -132,12 +132,12 @@ namespace YoCode {
         
         /// <summary>
         ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
-        ///Possible commands: --{0}; --{1}; --{2}
-        ///Example use: --{0}=&lt;path-to-original-test&gt; --{1}=&lt;path-to-modified-test&gt;
-        ///To disable loading animation, append --{3} at the end of command line
-        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{3}
-        ///To disable automatic HTML report opening, append --{4} at the end of command line
-        ///Example: --{0}=&lt;...&gt; --{1}=&lt;...&gt; --{4}.
+        ///Possible commands: --{0}; --{1}
+        ///Example use: --{0}=&lt;path-to-modified-test&gt;
+        ///To disable loading animation, append --{2} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{2}
+        ///To disable automatic HTML report opening, append --{3} at the end of command line
+        ///Example: --{0}=&lt;...&gt; --{3}.
         /// </summary>
         public static string HelpMessage {
             get {

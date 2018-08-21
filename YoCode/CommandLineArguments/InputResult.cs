@@ -10,7 +10,7 @@ namespace YoCode
         public bool HelpAsked { get; set; }
         public bool Silent { get; set; }
         public bool NoLoadingScreen { get; set; }
-        public string originalFilePath;
+        public bool JuniorTest { get; set; }
         public string modifiedFilePath;
     }
 }
