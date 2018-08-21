@@ -14,7 +14,7 @@ namespace YoCode
         {
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
-            var compositeOutput = new Output(new CompositeWriter(outputs));
+            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter) outputs.Find(a=> a is ConsoleWriter));
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -43,7 +43,6 @@ namespace YoCode
             ConsoleCloseHandler.StartHandler(pr);
 
             showLoadingAnim = !result.NoLoadingScreen;
-            OpenHTMLOnFinish = !result.Silent;
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
         }

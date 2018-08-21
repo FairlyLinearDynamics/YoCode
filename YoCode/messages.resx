@@ -123,7 +123,7 @@ Direct download link here: https://www.jetbrains.com/resharper/download/download
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
   <data name="Divider" xml:space="preserve">
-    <value>==========================================================
+    <value>=========================================================================
 </value>
   </data>
   <data name="ConsoleFireplaceBanner" xml:space="preserve">
@@ -156,7 +156,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 </value>
   </data>
   <data name="AskForHelp" xml:space="preserve">
-    <value> If you would like to see list of commands, type: --help</value>
+    <value>If you would like to see list of commands, type: --help</value>
   </data>
   <data name="AppsettingsHelp" xml:space="preserve">
     <value> appsettings.json file missing. Please make sure to create the file as specified in the README</value>
@@ -347,7 +347,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 
       .panel-content li{
         margin-top: 0px;
-        white-space: pre;
+        white-space: pre-wrap;
       }
 
       .green-text {
@@ -413,7 +413,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 
     &lt;div class="sections-wrapper"&gt;
       &lt;div class="section passed-tests"&gt;
-        &lt;span class="section-title"&gt;Total tests passed&lt;/span&gt; 
+        &lt;span class="section-title"&gt;Total checks passed&lt;/span&gt; 
         &lt;span id="js-passed-number" class="test-bar-number"&gt;5&lt;/span&gt;
 
         &lt;div class="bar-container"&gt;
@@ -423,7 +423,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
       &lt;/div&gt;
 
       &lt;div class="section failed-tests"&gt;
-        &lt;span class="section-title"&gt;Total tests failed&lt;/span&gt; 
+        &lt;span class="section-title"&gt;Total checks failed&lt;/span&gt; 
         &lt;span id="js-failed-number" class="test-bar-number"&gt;5&lt;/span&gt;
 
         &lt;div class="bar-container"&gt;
@@ -479,8 +479,6 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 
       document.getElementById('js-test-bar-passed').style.width = percentPassed+"%";
       document.getElementById('js-test-bar-failed').style.width = percentFailed+"%";
-
-      var acc = document.getElementsByClassName(".accordion")
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</value>
@@ -500,7 +498,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
   {CONTENT}
 &lt;/div&gt;</value>
   </data>
-  <data name="HtmlTemplate_WithoutFeatures" xml:space="preserve">
+  <data name="HtmlTemplate_HelpPage" xml:space="preserve">
     <value>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 
@@ -510,16 +508,8 @@ Example: --{0}=&lt;...&gt; --{3}</value>
     &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
 
     &lt;title&gt;YoCode Report&lt;/title&gt;
-
-    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
     &lt;style&gt;
       :root{
-        --console-bg: #222121;
-        --console-text: #c0c0c0;
-        --green-bg: #3bc511;
-        --red-bg: #eb4b4b;
-        --green-bg-transparent: #70eb4b3a;
-        --red-bg-transparent: #eb4b4b3a;
         --main-bg: #d6cbda;
         --panel-bg: #f4eef8;
         --panel-text: #3b3838;
@@ -542,58 +532,6 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         color: var(--toolbar-text);
         padding: 15px;
         border-bottom: 2px solid var(--element-underlining);
-      }
-
-      .sections-wrapper{
-        display: grid;
-        grid-template-columns: repeat(3,auto);
-        column-gap: 15px;
-        padding: 15px;
-        color:var(--panel-text);
-      }
-
-      .section{
-        display: grid;
-        grid-template-rows: repeat(3,auto);
-        background-color: var(--panel-bg);
-        padding: 15px;
-        height: 80px;
-        border-bottom: 2px solid var(--element-underlining);
-      }
-
-      .passed-tests{
-        grid-column: 1/2;
-      }
-
-      .failed-tests{
-        grid-column: 2/3;
-      }
-
-      .score{
-        grid-column: 3/4;
-      }
-
-      @media (max-width: 400px) {
-        .sections-wrapper {
-          grid-template-columns: auto;
-          grid-template-rows: repeat(3, auto);
-          grid-row-gap: 8px;
-        }
-
-        .passed-tests{
-          grid-row: 1/2;
-          grid-column: 1;
-        }
-
-        .failed-tests{
-          grid-row: 2/3;
-          grid-column: 1;
-        }
-
-        .score{
-          grid-row: 3/4;
-          grid-column: 1;
-        }
       }
 
       .report-wrapper{
@@ -624,147 +562,6 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         grid-column: 1;
         grid-row: 1/3;
       }
-
-      .section-title{
-        grid-row: 1/2;
-      }
-
-      .test-bar-number{
-        margin-top: 5px;
-        grid-row: 2/3;
-      }
-
-      .bar-container{
-        grid-row: 3/4;
-        width: auto;
-        height: 2px;
-        margin-top: 5px;
-        background-color: #ddd;
-      }
-
-      .tests-bar{
-        text-align: right;
-        height: 100%;
-        color:inherit;
-      }
-
-      .passed{width: 0%;background-color: var(--green-bg);}
-      .failed{width: 0%;background-color: var(--red-bg);}
-
-      .accordion {
-        width: 100%;
-        display: grid;
-        position: relative;
-        grid-template-columns: 50px auto 25px;
-        background-color: var(--panel-bg);
-        color: var(--panel-text);
-        cursor: pointer;
-        height: auto;
-        border: none;
-        outline: none;
-        transition: 0.4s;
-        border-bottom: 2px solid var(--element-underlining);
-        text-align: left;
-        padding: 0;
-      }
-
-      .accordion::after{
-        content: '\2B9F'; /* Unicode character for "plus" sign (+) */
-        font-size: 15px;
-        color: #777;
-        grid-column: 3;
-        align-self: center;
-        justify-content: center;
-      }
-
-      .active::after{
-        content: '\2B9D';
-      }
-
-      .active, .accordion:hover {
-        background-color: #e4dfe8;
-      }
-
-      .panel {
-        grid-column: 1/4;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-        margin-bottom: 3px;
-      }
-
-      .panel-content {
-        padding: 10px;
-        font-family: consolas;
-        background-color: var(--console-bg);
-        color: var(--console-text);
-        margin: 0px;
-        counter-reset: line;
-      }
-
-      .panel-content ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      .panel-content li{
-        margin-top: 0px;
-        white-space: pre;
-      }
-
-      .green-text {
-        color: var(--green-bg);
-      }
-
-      .red-text {
-        color: var(--red-bg);
-      }
-
-      .accordion-title {
-        grid-column: 2/2;
-        text-align: left;
-        font-size: 100%;
-        padding: 15px 15px;
-        font-weight: 400;
-        font-size: 25px;
-      }
-
-      @media (max-width: 400px) {
-        .accordion-title {
-          font-size: 18px;
-        }
-      }
-
-      .accordion-icon {
-        display: flex;
-        flex-direction: column;
-        flex-basis: 100%;
-        justify-content: center;
-      }
-
-      .accordion-icon-pass {
-        background-color: var(--green-bg-transparent);
-      }
-
-      .accordion-icon-fail {
-        background-color: var(--red-bg-transparent);
-      }
-
-        .fa-check-circle-o,
-        .fa-times-circle-o {
-        text-align: center;
-        font-size: 130%;   
-      }
-
-
-      .fa-times-circle-o {
-        color: var(--red-bg);
-      }
-
-
-      .fa-check-circle-o {
-        color: var(--green-bg);
-      }
     &lt;/style&gt;
   &lt;/head&gt;
 
@@ -775,44 +572,6 @@ Example: --{0}=&lt;...&gt; --{3}</value>
     &lt;div class="report-wrapper"&gt;
       {FEATURE}
     &lt;/div&gt;
-
-    &lt;script&gt;
-      var acc = document.getElementsByClassName("accordion");
-
-      for (let i = 0; i &lt; acc.length; i++) 
-      {
-      acc[i].addEventListener("click", function() 
-      {
-          this.classList.toggle("active");
-
-          var panel = this.nextElementSibling;
-
-          if (!this.classList.contains("active"))
-          {
-            panel.style.maxHeight = null;
-          } 
-          else 
-          {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-          }
-        });
-      }
-
-      var totalPassed = document.getElementsByClassName('accordion-icon-pass').length;
-      var totalFailed = document.getElementsByClassName('accordion-icon-fail').length;
-      var total = totalPassed + totalFailed;
-
-      var percentPassed = Math.ceil((totalPassed * 100) / total);
-      var percentFailed = Math.ceil((totalFailed * 100) / total);
-
-      document.getElementById('js-passed-number').innerText = totalPassed;
-      document.getElementById('js-failed-number').innerText = totalFailed;
-
-      document.getElementById('js-test-bar-passed').style.width = percentPassed+"%";
-      document.getElementById('js-test-bar-failed').style.width = percentFailed+"%";
-
-      var acc = document.getElementsByClassName(".accordion")
-    &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
@@ -822,7 +581,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
       &lt;/div&gt;</value>
   </data>
   <data name="ParagraphDivider" xml:space="preserve">
-    <value>---------------------------------------------------------</value>
+    <value>------------------------------------------------------------------------</value>
   </data>
   <data name="LoadingMessage" xml:space="preserve">
     <value>Get comfortable, YoCode is gathering your results</value>

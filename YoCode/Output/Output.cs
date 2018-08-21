@@ -5,11 +5,15 @@ namespace YoCode
     class Output
     {
         IPrint outputWriter;
+        IErrorReporter errOutput;
         FeatureData featData;
 
-        public Output(IPrint printTo)
+        public Output(IPrint printTo, IErrorReporter errorReporter = null)
         {
             outputWriter = printTo;
+
+            errOutput = errorReporter ?? new NullErrorObject();
+
             featData = new FeatureData();
         }
 
@@ -28,9 +32,7 @@ namespace YoCode
 
         public void ShowInputErrors(List<string> errs)
         {
-            outputWriter.AddErrs(errs);
-            outputWriter.AddMessage(messages.AskForHelp);
-            outputWriter.WriteReport();
+            errOutput.PrintErrors(errs);
         }
 
         public void ShowHelp()
