@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace YoCode
 {
     class Output
     {
         IPrint outputWriter;
+        IErrorReporter errOutput;
         FeatureData featData;
 
-        public Output(IPrint printTo)
+        public Output(IPrint printTo, IErrorReporter errorReporter = null)
         {
             outputWriter = printTo;
+
+            errOutput = errorReporter ?? new NullErrorObject();
+
             featData = new FeatureData();
         }
 
@@ -31,9 +32,7 @@ namespace YoCode
 
         public void ShowInputErrors(List<string> errs)
         {
-            outputWriter.AddErrs(errs);
-            outputWriter.AddMessage(messages.AskForHelp);
-            outputWriter.WriteReport();
+            errOutput.PrintErrors(errs);
         }
 
         public void ShowHelp()
@@ -52,7 +51,7 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.ORIGIN, CommandNames.MODIFIED, 
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.MODIFIED, 
                 CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
         }
 
@@ -64,18 +63,6 @@ namespace YoCode
         private void ShowCodeCoverageHelp()
         {
             outputWriter.AddMessage(messages.CodeCoverageHelp);
-        }
-
-        public void ShowLaziness()
-        {
-            outputWriter.AddMessage("Project unmodified");
-            outputWriter.WriteReport();
-        }
-
-        public void ShowDirEmptyMsg()
-        {
-            outputWriter.AddMessage("Specified directory inaccessible");
-            outputWriter.WriteReport();
         }
 
         public void AppsettingsHelp()

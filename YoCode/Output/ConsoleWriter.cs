@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace YoCode
 {
-    public class ConsoleWriter : IPrint
+    public class ConsoleWriter : IPrint,IErrorReporter
     {
         StringBuilder consoleReport = new StringBuilder();
 
-        public void AddErrs(IEnumerable<string> errs)
+        public void PrintErrors(IEnumerable<string> errs)
         {
             foreach(var err in errs)
             {
                 consoleReport.AppendLine(err);
             }
             consoleReport.AppendLine(messages.Divider);
+            consoleReport.AppendLine(messages.AskForHelp);
+            WriteReport();
         }
 
         public void AddFeature(FeatureData data)

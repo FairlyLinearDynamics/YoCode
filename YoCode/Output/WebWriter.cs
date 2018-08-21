@@ -22,12 +22,6 @@ namespace YoCode
             msg = new StringBuilder();
         }
 
-        public void AddErrs(IEnumerable<string> errs)
-        {
-            errors.Append(WebElementBuilder.FormatAccordionElement(WebElementBuilder.FormaFeatureTitle("Errors present"),
-                WebElementBuilder.FormatListOfStrings(errs)));
-        }
-
         public void AddMessage(string message)
         {
             msg.Append(WebElementBuilder.FormatParagraph(message));
@@ -51,18 +45,15 @@ namespace YoCode
 
         private string BuildReport()
         {
-            var report = new StringBuilder();
-            if (features.Length == 0)
+            if (features.Length == 0 && errors.Length == 0)
             {
-                report.Append(errors.ToString());
-                report.Append(msg);
-                return messages.HtmlTemplate_WithoutFeatures.Replace(FEATURE_TAG, report.ToString());
+                return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
-            report.Append(features.ToString());
-            report.Append(errors.ToString());
-            report.Append(msg);
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG,report.ToString());
+            else
+            {
+                return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString());
+            }
         }
 
         public void WriteReport()
