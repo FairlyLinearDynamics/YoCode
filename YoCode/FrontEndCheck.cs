@@ -19,6 +19,12 @@ namespace YoCode
         {
             FrontEndEvidence.FeatureTitle = "Bad input exceptions fixed in UI";
             FrontEndEvidence.Feature = Feature.FrontEndCheck;
+            if (String.IsNullOrEmpty(applicantsWebPort))
+            {
+                FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+                return;
+            }
+
             try
             {
                 try

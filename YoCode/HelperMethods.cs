@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace YoCode
@@ -98,6 +99,18 @@ namespace YoCode
         public static bool ApproximatelyEquals(this double a, double b)
         {
             return Math.Abs(a - b) <= 0.001;
+        }
+
+        public static bool FileIsModified(this Stream originalFile, Stream modifiedFile)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                string originalChecksum = BitConverter.ToString(sha1.ComputeHash(originalFile));
+
+                string modifiedCheckSum = BitConverter.ToString(sha1.ComputeHash(modifiedFile));
+
+                return originalChecksum != modifiedCheckSum;
+            }
         }
 
         public static double GetRatingFromBoolList(List<bool> boolList)

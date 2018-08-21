@@ -50,7 +50,6 @@ namespace YoCode_XUnit
             List<string> errorList = new List<string>()
             {
                nameof(ArgErrorType.WrongCommand),
-               nameof(ArgErrorType.WrongOriginalDirectory),
                nameof(ArgErrorType.WrongModifiedDirectory)
             };
 

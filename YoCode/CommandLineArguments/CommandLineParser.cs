@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.IO;
-
 
 namespace YoCode
 {
     public class CommandLineParser
     {
-        List<string> implementedCommands = new List<string>() { CommandNames.ORIGIN, CommandNames.MODIFIED, CommandNames.HELP,
-            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT };
-        private List<SplitArg> currentCommands;
-        
+        private readonly List<string> implementedCommands = new List<string>() { CommandNames.MODIFIED, CommandNames.HELP,
+            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.JUNIORTEST };
+
+        private readonly List<SplitArg> currentCommands;
+
         public CommandLineParser(string[] args)
         {
             currentCommands = args.Select(CommandExtractor.ArgsSplitter).ToList();
@@ -25,9 +23,6 @@ namespace YoCode
             {
                 switch (arg.command)
                 {
-                    case CommandNames.ORIGIN:
-                        ires.originalFilePath = arg.data;
-                        break;
                     case CommandNames.MODIFIED:
                         ires.modifiedFilePath = arg.data;
                         break;
@@ -39,6 +34,9 @@ namespace YoCode
                         break;
                     case CommandNames.NOLOADINGSCREEN:
                         ires.NoLoadingScreen = arg.command == CommandNames.NOLOADINGSCREEN;
+                        break;
+                    case CommandNames.JUNIORTEST:
+                        ires.JuniorTest = arg.command == CommandNames.JUNIORTEST;
                         break;
                 }
             }
