@@ -1,11 +1,29 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Linq;
 
 namespace YoCode
 {
     class FeatureDetailsStorage
     {
+        public void InitializeJSONFile()
+        {
+            using (StreamReader r = new StreamReader(@"..\..\..\FeatureWeightings.json"))
+            {
+                string json = r.ReadToEnd();
+
+                Dictionary<Feature, double> dict = JsonConvert.DeserializeObject<Dictionary<Feature, double>>(json);
+
+                foreach(var elem in dict)
+                {
+                    Console.WriteLine(elem.Key + " " + elem.Value);
+                }
+
+            }
+        }
+
         public Dictionary<Feature,FeatureDetails> InitializeJuniorDetails()
         {
             var JuniorTestDetails = new Dictionary<Feature, FeatureDetails>();

@@ -18,6 +18,9 @@ namespace YoCode
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
             CalculateFinalScore();
+
+            storage.InitializeJSONFile();
+
         }
 
         public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
