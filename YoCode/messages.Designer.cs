@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YoCode
-{
-
-
+namespace YoCode {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -131,7 +131,7 @@ namespace YoCode
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
+        ///   Looks up a localized string similar to Application takes only one parameter: path to the modified test directory
         ///Possible commands: --{0}; --{1}
         ///Example use: --{0}=&lt;path-to-modified-test&gt;
         ///To disable loading animation, append --{2} at the end of command line
@@ -220,6 +220,20 @@ namespace YoCode
         public static string HtmlTemplate_HelpPage {
             get {
                 return ResourceManager.GetString("HtmlTemplate_HelpPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;span class=&quot;accordion-icon {0}&quot;&gt;
+        ///    &lt;span class=&quot;fa {1}&quot;&gt;&lt;/span&gt;
+        ///  &lt;/span&gt;
+        ///  &lt;span class=&quot;accordion-score-holder&quot;&gt;
+        ///    &lt;span class=&quot;accordion-score&quot;&gt;{2}&lt;/span&gt;
+        ///  &lt;/span&gt;&lt;span class=&quot;accordion-title&quot;&gt;{3}&lt;/span&gt;.
+        /// </summary>
+        public static string HtmlTitleTemplate {
+            get {
+                return ResourceManager.GetString("HtmlTitleTemplate", resourceCulture);
             }
         }
         

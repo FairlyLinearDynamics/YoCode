@@ -6,7 +6,7 @@ using System.Text;
 
 namespace YoCode
 {
-    class UIInputCheck
+    class UIConversionCheck
     {
         IWebDriver browser;
         private const int TitleColumnFormatter = -40;
@@ -14,9 +14,9 @@ namespace YoCode
 
         private static double unitConvertValue = 1.60934;
 
-        public UIInputCheck(IWebDriver browser, string foundKeyWord)
+        public UIConversionCheck(IWebDriver browser, string foundKeyWord)
         {
-            UIInputEvidence.FeatureTitle = "Correct convertion using user interface";
+            UIConversionEvidence.Feature = Feature.UIConversionCheck;
 
             this.browser = browser;
 
@@ -30,17 +30,19 @@ namespace YoCode
                 }
                 catch (NoSuchElementException)
                 {
-                    UIInputEvidence.SetFailed("Values were converted incorrectly");
+                    UIConversionEvidence.SetFailed("Values were converted incorrectly");
+                    UIConversionEvidence.FeatureRating = 0;
                     browser.Navigate().Back();
                     return;
                 }
                 browser.Navigate().Back();
             }
 
-            UIInputEvidence.FeatureImplemented = true;
-            UIInputEvidence.GiveEvidence("Successfully converted from miles to kilometres");
+            UIConversionEvidence.FeatureImplemented = true;
+            UIConversionEvidence.FeatureRating = 1;
+            UIConversionEvidence.GiveEvidence("Successfully converted from miles to kilometres");
         }
 
-        public FeatureEvidence UIInputEvidence { get; set; } = new FeatureEvidence();
+        public FeatureEvidence UIConversionEvidence { get; set; } = new FeatureEvidence();
     }
 }

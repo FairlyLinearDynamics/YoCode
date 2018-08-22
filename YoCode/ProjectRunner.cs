@@ -9,17 +9,19 @@ namespace YoCode
     {
         internal string Output { get; set; }
 
-        private string Process { get; } = "dotnet";
+        private string ProcessName { get; } = "dotnet";
         private string Argument { get; set; } = @"bin\Debug\";
-        private string ErrorOutput { get; set;}
+        private string ErrorOutput { get; set; }
         private const string projectFolder = @"\UnitConverterWebApp";
-        private FeatureRunner featureRunner;
-        private string workingDir;
+        private readonly FeatureRunner featureRunner;
+        private readonly string workingDir;
 
         public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
             ProjectRunEvidence.FeatureTitle = "Project Run";
+            ProjectRunEvidence.Feature = Feature.ProjectRunner;
+
             this.workingDir = workingDir + projectFolder;
             if (!Directory.Exists(this.workingDir))
             {
@@ -29,20 +31,21 @@ namespace YoCode
 
         public void Execute()
         {
-            if(ProjectRunEvidence.FeatureFailed)
+            if (ProjectRunEvidence.FeatureFailed)
             {
                 return;
             }
 
             Argument = CreateArgument(workingDir);
 
-            var processDetails = new ProcessDetails(Process, workingDir, Argument);
+            var processDetails = new ProcessDetails(ProcessName, workingDir, Argument);
 
             var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
             Output = evidence.Output;
             ErrorOutput = evidence.ErrorOutput;
 
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
+            ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
 
             if (ProjectRunEvidence.FeatureImplemented)
             {
@@ -52,6 +55,7 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
+
         }
 
         private string CreateArgument(string workingDir)
@@ -80,7 +84,12 @@ namespace YoCode
             {
                 featureRunner.EndProcess();
             }
-            catch(NullReferenceException) { }
+            catch (NullReferenceException) { }
+        }
+
+        public void ReportLefOverProcess()
+        {
+            featureRunner.FindLeftOverProcess();
         }
 
         public FeatureEvidence ProjectRunEvidence { get; } = new FeatureEvidence();

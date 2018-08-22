@@ -13,7 +13,7 @@ namespace YoCode
         
         public UIFeatureImplemented(IWebDriver browser, string[] keyWords)
         {
-            UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
+            UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplmeneted;
 
             this.browser = browser;
             this.keyWords = keyWords;
@@ -30,6 +30,7 @@ namespace YoCode
                 }
             }
             UIFeatureImplementedEvidence.FeatureImplemented = false;
+            UIFeatureImplementedEvidence.FeatureRating = 0;
             UIFeatureImplementedEvidence.GiveEvidence($"Did not find any evidence in user interface");
         }
 
@@ -42,6 +43,7 @@ namespace YoCode
                     if (keyWords.Any(a => tag.GetAttribute("value").Contains(a, StringComparison.OrdinalIgnoreCase)))
                     {
                         UIFeatureImplementedEvidence.FeatureImplemented = true;
+                        UIFeatureImplementedEvidence.FeatureRating = 1;
                         UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
                         FeatureTagFound = tag.GetAttribute("value");
                         return true;
@@ -50,6 +52,7 @@ namespace YoCode
                 else if (keyWords.Any(a => tag.Text.Equals(a, StringComparison.OrdinalIgnoreCase)))
                 {
                     UIFeatureImplementedEvidence.FeatureImplemented = true;
+                    UIFeatureImplementedEvidence.FeatureRating = 1;
                     UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
                     FeatureTagFound = tag.Text;
                     return true;
@@ -59,6 +62,6 @@ namespace YoCode
         }
 
         public FeatureEvidence UIFeatureImplementedEvidence { get; set; } = new FeatureEvidence();
-        public string FeatureTagFound { get; set; } 
+        public string FeatureTagFound { get; set; } = null;
     }
 }

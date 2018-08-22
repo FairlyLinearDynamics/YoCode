@@ -16,7 +16,7 @@ namespace YoCode
 
         public UIBadInputChecker(IWebDriver browser, string foundKeyWord)
         {
-            UIBadInputCheckEvidence.FeatureTitle = "Bad input exceptions handled";
+            UIBadInputCheckEvidence.Feature = Feature.BadInputCheck;
 
             this.browser = browser;
 
@@ -27,6 +27,14 @@ namespace YoCode
                 uiInputhandler.InputData(a);
                 OutputCheck(a);
             });
+
+            UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
+            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+        }
+
+        public double GetOutputCheckRating()
+        {
+            return HelperMethods.GetRatingFromBoolList(ratingsList);
         }
 
         private void OutputCheck(string testData)

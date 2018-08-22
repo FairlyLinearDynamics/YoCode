@@ -70,17 +70,11 @@ namespace YoCode
                 browser.Navigate().GoToUrl(port);
 
                 var featureInUI = new UIFeatureImplemented(browser, UIKeywords.UNIT_KEYWORDS);
-                UIFeatureEvidences[0].FeatureImplemented = featureInUI.FeatureTagFound!=null;
-                UIFeatureEvidences[0].GiveEvidence(featureInUI.FeatureTagFound != null
-                    ?$"Found \"{featureInUI.FeatureTagFound}\" keyword in user interface"
-                    :"No keywords found in user interface");
                 UIFeatureEvidences[0] = featureInUI.UIFeatureImplementedEvidence;
 
-                // TODO: Link "Bad input crashes are handled"
                 UIFeatureEvidences[1] = new UIBadInputChecker(browser, featureInUI.FeatureTagFound).UIBadInputCheckEvidence;
 
-                // TODO: Link "Output is calculated correctly"
-                UIFeatureEvidences[2] = new UIInputCheck(browser, featureInUI.FeatureTagFound).UIInputEvidence;
+                UIFeatureEvidences[2] = new UIConversionCheck(browser, featureInUI.FeatureTagFound).UIConversionEvidence;
 
                 CloseBrowser();
             }
@@ -103,9 +97,9 @@ namespace YoCode
 
         public List<FeatureEvidence> UIFeatureEvidences { get; } = new List<FeatureEvidence>()
         {
-            new FeatureEvidence(){ FeatureTitle = "Found feature evidence in user interface" },
-            new FeatureEvidence(){ FeatureTitle = "Bad input exceptions handled"},
-            new FeatureEvidence(){ FeatureTitle = "Correctly converted units using user interface"}
+            new FeatureEvidence(){ Feature = Feature.UIFeatureImplmeneted },
+            new FeatureEvidence(){ Feature = Feature.UIBadInputCheck},
+            new FeatureEvidence(){ Feature = Feature.UIConversionCheck}
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace YoCode
 {
@@ -42,6 +43,14 @@ namespace YoCode
             foreach(var writer in writers)
             {
                 writer.WriteReport();
+            }
+        }
+
+        public void AddFinalScore(double score)
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddFinalScore(score);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -17,10 +18,14 @@ namespace YoCode
         private TestStats stats;
         private List<int> tempStats;
 
+        private const int TitleColumnFormatter = -25;
+
+
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
+            UnitTestEvidence.Feature = Feature.TestCountCheck;
             processName = "dotnet";
             workingDir = repositoryPath;
             arguments = "test";
@@ -42,9 +47,7 @@ namespace YoCode
             StoreCalculations(tempStats);
 
             UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
-            UnitTestEvidence.GiveEvidence(StatLine);
-            UnitTestEvidence.GiveEvidence("Percentage: "+ (stats.PercentagePassed).ToString());
-            UnitTestEvidence.GiveEvidence("Minimum test count: " + TestCountTreshold);
+            StructuredOutput();
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -54,17 +57,44 @@ namespace YoCode
                 stats.totalTests = tempStats[0];
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
-                stats.testsSkipped = tempStats[3];
+                stats.testsSkipped = tempStats[3];    
+                UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
+
             }
             else
             {
-                UnitTestEvidence.SetFailed("Could not get information about tests");
+                UnitTestEvidence.SetFailed("Couldn't get information about tests");
+                UnitTestEvidence.FeatureRating = 0;
             }
         }
 
         public static List<string> GetTestKeyWords()
         {
             return new List<string> { "Total tests:" };
+        }
+
+        public double GetTestCountCheckRating()
+        {
+            double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
+
+            if(stats.totalTests >= TestCountTreshold)
+            {
+                return rating;
+            }
+            double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+            return rating - deduction;
+        }
+
+        public void StructuredOutput()
+        {
+            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
+            UnitTestEvidence.GiveEvidence(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

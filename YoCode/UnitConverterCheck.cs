@@ -30,15 +30,24 @@ namespace YoCode
         public List<string> MiToKmKeys { get; set; }
         public List<string> YdToMeKeys { get; set; }
 
-        private readonly string from = "value=\"";
-        private readonly string to = "\"";
+        List<bool> BadInputBoolResults;
+        List<bool> UnitConverterBoolResults;
+        
+        string from = "value=\"";
+        string to = "\"";
 
         private readonly string HTMLcode;
 
+        private const int TitleColumnFormatter = -30;
+        private const int ValueColumnFormatter = -10;
+
         public UnitConverterCheck(string port)
         {
-            BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
+            UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+
+            BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
+            BadInputCheckEvidence.Feature = Feature.BadInputCheck;
 
             if (String.IsNullOrEmpty(port))
             {
@@ -57,7 +66,10 @@ namespace YoCode
 
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+
                     BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
+                    BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
                 catch (Exception)
                 {
@@ -100,6 +112,9 @@ namespace YoCode
             KeywordMap.Add(YdToMeKeys, YardsToMeters);
 
             InitializeExpectedValues();
+
+            BadInputBoolResults = new List<bool>();
+            UnitConverterBoolResults = new List<bool>();
         }
 
         private void InitializeExpectedValues()
@@ -177,7 +192,7 @@ namespace YoCode
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
-                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider + ("---------------"));
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
@@ -185,6 +200,8 @@ namespace YoCode
 
                     var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
                     UnitConverterCheckEvidence.GiveEvidence(x);
+
+                    UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
 
                     if (!actualOutput.ApproximatelyEquals(expectedOutput))
                     {
@@ -204,21 +221,32 @@ namespace YoCode
         {
             bool ret = true;
 
-            BadInputCheckEvidence.GiveEvidence(string.Format("\n{0,-30} {1,-10}", "Input name", "FIXED"));
+            BadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
             BadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
             {
                 bool isFixed = !badInputResults.Contains(a.Key);
+                BadInputBoolResults.Add(isFixed);
 
                 if (!isFixed)
                 {
                     ret = false;
                 }
 
-                BadInputCheckEvidence.GiveEvidence(string.Format("{0,-30} {1,-10}", a.Key, isFixed));
+                BadInputCheckEvidence.GiveEvidence(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
             }
             return ret;
+        }
+
+        public double GetBadInputCheckRating()
+        {
+            return HelperMethods.GetRatingFromBoolList(BadInputBoolResults);
+        }
+
+        public double GetUnitConverterCheckRating()
+        {
+            return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
         }
 
         public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
