@@ -97,9 +97,9 @@ namespace YoCode
 
         public List<FeatureEvidence> UIFeatureEvidences { get; } = new List<FeatureEvidence>()
         {
-            new FeatureEvidence(){ Feature = Feature.UIFeatureImplmeneted },
-            new FeatureEvidence(){ Feature = Feature.UIBadInputCheck},
-            new FeatureEvidence(){ Feature = Feature.UIConversionCheck}
+            new FeatureEvidence(){ FeatureTitle = "Found feature evidence in user interface", Feature = Feature.UIFeatureImplmeneted },
+            new FeatureEvidence(){ FeatureTitle = "Bad input crashes have been fixed in the UI", Feature = Feature.UIBadInputCheck},
+            new FeatureEvidence(){ FeatureTitle = "Units were converted successfully using UI", Feature = Feature.UIConversionCheck}
         };
     }
 }

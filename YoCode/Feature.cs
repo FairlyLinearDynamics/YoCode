@@ -13,7 +13,6 @@ namespace YoCode
         UICheck,
         FilesChangedCheck,
         GitCheck,
-        FrontEndCheck,
         ProjectBuilder,
         ProjectRunner,
         SolutionFileExists,

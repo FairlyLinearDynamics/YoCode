@@ -51,14 +51,8 @@ namespace YoCode
             double badInputWeighting = 0;
 
             badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
-            try
-            {
-                list.Find(e => e.Feature == Feature.UIBadInputCheck).FeatureWeighting = badInputWeighting;
-            }
-            catch
-            {
-                list.ForEach(a => Debug.Print(a.Feature.ToString()));
-            }
+            list.Find(e => e.Feature == Feature.UIBadInputCheck).FeatureWeighting = badInputWeighting;
+
 
             var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
 
