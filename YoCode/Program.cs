@@ -78,6 +78,14 @@ namespace YoCode
                 loadingThread.Start();
             }
 
+            // CodeCoverage check
+            var codeCoverage = new Thread(() =>
+            {
+                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+            });
+            workThreads.Add(codeCoverage);
+            codeCoverage.Start();
+
             // Duplication check
             var dupFinderThread = new Thread(() =>
             {
@@ -119,9 +127,6 @@ namespace YoCode
 
             // Unit converter test
             checkList.Add(ucc.UnitConverterCheckEvidence);
-
-            //Code coverage
-            checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
 
             checkList.Add(ucc.BadInputCheckEvidence);
 
