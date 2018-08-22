@@ -15,7 +15,7 @@ namespace YoCode
         {
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
-            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter) outputs.Find(a=> a is ConsoleWriter));
+            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -47,9 +47,8 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
             pr.ReportLefOverProcess();
-
         }
 
         public static bool OpenHTMLOnFinish { get; set; }
@@ -63,7 +62,7 @@ namespace YoCode
             // Files changed check
             checkList.Add(fileCheck.FileChangeEvidence);
 
-            if(fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
+            if (fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
             {
                 return checkList;
             }
@@ -79,26 +78,26 @@ namespace YoCode
                 loadingThread.Start();
             }
 
-                // Duplication check
-                var dupFinderThread = new Thread(() =>
-                {
-                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath),isJunior).DuplicationEvidence);
-                });
-                workThreads.Add(dupFinderThread);
-                dupFinderThread.Start();
+            // Duplication check
+            var dupFinderThread = new Thread(() =>
+            {
+                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), isJunior).DuplicationEvidence);
+            });
+            workThreads.Add(dupFinderThread);
+            dupFinderThread.Start();
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
-                // Solution file exists
-                checkList.Add(new FeatureEvidence()
-                {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureImplemented = true,
-                    FeatureRating = 1
-                });
+            // Solution file exists
+            checkList.Add(new FeatureEvidence()
+            {
+                FeatureTitle = "Solution File Exists",
+                FeatureImplemented = true,
+                FeatureRating = 1
+            });
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
@@ -120,6 +119,9 @@ namespace YoCode
 
             // Unit converter test
             checkList.Add(ucc.UnitConverterCheckEvidence);
+
+            //Code coverage
+            checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
 
             checkList.Add(ucc.BadInputCheckEvidence);
 
