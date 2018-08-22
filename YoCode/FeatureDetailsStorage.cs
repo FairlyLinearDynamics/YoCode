@@ -8,17 +8,37 @@ namespace YoCode
 {
     class FeatureDetailsStorage
     {
-        public void InitializeJSONFile()
+        Dictionary<Feature, double> WeightingsFromJson;
+        string path = @"..\..\..\FeatureWeightings.json";
+
+        public FeatureDetailsStorage()
         {
-            using (StreamReader r = new StreamReader(@"..\..\..\FeatureWeightings.json"))
+            WeightingsFromJson = InitializeJSONFile();
+        }
+
+        public Dictionary<Feature,double> InitializeJSONFile()
+        {
+            using (StreamReader r = new StreamReader(path))
             {
                 string json = r.ReadToEnd();
 
-                Dictionary<Feature, double> dict = JsonConvert.DeserializeObject<Dictionary<Feature, double>>(json);
+                return JsonConvert.DeserializeObject<Dictionary<Feature, double>>(json);
 
-                foreach(var elem in dict)
+            }
+        }
+
+        public void AssignWeightings(Dictionary<Feature,FeatureDetails> localDictionary)
+        {
+            foreach(var localElem in localDictionary)
+            {
+                foreach(var jsonElem in WeightingsFromJson)
                 {
-                    Console.WriteLine(elem.Key + " " + elem.Value);
+                    if(localElem.Key == jsonElem.Key)
+                    {
+                        localElem.Value.FeatureWeighting = jsonElem.Value;
+                    }
+
+
                 }
 
             }
