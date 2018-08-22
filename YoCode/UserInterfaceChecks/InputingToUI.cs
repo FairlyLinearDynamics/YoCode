@@ -12,7 +12,7 @@ namespace YoCode
         IWebDriver browser;
         string featureKeyWord;
 
-        public InputingToUI(IWebDriver browser, string featureKeyWord)
+        public InputingToUI(IWebDriver browser, string featureKeyWord = null)
         {
             this.browser = browser;
             this.featureKeyWord = featureKeyWord;
@@ -31,6 +31,10 @@ namespace YoCode
                 try
                 {
                     var selectors = form.FindElements(By.CssSelector("select"));
+
+                    var xpath = featureKeyWord != null ? $"//input[@value=\"{featureKeyWord}\"]" : "//input[@*]";
+                    var elementToClick = form.FindElement(By.XPath(xpath));
+
                     if (selectors.Count > 1)
                     {
                         string selectedElem = null;
@@ -47,7 +51,7 @@ namespace YoCode
                             textField.SendKeys(applicantTestInput);
                         }
 
-                        form.FindElement(By.CssSelector("input")).Click();
+                        elementToClick.Click();
                         //OutputCheck(applicantTestInput);
                     }
                     else if (selectors.Count == 1)
@@ -60,7 +64,7 @@ namespace YoCode
                             textField.SendKeys(applicantTestInput);
                         }
 
-                        form.FindElement(By.CssSelector("input")).Click();
+                        elementToClick.Click();
                         //OutputCheck(applicantTestInput);
                     }
                     else
@@ -70,7 +74,7 @@ namespace YoCode
                             textField.SendKeys(applicantTestInput);
                         }
 
-                        form.FindElement(By.XPath($"//input[@*='{featureKeyWord}']")).Click();
+                        elementToClick.Click();
                         //OutputCheck(applicantTestInput);
                     }
                 }

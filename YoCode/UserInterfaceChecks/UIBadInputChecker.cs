@@ -7,16 +7,22 @@ using OpenQA.Selenium.Support.UI;
 
 namespace YoCode
 {
-    class UIBadInputChecker
+    internal class UIBadInputChecker
     {
-        IWebDriver browser;
-        List<bool> inputCheckResult = new List<bool>();
+        private readonly IWebDriver browser;
+        private const int TitleColumnFormatter = -40;
+        private const int ValueColumnFormatter = -10;
+        private List<bool> ratingsList = new List<bool>();
 
-        public UIBadInputChecker(IWebDriver browser)
+        public UIBadInputChecker(IWebDriver browser, string foundKeyWord)
         {
-            UIBadInputEvidence.FeatureTitle = "Applicant handled bad input cases in user interface";
+            UIBadInputCheckEvidence.FeatureTitle = "Bad input exceptions handled";
+
             this.browser = browser;
-            var uiInputhandler = new InputingToUI(browser, browser.Url);
+
+            UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputCheckResult.Add(a,false));
+
+            var uiInputhandler = new InputingToUI(browser, foundKeyWord);
             UIKeywords.GARBAGE_INPUT.ToList().ForEach(a=> {
                 uiInputhandler.InputData(a);
                 OutputCheck(a);
@@ -26,22 +32,22 @@ namespace YoCode
         private void OutputCheck(string testData)
         {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
+            var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
             if (exception.Any())
             {
-                UIBadInputEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
-                inputCheckResult.Add(false);
+                UIBadInputCheckEvidence.SetFailed(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
+                ratingsList.Add(false);
             }
             else
             {
-                UIBadInputEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
-                inputCheckResult.Add(true);
+                UIBadInputCheckEvidence.GiveEvidence(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}"));
+                ratingsList.Add(true);
             }
 
             browser.Navigate().Back();
         }
 
-
-
-        public FeatureEvidence UIBadInputEvidence { get; set; } = new FeatureEvidence();
+        public FeatureEvidence UIBadInputCheckEvidence { get; set; } = new FeatureEvidence();
+        public Dictionary<string, bool> InputCheckResult { get; set; } = new Dictionary<string, bool>();
     }
 }

@@ -13,6 +13,8 @@ namespace YoCode
         
         public UIFeatureImplemented(IWebDriver browser, string[] keyWords)
         {
+            UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
+
             this.browser = browser;
             this.keyWords = keyWords;
             ExecuteCheck();
@@ -27,6 +29,8 @@ namespace YoCode
                     return;
                 }
             }
+            UIFeatureImplementedEvidence.FeatureImplemented = false;
+            UIFeatureImplementedEvidence.GiveEvidence($"Did not find any evidence in user interface");
         }
 
         private bool SearchForElement(HtmlTags htmlTag, string[] keyWords)
@@ -37,12 +41,16 @@ namespace YoCode
                 {
                     if (keyWords.Any(a => tag.GetAttribute("value").Contains(a, StringComparison.OrdinalIgnoreCase)))
                     {
+                        UIFeatureImplementedEvidence.FeatureImplemented = true;
+                        UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
                         FeatureTagFound = tag.GetAttribute("value");
                         return true;
                     }
                 }
                 else if (keyWords.Any(a => tag.Text.Equals(a, StringComparison.OrdinalIgnoreCase)))
                 {
+                    UIFeatureImplementedEvidence.FeatureImplemented = true;
+                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
                     FeatureTagFound = tag.Text;
                     return true;
                 }
@@ -50,6 +58,7 @@ namespace YoCode
             return false;
         }
 
+        public FeatureEvidence UIFeatureImplementedEvidence { get; set; } = new FeatureEvidence();
         public string FeatureTagFound { get; set; } 
     }
 }
