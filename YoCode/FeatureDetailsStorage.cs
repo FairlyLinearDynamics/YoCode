@@ -38,7 +38,7 @@ namespace YoCode
                 Feature.FrontEndCheck, 
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 1 });
+                    FeatureWeighting = 0 });
 
             JuniorTestDetails.Add(
                 Feature.GitCheck, 
@@ -117,7 +117,7 @@ namespace YoCode
                 Feature.FrontEndCheck, 
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 1 });
+                    FeatureWeighting = 0});
 
             OriginalTestDetails.Add(
                 Feature.GitCheck, 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace YoCode
 {
@@ -26,13 +27,10 @@ namespace YoCode
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
         {
-            double applyWeighting = 0;
+            ApplySpecialCases(list);
 
             foreach (var elem in list)
             {
-                applyWeighting = (elem.Feature == Feature.BadInputCheck && elem.FeatureRating == 0) ? elem.FeatureWeighting : 0;
-                elem.FeatureWeighting = (elem.Feature == Feature.FrontEndCheck) ? applyWeighting : elem.FeatureWeighting;
-
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
                 MaximumScore += elem.FeatureWeighting;
 
@@ -46,5 +44,21 @@ namespace YoCode
             FinalScore = Math.Round((FinalScore / MaximumScore) * 100);
         }
 
+        public void ApplySpecialCases(List<FeatureEvidence> list)
+        {
+            double badInputWeighting = 0;
+
+            badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
+            list.Find(e => e.Feature == Feature.FrontEndCheck).FeatureWeighting = badInputWeighting;
+
+            var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
+
+            if (unitConverterCheck.FeatureFailed)
+            {
+                MaximumScore -= unitConverterCheck.FeatureWeighting;
+                unitConverterCheck.FeatureWeighting = 0;
+            }
+
+        }
     }
 }
