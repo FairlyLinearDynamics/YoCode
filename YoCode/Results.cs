@@ -20,6 +20,7 @@ namespace YoCode
             CalculateFinalScore();
 
             storage.InitializeJSONFile();
+            storage.AssignWeightings(thisDictionary);
 
         }
 

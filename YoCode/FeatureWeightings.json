@@ -1,4 +1,4 @@
-﻿{
+﻿"Junior": {
   "TestCountCheck": 1.355,
   "BadInputCheck": 2.39,
   "CodeCoverageCheck": 0,
@@ -12,3 +12,4 @@
   "SolutionFileExists": 0,
   "UnitConverterCheck": 1.09
 }
+

@@ -29,19 +29,7 @@ namespace YoCode
 
         public void AssignWeightings(Dictionary<Feature,FeatureDetails> localDictionary)
         {
-            foreach(var localElem in localDictionary)
-            {
-                foreach(var jsonElem in WeightingsFromJson)
-                {
-                    if(localElem.Key == jsonElem.Key)
-                    {
-                        localElem.Value.FeatureWeighting = jsonElem.Value;
-                    }
 
-
-                }
-
-            }
         }
 
         public Dictionary<Feature,FeatureDetails> InitializeJuniorDetails()
