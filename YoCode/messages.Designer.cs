@@ -131,7 +131,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Application takes 2 parameters: path to original test directory and path to modified test directory
+        ///   Looks up a localized string similar to Application takes only one parameter: path to the modified test directory
         ///Possible commands: --{0}; --{1}
         ///Example use: --{0}=&lt;path-to-modified-test&gt;
         ///To disable loading animation, append --{2} at the end of command line
