@@ -5,6 +5,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -12,13 +13,17 @@ namespace YoCode
     {
         private static IWebDriver browser;
         private readonly string port;
+        private List<bool> ratingsList = new List<bool>();
+
+        private const int TitleColumnFormatter = -40;
+        private const int ValueColumnFormatter = -10;
 
         public static bool Running { get; private set; }
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
-            FrontEndEvidence.FeatureTitle = "New feature found in front-end implementation";
-
+            FrontEndEvidence.FeatureTitle = "Bad input exceptions fixed in UI";
+            FrontEndEvidence.Feature = Feature.FrontEndCheck;
             if (String.IsNullOrEmpty(applicantsWebPort))
             {
                 FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
@@ -31,6 +36,8 @@ namespace YoCode
             {
                 try
                 {
+                    FrontEndEvidence.GiveEvidence(string.Format("\n{0,-40} {1,-10}", "Input name", "FIXED"));
+                    FrontEndEvidence.GiveEvidence(messages.ParagraphDivider);
                     var foxService = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     foxService.HideCommandPromptWindow = true;
                     port = applicantsWebPort;
@@ -52,14 +59,15 @@ namespace YoCode
 
                 browser.Navigate().GoToUrl(port);
 
-                FrontEndEvidence.FeatureImplemented = CheckIfUIContainsFeature(keyWords);
-
                 UIKeywords.GARBAGE_INPUT.ToList().ForEach(InputData);
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
                     FrontEndEvidence.GiveEvidence("Could not input any data");
                 }
+
+                FrontEndEvidence.FeatureRating = GetOutputCheckRating();
+                FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
 
                 CloseBrowser();
             }
@@ -110,18 +118,26 @@ namespace YoCode
         }
 
         private void OutputCheck(string testData)
-        { 
+        {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
+            var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
             if (exception.Any())
             {
-                FrontEndEvidence.SetFailed($"Exception with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input not handled");
+                FrontEndEvidence.SetFailed(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
+                ratingsList.Add(false);
             }
             else
             {
-                FrontEndEvidence.GiveEvidence($"No exceptions found with \"{testData.Replace(Environment.NewLine, "(New line here)")}\" input");
+                FrontEndEvidence.GiveEvidence(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}"));
+                ratingsList.Add(true);
             }
 
             browser.Navigate().GoToUrl(port);
+        }
+
+        public double GetOutputCheckRating()
+        {
+            return HelperMethods.GetRatingFromBoolList(ratingsList);
         }
 
         private void InputData(string applicantTestInput)

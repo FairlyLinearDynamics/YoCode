@@ -6,5 +6,6 @@
         void AddMessage(string message);
         void AddBanner();
         void WriteReport();
+        void AddFinalScore(double score);
     }
 }

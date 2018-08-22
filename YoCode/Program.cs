@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace YoCode
 {
@@ -46,9 +47,9 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle));
-
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
             pr.ReportLefOverProcess();
+
         }
 
         public static bool OpenHTMLOnFinish { get; set; }
@@ -78,33 +79,26 @@ namespace YoCode
                 loadingThread.Start();
             }
 
-            //Code Coverage
-            var codeCoverageThread = new Thread(() =>
-            {
-                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-            });
-            workThreads.Add(codeCoverageThread);
-            codeCoverageThread.Start();
-
-            // Duplication check
-            var dupFinderThread = new Thread(() =>
-            {
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), isJunior).DuplicationEvidence);
-            });
-            workThreads.Add(dupFinderThread);
-            dupFinderThread.Start();
+                // Duplication check
+                var dupFinderThread = new Thread(() =>
+                {
+                    checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath),isJunior).DuplicationEvidence);
+                });
+                workThreads.Add(dupFinderThread);
+                dupFinderThread.Start();
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
-            });
+                // Solution file exists
+                checkList.Add(new FeatureEvidence()
+                {
+                    FeatureTitle = "Solution File Exists",
+                    FeatureImplemented = true,
+                    FeatureRating = 1
+                });
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);

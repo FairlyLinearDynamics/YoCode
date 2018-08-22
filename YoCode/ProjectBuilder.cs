@@ -15,6 +15,7 @@ namespace YoCode
             CleanBuildOutput(workingDir);
 
             ProjectBuilderEvidence.FeatureTitle = "Project build";
+            ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
 
             workingDir = Path.Combine(workingDir, projectFolder);
             if (!Directory.Exists(workingDir))
@@ -22,6 +23,7 @@ namespace YoCode
                 ProjectBuilderEvidence.SetFailed($"{workingDir} not found");
                 return;
             }
+
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
@@ -36,7 +38,9 @@ namespace YoCode
                 return;
             }
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
-            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}{Environment.NewLine}Error count: {GetNumberOfErrors()}");
+            ProjectBuilderEvidence.FeatureRating = BuildSuccessful() ? 1 : 0;
+
+            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
             {
                 ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");

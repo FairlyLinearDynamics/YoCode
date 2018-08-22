@@ -40,6 +40,7 @@ namespace YoCode
                 OrigDuplicateCost = 611;
             }
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
+            DuplicationEvidence.Feature = Feature.DuplicationCheck;
 
             this.dir = dir;
             this.dupFinder = dupFinder;
@@ -49,7 +50,9 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
+                StructuredOutput();
                 CheckForSpecialRepetition();
+
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
@@ -72,7 +75,7 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.GiveEvidence(modEvidence);
+            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
         }
 
         private void CheckForSpecialRepetition()
@@ -117,11 +120,21 @@ namespace YoCode
             }
             if (stringRep > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep}");
+                DuplicationEvidence.GiveEvidence($"String \"Yards to meters\" duplicated {stringRep} times");
             }
         }
 
-        private int CountRepetition(string valueToCheckAgainst, string fileToReadFrom, string regexPattern)
+        public double GetDuplicationCheckRating()
+        {
+            double UpperBound = 628;
+            double LowerBound = 174;
+            double range = UpperBound - LowerBound;
+
+            return ModiDuplicateCost >= UpperBound ? 0 : 1-Math.Round((ModiDuplicateCost - LowerBound) / range,2);
+        }
+
+
+        private int CountRepetition(string valueToCheckAgainst ,string fileToReadFrom, string regexPattern)
         {
             var elements = Regex.Matches(fileToReadFrom, regexPattern);
             return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
@@ -136,8 +149,17 @@ namespace YoCode
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
 
             evidence.GiveEvidence(BuildEvidenceString(whichDir, codebaseCost, duplicateCost));
-
             return (evidence, codebaseCost, duplicateCost);
+        }
+
+
+        public void StructuredOutput()
+        {
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            DuplicationEvidence.GiveEvidence(messages.ParagraphDivider);
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
+            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
+            DuplicationEvidence.GiveEvidence(Environment.NewLine);
         }
 
         private string BuildEvidenceString(string whichDir, int codebaseCost, int duplicateCost)

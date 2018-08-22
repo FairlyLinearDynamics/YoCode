@@ -293,7 +293,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         width: 100%;
         display: grid;
         position: relative;
-        grid-template-columns: 50px auto 25px;
+        grid-template-columns: 50px 65px auto 25px;
         background-color: var(--panel-bg);
         color: var(--panel-text);
         cursor: pointer;
@@ -304,13 +304,14 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         border-bottom: 2px solid var(--element-underlining);
         text-align: left;
         padding: 0;
+        font-weight: 400;
       }
 
       .accordion::after{
         content: '\2B9F'; /* Unicode character for "plus" sign (+) */
         font-size: 15px;
         color: #777;
-        grid-column: 3;
+        grid-column: 4;
         align-self: center;
         justify-content: center;
       }
@@ -321,6 +322,19 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 
       .active, .accordion:hover {
         background-color: #e4dfe8;
+      }
+
+      .accordion-score-holder{
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-basis: 100%;
+        padding: 15px 15px;
+      }
+      .accordion-score{
+        text-align: center;
+        font-size: 25px;
       }
 
       .panel {
@@ -359,11 +373,10 @@ Example: --{0}=&lt;...&gt; --{3}</value>
       }
 
       .accordion-title {
-        grid-column: 2/2;
+        grid-column: 3;
         text-align: left;
         font-size: 100%;
         padding: 15px 15px;
-        font-weight: 400;
         font-size: 25px;
       }
 
@@ -434,7 +447,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
 
       &lt;div class="section score"&gt;
         &lt;span class="section-title"&gt;YoScore&lt;/span&gt; 
-        &lt;span id="js-score" class="test-bar-number"&gt;0.0&lt;/span&gt;
+        &lt;span id="js-score" class="test-bar-number"&gt;{SCORE}&lt;/span&gt;
 
         &lt;div class="bar-container"&gt;
         &lt;/div&gt;
@@ -589,5 +602,13 @@ Example: --{0}=&lt;...&gt; --{3}</value>
   <data name="CodeCoverageHelp" xml:space="preserve">
     <value>Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
+  </data>
+  <data name="HtmlTitleTemplate" xml:space="preserve">
+    <value>&lt;span class="accordion-icon {0}"&gt;
+    &lt;span class="fa {1}"&gt;&lt;/span&gt;
+  &lt;/span&gt;
+  &lt;span class="accordion-score-holder"&gt;
+    &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
+  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
   </data>
 </root>
