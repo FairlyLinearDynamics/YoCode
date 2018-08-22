@@ -71,12 +71,14 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormaFeatureTitle(string title, bool featurePassed = false, double score = 0.0)
+        public static string FormaFeatureTitle(string title, bool? featurePassed = null, double score = 0.0)
         {
             var passIcon = "accordion-icon-pass";
             var failIcon = "accordion-icon-fail";
+            var undefinedIcon = "accordion-icon-undefinded";
             var passIconStyle = "fa-check-circle-o";
             var failIconStyle = "fa-times-circle-o";
+            var undefinedStyle = "fa-question-circle-o";
 
             return String.Format(messages.HtmlTitleTemplate, featurePassed ? passIcon : failIcon, featurePassed ? passIconStyle : failIconStyle, score+"%",title);
         }

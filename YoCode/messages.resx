@@ -180,8 +180,10 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         --console-text: #c0c0c0;
         --green-bg: #3bc511;
         --red-bg: #eb4b4b;
+        --yellow-bg: #ebc04b;
         --green-bg-transparent: #70eb4b3a;
         --red-bg-transparent: #eb4b4b3a;
+        --yellow-bg-transparent: #ebc64b3a;
         --main-bg: #d6cbda;
         --panel-bg: #f4eef8;
         --panel-text: #3b3838;
@@ -401,20 +403,28 @@ Example: --{0}=&lt;...&gt; --{3}</value>
         background-color: var(--red-bg-transparent);
       }
 
+      .accordion-icon-undefinded{
+        background-color: var(--yellow-bg-transparent);
+      }
+
         .fa-check-circle-o,
-        .fa-times-circle-o {
+        .fa-times-circle-o,
+        .fa-question-circle-o {
         text-align: center;
         font-size: 130%;   
       }
-
 
       .fa-times-circle-o {
         color: var(--red-bg);
       }
 
-
       .fa-check-circle-o {
         color: var(--green-bg);
+      }
+
+      .fa-question-circle-o {
+        color: var(--yellow-bg);
+        font-weight: bold;
       }
     &lt;/style&gt;
   &lt;/head&gt;
