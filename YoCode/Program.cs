@@ -21,6 +21,7 @@ namespace YoCode
             var result = commandLinehandler.Parse();
 
             var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
+
             OpenHTMLOnFinish = !result.Silent;
             isJunior = result.JuniorTest;
             if (!parameters.ParametersAreValid())
@@ -47,6 +48,7 @@ namespace YoCode
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
+            pr.ReportLefOverProcess();
 
         }
 
@@ -124,6 +126,7 @@ namespace YoCode
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
             pr.KillProject();
+
             return checkList;
         }
     }

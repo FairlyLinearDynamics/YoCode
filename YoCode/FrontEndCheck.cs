@@ -11,12 +11,14 @@ namespace YoCode
 {
     internal class FrontEndCheck
     {
-        private readonly IWebDriver browser;
+        private static IWebDriver browser;
         private readonly string port;
         private List<bool> ratingsList = new List<bool>();
 
         private const int TitleColumnFormatter = -40;
         private const int ValueColumnFormatter = -10;
+
+        public static bool Running { get; private set; }
 
         public FrontEndCheck(string applicantsWebPort, string[] keyWords)
         {
@@ -27,6 +29,8 @@ namespace YoCode
                 FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
                 return;
             }
+
+            Running = true;
 
             try
             {
@@ -65,7 +69,7 @@ namespace YoCode
                 FrontEndEvidence.FeatureRating = GetOutputCheckRating();
                 FrontEndEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
 
-                browser.Dispose();
+                CloseBrowser();
             }
             catch (WebDriverException e)
             {
@@ -73,6 +77,20 @@ namespace YoCode
 
                 FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
             }
+        }
+
+        public static bool CloseBrowser()
+        {
+            if(browser != null)
+            {
+                browser.Dispose();
+                Running = false;
+                browser = null;
+                return true;
+            }
+
+            return !Running;
+
         }
 
         private bool CheckIfUIContainsFeature(string[] keyWords)

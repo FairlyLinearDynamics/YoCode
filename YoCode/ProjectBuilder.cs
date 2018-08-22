@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace YoCode
 {
@@ -7,13 +8,22 @@ namespace YoCode
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
         private readonly string Output;
+        private const string projectFolder = "UnitConverterWebApp";
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
             CleanBuildOutput(workingDir);
 
-            ProjectBuilderEvidence.FeatureTitle = "Project Build";
+            ProjectBuilderEvidence.FeatureTitle = "Project build";
             ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
+
+            workingDir = Path.Combine(workingDir, projectFolder);
+            if (!Directory.Exists(workingDir))
+            {
+                ProjectBuilderEvidence.SetFailed($"{workingDir} not found");
+                return;
+            }
+
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
