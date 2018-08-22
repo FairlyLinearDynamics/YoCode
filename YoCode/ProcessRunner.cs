@@ -182,7 +182,7 @@ namespace YoCode
             {
                 if (!Process.GetProcessById(Pid).HasExited)
                 {
-                    Console.WriteLine("Left Over Process Detected");
+                    Console.WriteLine($"Left Over Process Detected with PID: {Pid}");
                 }
             }
             catch (ArgumentException) { }
