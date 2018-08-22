@@ -11,6 +11,7 @@ namespace YoCodeAutomatedTests
         [InlineData("P1.txt", "\\Project1")]
         [InlineData("P2.txt", "\\Project2")]
         [InlineData("P3.txt", "\\Project3")]
+        [InlineData("P4.txt", "\\Project4")]
         public void CompareProjects(string outputFile, string project)
         {
             var helper = new TestHelperMethods();
