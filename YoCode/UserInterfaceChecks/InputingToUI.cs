@@ -52,7 +52,6 @@ namespace YoCode
                         }
 
                         elementToClick.Click();
-                        //OutputCheck(applicantTestInput);
                     }
                     else if (selectors.Count == 1)
                     {
@@ -65,7 +64,6 @@ namespace YoCode
                         }
 
                         elementToClick.Click();
-                        //OutputCheck(applicantTestInput);
                     }
                     else
                     {
@@ -75,10 +73,10 @@ namespace YoCode
                         }
 
                         elementToClick.Click();
-                        //OutputCheck(applicantTestInput);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception) {
+                }
             }
         }
     }

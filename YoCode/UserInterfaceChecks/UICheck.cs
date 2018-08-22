@@ -21,11 +21,14 @@ namespace YoCode
 
         public UICheck(string port)
         {
+            UIFeatureEvidences = ExecuteChecks(port);
+        }
 
+        private static List<FeatureEvidence> ExecuteChecks(string port)
+        {
             if (string.IsNullOrEmpty(port))
             {
-                UIFeatureEvidences.ForEach(a => a.SetFailed("Could not retrieve the port number. Another program might be using it."));
-                return;
+                return CreateFailureEvidence("Could not retrieve the port number. Another program might be using it.");
             }
 
             Running = true;
@@ -62,7 +65,7 @@ namespace YoCode
             }
             else
             {
-                UIFeatureEvidences.ForEach(a=>a.SetFailed($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser"));
+                return CreateFailureEvidence($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser");
             }
 
             try
@@ -70,16 +73,38 @@ namespace YoCode
                 browser.Navigate().GoToUrl(port);
 
                 var featureInUI = new UIFeatureImplemented(browser, UIKeywords.UNIT_KEYWORDS);
-                UIFeatureEvidences[0] = featureInUI.UIFeatureImplementedEvidence;
 
-                UIFeatureEvidences[1] = new UIBadInputChecker(browser, featureInUI.FeatureTagFound).UIBadInputCheckEvidence;
-
-                UIFeatureEvidences[2] = new UIConversionCheck(browser, featureInUI.FeatureTagFound).UIConversionEvidence;
-
+                return new List<FeatureEvidence>
+                {
+                    featureInUI.UIFeatureImplementedEvidence,
+                    new UIBadInputChecker(browser, featureInUI.FeatureTagFound).UIBadInputCheckEvidence,
+                    new UIConversionCheck(browser, featureInUI.FeatureTagFound).UIConversionEvidence
+                };
+            }
+            catch
+            {
+                return CreateFailureEvidence("Unexpected closure of application, could not interact with browser.");
+            }
+            finally
+            {
                 CloseBrowser();
             }
-            catch { return; }
+        }
 
+        private static List<FeatureEvidence> CreateDefaultFeatureEvidence()
+        {
+            return new List<FeatureEvidence> {
+                new FeatureEvidence(){ FeatureTitle = "Found feature evidence in user interface", Feature = Feature.UIFeatureImplmeneted },
+                new FeatureEvidence(){ FeatureTitle = "Bad input crashes have been fixed in the UI", Feature = Feature.UIBadInputCheck},
+                new FeatureEvidence(){ FeatureTitle = "Units were converted successfully using UI", Feature = Feature.UIConversionCheck}
+            };
+        }
+
+        private static List<FeatureEvidence> CreateFailureEvidence(string failureReason)
+        {
+            var evidence = CreateDefaultFeatureEvidence();
+            evidence.ForEach(a => a.SetFailed(failureReason));
+            return evidence;
         }
 
         public static bool CloseBrowser()
@@ -95,11 +120,6 @@ namespace YoCode
             return !Running;
         }
 
-        public List<FeatureEvidence> UIFeatureEvidences { get; } = new List<FeatureEvidence>()
-        {
-            new FeatureEvidence(){ FeatureTitle = "Found feature evidence in user interface", Feature = Feature.UIFeatureImplmeneted },
-            new FeatureEvidence(){ FeatureTitle = "Bad input crashes have been fixed in the UI", Feature = Feature.UIBadInputCheck},
-            new FeatureEvidence(){ FeatureTitle = "Units were converted successfully using UI", Feature = Feature.UIConversionCheck}
-        };
+        public List<FeatureEvidence> UIFeatureEvidences { get; }
     }
 }
