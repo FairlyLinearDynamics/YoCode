@@ -90,22 +90,64 @@ namespace YoCode {
         
         /// <summary>
         ///   Looks up a localized string similar to ___________________________
-        ///   _|__ _________________ __|__
-        ///  _|___||               ||_|__
-        ///  ___|_||       )  &apos;    ||___|_
-        ///   _|__||    ( ()\(     ||_|___
-        ///  ___|_||  ( ,|,(X)&apos;    ||___#_
-        ///  _|___|| /,)/|`\``\\\  |||__/\
-        ///       &apos;&apos;---------------&apos;&apos;  /  `--#
-        ///       . - ------------ . #/      |
-        ///     (( (((  (( ))) ))))  )\      |
-        ///       `  -   ----  __ -/\  `.__.-#
-        ///                  C(__)`\ \____
-        ///                      /_`\/___/.
+        ///  _|__ _________________ __|__
+        ///_|___||               ||_|__
+        ///___|_||       )  &apos;    ||___|_
+        ///  _|__||    ( ()\(     ||_|___
+        ///___|_||  ( ,|,(X)&apos;    ||___#_
+        ///_|___|| /,)/|`\``\\\  |||__/\
+        ///      &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///      . - ------------ . #/      |
+        ///    (( (((  (( ))) ))))  )\      |
+        ///      `  -   ----  __ -/\  `.__.-#
+        ///                C(__)`\ \____
+        ///                    /_`\/___/.
         /// </summary>
-        public static string ConsoleFireplaceBanner {
+        public static string ConsoleFireplaceBannerFrame1 {
             get {
-                return ResourceManager.GetString("ConsoleFireplaceBanner", resourceCulture);
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///  _|__ _________________ __|__
+        ///_|___||    ,          ||_|__
+        ///___|_||     )    (    ||___|_
+        ///  _|__||  ,) ,() (     ||_|___
+        ///___|_|| )  )|,(X)&apos;    ||___#_
+        ///_|___|| /,)/|`\``\\\  |||__/\
+        ///      &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///      . - ------------ . #/      |
+        ///    (( (((  (( ))) ))))  )\      |
+        ///      `  -   ----  __ -/\  `.__.-#
+        ///                C(__)`\ \____
+        ///                    /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame2 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ___________________________
+        ///  _|__ _________________ __|__
+        ///_|___||               ||_|__
+        ///___|_||  )     (      ||___|_
+        ///  _|__||   ) ,())  ,   ||_|___
+        ///___|_||   ,)|,(X)&apos;    ||___#_
+        ///_|___|| /,)/|`\``\\\  |||__/\
+        ///      &apos;&apos;---------------&apos;&apos;  /  `--#
+        ///      . - ------------ . #/      |
+        ///    (( (((  (( ))) ))))  )\      |
+        ///      `  -   ----  __ -/\  `.__.-#
+        ///                C(__)`\ \____
+        ///                    /_`\/___/.
+        /// </summary>
+        public static string ConsoleFireplaceBannerFrame3 {
+            get {
+                return ResourceManager.GetString("ConsoleFireplaceBannerFrame3", resourceCulture);
             }
         }
         
@@ -132,15 +174,14 @@ namespace YoCode {
         
         /// <summary>
         ///   Looks up a localized string similar to Application takes only one parameter: path to the modified test directory
-        ///Possible commands: --{0}; --{1}
+        ///Possible commands: --{0}; --{1}; --{2}; --{3}; --{4}; --{5};
         ///Example use: --{0}=&lt;path-to-modified-test&gt;
         ///To disable loading animation, append --{2} at the end of command line
         ///Example: --{0}=&lt;...&gt; --{2}
         ///To disable automatic HTML report opening, append --{3} at the end of command line
         ///Example: --{0}=&lt;...&gt; --{3}
         ///To specify directory to witch generate HTML report, append --{4} at the end of command line
-        ///Example --{0}=&lt;...&gt; --{4}=&lt;path-where-to-write&gt;
-        ///To disab [rest of string was truncated]&quot;;.
+        ///Example --{0}=&lt;...&gt; --{4}=&lt;p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string HelpMessage {
             get {

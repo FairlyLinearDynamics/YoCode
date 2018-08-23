@@ -126,24 +126,9 @@ After you downloaded it please specify its location in appsettings.json file, wh
     <value>===================================================================================
 </value>
   </data>
-  <data name="ConsoleFireplaceBanner" xml:space="preserve">
-    <value>___________________________
-   _|__ _________________ __|__
-  _|___||               ||_|__
-  ___|_||       )  '    ||___|_
-   _|__||    ( ()\(     ||_|___
-  ___|_||  ( ,|,(X)'    ||___#_
-  _|___|| /,)/|`\``\\\  |||__/\
-       ''---------------''  /  `--#
-       . - ------------ . #/      |
-     (( (((  (( ))) ))))  )\      |
-       `  -   ----  __ -/\  `.__.-#
-                  C(__)`\ \____
-                      /_`\/___/</value>
-  </data>
   <data name="HelpMessage" xml:space="preserve">
     <value>Application takes only one parameter: path to the modified test directory
-Possible commands: --{0}; --{1}
+Possible commands: --{0}; --{1}; --{2}; --{3}; --{4}; --{5};
 Example use: --{0}=&lt;path-to-modified-test&gt;
 To disable loading animation, append --{2} at the end of command line
 Example: --{0}=&lt;...&gt; --{2}
@@ -620,5 +605,53 @@ After you downloaded it please specify its location in appsettings.json file, wh
   </data>
   <data name="SuccessfullyWroteReport" xml:space="preserve">
     <value>HTML successfully generated in {0}"{1}" directory</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame1" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||               ||_|__
+___|_ ||       )  '    ||___|_
+  _|__||    ( ()\(     ||_|___
+___|_ ||  ( ,|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''---------------''  /  `--#
+      . - ------------ . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame2" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||    ,          ||_|__
+___|_ ||     )    (    ||___|_
+  _|__||  ,) ,() (     ||_|___
+___|_ || )  )|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''---------------''  /  `--#
+      . - ------------ . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame3" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||               ||_|__
+___|_ ||  )     (      ||___|_
+  _|__||   ) ,())  ,   ||_|___
+___|_ ||   ,)|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''---------------''  /  `--#
+      . - ------------ . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
   </data>
 </root>

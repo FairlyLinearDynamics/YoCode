@@ -63,7 +63,8 @@ namespace YoCode
 
         public void WriteReport()
         {
-            var writeTo = Path.Combine(Program.OutputTo, OUTPUT_PATH) ?? OUTPUT_PATH;
+            var writeTo = (Program.OutputTo!=null)? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
+
             var consoleWriter = new ConsoleWriter();
             try
             {
