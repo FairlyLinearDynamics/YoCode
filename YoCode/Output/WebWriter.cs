@@ -1,20 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Text;
-using System.Linq;
 
 namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string OUTPUT_PATH = @"YoCodeReport.html";
-        const string FEATURE_TAG = "{FEATURE}";
-        const string SCORE_TAG = "{SCORE}";
+        private const string OUTPUT_PATH = "YoCodeReport.html";
+        private const string FEATURE_TAG = "{FEATURE}";
+        private const string SCORE_TAG = "{SCORE}";
 
-        StringBuilder features;
-        StringBuilder errors;
-        StringBuilder msg;
+        private readonly StringBuilder features;
+        private readonly StringBuilder errors;
+        private readonly StringBuilder msg;
 
         private double score;
 
@@ -63,26 +60,10 @@ namespace YoCode
 
         public void WriteReport()
         {
-            var writeTo = (Program.OutputTo!=null)? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
-
-            var consoleWriter = new ConsoleWriter();
-            try
+            File.WriteAllText(OUTPUT_PATH, BuildReport());
+            if (Program.OpenHTMLOnFinish)
             {
-                if (Program.GenerateHtml)
-                {
-                    File.WriteAllText(writeTo, BuildReport());
-                    if (Program.OpenHTMLOnFinish)
-                    {
-                        HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
-                    }
-                    consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
-                    consoleWriter.WriteReport();
-                }
-            }
-            catch
-            {
-                
-                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(writeTo), Environment.NewLine, Environment.NewLine) });
+                HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
             }
         }
     }
