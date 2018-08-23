@@ -272,6 +272,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTML successfully generated in {0}&quot;{1}&quot; directory.
+        /// </summary>
+        public static string SuccessfullyWroteReport {
+            get {
+                return ResourceManager.GetString("SuccessfullyWroteReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to YoCode!
         ///
         ///.
@@ -283,7 +292,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HTML report could not be written in {0} directory.{1}If you would like to specify directory,{2}please append &quot;--output=&lt;path-where-to-write&gt;&quot; command.
+        ///   Looks up a localized string similar to HTML report could not be written to &quot;{0}&quot; directory.{1}If you would like to specify different directory,{2}please append &quot;--output=&lt;path-where-to-write&gt;&quot; command.
         /// </summary>
         public static string WrongWritePermission {
             get {

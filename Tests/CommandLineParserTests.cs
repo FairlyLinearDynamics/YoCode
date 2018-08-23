@@ -53,7 +53,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.modifiedFilePath.Should().Be("/");
+            cmdResult.ModifiedFilePath.Should().Be("/");
         }
 
         [Fact]

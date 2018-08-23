@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    class Output
+    internal class Output
     {
         IPrint outputWriter;
         IErrorReporter errOutput;

@@ -612,6 +612,9 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
   </data>
   <data name="WrongWritePermission" xml:space="preserve">
-    <value>HTML report could not be written in {0} directory.{1}If you would like to specify directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>
+    <value>HTML report could not be written to "{0}" directory.{1}If you would like to specify different directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>
+  </data>
+  <data name="SuccessfullyWroteReport" xml:space="preserve">
+    <value>HTML successfully generated in {0}"{1}" directory</value>
   </data>
 </root>

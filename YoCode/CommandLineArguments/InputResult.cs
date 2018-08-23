@@ -11,6 +11,7 @@ namespace YoCode
         public bool Silent { get; set; }
         public bool NoLoadingScreen { get; set; }
         public bool JuniorTest { get; set; }
-        public string modifiedFilePath;
+        public string ModifiedFilePath { get; set; }
+        public string OutputFilePath { get; set; }
     }
 }

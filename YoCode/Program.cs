@@ -11,6 +11,9 @@ namespace YoCode
         private static bool showLoadingAnim;
         private static bool isJunior;
 
+        public static bool OpenHTMLOnFinish { get; set; }
+        public static string OutputTo { get; set; }
+
         private static void Main(string[] args)
         {
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
@@ -23,6 +26,7 @@ namespace YoCode
             var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
 
             OpenHTMLOnFinish = !result.Silent;
+            OutputTo = result.OutputFilePath;
             isJunior = result.JuniorTest;
             if (!parameters.ParametersAreValid())
             {
@@ -37,7 +41,7 @@ namespace YoCode
                 return;
             }
 
-            var modifiedTestDirPath = result.modifiedFilePath;
+            var modifiedTestDirPath = result.ModifiedFilePath;
 
             var dir = new PathManager(modifiedTestDirPath);
 
@@ -51,8 +55,6 @@ namespace YoCode
             pr.ReportLefOverProcess();
 
         }
-
-        public static bool OpenHTMLOnFinish { get; set; }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
