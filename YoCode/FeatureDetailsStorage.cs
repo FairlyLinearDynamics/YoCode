@@ -12,7 +12,7 @@ namespace YoCode
         TestType mode;
 
         string JuniorPath = @"..\..\..\FeatureWeightings\JuniorWeightings.json";
-        string OriginalPath =  @"..\..\..\FeatureWeightings\OriginalWeightings.json";
+        string OriginalPath = @"..\..\..\FeatureWeightings\OriginalWeightings.json";
 
         public FeatureDetailsStorage(TestType mode)
         {
@@ -20,7 +20,7 @@ namespace YoCode
             this.mode = mode;
         }
 
-        public Dictionary<Feature,double> InitializeJSONFile()
+        public Dictionary<Feature, double> InitializeJSONFile()
         {
             using (StreamReader r = new StreamReader(ReturnPathByMode(mode)))
             {
@@ -30,175 +30,168 @@ namespace YoCode
             }
         }
 
-        public void AssignWeightingsFromJSON(Dictionary<Feature,FeatureDetails> localDictionary)
+        public void AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
         {
-            foreach(var local in localDictionary.ToList())
+            foreach (var local in localDictionary.ToList())
             {
-                foreach(var json in WeightingsFromJson)
-                {
-                    if(local.Key == json.Key)
-                    {
-                        localDictionary[local.Key] = new FeatureDetails
-                        {
-                            FeatureTitle = local.Value.FeatureTitle,
-                            FeatureWeighting = json.Value
-                        };
-                    }
-                }
+                var onejson = WeightingsFromJson.ToList().Find(e => e.Key == local.Key);
+
+                localDictionary[local.Key] = ReturnFeatureDetails(local.Value.FeatureTitle, onejson.Value);
+
             }
         }
 
-        public Dictionary<Feature,FeatureDetails> InitializeJuniorDetails()
+        public Dictionary<Feature, FeatureDetails> InitializeJuniorDetails()
         {
             var JuniorTestDetails = new Dictionary<Feature, FeatureDetails>();
 
             JuniorTestDetails.Add(
-                Feature.BadInputCheck, 
+                Feature.BadInputCheck,
                 new FeatureDetails {
                     FeatureTitle = "Bad input crashes have been fixed",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.CodeCoverageCheck, 
+                Feature.CodeCoverageCheck,
                 new FeatureDetails {
                     FeatureTitle = "Code Coverage",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.DuplicationCheck, 
+                Feature.DuplicationCheck,
                 new FeatureDetails {
                     FeatureTitle = "Code quality improvement",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.FilesChangedCheck, 
+                Feature.FilesChangedCheck,
                 new FeatureDetails {
                     FeatureTitle = "Files changed",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.FrontEndCheck, 
+                Feature.FrontEndCheck,
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.GitCheck, 
+                Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.ProjectBuilder, 
+                Feature.ProjectBuilder,
                 new FeatureDetails {
                     FeatureTitle = "Project Build",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.ProjectRunner, 
+                Feature.ProjectRunner,
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.SolutionFileExists, 
+                Feature.SolutionFileExists,
                 new FeatureDetails {
                     FeatureTitle = "Solution File Exists",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.TestCountCheck, 
+                Feature.TestCountCheck,
                 new FeatureDetails {
                     FeatureTitle = "All unit tests have passed",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.UICheck, 
+                Feature.UICheck,
                 new FeatureDetails {
                     FeatureTitle = "Evidence present in UI",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.UnitConverterCheck, 
+                Feature.UnitConverterCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
                     FeatureWeighting = 1 });
 
             return JuniorTestDetails;
         }
-        
-        public Dictionary<Feature,FeatureDetails> InitializeOriginalDetails()
+
+        public Dictionary<Feature, FeatureDetails> InitializeOriginalDetails()
         {
             var OriginalTestDetails = new Dictionary<Feature, FeatureDetails>();
 
             OriginalTestDetails.Add(
-                Feature.BadInputCheck, 
+                Feature.BadInputCheck,
                 new FeatureDetails {
                     FeatureTitle = "Bad input crashes have been fixed",
                     FeatureWeighting = 2.39 });
 
             OriginalTestDetails.Add(
-                Feature.CodeCoverageCheck, 
+                Feature.CodeCoverageCheck,
                 new FeatureDetails {
                     FeatureTitle = "Code Coverage",
                     FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
-                Feature.DuplicationCheck, 
+                Feature.DuplicationCheck,
                 new FeatureDetails {
                     FeatureTitle = "Code quality improvement",
                     FeatureWeighting = 1.69 });
 
             OriginalTestDetails.Add(
-                Feature.FilesChangedCheck, 
+                Feature.FilesChangedCheck,
                 new FeatureDetails {
                     FeatureTitle = "Files changed",
                     FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
-                Feature.FrontEndCheck, 
+                Feature.FrontEndCheck,
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 0});
+                    FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
-                Feature.GitCheck, 
+                Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
                     FeatureWeighting = 1 });
 
             OriginalTestDetails.Add(
-                Feature.ProjectBuilder, 
+                Feature.ProjectBuilder,
                 new FeatureDetails {
                     FeatureTitle = "Project Build",
                     FeatureWeighting = 1.107 });
 
             OriginalTestDetails.Add(
-                Feature.ProjectRunner, 
+                Feature.ProjectRunner,
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
                     FeatureWeighting = 1.033 });
 
             OriginalTestDetails.Add(
-                Feature.SolutionFileExists, 
+                Feature.SolutionFileExists,
                 new FeatureDetails {
                     FeatureTitle = "Solution File Exists",
                     FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
-                Feature.TestCountCheck, 
+                Feature.TestCountCheck,
                 new FeatureDetails {
                     FeatureTitle = "All unit tests have passed",
                     FeatureWeighting = 1.355 });
 
             OriginalTestDetails.Add(
-                Feature.UICheck, 
+                Feature.UICheck,
                 new FeatureDetails {
                     FeatureTitle = "Evidence present in UI",
                     FeatureWeighting = 1.03 });
 
             OriginalTestDetails.Add(
-                Feature.UnitConverterCheck, 
+                Feature.UnitConverterCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
                     FeatureWeighting = 1.09 });
@@ -206,9 +199,9 @@ namespace YoCode
             return OriginalTestDetails;
         }
 
-        public Dictionary<Feature,FeatureDetails> ReturnDetailsByMode(TestType mode)
+        public Dictionary<Feature, FeatureDetails> ReturnDetailsByMode(TestType mode)
         {
-            return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();  
+            return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();
         }
 
         public string ReturnPathByMode(TestType mode)
@@ -216,8 +209,14 @@ namespace YoCode
             return mode == TestType.Junior ? JuniorPath : OriginalPath;
         }
 
-
-
+        public FeatureDetails ReturnFeatureDetails(string featureTitle,double featureWeighting)
+        {
+            return new FeatureDetails
+            {
+                FeatureTitle = featureTitle,
+                FeatureWeighting = featureWeighting
+            };
+        }
 
     }
 }
