@@ -4,7 +4,7 @@
   "CodeCoverageCheck": 0,
   "DuplicationCheck": 1.69,
   "UICheck": 1.03,
-  "FilesChangedCheck": 25,
+  "FilesChangedCheck": 0,
   "GitCheck": 1,
   "FrontEndCheck": 0,
   "ProjectBuilder": 1.107,

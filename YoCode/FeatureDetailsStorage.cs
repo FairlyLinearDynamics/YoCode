@@ -11,8 +11,8 @@ namespace YoCode
         Dictionary<Feature, double> WeightingsFromJson;
         TestType mode;
 
-        string JuniorPath = @"..\..\..\JuniorWeightings.json";
-        string OriginalPath =  @"..\..\..\OriginalWeightings.json";
+        string JuniorPath = @"..\..\..\FeatureWeightings\JuniorWeightings.json";
+        string OriginalPath =  @"..\..\..\FeatureWeightings\OriginalWeightings.json";
 
         public FeatureDetailsStorage(TestType mode)
         {
@@ -27,15 +27,14 @@ namespace YoCode
                 string json = r.ReadToEnd();
 
                 return JsonConvert.DeserializeObject<Dictionary<Feature, double>>(json);
-
             }
         }
 
-        public void AssignWeightings(Dictionary<Feature,FeatureDetails> localDictionary)
+        public void AssignWeightingsFromJSON(Dictionary<Feature,FeatureDetails> localDictionary)
         {
             foreach(var local in localDictionary.ToList())
             {
-                foreach(var json in WeightingsFromJson.ToList())
+                foreach(var json in WeightingsFromJson)
                 {
                     if(local.Key == json.Key)
                     {
@@ -46,7 +45,6 @@ namespace YoCode
                         };
                     }
                 }
-
             }
         }
 
@@ -58,31 +56,31 @@ namespace YoCode
                 Feature.BadInputCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Bad input crashes have been fixed",
-                    FeatureWeighting = 2.39 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.CodeCoverageCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Code Coverage",
-                    FeatureWeighting = 0 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.DuplicationCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Code quality improvement",
-                    FeatureWeighting = 1.69 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.FilesChangedCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Files changed",
-                    FeatureWeighting = 0 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.FrontEndCheck, 
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 0 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.GitCheck, 
@@ -94,37 +92,37 @@ namespace YoCode
                 Feature.ProjectBuilder, 
                 new FeatureDetails {
                     FeatureTitle = "Project Build",
-                    FeatureWeighting = 1.107 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.ProjectRunner, 
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
-                    FeatureWeighting = 1.033 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.SolutionFileExists, 
                 new FeatureDetails {
                     FeatureTitle = "Solution File Exists",
-                    FeatureWeighting = 0 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.TestCountCheck, 
                 new FeatureDetails {
                     FeatureTitle = "All unit tests have passed",
-                    FeatureWeighting = 1.355 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.UICheck, 
                 new FeatureDetails {
                     FeatureTitle = "Evidence present in UI",
-                    FeatureWeighting = 1.03 });
+                    FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.UnitConverterCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
-                    FeatureWeighting = 1.09 });
+                    FeatureWeighting = 1 });
 
             return JuniorTestDetails;
         }

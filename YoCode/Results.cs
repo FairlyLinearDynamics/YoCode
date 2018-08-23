@@ -15,12 +15,12 @@ namespace YoCode
 
             var thisDictionary = storage.ReturnDetailsByMode(mode);
 
+            storage.InitializeJSONFile();
+            storage.AssignWeightingsFromJSON(thisDictionary);
+
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
             CalculateFinalScore();
-
-            storage.InitializeJSONFile();
-            storage.AssignWeightings(thisDictionary);
 
         }
 
@@ -36,6 +36,8 @@ namespace YoCode
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
+
+                Console.WriteLine(elem.FeatureWeighting);
 
                 MaximumScore += elem.FeatureWeighting;
 
