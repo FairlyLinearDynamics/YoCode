@@ -8,7 +8,7 @@ namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string OUTPUT_PATH = @"YoCodeReport.html";
+        const string OUTPUT_PATH = @"C:\Program Files\YoCodeReport.html";
         const string FEATURE_TAG = "{FEATURE}";
         const string SCORE_TAG = "{SCORE}";
 
@@ -63,10 +63,18 @@ namespace YoCode
 
         public void WriteReport()
         {
-            File.WriteAllText(OUTPUT_PATH, BuildReport());
-            if (Program.OpenHTMLOnFinish)
+            try
             {
-                HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                File.WriteAllText(OUTPUT_PATH, BuildReport());
+                if (Program.OpenHTMLOnFinish)
+                {
+                    HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                }
+            }
+            catch
+            {
+                var consoleWriter = new ConsoleWriter();
+                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, OUTPUT_PATH, Environment.NewLine, Environment.NewLine) });
             }
         }
     }

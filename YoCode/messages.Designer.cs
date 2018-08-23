@@ -110,7 +110,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to =========================================================================
+        ///   Looks up a localized string similar to ===================================================================================
         ///.
         /// </summary>
         public static string Divider {
@@ -263,7 +263,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ------------------------------------------------------------------------.
+        ///   Looks up a localized string similar to -----------------------------------------------------------------------------------.
         /// </summary>
         public static string ParagraphDivider {
             get {
@@ -279,6 +279,15 @@ namespace YoCode {
         public static string Welcome {
             get {
                 return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTML report could not be written in {0} directory.{1}If you would like to specify directory,{2}please append &quot;--output=&lt;path-where-to-write&gt;&quot; command.
+        /// </summary>
+        public static string WrongWritePermission {
+            get {
+                return ResourceManager.GetString("WrongWritePermission", resourceCulture);
             }
         }
     }

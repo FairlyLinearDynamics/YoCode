@@ -55,6 +55,7 @@ namespace YoCode
         public void WriteReport()
         {
             Console.Write(consoleReport);
+            Console.SetWindowPosition(0, 0);
             consoleReport.Clear();
         }
     }

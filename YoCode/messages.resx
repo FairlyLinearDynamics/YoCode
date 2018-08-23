@@ -123,7 +123,7 @@ Direct download link here: https://www.jetbrains.com/resharper/download/download
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
   <data name="Divider" xml:space="preserve">
-    <value>=========================================================================
+    <value>===================================================================================
 </value>
   </data>
   <data name="ConsoleFireplaceBanner" xml:space="preserve">
@@ -594,7 +594,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
       &lt;/div&gt;</value>
   </data>
   <data name="ParagraphDivider" xml:space="preserve">
-    <value>------------------------------------------------------------------------</value>
+    <value>-----------------------------------------------------------------------------------</value>
   </data>
   <data name="LoadingMessage" xml:space="preserve">
     <value>Get comfortable, YoCode is gathering your results</value>
@@ -610,5 +610,8 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
   &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
+  </data>
+  <data name="WrongWritePermission" xml:space="preserve">
+    <value>HTML report could not be written in {0} directory.{1}If you would like to specify directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>
   </data>
 </root>
