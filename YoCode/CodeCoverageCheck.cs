@@ -9,7 +9,7 @@ namespace YoCode
 
         private string ReportName { get; } = "report.json";
         private string FullReportPath { get; }
-        private const int passPerc = 30;
+        private const int passPerc = 45;
         private const string testFolder = "UnitConverterTests";
 
         public CodeCoverageCheck(string dotCoverDir, string workingDir, FeatureRunner featureRunner)
