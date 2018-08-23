@@ -30,15 +30,9 @@ namespace YoCode
             }
         }
 
-        public void AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
+        public Dictionary<Feature,FeatureDetails> AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
         {
-            foreach (var local in localDictionary.ToList())
-            {
-                var onejson = WeightingsFromJson.ToList().Find(e => e.Key == local.Key);
-
-                localDictionary[local.Key] = ReturnFeatureDetails(local.Value.FeatureTitle, onejson.Value);
-
-            }
+            return localDictionary.ToDictionary(kv => kv.Key, kv => ReturnFeatureDetails(kv.Value.FeatureTitle, WeightingsFromJson[kv.Key]));
         }
 
         public Dictionary<Feature, FeatureDetails> InitializeJuniorDetails()
