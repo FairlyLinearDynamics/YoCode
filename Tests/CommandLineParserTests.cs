@@ -49,7 +49,7 @@ namespace YoCode_XUnit
         [Fact]
         public void CommandLineParser_ExpectedModifiedFilepath()
         {
-            var cmd = new CommandLineParser(new string[] { "--modified=/" });
+            var cmd = new CommandLineParser(new string[] { "--input=/" });
 
             var cmdResult = cmd.Parse();
 
