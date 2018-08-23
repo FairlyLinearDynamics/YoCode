@@ -47,7 +47,7 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Original).FinalScore);
             pr.ReportLefOverProcess();
 
         }

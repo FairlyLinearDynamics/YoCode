@@ -11,7 +11,7 @@ namespace YoCode
 
         public Results(List<FeatureEvidence> list,TestType mode)
         {
-            var storage = new FeatureDetailsStorage();
+            var storage = new FeatureDetailsStorage(mode);
 
             var thisDictionary = storage.ReturnDetailsByMode(mode);
 
