@@ -50,7 +50,7 @@ namespace YoCode_XUnit
             List<string> errorList = new List<string>()
             {
                nameof(ArgErrorType.WrongCommand),
-               nameof(ArgErrorType.WrongModifiedDirectory)
+               nameof(ArgErrorType.WrongInputDirectory)
             };
 
             result = SetupMockInputResult("--privet druzja");

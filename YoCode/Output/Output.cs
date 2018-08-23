@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    class Output
+    internal class Output
     {
         IPrint outputWriter;
         IErrorReporter errOutput;
@@ -53,8 +53,8 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.MODIFIED, 
-                CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.INPUT, 
+                CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.OUTPUT, CommandNames.NOHTML));
         }
 
         private void ShowDupfinderHelp()
