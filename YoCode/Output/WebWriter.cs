@@ -1,18 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        private const string OUTPUT_PATH = "YoCodeReport.html";
-        private const string FEATURE_TAG = "{FEATURE}";
-        private const string SCORE_TAG = "{SCORE}";
+        const string OUTPUT_PATH = @"YoCodeReport.html";
+        const string FEATURE_TAG = "{FEATURE}";
+        const string SCORE_TAG = "{SCORE}";
 
-        private readonly StringBuilder features;
-        private readonly StringBuilder errors;
-        private readonly StringBuilder msg;
+        StringBuilder features;
+        StringBuilder errors;
+        StringBuilder msg;
 
         private double score;
 
@@ -56,8 +58,7 @@ namespace YoCode
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString())
-                .Replace(SCORE_TAG, (!Double.IsNaN(score)) ? score + "%" : "0%");
+            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString()).Replace(SCORE_TAG, score + "%");
         }
 
         public void WriteReport()
