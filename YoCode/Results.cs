@@ -15,7 +15,7 @@ namespace YoCode
 
             var thisDictionary = storage.ReturnDetailsByMode(mode);
 
-            storage.InitializeJSONFile();
+            storage.DeserializeJSONFile();
             thisDictionary = storage.AssignWeightingsFromJSON(thisDictionary);
 
             AssignWeightings(list, thisDictionary);

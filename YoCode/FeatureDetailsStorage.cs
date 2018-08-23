@@ -11,18 +11,17 @@ namespace YoCode
         Dictionary<Feature, double> WeightingsFromJson;
         TestType mode;
 
-        string JuniorPath = @"..\..\..\FeatureWeightings\JuniorWeightings.json";
-        string OriginalPath = @"..\..\..\FeatureWeightings\OriginalWeightings.json";
-
         public FeatureDetailsStorage(TestType mode)
         {
-            WeightingsFromJson = InitializeJSONFile();
+            WeightingsFromJson = DeserializeJSONFile();
             this.mode = mode;
         }
 
-        public Dictionary<Feature, double> InitializeJSONFile()
+        public Dictionary<Feature, double> DeserializeJSONFile()
         {
-            using (StreamReader r = new StreamReader(ReturnPathByMode(mode)))
+            AppSettingsBuilder builder = new AppSettingsBuilder();
+
+            using (StreamReader r = new StreamReader(builder.ReturnPathByMode(mode)))
             {
                 string json = r.ReadToEnd();
 
@@ -198,11 +197,6 @@ namespace YoCode
             return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();
         }
 
-        public string ReturnPathByMode(TestType mode)
-        {
-            return mode == TestType.Junior ? JuniorPath : OriginalPath;
-        }
-
         public FeatureDetails ReturnFeatureDetails(string featureTitle,double featureWeighting)
         {
             return new FeatureDetails
@@ -211,6 +205,5 @@ namespace YoCode
                 FeatureWeighting = featureWeighting
             };
         }
-
     }
 }

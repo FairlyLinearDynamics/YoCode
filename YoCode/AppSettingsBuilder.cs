@@ -24,5 +24,12 @@ namespace YoCode
         {
             return Configuration["codeCoverageCheckSetup:dotCoverDir"];
         }
+
+        public string ReturnPathByMode(TestType mode)
+        {
+            return mode == TestType.Junior ? Configuration["featureWeightings:Junior"] : Configuration["featureWeightings:Original"];
+        }
+
+
     }
 }
