@@ -43,7 +43,7 @@ namespace YoCode
 
         public void AddBanner()
         {
-            AddNewBlock(messages.ConsoleFireplaceBanner);
+            AddNewBlock(messages.ConsoleFireplaceBannerFrame1);
         }
 
         private void AddNewBlock(string text)

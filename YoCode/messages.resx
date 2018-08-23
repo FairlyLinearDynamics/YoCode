@@ -123,32 +123,21 @@ Direct download link here: https://www.jetbrains.com/resharper/download/download
 After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project</value>
   </data>
   <data name="Divider" xml:space="preserve">
-    <value>=========================================================================
+    <value>===================================================================================
 </value>
-  </data>
-  <data name="ConsoleFireplaceBanner" xml:space="preserve">
-    <value>___________________________
-   _|__ _________________ __|__
-  _|___||               ||_|__
-  ___|_||       )  '    ||___|_
-   _|__||    ( ()\(     ||_|___
-  ___|_||  ( ,|,(X)'    ||___#_
-  _|___|| /,)/|`\``\\\  |||__/\
-       ''---------------''  /  `--#
-       . - ------------ . #/      |
-     (( (((  (( ))) ))))  )\      |
-       `  -   ----  __ -/\  `.__.-#
-                  C(__)`\ \____
-                      /_`\/___/</value>
   </data>
   <data name="HelpMessage" xml:space="preserve">
     <value>Application takes only one parameter: path to the modified test directory
-Possible commands: --{0}; --{1}
+Possible commands: --{0}; --{1}; --{2}; --{3}; --{4}; --{5};
 Example use: --{0}=&lt;path-to-modified-test&gt;
 To disable loading animation, append --{2} at the end of command line
 Example: --{0}=&lt;...&gt; --{2}
 To disable automatic HTML report opening, append --{3} at the end of command line
-Example: --{0}=&lt;...&gt; --{3}</value>
+Example: --{0}=&lt;...&gt; --{3}
+To specify directory to witch generate HTML report, append --{4} at the end of command line
+Example --{0}=&lt;...&gt; --{4}=&lt;path-where-to-write&gt;
+To disable HTML report generation, append --{5} at the end of command line
+Example: --{0}=&lt;...&gt; --{5}</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome to YoCode!
@@ -159,7 +148,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
     <value>If you would like to see list of commands, type: --help</value>
   </data>
   <data name="AppsettingsHelp" xml:space="preserve">
-    <value> appsettings.json file missing. Please make sure to create the file as specified in the README</value>
+    <value>appsettings.json file missing. Please make sure to create the file as specified in the README</value>
   </data>
   <data name="HtmlTemplate" xml:space="preserve">
     <value>
@@ -594,7 +583,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
       &lt;/div&gt;</value>
   </data>
   <data name="ParagraphDivider" xml:space="preserve">
-    <value>------------------------------------------------------------------------</value>
+    <value>-----------------------------------------------------------------------------------</value>
   </data>
   <data name="LoadingMessage" xml:space="preserve">
     <value>Get comfortable, YoCode is gathering your results</value>
@@ -610,5 +599,91 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
   &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
+  </data>
+  <data name="WrongWritePermission" xml:space="preserve">
+    <value>HTML report could not be written to "{0}" directory.{1}If you would like to specify different directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>
+  </data>
+  <data name="SuccessfullyWroteReport" xml:space="preserve">
+    <value>HTML successfully generated in {0}"{1}" directory</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame1" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||               ||_|__
+___|_ ||       )  '    ||___|_
+  _|__||    ( ()\(     ||_|___
+___|_ ||  ( ,|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''---------------''  /  `--#
+      . - ------------ . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame2" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||    ,          ||_|__
+___|_ ||     )    (    ||___|_
+  _|__||  ,) ,() (     ||_|___
+___|_ || )  )|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''-------  ------''  /  `--#
+      . - ---------  - . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame3" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||               ||_|__
+___|_ ||  )     (      ||___|_
+  _|__||   ) ,())  ,   ||_|___
+___|_ ||   ,)|,(X)'    ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''-----  --- ----''  /  `--#
+      . - ------- ---- . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame4" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||   ,   .       ||_|__
+___|_ || (  ,   (   .  ||___|_
+  _|__||  (   ())  )   ||_|___
+___|_ || ) ,)|,(X)   . ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''-  ------------''  /  `--#
+      . - ------   --- . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
+  </data>
+  <data name="ConsoleFireplaceBannerFrame5" xml:space="preserve">
+    <value>
+    ___________________________
+  _|__ _________________ __|__
+_|___ ||               ||_|__
+___|_ ||  ,   )   .    ||___|_
+  _|__||   ),( )   ,   ||_|___
+___|_ ||  ,()|,(X) )   ||___#_
+_|___ || /,)/|`\``\\\  |||__/\
+      ''---- -   ------''  /  `--#
+      . - ---------  - . #/      |
+    (( (((  (( ))) ))))  )\      |
+      `  -   ----  __ -/\  `.__.-#
+                C(__)`\ \____
+                    /_`\/___/</value>
   </data>
 </root>
