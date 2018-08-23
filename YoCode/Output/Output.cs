@@ -26,6 +26,11 @@ namespace YoCode
                 featData.evidence = feature.Evidence;
                 featData.featurePass = feature.FeatureImplemented;
                 featData.score = feature.FeatureRating;
+                var result = feature.FeatureImplemented.HasValue
+                    ? $"Feature implemented: {((feature.FeatureImplemented.Value) ? "Yes" : "No")}"
+                    : "Could not perform check";
+                featData.featureResult = result;
+
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

@@ -20,21 +20,32 @@ namespace YoCode
             workingDir = Path.Combine(workingDir, projectFolder);
             if (!Directory.Exists(workingDir))
             {
-                ProjectBuilderEvidence.SetFailed($"{workingDir} not found");
+                ProjectBuilderEvidence.SetInconclusive($"{workingDir} not found");
                 return;
             }
-
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);
             Output = evidence.Output;
 
+            // TODO: Refactor Project Builder
+            var portKeyword = "Now listening on: ";
+            var line = Output.GetLineWithOneKeyword(portKeyword);
+            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
+            var port = splitLine.Length > 1 ? splitLine[1] : "";
+
+            if (String.IsNullOrEmpty(port))
+            {
+                ProjectBuilderEvidence.SetInconclusive(messages.BadPort);
+                return;
+            }
+
             bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-            if (evidence.FeatureFailed|| ErrorGettingErrorsOrWarnings)
+            if (evidence.FeatureImplemented == null|| ErrorGettingErrorsOrWarnings)
             {
-                ProjectBuilderEvidence.SetFailed("Timed Out");
+                ProjectBuilderEvidence.SetInconclusive("Timed Out");
                 return;
             }
             ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();

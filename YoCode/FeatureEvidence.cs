@@ -5,6 +5,8 @@ namespace YoCode
 {
     internal class FeatureEvidence
     {
+        // TODO: Maybe should be 3 methods: SetFailed(reason); SetInconclusive(reason); SetPassed(reason)
+        // Each method would set featureImplemented; FeatureRatings and weights; Evidence
         public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
         public bool? FeatureImplemented { get; set; }
@@ -26,6 +28,8 @@ namespace YoCode
         public void SetInconclusive(string reason)
         {
             FeatureImplemented = null;
+            WeightedRating = 0;
+            FeatureWeighting = 0;
             GiveEvidence(reason);
         }
 

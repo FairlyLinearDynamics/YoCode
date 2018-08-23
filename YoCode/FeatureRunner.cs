@@ -16,8 +16,10 @@
 
             if (pr.TimedOut)
             {
-                evidence.SetFailed("Timed out");
+                evidence.SetInconclusive("Timed out");
+                return evidence;
             }
+            evidence.FeatureImplemented = true;
             return evidence;
         }
 

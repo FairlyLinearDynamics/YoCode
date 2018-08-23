@@ -79,6 +79,15 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not retrieve the port number. Another program might be using it..
+        /// </summary>
+        public static string BadPort {
+            get {
+                return ResourceManager.GetString("BadPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install dotCover, Download link: https://www.jetbrains.com/dotcover/download/#section=commandline
         ///After you downloaded it please specify its location in appsettings.json file, which lives in the root directory of this project.
         /// </summary>
@@ -182,7 +191,7 @@ namespace YoCode {
         ///  _|__ _________________ __|__
         ///_|___ ||               ||_|__
         ///___|_ ||  ,   )   .    ||___|_
-        ///  _|__||   ),( )   ,  ||_|___
+        ///  _|__||   ),( )   ,   ||_|___
         ///___|_ ||  ,()|,(X) )   ||___#_
         ///_|___ || /,)/|`\``\\\  |||__/\
         ///      &apos;&apos;---- -   ------&apos;&apos;  /  `--#

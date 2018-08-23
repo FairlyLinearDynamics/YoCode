@@ -57,7 +57,7 @@ namespace YoCode
             catch (FileNotFoundException) { }
             catch (Exception e)
             {
-                DuplicationEvidence.SetFailed(messages.DupFinderHelp + "\n" + e);
+                DuplicationEvidence.SetInconclusive(messages.DupFinderHelp + "\n" + e);
             }
         }
 

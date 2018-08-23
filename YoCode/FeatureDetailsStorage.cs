@@ -71,12 +71,6 @@ namespace YoCode
                     FeatureWeighting = 1.355 });
 
             JuniorTestDetails.Add(
-                Feature.UICheck, 
-                new FeatureDetails {
-                    FeatureTitle = "Evidence present in UI",
-                    FeatureWeighting = 1.03 });
-
-            JuniorTestDetails.Add(
                 Feature.UnitConverterCheck, 
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
@@ -148,12 +142,6 @@ namespace YoCode
                 new FeatureDetails {
                     FeatureTitle = "All unit tests have passed",
                     FeatureWeighting = 1.355 });
-
-            OriginalTestDetails.Add(
-                Feature.UICheck, 
-                new FeatureDetails {
-                    FeatureTitle = "Evidence present in UI",
-                    FeatureWeighting = 1.03 });
 
             OriginalTestDetails.Add(
                 Feature.UnitConverterCheck, 

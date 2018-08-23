@@ -26,7 +26,7 @@ namespace YoCode
             FrontEndEvidence.Feature = Feature.FrontEndCheck;
             if (String.IsNullOrEmpty(applicantsWebPort))
             {
-                FrontEndEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+                FrontEndEvidence.SetInconclusive(messages.BadPort);
                 return;
             }
 
@@ -63,7 +63,8 @@ namespace YoCode
 
                 if (!FrontEndEvidence.Evidence.Any())
                 {
-                    FrontEndEvidence.GiveEvidence("Could not input any data");
+                    FrontEndEvidence.SetInconclusive("Could not input any data");
+                    return;
                 }
 
                 FrontEndEvidence.FeatureRating = GetOutputCheckRating();
@@ -75,7 +76,7 @@ namespace YoCode
             {
                 browser.Dispose();
 
-                FrontEndEvidence.SetFailed($"Check could not be executed due to exception: \"{e.Message}\"");
+                FrontEndEvidence.SetInconclusive($"Check could not be executed due to exception: \"{e.Message}\"");
             }
         }
 

@@ -11,5 +11,6 @@ namespace YoCode
         public bool? featurePass;
         public List<string> evidence;
         public double score;
+        public string featureResult;
     }
 }

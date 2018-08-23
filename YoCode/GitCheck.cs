@@ -20,6 +20,10 @@ namespace YoCode
             {
                 ExecuteTheCheck();
             }
+            else
+            {
+                GitEvidence.SetInconclusive("Invalid git repository");
+            }
         }
 
         public void ExecuteTheCheck()

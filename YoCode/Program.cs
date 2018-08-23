@@ -99,16 +99,12 @@ namespace YoCode
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
 
-            // UI test
-            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
-
-            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
-
             // Solution file exists
             checkList.Add(new FeatureEvidence()
             {
+                Feature = Feature.SolutionFileExists,
                 FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
+                FeatureImplemented = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.sln).Any(),
                 FeatureRating = 1
             });
 
@@ -138,7 +134,6 @@ namespace YoCode
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
             pr.KillProject();
-
             return checkList;
         }
     }

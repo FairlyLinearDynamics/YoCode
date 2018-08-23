@@ -23,7 +23,7 @@ namespace YoCode
 
             if (!Directory.Exists(targetWorkingDir))
             {
-                CodeCoverageEvidence.SetFailed($"{testFolder} Directory Not Found");
+                CodeCoverageEvidence.SetInconclusive($"{testFolder} Directory Not Found");
                 return;
             }
 
@@ -38,11 +38,11 @@ namespace YoCode
 
             if (coverage == 0)
             {
-                CodeCoverageEvidence.SetFailed("Code Coverage Not Found");
+                CodeCoverageEvidence.SetInconclusive("Code Coverage Not Found");
             }
             else if (coverage == -1)
             {
-                CodeCoverageEvidence.SetFailed("Failed to Generate/Read Report");
+                CodeCoverageEvidence.SetInconclusive("Failed to Generate/Read Report");
             }
             else
             {

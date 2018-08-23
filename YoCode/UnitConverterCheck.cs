@@ -51,8 +51,8 @@ namespace YoCode
 
             if (String.IsNullOrEmpty(port))
             {
-                UnitConverterCheckEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
-                BadInputCheckEvidence.SetFailed("Could not retrieve the port number. Another program might be using it.");
+                UnitConverterCheckEvidence.SetInconclusive(messages.BadPort);
+                BadInputCheckEvidence.SetInconclusive(messages.BadPort);
             }
             else
             {
@@ -73,8 +73,8 @@ namespace YoCode
                 }
                 catch (Exception)
                 {
-                    UnitConverterCheckEvidence.SetFailed("Could not check this feature");
-                    BadInputCheckEvidence.SetFailed("Could not check this feature");
+                    UnitConverterCheckEvidence.SetInconclusive("Could not check this feature");
+                    BadInputCheckEvidence.SetInconclusive("Could not check this feature");
                 }
             }
         }

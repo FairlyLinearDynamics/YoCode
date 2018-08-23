@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace YoCode
 {
@@ -36,12 +37,27 @@ namespace YoCode
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
+
             if (evidence.FeatureImplemented == null)
             {
+                UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
                 return;
             }
 
             Output = evidence.Output;
+
+            // TODO: Refactor Test Count Check
+            var portKeyword = "Now listening on: ";
+            var line = Output.GetLineWithOneKeyword(portKeyword);
+            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
+            var port = splitLine.Length > 1 ? splitLine[1] : "";
+
+            if (String.IsNullOrEmpty(port))
+            {
+                UnitTestEvidence.SetInconclusive(messages.BadPort);
+                return;
+            }
+
             ErrorOutput = evidence.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();

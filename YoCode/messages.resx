@@ -696,4 +696,7 @@ _|___ || /,)/|`\``\\\  |||__/\
                 C(__)`\ \____
                     /_`\/___/</value>
   </data>
+  <data name="BadPort" xml:space="preserve">
+    <value>Could not retrieve the port number. Another program might be using it.</value>
+  </data>
 </root>

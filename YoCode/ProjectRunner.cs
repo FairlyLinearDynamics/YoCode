@@ -27,11 +27,13 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"{this.workingDir} not found");
             }
+
+
         }
 
         public void Execute()
         {
-            if (ProjectRunEvidence.FeatureImplemented == null) 
+            if (ProjectRunEvidence.FeatureImplemented == false) 
             {
                 return;
             }
@@ -44,16 +46,28 @@ namespace YoCode
             Output = evidence.Output;
             ErrorOutput = evidence.ErrorOutput;
 
+            // TODO: Refactor Project Runner
+            var portKeyword = "Now listening on: ";
+            var line = Output.GetLineWithOneKeyword(portKeyword);
+            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
+            var port = splitLine.Length > 1 ? splitLine[1] : "";
+
+            if (String.IsNullOrEmpty(port))
+            {
+                ProjectRunEvidence.SetInconclusive(messages.BadPort);
+                return;
+            }
+
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
             ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
 
-            if (ProjectRunEvidence.FeatureImplemented??false)
+            if (ProjectRunEvidence.FeatureImplemented.Value)
             {
                 ProjectRunEvidence.GiveEvidence($"Port: {GetPort()}");
             }
             else
             {
-                ProjectRunEvidence.SetInconclusive($"Error Output: {ErrorOutput}");
+                ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
             }
 
         }
