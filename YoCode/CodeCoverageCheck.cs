@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace YoCode
 {
@@ -10,10 +6,10 @@ namespace YoCode
     {
         private string Argument { get; }
         private string ProcessName { get; } = "dotCover.exe";
-        
+
         private string ReportName { get; } = "report.json";
         private string FullReportPath { get; }
-        private const int passPerc = 30;
+        private const int passPerc = 45;
         private const string testFolder = "UnitConverterTests";
 
         public CodeCoverageCheck(string dotCoverDir, string workingDir, FeatureRunner featureRunner)
@@ -50,7 +46,8 @@ namespace YoCode
             }
             else
             {
-                CodeCoverageEvidence.FeatureImplemented = (coverage > passPerc) ? true : false;
+                CodeCoverageEvidence.FeatureRating = ( (double) GetCodeCoverage(report) ) / 100;
+                CodeCoverageEvidence.FeatureImplemented = coverage > passPerc;
                 CodeCoverageEvidence.GiveEvidence($"Code Coverage: {coverage}%");
             }
         }
@@ -87,22 +84,7 @@ namespace YoCode
 
         private int GetCodeCoverage(string json)
         {
-            try
-            {
-                var coverage = JObject.Parse(json)["Children"]
-                   .Where(c => (string)c["Name"] == "UnitConverterWebApp" && (string)c["Kind"] == "Assembly")
-                   .Select(c => (int)c["CoveragePercent"]);
-
-                return coverage.FirstOrDefault();
-            }
-            catch (ArgumentNullException) { }
-            /*If YoCode times out then dotCover also fails and ArgumentNullException occurs*/
-
-            catch (JsonReaderException) { }
-            /*If ReadReport method doesn't find a report file to read then it returns
-             * an empty string and GetCodeCoverage returns JsonReaderException*/
-
-            return -1;
+            return DotCover.CalculateCoverageFromJsonReport(json);
         }
 
         private void CleanUp()

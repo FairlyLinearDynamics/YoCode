@@ -12,6 +12,7 @@ namespace YoCode
 
         public string StatLine { get; set; }
         public string Output { get; set; }
+        public string ErrorOutput { get; set; }
 
         private readonly int TestCountTreshold = 10;
 
@@ -19,7 +20,6 @@ namespace YoCode
         private List<int> tempStats;
 
         private const int TitleColumnFormatter = -25;
-
 
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
@@ -42,6 +42,7 @@ namespace YoCode
             }
 
             Output = evidence.Output;
+            ErrorOutput = evidence.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
@@ -57,15 +58,19 @@ namespace YoCode
                 stats.totalTests = tempStats[0];
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
-                stats.testsSkipped = tempStats[3];    
+                stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
-
             }
             else
             {
-                UnitTestEvidence.SetFailed("Couldn't get information about tests");
+                UnitTestEvidence.SetFailed(BuildErrorOutput());
                 UnitTestEvidence.FeatureRating = 0;
             }
+        }
+
+        private string BuildErrorOutput()
+        {
+            return $"Error Running Tests: {ErrorOutput}";
         }
 
         public static List<string> GetTestKeyWords()
