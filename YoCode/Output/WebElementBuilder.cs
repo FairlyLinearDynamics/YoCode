@@ -71,7 +71,7 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormaFeatureTitle(string title, bool? featurePassed = null, double score = 0.0)
+        public static string FormaFeatureTitle(string title, bool? featurePassed, double score = 0.0)
         {
             var passIcon = "accordion-icon-pass";
             var failIcon = "accordion-icon-fail";
@@ -80,7 +80,25 @@ namespace YoCode
             var failIconStyle = "fa-times-circle-o";
             var undefinedStyle = "fa-question-circle-o";
 
-            return String.Format(messages.HtmlTitleTemplate, featurePassed ? passIcon : failIcon, featurePassed ? passIconStyle : failIconStyle, score+"%",title);
+            var chosenIcon = "";
+            var chosenIconStyle = "";
+            switch (featurePassed)
+            {
+                case true:
+                    chosenIcon = passIcon;
+                    chosenIconStyle = passIconStyle;
+                    break;
+                case false:
+                    chosenIcon = failIcon;
+                    chosenIconStyle = failIconStyle;
+                    break;
+                default:
+                    chosenIcon = undefinedIcon;
+                    chosenIconStyle = undefinedStyle;
+                    break;
+            }
+
+            return String.Format(messages.HtmlTitleTemplate, chosenIcon, chosenIconStyle, score+"%",title);
         }
 
         private static string FormatCheckIcont(bool checkMark)

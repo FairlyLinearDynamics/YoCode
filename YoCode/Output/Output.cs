@@ -23,7 +23,6 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = feature.FeatureTitle;
-                featData.featureResult = $"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}";
                 featData.evidence = feature.Evidence;
                 featData.featurePass = feature.FeatureImplemented;
                 featData.score = feature.FeatureRating;

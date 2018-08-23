@@ -31,7 +31,7 @@ namespace YoCode
 
         public void Execute()
         {
-            if (ProjectRunEvidence.FeatureFailed)
+            if (ProjectRunEvidence.FeatureImplemented == null) 
             {
                 return;
             }
@@ -47,13 +47,13 @@ namespace YoCode
             ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
             ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
 
-            if (ProjectRunEvidence.FeatureImplemented)
+            if (ProjectRunEvidence.FeatureImplemented??false)
             {
                 ProjectRunEvidence.GiveEvidence($"Port: {GetPort()}");
             }
             else
             {
-                ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
+                ProjectRunEvidence.SetInconclusive($"Error Output: {ErrorOutput}");
             }
 
         }

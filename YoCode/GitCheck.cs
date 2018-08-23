@@ -38,9 +38,9 @@ namespace YoCode
         private void FillInEvidence(IQueryableCommitLog commitLog, string output)
         {
             GitEvidence.FeatureImplemented = LastCommitWasByNonEmployee(commitLog);
-            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented ? 1 : 0;
+            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented??false ? 1 : 0;
 
-            if (GitEvidence.FeatureImplemented)
+            if (GitEvidence.FeatureImplemented??false)
             {
                 GitEvidence.GiveEvidence("Commits:" + Environment.NewLine + output);
             }

@@ -54,7 +54,7 @@ namespace YoCode
 
             var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
 
-            if (unitConverterCheck.FeatureFailed)
+            if (unitConverterCheck.FeatureImplemented == null)
             {
                 MaximumScore -= unitConverterCheck.FeatureWeighting;
                 unitConverterCheck.FeatureWeighting = 0;

@@ -36,7 +36,7 @@ namespace YoCode
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
-            if (evidence.FeatureFailed)
+            if (evidence.FeatureImplemented == null)
             {
                 return;
             }
