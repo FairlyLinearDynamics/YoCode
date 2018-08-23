@@ -24,11 +24,18 @@ namespace YoCode
 
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
+            workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
+
+            if (!Directory.Exists(workingDir))
+            {
+                UnitTestEvidence.SetFailed($"{workingDir} not found");
+                return;
+            }
+
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             processName = "dotnet";
-            workingDir = Path.Combine(repositoryPath,"UnitConverterTests");
             arguments = "test";
             ExecuteTheCheck();
         }
