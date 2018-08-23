@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace YoCode
 {
-    class Results
+    internal class Results
     {
         public double FinalScore { get; set; }
         public double MaximumScore { get; set;}
@@ -47,19 +46,21 @@ namespace YoCode
 
         public void ApplySpecialCases(List<FeatureEvidence> list)
         {
-            double badInputWeighting = 0;
-
-            badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
-            list.Find(e => e.Feature == Feature.FrontEndCheck).FeatureWeighting = badInputWeighting;
-
-            var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
-
-            if (unitConverterCheck.FeatureFailed)
+            if (list.Count > 1)
             {
-                MaximumScore -= unitConverterCheck.FeatureWeighting;
-                unitConverterCheck.FeatureWeighting = 0;
-            }
+                double badInputWeighting = 0;
 
+                badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
+                list.Find(e => e.Feature == Feature.FrontEndCheck).FeatureWeighting = badInputWeighting;
+
+                var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
+
+                if (unitConverterCheck.FeatureFailed)
+                {
+                    MaximumScore -= unitConverterCheck.FeatureWeighting;
+                    unitConverterCheck.FeatureWeighting = 0;
+                }
+            }
         }
     }
 }

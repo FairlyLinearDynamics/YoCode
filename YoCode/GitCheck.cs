@@ -50,7 +50,7 @@ namespace YoCode
         {
             const string RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
 
-            foreach (Commit c in commitLog)
+            foreach (Commit c in commitLog.Where(c => !c.Author.Email.ContainsAny(GetHostDomains())))
             {
                 output.Add(string.Format("commit {0}", c.Id));
 
@@ -66,7 +66,7 @@ namespace YoCode
             return string.Join(Environment.NewLine, output);
         }
 
-        public bool LastCommitWasByNonEmployee(IQueryableCommitLog c)
+        public static bool LastCommitWasByNonEmployee(IQueryableCommitLog c)
         {
             return !c.First().Author.Email.ContainsAny(GetHostDomains());
         }

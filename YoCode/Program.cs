@@ -47,8 +47,8 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
+
             compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
-            pr.ReportLefOverProcess();
         }
 
         public static bool OpenHTMLOnFinish { get; set; }
@@ -62,7 +62,13 @@ namespace YoCode
             // Files changed check
             checkList.Add(fileCheck.FileChangeEvidence);
 
-            if (fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
+            var stopEvidence = new List<string>()
+            {
+                "No Files Changed",
+                "Last Commit By Waters Employee"
+            };
+
+            if (fileCheck.FileChangeEvidence.Evidence.ListContainsAnyKeywords(stopEvidence))
             {
                 return checkList;
             }
@@ -134,6 +140,7 @@ namespace YoCode
             workThreads.ForEach(a => a.Join());
             pr.KillProject();
 
+            pr.ReportLefOverProcess();
             return checkList;
         }
     }

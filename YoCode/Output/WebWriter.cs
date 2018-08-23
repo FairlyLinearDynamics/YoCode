@@ -1,20 +1,18 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 
 namespace YoCode
 {
     public class WebWriter : IPrint
     {
-        const string OUTPUT_PATH = @"YoCodeReport.html";
-        const string FEATURE_TAG = "{FEATURE}";
-        const string SCORE_TAG = "{SCORE}";
+        private const string OUTPUT_PATH = "YoCodeReport.html";
+        private const string FEATURE_TAG = "{FEATURE}";
+        private const string SCORE_TAG = "{SCORE}";
 
-        StringBuilder features;
-        StringBuilder errors;
-        StringBuilder msg;
+        private readonly StringBuilder features;
+        private readonly StringBuilder errors;
+        private readonly StringBuilder msg;
 
         private double score;
 
@@ -36,7 +34,7 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
 
-            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title,data.featurePass,data.score);
+            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title, data.featurePass, data.score);
 
             features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
         }
@@ -58,7 +56,8 @@ namespace YoCode
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString()).Replace(SCORE_TAG, score+"%");
+            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString())
+                .Replace(SCORE_TAG, (!Double.IsNaN(score)) ? score + "%" : "0%");
         }
 
         public void WriteReport()
