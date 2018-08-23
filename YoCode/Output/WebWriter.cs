@@ -63,10 +63,26 @@ namespace YoCode
 
         public void WriteReport()
         {
-            File.WriteAllText(OUTPUT_PATH, BuildReport());
-            if (Program.OpenHTMLOnFinish)
+            var writeTo = (Program.OutputTo!=null)? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
+
+            var consoleWriter = new ConsoleWriter();
+            try
             {
-                HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                if (Program.GenerateHtml)
+                {
+                    File.WriteAllText(writeTo, BuildReport());
+                    if (Program.OpenHTMLOnFinish)
+                    {
+                        HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                    }
+                    consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
+                    consoleWriter.WriteReport();
+                }
+            }
+            catch
+            {
+                
+                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(writeTo), Environment.NewLine, Environment.NewLine) });
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -20,16 +21,16 @@ namespace YoCode
                 errList.Add(nameof(ArgErrorType.WrongCommand));
             }
 
-            if (!currentCommands.Any(a => a.command == CommandNames.MODIFIED))
+            if (!currentCommands.Any(a => a.command == CommandNames.INPUT))
             {
-                errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
+                errList.Add(nameof(ArgErrorType.WrongInputDirectory));
             }
 
             foreach (SplitArg arg in currentCommands)
             {
-                if (!Directory.Exists(arg.data) && arg.command == CommandNames.MODIFIED)
+                if (!Directory.Exists(arg.data) && arg.command == CommandNames.INPUT)
                 {
-                    errList.Add(nameof(ArgErrorType.WrongModifiedDirectory));
+                    errList.Add(nameof(ArgErrorType.WrongInputDirectory));
                 }
             }
 
