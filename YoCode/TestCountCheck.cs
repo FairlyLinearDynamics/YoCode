@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace YoCode
 {
@@ -24,11 +25,18 @@ namespace YoCode
 
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
+            workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
+
+            if (!Directory.Exists(workingDir))
+            {
+                UnitTestEvidence.SetInconclusive($"{workingDir} not found");
+                return;
+            }
+
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             processName = "dotnet";
-            workingDir = repositoryPath;
             arguments = "test";
             ExecuteTheCheck();
         }
