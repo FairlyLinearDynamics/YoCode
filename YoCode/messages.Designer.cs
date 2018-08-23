@@ -61,7 +61,7 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  appsettings.json file missing. Please make sure to create the file as specified in the README.
+        ///   Looks up a localized string similar to appsettings.json file missing. Please make sure to create the file as specified in the README.
         /// </summary>
         public static string AppsettingsHelp {
             get {
@@ -137,7 +137,10 @@ namespace YoCode {
         ///To disable loading animation, append --{2} at the end of command line
         ///Example: --{0}=&lt;...&gt; --{2}
         ///To disable automatic HTML report opening, append --{3} at the end of command line
-        ///Example: --{0}=&lt;...&gt; --{3}.
+        ///Example: --{0}=&lt;...&gt; --{3}
+        ///To specify directory to witch generate HTML report, append --{4} at the end of command line
+        ///Example --{0}=&lt;...&gt; --{4}=&lt;path-where-to-write&gt;
+        ///To disab [rest of string was truncated]&quot;;.
         /// </summary>
         public static string HelpMessage {
             get {

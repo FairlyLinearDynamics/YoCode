@@ -148,7 +148,11 @@ Example use: --{0}=&lt;path-to-modified-test&gt;
 To disable loading animation, append --{2} at the end of command line
 Example: --{0}=&lt;...&gt; --{2}
 To disable automatic HTML report opening, append --{3} at the end of command line
-Example: --{0}=&lt;...&gt; --{3}</value>
+Example: --{0}=&lt;...&gt; --{3}
+To specify directory to witch generate HTML report, append --{4} at the end of command line
+Example --{0}=&lt;...&gt; --{4}=&lt;path-where-to-write&gt;
+To disable HTML report generation, append --{5} at the end of command line
+Example: --{0}=&lt;...&gt; --{5}</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome to YoCode!
@@ -159,7 +163,7 @@ Example: --{0}=&lt;...&gt; --{3}</value>
     <value>If you would like to see list of commands, type: --help</value>
   </data>
   <data name="AppsettingsHelp" xml:space="preserve">
-    <value> appsettings.json file missing. Please make sure to create the file as specified in the README</value>
+    <value>appsettings.json file missing. Please make sure to create the file as specified in the README</value>
   </data>
   <data name="HtmlTemplate" xml:space="preserve">
     <value>

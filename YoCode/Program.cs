@@ -13,6 +13,7 @@ namespace YoCode
 
         public static bool OpenHTMLOnFinish { get; set; }
         public static string OutputTo { get; set; }
+        public static bool GenerateHtml { get; set; }
 
         private static void Main(string[] args)
         {
@@ -27,6 +28,8 @@ namespace YoCode
 
             OpenHTMLOnFinish = !result.Silent;
             OutputTo = result.OutputFilePath;
+            GenerateHtml = !result.NoHtml;
+
             isJunior = result.JuniorTest;
             if (!parameters.ParametersAreValid())
             {
@@ -41,7 +44,7 @@ namespace YoCode
                 return;
             }
 
-            var modifiedTestDirPath = result.ModifiedFilePath;
+            var modifiedTestDirPath = result.InputFilePath;
 
             var dir = new PathManager(modifiedTestDirPath);
 

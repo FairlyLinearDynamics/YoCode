@@ -13,7 +13,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongInputDirectory));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.ModifiedFilePath.Should().Be("/");
+            cmdResult.InputFilePath.Should().Be("/");
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace YoCode_XUnit
 
             var cmdResult = cmd.Parse();
 
-            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongModifiedDirectory));
+            cmdResult.Errors.Should().Contain(nameof(ArgErrorType.WrongInputDirectory));
         }
 
         [Fact]

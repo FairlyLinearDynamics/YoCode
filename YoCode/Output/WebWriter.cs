@@ -67,13 +67,16 @@ namespace YoCode
             var consoleWriter = new ConsoleWriter();
             try
             {
-                File.WriteAllText(writeTo, BuildReport());
-                if (Program.OpenHTMLOnFinish)
+                if (Program.GenerateHtml)
                 {
-                    HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                    File.WriteAllText(writeTo, BuildReport());
+                    if (Program.OpenHTMLOnFinish)
+                    {
+                        HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                    }
+                    consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
+                    consoleWriter.WriteReport();
                 }
-                consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
-                consoleWriter.WriteReport();
             }
             catch
             {
