@@ -1,7 +1,7 @@
 ﻿{
   "TestCountCheck": 1.355,
   "BadInputCheck": 2.39,
-  "CodeCoverageCheck": 0,
+  "CodeCoverageCheck": 1.32,
   "DuplicationCheck": 1.69,
   "UICheck": 1.03,
   "FilesChangedCheck": 0,
