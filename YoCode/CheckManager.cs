@@ -20,24 +20,28 @@ namespace YoCode
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
         {
             var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-            evidenceList.Add(fileCheck.FileChangeEvidence);
             if (fileCheck.FileChangeEvidence.FeatureFailed)
             {
+                evidenceList.Add(fileCheck.FileChangeEvidence);
                 return null;
             }
 
             var projectBuilder = new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner());
-            evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
             if (projectBuilder.ProjectBuilderEvidence.FeatureFailed)
             {
+                evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
                 return null;
             }
 
             var projectRunner = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
             ConsoleCloseHandler.StartHandler(projectRunner);
             projectRunner.Execute();
-            evidenceList.Add(projectRunner.ProjectRunEvidence);
-            return projectRunner.ProjectRunEvidence.FeatureFailed ? null : projectRunner;
+            if(projectRunner.ProjectRunEvidence.FeatureFailed)
+            {
+                evidenceList.Add(projectRunner.ProjectRunEvidence);
+                return null;
+            }
+            return projectRunner;
         }
 
         public List<FeatureEvidence> PerformChecks(RunParameterChecker p, ProjectRunner projectRunner)

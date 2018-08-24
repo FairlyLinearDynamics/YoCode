@@ -68,6 +68,8 @@ namespace YoCode
 
             if (projectRunner == null)
             {
+                LoadingAnimation.LoadingFinished = true;
+                workThreads.ForEach(a => a.Join());
                 compositeOutput.PrintFinalResults(evidenceList, 0);
                 return;
             }
