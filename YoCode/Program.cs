@@ -55,7 +55,8 @@ namespace YoCode
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
 
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle)
+                , new Results(implementedFeatureList, (isJunior) ? TestType.Junior : TestType.Original).FinalScore);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
@@ -109,14 +110,6 @@ namespace YoCode
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
-
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
-                FeatureRating = 1
-            });
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
