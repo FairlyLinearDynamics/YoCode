@@ -4,7 +4,7 @@ using System.IO;
 
 namespace YoCode
 {
-    internal class RunParameterChecker
+    internal class RunParameterChecker : IRunParameterChecker
     {
         private readonly Output compositeOutput;
         private readonly IInputResult result;
