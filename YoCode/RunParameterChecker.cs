@@ -13,6 +13,8 @@ namespace YoCode
         public List<string> Errs= new List<string>();
         public string CMDToolsPath { get; set; }
         public string DotCoverDir { get; set; }
+        public string CodeBaseCost { get; set; }
+        public string DuplicationCost { get; set; }
 
         public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
@@ -21,7 +23,7 @@ namespace YoCode
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid()
+        public bool ParametersAreValid(bool isJunior)
         {
             if (result.HelpAsked)
             {
@@ -39,6 +41,15 @@ namespace YoCode
 
                 CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
                 DotCoverDir = appsettingsBuilder.GetDotCoverDir();
+
+                if (isJunior)
+                {
+                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetJuniorCosts();
+                }
+                else
+                {
+                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetOriginalCosts();
+                }
             }
             catch (FileNotFoundException)
             {
@@ -51,10 +62,12 @@ namespace YoCode
 
             var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            var costValuesProvided = CheckIfCostsProvided(CodeBaseCost, DuplicationCost, "Test cost values");
+
             var juniorFileExists = FileExists(TestType.Junior, "JuniorWeightings.json");
             var originalFileExists = FileExists(TestType.Original, "OriginalWeightings.json");
 
-            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists;
+            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
 
             if (anyFilesMissing)
             {
@@ -101,6 +114,15 @@ namespace YoCode
             else if (!Directory.Exists(path))
             {
                 return SetError($"invalid directory provided for {checkName}");
+            }
+            return true;
+        }
+
+        private bool CheckIfCostsProvided(string cost1, string cost2, string checkName)
+        {
+            if (String.IsNullOrEmpty(cost1) || String.IsNullOrEmpty(cost2))
+            {
+                return SetError($"{checkName} cannot be empty");
             }
             return true;
         }

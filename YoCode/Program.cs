@@ -29,7 +29,7 @@ namespace YoCode
             GenerateHtml = !result.NoHtml;
             isJunior = result.JuniorTest;
 
-            if (!parameters.ParametersAreValid())
+            if (!parameters.ParametersAreValid(isJunior))
             {
                 if (!result.HelpAsked)
                 {
