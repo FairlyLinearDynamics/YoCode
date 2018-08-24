@@ -110,15 +110,6 @@ namespace YoCode
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                Feature = Feature.SolutionFileExists,
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = dir.GetFilesInDirectory(dir.ModifiedTestDirPath,FileTypes.sln).Any(),
-                FeatureRating = 1
-            });
-
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
