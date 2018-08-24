@@ -55,7 +55,8 @@ namespace YoCode
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
 
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle)
+                , new Results(implementedFeatureList, (isJunior) ? TestType.Junior : TestType.Original).FinalScore);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
