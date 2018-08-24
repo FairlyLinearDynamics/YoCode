@@ -35,12 +35,11 @@ namespace YoCode
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
-
                 MaximumScore += elem.FeatureWeighting;
-
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
+
         }
 
         public void CalculateFinalScore()
@@ -56,6 +55,15 @@ namespace YoCode
 
                 badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
                 list.Find(e => e.Feature == Feature.FrontEndCheck).FeatureWeighting = badInputWeighting;
+
+                var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
+                var badInputUI = list.Find(e => e.Feature == Feature.FrontEndCheck);
+
+                if (!badInputBackEnd.FeatureImplemented && badInputUI.FeatureImplemented) 
+                {
+                    badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
+                    badInputBackEnd.FeatureWeighting = 0;
+                }
 
                 var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
 
