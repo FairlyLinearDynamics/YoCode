@@ -60,11 +60,11 @@ namespace YoCode
             var splitLine = line.Split(portKeyword, StringSplitOptions.None);
             var port = splitLine.Length > 1 ? splitLine[1] : "";
 
-            if (String.IsNullOrEmpty(port))
-            {
-                UnitTestEvidence.SetInconclusive(messages.BadPort);
-                return;
-            }
+            //if (String.IsNullOrEmpty(port))
+            //{
+            //    UnitTestEvidence.SetInconclusive(messages.BadPort);
+            //    return;
+            //}
 
             ErrorOutput = evidence.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
