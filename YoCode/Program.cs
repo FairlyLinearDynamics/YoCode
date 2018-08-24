@@ -113,8 +113,9 @@ namespace YoCode
             // Solution file exists
             checkList.Add(new FeatureEvidence()
             {
+                Feature = Feature.SolutionFileExists,
                 FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
+                FeatureImplemented = dir.GetFilesInDirectory(dir.ModifiedTestDirPath,FileTypes.sln).Any(),
                 FeatureRating = 1
             });
 
