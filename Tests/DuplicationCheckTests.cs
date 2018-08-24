@@ -13,6 +13,7 @@ namespace YoCode_XUnit
             return new FeatureEvidence()
             {
                 Output = outputToBeSet,
+                FeatureImplemented = true,
             };
         }
 
