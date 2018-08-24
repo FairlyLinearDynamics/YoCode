@@ -28,7 +28,6 @@ namespace YoCode
         public void SetInconclusive(string reason)
         {
             FeatureImplemented = null;
-            WeightedRating = 0;
             FeatureWeighting = 0;
             GiveEvidence(reason);
         }

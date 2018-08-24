@@ -54,8 +54,9 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
-            pr.ReportLefOverProcess();
+
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle)
+                , new Results(implementedFeatureList, (isJunior) ? TestType.Junior : TestType.Original).FinalScore);
         }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
@@ -67,7 +68,13 @@ namespace YoCode
             // Files changed check
             checkList.Add(fileCheck.FileChangeEvidence);
 
-            if (fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
+            var stopEvidence = new List<string>()
+            {
+                "No Files Changed",
+                "Last Commit By Waters Employee"
+            };
+
+            if (fileCheck.FileChangeEvidence.Evidence.ListContainsAnyKeywords(stopEvidence))
             {
                 return checkList;
             }
@@ -99,15 +106,6 @@ namespace YoCode
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
 
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                Feature = Feature.SolutionFileExists,
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.sln).Any(),
-                FeatureRating = 1
-            });
-
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
@@ -134,6 +132,8 @@ namespace YoCode
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
             pr.KillProject();
+
+            pr.ReportLefOverProcess();
             return checkList;
         }
     }

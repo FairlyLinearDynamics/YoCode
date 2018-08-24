@@ -9,6 +9,7 @@ namespace YoCode
         private string Arguments { get; } = "build";
         private readonly string Output;
         private const string projectFolder = "UnitConverterWebApp";
+        private bool? buildSuccessful;
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
@@ -30,21 +31,17 @@ namespace YoCode
             Output = evidence.Output;
 
             var errs = evidence.ErrorOutput;
-
-            if (Output.Contains(""))
-            {
-
-            }
+            CheckBuildSuccess();
 
             bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-            if (evidence.FeatureImplemented == null|| ErrorGettingErrorsOrWarnings)
+            if (evidence.FeatureImplemented == null|| ErrorGettingErrorsOrWarnings || buildSuccessful == null)
             {
-                ProjectBuilderEvidence.SetInconclusive("Timed Out");
                 return;
             }
-            ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
-            ProjectBuilderEvidence.FeatureRating = BuildSuccessful() ? 1 : 0;
+
+            ProjectBuilderEvidence.FeatureImplemented = buildSuccessful.Value;
+            ProjectBuilderEvidence.FeatureRating = buildSuccessful.Value ? 1 : 0;
 
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
@@ -69,11 +66,15 @@ namespace YoCode
             return "";
         }
 
-        private bool BuildSuccessful()
+        private void CheckBuildSuccess()
         {
-            var buildLine = Output.GetLineWithOneKeyword("Build succeeded");
-
-            return buildLine != "";
+            if(Output.Contains("is being used by another process"))
+            {
+                ProjectBuilderEvidence.SetInconclusive(messages.BadPort);
+                return;
+            }
+            buildSuccessful = Output.Contains("Build succeeded");
+            return;
         }
 
         private int GetNumberOfWarnings()

@@ -91,8 +91,8 @@ namespace YoCode
             badInputs = new Dictionary<string, string>
             {
                 { "Empty input", " " },
-                { "Blank lines at the start", "\n 10" },
-                { "Blank lines at the middle", "10\n\n10" },
+                { "Blank lines at the start", "\n10" },
+                { "Blank lines at the middle", "10 \n\n 10" },
                 { "Blank lines at the end", "10 \n\n" },
                 { "Not numbers", "Y..@" }
             };

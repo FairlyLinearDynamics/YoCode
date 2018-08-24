@@ -53,25 +53,14 @@ namespace YoCode
             }
 
             Output = evidence.Output;
-
-            // TODO: Refactor Test Count Check
-            var portKeyword = "Now listening on: ";
-            var line = Output.GetLineWithOneKeyword(portKeyword);
-            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
-            var port = splitLine.Length > 1 ? splitLine[1] : "";
-
-            //if (String.IsNullOrEmpty(port))
-            //{
-            //    UnitTestEvidence.SetInconclusive(messages.BadPort);
-            //    return;
-            //}
-
             ErrorOutput = evidence.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
+            if (UnitTestEvidence.FeatureImplemented == null)
+                return;
+
             StructuredOutput();
         }
 
@@ -84,11 +73,12 @@ namespace YoCode
                 stats.testsFailed = tempStats[2];
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
+
+                UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
             }
             else
             {
-                UnitTestEvidence.SetFailed(BuildErrorOutput());
-                UnitTestEvidence.FeatureRating = 0;
+                UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
             }
         }
 
