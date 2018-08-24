@@ -6,5 +6,6 @@
   "UICheck": 1.03,
   "GitCheck": 1,
   "FrontEndCheck": 0,
-  "UnitConverterCheck": 1.09
+  "UnitConverterCheck": 1.09,
+  "FilesChangedCheck": 0
 }

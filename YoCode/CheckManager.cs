@@ -20,7 +20,7 @@ namespace YoCode
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
         {
             var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-            if (fileCheck.FileChangeEvidence.FeatureFailed)
+            if (fileCheck.FileChangeEvidence.FeatureFailed && !fileCheck.FileChangeEvidence.Evidence.Contains("Git Repository Not Found"))
             {
                 evidenceList.Add(fileCheck.FileChangeEvidence);
                 return null;
@@ -63,6 +63,10 @@ namespace YoCode
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
+
+            //File Change
+            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
+            checkList.Add(fileCheck.FileChangeEvidence);
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();

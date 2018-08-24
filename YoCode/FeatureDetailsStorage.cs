@@ -28,7 +28,7 @@ namespace YoCode
             }
         }
 
-        public Dictionary<Feature,FeatureDetails> AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
+        public Dictionary<Feature, FeatureDetails> AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
         {
             return localDictionary.ToDictionary(kv => kv.Key, kv => ReturnFeatureDetails(kv.Value.FeatureTitle, WeightingsFromJson[kv.Key]));
         }
@@ -72,6 +72,14 @@ namespace YoCode
                         FeatureWeighting = 1
                     }
                 },
+                {
+                    Feature.FilesChangedCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Files changed",
+                        FeatureWeighting = 1
+                    }
+                 },
 
                 {
                     Feature.GitCheck,
@@ -143,6 +151,15 @@ namespace YoCode
                 },
 
                 {
+                    Feature.FilesChangedCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Files changed",
+                        FeatureWeighting = 1
+                    }
+                 },
+
+                {
                     Feature.FrontEndCheck,
                     new FeatureDetails
                     {
@@ -194,7 +211,7 @@ namespace YoCode
             return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();
         }
 
-        public FeatureDetails ReturnFeatureDetails(string featureTitle,double featureWeighting)
+        public FeatureDetails ReturnFeatureDetails(string featureTitle, double featureWeighting)
         {
             return new FeatureDetails
             {
