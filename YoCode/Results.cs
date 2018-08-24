@@ -11,13 +11,17 @@ namespace YoCode
 
         public Results(List<FeatureEvidence> list,TestType mode)
         {
-            var storage = new FeatureDetailsStorage();
+            var storage = new FeatureDetailsStorage(mode);
 
             var thisDictionary = storage.ReturnDetailsByMode(mode);
+
+            storage.DeserializeJSONFile();
+            thisDictionary = storage.AssignWeightingsFromJSON(thisDictionary);
 
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
             CalculateFinalScore();
+
         }
 
         public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
@@ -32,6 +36,8 @@ namespace YoCode
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
+
+                Console.WriteLine(elem.FeatureWeighting);
 
                 MaximumScore += elem.FeatureWeighting;
 

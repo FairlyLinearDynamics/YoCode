@@ -92,7 +92,7 @@ namespace YoCode
             {
                 { "Empty input", " " },
                 { "Blank lines at the start", "\n 10" },
-                { "Blank lines at the middle", "10   10" },
+                { "Blank lines at the middle", "10 \n 10" },
                 { "Blank lines at the end", "10 \n" },
                 { "Not numbers", "Y..@" }
             };
