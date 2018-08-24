@@ -57,12 +57,6 @@ namespace YoCode
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.FilesChangedCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Files changed",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
                 Feature.FrontEndCheck,
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
@@ -72,24 +66,6 @@ namespace YoCode
                 Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.ProjectBuilder,
-                new FeatureDetails {
-                    FeatureTitle = "Project Build",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.ProjectRunner,
-                new FeatureDetails {
-                    FeatureTitle = "Project Run",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.SolutionFileExists,
-                new FeatureDetails {
-                    FeatureTitle = "Solution File Exists",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
@@ -136,12 +112,6 @@ namespace YoCode
                     FeatureWeighting = 1.69 });
 
             OriginalTestDetails.Add(
-                Feature.FilesChangedCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Files changed",
-                    FeatureWeighting = 0 });
-
-            OriginalTestDetails.Add(
                 Feature.FrontEndCheck,
                 new FeatureDetails {
                     FeatureTitle = "New feature found in front-end implementation",
@@ -152,24 +122,6 @@ namespace YoCode
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
                     FeatureWeighting = 1 });
-
-            OriginalTestDetails.Add(
-                Feature.ProjectBuilder,
-                new FeatureDetails {
-                    FeatureTitle = "Project Build",
-                    FeatureWeighting = 1.107 });
-
-            OriginalTestDetails.Add(
-                Feature.ProjectRunner,
-                new FeatureDetails {
-                    FeatureTitle = "Project Run",
-                    FeatureWeighting = 1.033 });
-
-            OriginalTestDetails.Add(
-                Feature.SolutionFileExists,
-                new FeatureDetails {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
                 Feature.TestCountCheck,

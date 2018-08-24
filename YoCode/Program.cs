@@ -7,7 +7,6 @@ namespace YoCode
 {
     internal static class Program
     {
-        private static ProjectRunner pr;
         private static bool showLoadingAnim;
         private static bool isJunior;
 
@@ -48,40 +47,53 @@ namespace YoCode
 
             var dir = new PathManager(modifiedTestDirPath);
 
-            pr = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
-
-            ConsoleCloseHandler.StartHandler(pr);
-
             showLoadingAnim = !result.NoLoadingScreen;
-            var implementedFeatureList = PerformChecks(dir, parameters);
 
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle), new Results(implementedFeatureList, TestType.Junior).FinalScore);
+            var evidenceList = new List<FeatureEvidence>();
+
+            var projectRunner = PassGatewayChecks(dir, evidenceList);
+            if (projectRunner == null)
+            {
+                compositeOutput.PrintFinalResults(evidenceList, 0);
+                return;
+            }
+
+            evidenceList = PerformChecks(dir, parameters, projectRunner);
+            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle), new Results(evidenceList, TestType.Junior).FinalScore);
         }
 
-        private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
+        private static ProjectRunner PassGatewayChecks(IPathManager dir, ICollection<FeatureEvidence> evidenceList)
+        {
+            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
+            evidenceList.Add(fileCheck.FileChangeEvidence);
+            if (fileCheck.FileChangeEvidence.FeatureFailed)
+            {
+                return null;
+            }
+
+            var projectBuilder = new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner());
+            evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
+            if (projectBuilder.ProjectBuilderEvidence.FeatureFailed)
+            {
+                return null;
+            }
+
+            var projectRunner = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
+            ConsoleCloseHandler.StartHandler(projectRunner);
+            projectRunner.Execute();
+            evidenceList.Add(projectRunner.ProjectRunEvidence);
+            return projectRunner.ProjectRunEvidence.FeatureFailed ? null : projectRunner;
+        }
+
+        private static List<FeatureEvidence> PerformChecks(IPathManager dir, RunParameterChecker p, ProjectRunner projectRunner)
         {
             var checkList = new List<FeatureEvidence>();
 
-            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-
-            // Files changed check
-            checkList.Add(fileCheck.FileChangeEvidence);
-
-            var stopEvidence = new List<string>()
-            {
-                "No Files Changed",
-                "Last Commit By Waters Employee"
-            };
-
-            if (fileCheck.FileChangeEvidence.Evidence.ListContainsAnyKeywords(stopEvidence))
-            {
-                return checkList;
-            }
             var workThreads = new List<Thread>();
 
             if (showLoadingAnim)
             {
-                Thread loadingThread = new Thread(LoadingAnimation.RunLoading)
+                var loadingThread = new Thread(LoadingAnimation.RunLoading)
                 {
                     IsBackground = true
                 };
@@ -110,31 +122,16 @@ namespace YoCode
 
             checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
-                FeatureRating = 1
-            });
-
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
-
-            // Project build
-            checkList.Add(new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner()).ProjectBuilderEvidence);
-
-            pr.Execute();
-            // Project run test
-            checkList.Add(pr.ProjectRunEvidence);
 
             // Unit test test
             checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
             //Front End Check
-            checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
+            checkList.Add(new FrontEndCheck(projectRunner.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
-            UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
+            var ucc = new UnitConverterCheck(projectRunner.GetPort());
 
             // Unit converter test
             checkList.Add(ucc.UnitConverterCheckEvidence);
@@ -143,9 +140,9 @@ namespace YoCode
 
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
-            pr.KillProject();
+            projectRunner.KillProject();
 
-            pr.ReportLefOverProcess();
+            projectRunner.ReportLefOverProcess();
             return checkList;
         }
     }
