@@ -29,7 +29,5 @@ namespace YoCode
         {
             return mode == TestType.Junior ? Configuration["featureWeightings:Junior"] : Configuration["featureWeightings:Original"];
         }
-
-
     }
 }

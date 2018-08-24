@@ -51,12 +51,26 @@ namespace YoCode
 
             var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            if (!CMDPathExists || !dotCoverPathExists)
+            var juniorFileExists = FileExists(TestType.Junior, "JuniorWeightings.json");
+            var originalFileExists = FileExists(TestType.Original, "OriginalWeightings.json");
+
+            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists;
+
+            if (anyFilesMissing)
             {
                 return false;
             }
 
             return CheckIfToolExecutablesExist();
+        }
+
+        private bool FileExists(TestType type, string fileName)
+        {
+            if(!File.Exists(appsettingsBuilder.ReturnPathByMode(type)))
+            {
+                return SetError($"{fileName} not found");
+            }
+            return true;
         }
 
         private bool SetError(string errorMessage)

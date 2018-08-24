@@ -28,8 +28,8 @@ namespace YoCode
             OpenHTMLOnFinish = !result.Silent;
             OutputTo = result.OutputFilePath;
             GenerateHtml = !result.NoHtml;
-
             isJunior = result.JuniorTest;
+
             if (!parameters.ParametersAreValid())
             {
                 if (!result.HelpAsked)
@@ -59,7 +59,8 @@ namespace YoCode
             }
 
             evidenceList = PerformChecks(dir, parameters, projectRunner);
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle), new Results(evidenceList, TestType.Junior).FinalScore);
+            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
+                new Results(evidenceList, isJunior ? TestType.Junior : TestType.Original).FinalScore);
         }
 
         private static ProjectRunner PassGatewayChecks(IPathManager dir, ICollection<FeatureEvidence> evidenceList)
