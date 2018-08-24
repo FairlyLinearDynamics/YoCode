@@ -36,8 +36,6 @@ namespace YoCode
             {
                 elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
 
-                Console.WriteLine(elem.FeatureWeighting);
-
                 MaximumScore += elem.FeatureWeighting;
 
                 FinalScore += elem.WeightedRating;
