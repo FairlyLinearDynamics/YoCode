@@ -106,6 +106,10 @@ namespace YoCode
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
 
+            // UI test
+            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
+            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
+
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
