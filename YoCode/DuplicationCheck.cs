@@ -41,6 +41,8 @@ namespace YoCode
             }
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             DuplicationEvidence.Feature = Feature.DuplicationCheck;
+            FeatureImplementedTreshold = 0.5;
+
 
             this.dir = dir;
             this.dupFinder = dupFinder;
@@ -74,8 +76,9 @@ namespace YoCode
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
+            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= FeatureImplementedTreshold ? true : false;
+
         }
 
         private void CheckForSpecialRepetition()
