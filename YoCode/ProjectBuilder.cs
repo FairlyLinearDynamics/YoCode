@@ -29,17 +29,12 @@ namespace YoCode
             var evidence = featureRunner.Execute(processDetails);
             Output = evidence.Output;
 
-            // TODO: Refactor Project Builder
-            var portKeyword = "Now listening on: ";
-            var line = Output.GetLineWithOneKeyword(portKeyword);
-            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
-            var port = splitLine.Length > 1 ? splitLine[1] : "";
+            var errs = evidence.ErrorOutput;
 
-            //if (String.IsNullOrEmpty(port))
-            //{
-            //    ProjectBuilderEvidence.SetInconclusive(messages.BadPort);
-            //    return;
-            //}
+            if (Output.Contains(""))
+            {
+
+            }
 
             bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
