@@ -7,10 +7,8 @@ namespace YoCode
 {
     internal class FileChangeFinder
     {
-        private Repository Repo { get; }
         private List<string> FileList { get; } = new List<string>();
-        private List<string> UncommitedFiles { get; } = new List<string>();
-        private readonly List<string> ignoredAuthorEmails = new List<string> { "@nonlinear.com", "@waters.com" };
+        private List<string> UncommitedFiles { get; set; } = new List<string>();
 
         public FileChangeFinder(string path)
         {
@@ -20,48 +18,66 @@ namespace YoCode
             if (!Repository.IsValid(path))
             {
                 FileChangeEvidence.SetFailed("Git Repository Not Found");
-                return;
             }
+            else
+            {
+                ExecuteTheCheck(path);
+            }
+        }
 
-            Repo = new Repository(path);
+        public void ExecuteTheCheck(string path)
+        {
+            using (var Repo = new Repository(path))
+            {
+                UncommitedFiles = GetUncommitedFiles(Repo);
 
-            GetFileDifferences();
+                if (!GitCheck.LastCommitWasByNonEmployee(Repo.Commits) && !UncommitedFiles.Any())
+                {
+                    FileChangeEvidence.SetFailed("Last Commit By Waters Employee");
+                    return;
+                }
 
-            UncommitedFiles = GetUncommitedFiles(path);
+                GetFileDifferences(Repo);
 
-            FillInEvidence();
+                FillInEvidence();
+            }
         }
 
         private void FillInEvidence()
         {
-            if (FileList.Any() || UncommitedFiles.Any())
-            {
-                FileChangeEvidence.FeatureImplemented = true;
-                FileChangeEvidence.FeatureRating = 1;
-                FileChangeEvidence.GiveEvidence(BuildFileChangeOutput());
-            }
-            else
-            {
-                FileChangeEvidence.SetFailed("No Files Changed");
-            }
+            FileChangeEvidence.FeatureImplemented = true;
+            FileChangeEvidence.FeatureRating = 1;
+            FileChangeEvidence.GiveEvidence(BuildFileChangeOutput());
         }
 
-        private List<string> GetUncommitedFiles(string path)
+        private static List<string> GetUncommitedFiles(Repository repository)
         {
-            using (var repository = new Repository(path))
-            {
-                RepositoryStatus repositoryStatus = repository.RetrieveStatus(new StatusOptions());
 
-                return repositoryStatus.Untracked.Select(a => a.FilePath).ToList();
+            var newInIndex = new List<string>();
+            foreach (var item in repository.RetrieveStatus(new StatusOptions()))
+            {
+                if (FileIsNotCommited(item))
+                {
+                    newInIndex.Add(item.FilePath);
+                }
             }
+
+            return newInIndex;
         }
 
-        private void GetFileDifferences()
+        private static bool FileIsNotCommited(StatusEntry item)
+        {
+            /*NewInIndex = staged but not commited, NewInWorkdir = untracked*/
+            return item.State == FileStatus.NewInIndex || item.State == FileStatus.NewInWorkdir || 
+                item.State == FileStatus.ModifiedInWorkdir || item.State == FileStatus.ModifiedInIndex;
+        }
+
+        private void GetFileDifferences(Repository Repo)
         {
             Tree head = Repo.Head.Tip.Tree;
 
             Tree lastNonlinearCommit = Repo.Head.Commits.ToList().First
-                (a => a.Author.Email.ContainsAny(ignoredAuthorEmails)).Tree;
+                (a => a.Author.Email.ContainsAny(GitCheck.GetHostDomains())).Tree;
 
             foreach (var pec in Repo.Diff.Compare<Patch>(lastNonlinearCommit, head))
             {
