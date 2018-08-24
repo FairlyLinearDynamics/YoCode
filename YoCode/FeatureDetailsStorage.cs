@@ -87,12 +87,6 @@ namespace YoCode
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.SolutionFileExists,
-                new FeatureDetails {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
                 Feature.TestCountCheck,
                 new FeatureDetails {
                     FeatureTitle = "All unit tests have passed",
@@ -164,12 +158,6 @@ namespace YoCode
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
                     FeatureWeighting = 1.033 });
-
-            OriginalTestDetails.Add(
-                Feature.SolutionFileExists,
-                new FeatureDetails {
-                    FeatureTitle = "Solution File Exists",
-                    FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
                 Feature.TestCountCheck,
