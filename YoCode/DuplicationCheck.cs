@@ -68,7 +68,7 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
+            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating(628,174);
         }
 
         private void CheckForSpecialRepetition()
@@ -117,13 +117,11 @@ namespace YoCode
             }
         }
 
-        public double GetDuplicationCheckRating()
+        public double GetDuplicationCheckRating(double upperBound, double lowerBound)
         {
-            double UpperBound = 628;
-            double LowerBound = 174;
-            double range = UpperBound - LowerBound;
+            double range = upperBound - lowerBound;
 
-            return ModiDuplicateCost >= UpperBound ? 0 : 1-Math.Round((ModiDuplicateCost - LowerBound) / range,2);
+            return ModiDuplicateCost >= upperBound ? 0 : 1-Math.Round((ModiDuplicateCost - lowerBound) / range,2);
         }
 
 
