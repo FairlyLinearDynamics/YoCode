@@ -27,7 +27,7 @@ namespace YoCode
         private const string mileToKilometer = "1.60934";
         private const string stringCheck = "Yards to meters";
 
-        private double FeatureImplementedTreshold = 0.5;
+        private double passPerc = 0.5;
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, bool isJunior)
         {
@@ -78,7 +78,7 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
-            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= FeatureImplementedTreshold ? true : false;
+            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= passPerc ? true : false;
 
         }
 
