@@ -42,7 +42,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Bad input crashes have been fixed",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -51,7 +51,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Code Coverage",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -60,7 +60,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Code quality improvement",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -69,7 +69,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "New feature found in front-end implementation",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
                 {
@@ -77,7 +77,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Files changed",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                  },
 
@@ -86,7 +86,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Git was used",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -95,7 +95,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "All unit tests have passed",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -104,7 +104,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Evidence present in UI",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -113,7 +113,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Units were converted successfully",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 }
             };
@@ -128,7 +128,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Bad input crashes have been fixed",
-                        FeatureWeighting = 2.39
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -146,7 +146,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Code quality improvement",
-                        FeatureWeighting = 1.69
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -155,7 +155,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Files changed",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                  },
 
@@ -173,7 +173,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Git was used",
-                        FeatureWeighting = 1
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -182,7 +182,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "All unit tests have passed",
-                        FeatureWeighting = 1.355
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -191,7 +191,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Evidence present in UI",
-                        FeatureWeighting = 1.03
+                        FeatureWeighting = 0
                     }
                 },
 
@@ -200,7 +200,7 @@ namespace YoCode
                     new FeatureDetails
                     {
                         FeatureTitle = "Units were converted successfully",
-                        FeatureWeighting = 1.09
+                        FeatureWeighting = 0
                     }
                 }
             };
