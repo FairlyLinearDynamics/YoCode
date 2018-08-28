@@ -74,7 +74,7 @@ namespace YoCode
 
         public void IgnoreWeighting(FeatureEvidence evidence)
         {
-            if (evidence.FeatureFailed)
+            if (evidence.FeatureImplemented == null)
             {
                 MaximumScore -= evidence.FeatureWeighting;
                 evidence.FeatureWeighting = 0;
