@@ -29,7 +29,7 @@ namespace YoCode
 
         private double passPerc = 0.5;
 
-        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, bool isJunior)
+        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p)
         {
             OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
             OrigDuplicateCost = Int32.Parse(p.DuplicationCost);

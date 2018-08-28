@@ -5,7 +5,7 @@
   "DuplicationCheck": 1.69,
   "UICheck": 1.03,
   "GitCheck": 1,
-  "FrontEndCheck": 0,
+  "FrontEndCheck": 2.39,
   "UnitConverterCheck": 1.09,
   "FilesChangedCheck": 0
 }
