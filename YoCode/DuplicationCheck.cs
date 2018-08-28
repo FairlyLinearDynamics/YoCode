@@ -8,7 +8,7 @@ namespace YoCode
 {
     internal class DuplicationCheck
     {
-        private readonly string fileNameChecked = "UnitConverterWebApp.sln";
+        private readonly string fileNameChecked;
 
         private readonly string modifiedSolutionPath;
         private readonly IDupFinder dupFinder;
@@ -27,7 +27,7 @@ namespace YoCode
         private const string mileToKilometer = "1.60934";
         private const string stringCheck = "Yards to meters";
 
-        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p)
+        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p, string fileNameChecked)
         {
             OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
             OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
@@ -37,6 +37,7 @@ namespace YoCode
 
             this.dir = dir;
             this.dupFinder = dupFinder;
+            this.fileNameChecked = fileNameChecked;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
 
