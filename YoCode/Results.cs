@@ -80,6 +80,5 @@ namespace YoCode
                 evidence.FeatureWeighting = 0;
             }
         }
-
     }
 }
