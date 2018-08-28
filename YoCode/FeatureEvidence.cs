@@ -5,13 +5,14 @@ namespace YoCode
 {
     internal class FeatureEvidence
     {
+        // TODO: Maybe should be 3 methods: SetFailed(reason); SetInconclusive(reason); SetPassed(reason)
+        // Each method would set featureImplemented; FeatureRatings and weights; Evidence
         public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
-        public bool FeatureImplemented { get; set; }
+        public bool? FeatureImplemented { get; set; }
         public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
-        public bool FeatureFailed { get; private set; }
 
         public double FeatureRating { get; set; }
         public double FeatureWeighting { get; set; }
@@ -24,18 +25,16 @@ namespace YoCode
             Evidence.Add(evidence);
         }
 
-        public void GiveEvidence(params FeatureEvidence[] evidences)
+        public void SetInconclusive(string reason)
         {
-            foreach (var evidence in evidences)
-            {
-                Evidence.AddRange(evidence.Evidence);
-            }
+            FeatureImplemented = null;
+            FeatureWeighting = 0;
+            GiveEvidence(reason);
         }
 
         public void SetFailed(string reason)
         {
             FeatureImplemented = false;
-            FeatureFailed = true;
             GiveEvidence(reason);
         }
     }

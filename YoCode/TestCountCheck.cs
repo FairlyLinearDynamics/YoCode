@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 
 namespace YoCode
@@ -28,7 +29,7 @@ namespace YoCode
 
             if (!Directory.Exists(workingDir))
             {
-                UnitTestEvidence.SetFailed($"{workingDir} not found");
+                UnitTestEvidence.SetInconclusive($"{workingDir} not found");
                 return;
             }
 
@@ -44,8 +45,10 @@ namespace YoCode
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
-            if (evidence.FeatureFailed)
+
+            if (evidence.FeatureImplemented == null)
             {
+                UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
                 return;
             }
 
@@ -55,7 +58,9 @@ namespace YoCode
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
+            if (UnitTestEvidence.FeatureImplemented == null)
+                return;
+
             StructuredOutput();
         }
 
@@ -68,11 +73,12 @@ namespace YoCode
                 stats.testsFailed = tempStats[2];
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
+
+                UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
             }
             else
             {
-                UnitTestEvidence.SetFailed(BuildErrorOutput());
-                UnitTestEvidence.FeatureRating = 0;
+                UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
             }
         }
 

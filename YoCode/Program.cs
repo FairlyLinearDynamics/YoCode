@@ -15,6 +15,8 @@ namespace YoCode
 
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
+
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));

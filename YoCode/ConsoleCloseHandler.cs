@@ -32,21 +32,26 @@ namespace YoCode
                 case CtrlType.CTRL_CLOSE_EVENT:
                     Console.WriteLine("Closing");
 
-                    try
-                    {
-                        Pr.KillProject();
-                    }
-                    catch (NullReferenceException) { }
-                    while (!FrontEndCheck.CloseBrowser())
-                    {
-                        Thread.Sleep(sleepTimer);
-                    }
+                    CloseProcesses();
 
                     Environment.Exit(0);
                     return false;
 
                 default:
                     return false;
+            }
+        }
+
+        public static void CloseProcesses()
+        {
+            try
+            {
+                Pr.KillProject();
+            }
+            catch (NullReferenceException) { }
+            while (!FrontEndCheck.CloseBrowser())
+            {
+                Thread.Sleep(sleepTimer);
             }
         }
     }

@@ -23,10 +23,14 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = feature.FeatureTitle;
-                featData.featureResult = $"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}";
                 featData.evidence = feature.Evidence;
                 featData.featurePass = feature.FeatureImplemented;
                 featData.score = feature.FeatureRating;
+                var result = feature.FeatureImplemented.HasValue
+                    ? $"Feature implemented: {((feature.FeatureImplemented.Value) ? "Yes" : "No")}"
+                    : "Could not perform check";
+                featData.featureResult = result;
+
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

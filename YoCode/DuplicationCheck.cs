@@ -49,7 +49,7 @@ namespace YoCode
             catch (FileNotFoundException) { }
             catch (Exception e)
             {
-                DuplicationEvidence.SetFailed(messages.DupFinderHelp + "\n" + e);
+                DuplicationEvidence.SetInconclusive(messages.DupFinderHelp + "\n" + e);
             }
         }
 
@@ -57,9 +57,9 @@ namespace YoCode
         {
             (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
 
-            if (modEvidence.FeatureFailed)
+            if (modEvidence.FeatureImplemented == null)
             {
-                DuplicationEvidence.SetFailed($"Failed: {modEvidence.FeatureFailed}");
+                DuplicationEvidence.SetInconclusive($"Failed: {modEvidence.FeatureImplemented}");
                 return;
             }
 
