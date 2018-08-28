@@ -27,6 +27,8 @@ namespace YoCode
         private const string mileToKilometer = "1.60934";
         private const string stringCheck = "Yards to meters";
 
+        private double passPerc = 0.5;
+
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p)
         {
             OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
@@ -34,6 +36,7 @@ namespace YoCode
 
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             DuplicationEvidence.Feature = Feature.DuplicationCheck;
+
 
             this.dir = dir;
             this.dupFinder = dupFinder;
@@ -66,8 +69,9 @@ namespace YoCode
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
+            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= passPerc;
+
         }
 
         private void CheckForSpecialRepetition()

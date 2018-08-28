@@ -41,8 +41,7 @@ namespace YoCode
                     Feature.BadInputCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Bad input crashes have been fixed",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Bad input crashes have been fixed"
                     }
                 },
 
@@ -50,8 +49,7 @@ namespace YoCode
                     Feature.CodeCoverageCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Code Coverage",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Code Coverage"
                     }
                 },
 
@@ -59,8 +57,7 @@ namespace YoCode
                     Feature.DuplicationCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Code quality improvement",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Code quality improvement"
                     }
                 },
 
@@ -68,16 +65,14 @@ namespace YoCode
                     Feature.FrontEndCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "New feature found in front-end implementation",
-                        FeatureWeighting = 1
+                        FeatureTitle = "New feature found in front-end implementation"
                     }
                 },
                 {
                     Feature.FilesChangedCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Files changed",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Files changed"
                     }
                  },
 
@@ -85,8 +80,7 @@ namespace YoCode
                     Feature.GitCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Git was used",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Git was used"
                     }
                 },
 
@@ -94,8 +88,7 @@ namespace YoCode
                     Feature.TestCountCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "All unit tests have passed",
-                        FeatureWeighting = 1
+                        FeatureTitle = "All unit tests have passed"
                     }
                 },
 
@@ -103,8 +96,7 @@ namespace YoCode
                     Feature.UICheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Evidence present in UI",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Evidence present in UI"
                     }
                 },
 
@@ -112,8 +104,7 @@ namespace YoCode
                     Feature.UnitConverterCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Units were converted successfully",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Units were converted successfully"
                     }
                 }
             };
@@ -127,8 +118,7 @@ namespace YoCode
                     Feature.BadInputCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Bad input crashes have been fixed",
-                        FeatureWeighting = 2.39
+                        FeatureTitle = "Bad input crashes have been fixed"
                     }
                 },
 
@@ -136,8 +126,7 @@ namespace YoCode
                     Feature.CodeCoverageCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Code Coverage",
-                        FeatureWeighting = 0
+                        FeatureTitle = "Code Coverage"
                     }
                 },
 
@@ -145,8 +134,7 @@ namespace YoCode
                     Feature.DuplicationCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Code quality improvement",
-                        FeatureWeighting = 1.69
+                        FeatureTitle = "Code quality improvement"
                     }
                 },
 
@@ -154,8 +142,7 @@ namespace YoCode
                     Feature.FilesChangedCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Files changed",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Files changed"
                     }
                  },
 
@@ -163,8 +150,7 @@ namespace YoCode
                     Feature.FrontEndCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "New feature found in front-end implementation",
-                        FeatureWeighting = 0
+                        FeatureTitle = "New feature found in front-end implementation"
                     }
                 },
 
@@ -172,8 +158,7 @@ namespace YoCode
                     Feature.GitCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Git was used",
-                        FeatureWeighting = 1
+                        FeatureTitle = "Git was used"
                     }
                 },
 
@@ -181,8 +166,7 @@ namespace YoCode
                     Feature.TestCountCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "All unit tests have passed",
-                        FeatureWeighting = 1.355
+                        FeatureTitle = "All unit tests have passed"
                     }
                 },
 
@@ -190,8 +174,7 @@ namespace YoCode
                     Feature.UICheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Evidence present in UI",
-                        FeatureWeighting = 1.03
+                        FeatureTitle = "Evidence present in UI"
                     }
                 },
 
@@ -199,8 +182,7 @@ namespace YoCode
                     Feature.UnitConverterCheck,
                     new FeatureDetails
                     {
-                        FeatureTitle = "Units were converted successfully",
-                        FeatureWeighting = 1.09
+                        FeatureTitle = "Units were converted successfully"
                     }
                 }
             };
