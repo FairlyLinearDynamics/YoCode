@@ -20,14 +20,14 @@ namespace YoCode
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
         {
             var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-            if (fileCheck.FileChangeEvidence.FeatureFailed && !fileCheck.FileChangeEvidence.Evidence.Contains("Git Repository Not Found"))
+            if (fileCheck.FileChangeEvidence.Failed)
             {
                 evidenceList.Add(fileCheck.FileChangeEvidence);
                 return null;
             }
 
             var projectBuilder = new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner());
-            if (projectBuilder.ProjectBuilderEvidence.FeatureFailed)
+            if (projectBuilder.ProjectBuilderEvidence.Failed)
             {
                 evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
                 return null;
@@ -36,7 +36,7 @@ namespace YoCode
             var projectRunner = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
             ConsoleCloseHandler.StartHandler(projectRunner);
             projectRunner.Execute();
-            if(projectRunner.ProjectRunEvidence.FeatureFailed)
+            if(projectRunner.ProjectRunEvidence.Failed)
             {
                 evidenceList.Add(projectRunner.ProjectRunEvidence);
                 return null;
