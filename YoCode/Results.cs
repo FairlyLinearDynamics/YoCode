@@ -59,12 +59,12 @@ namespace YoCode
                     badInputBackEnd.FeatureWeighting = 0;
                 }
 
-                IgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
-                IgnoreWeighting(list.Find(e => e.Feature == Feature.UICheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICheck));
             }
         }
 
-        public void IgnoreWeighting(FeatureEvidence evidence)
+        public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
         {
             if (evidence.FeatureImplemented == null)
             {
