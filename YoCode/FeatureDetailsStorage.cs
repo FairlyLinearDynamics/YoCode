@@ -63,12 +63,6 @@ namespace YoCode
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.FrontEndCheck,
-                new FeatureDetails {
-                    FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
                 Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
@@ -93,15 +87,33 @@ namespace YoCode
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
-                Feature.UICheck,
+                Feature.UICodeCheck,
                 new FeatureDetails {
-                    FeatureTitle = "Evidence present in UI",
+                    FeatureTitle = "Found feature keyword in UI implementation",
                     FeatureWeighting = 1 });
 
             JuniorTestDetails.Add(
                 Feature.UnitConverterCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
+                    FeatureWeighting = 1 });
+
+            JuniorTestDetails.Add(
+                Feature.UIFeatureImplmeneted,
+                new FeatureDetails {
+                    FeatureTitle = "Found feature evidence in user interface",
+                    FeatureWeighting = 1 });
+
+            JuniorTestDetails.Add(
+                Feature.UIBadInputCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Bad input crashes have been fixed in the UI",
+                    FeatureWeighting = 1 });
+
+            JuniorTestDetails.Add(
+                Feature.UIConversionCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully using UI",
                     FeatureWeighting = 1 });
 
             return JuniorTestDetails;
@@ -136,12 +148,6 @@ namespace YoCode
                     FeatureWeighting = 0 });
 
             OriginalTestDetails.Add(
-                Feature.FrontEndCheck,
-                new FeatureDetails {
-                    FeatureTitle = "New feature found in front-end implementation",
-                    FeatureWeighting = 0 });
-
-            OriginalTestDetails.Add(
                 Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
@@ -166,9 +172,9 @@ namespace YoCode
                     FeatureWeighting = 1.355 });
 
             OriginalTestDetails.Add(
-                Feature.UICheck,
+                Feature.UICodeCheck,
                 new FeatureDetails {
-                    FeatureTitle = "Evidence present in UI",
+                    FeatureTitle = "Found feature keyword in UI implementation",
                     FeatureWeighting = 1.03 });
 
             OriginalTestDetails.Add(
@@ -176,6 +182,24 @@ namespace YoCode
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
                     FeatureWeighting = 1.09 });
+
+            OriginalTestDetails.Add(
+                Feature.UIFeatureImplmeneted,
+                new FeatureDetails {
+                    FeatureTitle = "Found feature evidence in user interface",
+                    FeatureWeighting = 0 });
+
+            OriginalTestDetails.Add(
+                Feature.UIBadInputCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Bad input crashes have been fixed in the UI",
+                    FeatureWeighting = 0 });
+
+            OriginalTestDetails.Add(
+                Feature.UIConversionCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully using UI",
+                    FeatureWeighting = 0 });
 
             return OriginalTestDetails;
         }

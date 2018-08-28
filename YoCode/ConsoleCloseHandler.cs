@@ -49,7 +49,7 @@ namespace YoCode
                 Pr.KillProject();
             }
             catch (NullReferenceException) { }
-            while (!FrontEndCheck.CloseBrowser())
+            while (!UICheck.CloseBrowser())
             {
                 Thread.Sleep(sleepTimer);
             }

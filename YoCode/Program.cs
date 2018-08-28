@@ -110,7 +110,7 @@ namespace YoCode
 
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
-            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
+            checkList.Add(new UICodeCheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
@@ -126,7 +126,7 @@ namespace YoCode
             checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
             //Front End Check
-            checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
+            checkList.AddRange(new UICheck(pr.GetPort()).UIFeatureEvidences);
 
             UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
