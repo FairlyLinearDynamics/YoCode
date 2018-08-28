@@ -28,7 +28,6 @@ namespace YoCode
                 uiInputhandler.InputData(key);
                 try
                 {
-                    Console.WriteLine($"Value looking for: {GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\nResult: {browser.FindElement(By.XPath($"//*[contains(text(),\"{GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\")]"))}");
                     browser.FindElement(By.XPath($"//*[contains(text(),\"{GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\")]"));
                 }
                 catch (NoSuchElementException)

@@ -44,17 +44,21 @@ namespace YoCode
                         elementToClick = form.FindElement(By.XPath("//*[@type=\"submit\"]"));
                     }
 
-
+                    // Assume that there are 2 dropdown menues with conversion options
                     if (selectors.Count > 1)
                     {
-                        Console.WriteLine(featureKeyWord);
-                        string selectedElem = null;
-
-                        foreach (var select in selectors)
+                        try
                         {
-                            SelectElement clicker = new SelectElement(select);
-                            clicker.SelectByText(clicker.Options.Last(a => !a.Text.Equals(selectedElem)).Text);
-                            selectedElem = clicker.SelectedOption.Text;
+                            var source = browser.FindElements(By.XPath($"//select/option[contains(text(),\"{featureKeyWord}\")]"));
+                            source[0].Click();
+
+                            // TODO: Check if kilometer is present in UI before using it
+                            var target = browser.FindElements(By.XPath($"//select/option[contains(text(),\"Kilometer\")]"));
+                            target[1].Click();
+                        }
+                        catch
+                        { 
+                            // TODO: Think of possible errs
                         }
 
                         foreach (var textField in form.FindElements(By.CssSelector("textarea")))
@@ -65,6 +69,8 @@ namespace YoCode
 
                         elementToClick.Click();
                     }
+                    
+                    // Assume that there is one dropdown menu with conversion options
                     else if (selectors.Count == 1)
                     {
                         SelectElement selectFromDropDown = new SelectElement(selectors.First());
@@ -78,6 +84,8 @@ namespace YoCode
 
                         elementToClick.Click();
                     }
+
+                    // No dropdown menu, only buttons
                     else
                     {
                         foreach (var textField in form.FindElements(By.CssSelector("textarea")))
@@ -89,8 +97,7 @@ namespace YoCode
                         elementToClick.Click();
                     }
                 }
-                catch (Exception) {
-                }
+                catch { }
             }
         }
     }
