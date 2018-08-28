@@ -6,7 +6,7 @@ namespace YoCode
 {
     class AppDuplicationCheck
     {
-        private readonly string testFile = "UnitConverterWebApp.sln";
+        private readonly string testFile = "UnitConverterWebApp\\UnitConverterWebApp.csproj";
 
         public AppDuplicationCheck(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
         {
