@@ -31,16 +31,9 @@ namespace YoCode
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, bool isJunior)
         {
-            if (isJunior)
-            {
-                OrigCodeBaseCost = 2381;
-                OrigDuplicateCost = 628;
-            }
-            else
-            {
-                OrigCodeBaseCost = 2305;
-                OrigDuplicateCost = 611;
-            }
+            OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
+            OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
+
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             DuplicationEvidence.Feature = Feature.DuplicationCheck;
 
@@ -55,7 +48,6 @@ namespace YoCode
                 ExecuteTheCheck();
                 StructuredOutput();
                 CheckForSpecialRepetition();
-
             }
             catch (FileNotFoundException) { }
             catch (Exception e)

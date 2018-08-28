@@ -16,7 +16,6 @@ namespace YoCode
         FrontEndCheck,
         ProjectBuilder,
         ProjectRunner,
-        SolutionFileExists,
         UnitConverterCheck
     }
 

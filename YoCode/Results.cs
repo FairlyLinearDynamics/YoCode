@@ -21,7 +21,6 @@ namespace YoCode
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
             CalculateFinalScore();
-
         }
 
         public void AssignWeightings(List<FeatureEvidence> list, Dictionary<Feature, FeatureDetails> xTestDetails)
@@ -35,15 +34,7 @@ namespace YoCode
 
             foreach (var elem in list)
             {
-                elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
-
-
-                Console.WriteLine(elem.Feature.ToString());
-                Console.WriteLine("Rating: " + elem.FeatureRating);
-                Console.WriteLine("Weight: " + elem.FeatureWeighting);
-                Console.WriteLine("Weighted Rating : " + elem.WeightedRating);
-                Console.WriteLine(messages.ParagraphDivider);
-
+                elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
 
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;

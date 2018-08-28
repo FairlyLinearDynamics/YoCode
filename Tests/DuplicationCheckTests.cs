@@ -22,10 +22,12 @@ namespace YoCode_XUnit
         {
             IPathManager fakeDir;
             IDupFinder fakeDupFinder;
+            IRunParameterChecker fakeRunCheck;
             DuplicationCheck dupCheck;
 
             var mockDir = new Mock<IPathManager>();
             var mockDupFinder = new Mock<IDupFinder>();
+            var mockRunCheck = new Mock<IRunParameterChecker>();
 
             const string fakeModified = @"\fake\modified\dir";
 
@@ -35,13 +37,17 @@ namespace YoCode_XUnit
 
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
 
+            mockRunCheck.Setup(w => w.CodeBaseCost).Returns("69");
+            mockRunCheck.Setup(w => w.DuplicationCost).Returns("420");
+
             mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeModified, fileNameChecked)))
                 .Returns(SetUpFeatureEvidence(fakeModifiedCodeScore));
 
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
+            fakeRunCheck = mockRunCheck.Object;
 
-            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, true);
+            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, fakeRunCheck);
 
             dupCheck.DuplicationEvidence.FeatureImplemented.Should()
                 .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.FeatureImplemented}, " +
