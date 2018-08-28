@@ -141,8 +141,17 @@ namespace YoCode
         {
             if (!p.HasExited)
             {
-                p.Kill();
-                p.Dispose();
+                // TODO: Refactor Process Runner
+                // Try/Catch needed to catch exceptions when process cannot be killed
+                try
+                {
+                    p.Kill();
+                    p.Dispose();
+                }
+                catch
+                {
+
+                }
             }
         }
 

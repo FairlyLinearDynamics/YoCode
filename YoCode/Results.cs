@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace YoCode
 {
     internal class Results
     {
         public double FinalScore { get; set; }
-        public double MaximumScore { get; set;}
+        public double MaximumScore { get; set; }
 
-        public Results(List<FeatureEvidence> list,TestType mode)
+        public Results(List<FeatureEvidence> list, TestType mode)
         {
             var storage = new FeatureDetailsStorage(mode);
 
@@ -23,9 +24,9 @@ namespace YoCode
 
         }
 
-        public void AssignWeightings(List<FeatureEvidence> list,Dictionary<Feature,FeatureDetails> xTestDetails)
+        public void AssignWeightings(List<FeatureEvidence> list, Dictionary<Feature, FeatureDetails> xTestDetails)
         {
-            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
+            list.FindAll(e=>e.FeatureImplemented.HasValue).ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
@@ -58,7 +59,7 @@ namespace YoCode
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
                 var badInputUI = list.Find(e => e.Feature == Feature.FrontEndCheck);
 
-                if (!badInputBackEnd.FeatureImplemented && badInputUI.FeatureImplemented) 
+                if (badInputBackEnd.FeatureImplemented==null && badInputUI.FeatureImplemented == true) 
                 {
                     badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
                     badInputBackEnd.FeatureWeighting = 0;
@@ -66,11 +67,12 @@ namespace YoCode
 
                 var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
 
-                if (unitConverterCheck.FeatureFailed)
+                if (unitConverterCheck.FeatureImplemented == null)
                 {
                     MaximumScore -= unitConverterCheck.FeatureWeighting;
                     unitConverterCheck.FeatureWeighting = 0;
                 }
+
             }
         }
     }
