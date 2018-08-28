@@ -8,6 +8,7 @@
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
             pr.ExecuteTheCheck(waitForMessage, kill);
+            var a = pr.procinfo;
             var evidence = new FeatureEvidence
             {
                 Output = pr.Output,
@@ -16,8 +17,10 @@
 
             if (pr.TimedOut)
             {
-                evidence.SetFailed("Timed out");
+                evidence.SetInconclusive("Timed out");
+                return evidence;
             }
+            evidence.FeatureImplemented = true;
             return evidence;
         }
 

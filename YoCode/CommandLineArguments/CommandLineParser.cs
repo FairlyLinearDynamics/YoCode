@@ -5,8 +5,8 @@ namespace YoCode
 {
     public class CommandLineParser
     {
-        private readonly List<string> implementedCommands = new List<string>() { CommandNames.MODIFIED, CommandNames.HELP,
-            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.JUNIORTEST };
+        private readonly List<string> implementedCommands = new List<string>() { CommandNames.INPUT, CommandNames.HELP,
+            CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.JUNIORTEST, CommandNames.OUTPUT, CommandNames.NOHTML };
 
         private readonly List<SplitArg> currentCommands;
 
@@ -23,8 +23,8 @@ namespace YoCode
             {
                 switch (arg.command)
                 {
-                    case CommandNames.MODIFIED:
-                        ires.modifiedFilePath = arg.data;
+                    case CommandNames.INPUT:
+                        ires.InputFilePath = arg.data;
                         break;
                     case CommandNames.HELP:
                         ires.HelpAsked = arg.command == CommandNames.HELP;
@@ -37,6 +37,12 @@ namespace YoCode
                         break;
                     case CommandNames.JUNIORTEST:
                         ires.JuniorTest = arg.command == CommandNames.JUNIORTEST;
+                        break;
+                    case CommandNames.OUTPUT:
+                        ires.OutputFilePath = arg.data;
+                        break;
+                    case CommandNames.NOHTML:
+                        ires.NoHtml = arg.command == CommandNames.NOHTML;
                         break;
                 }
             }

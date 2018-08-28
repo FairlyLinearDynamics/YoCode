@@ -3,7 +3,7 @@
     public enum ArgErrorType
     {
         NoArguments,
-        WrongModifiedDirectory,
+        WrongInputDirectory,
         WrongCommand
     }
 }

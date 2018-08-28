@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 namespace YoCode
 {
@@ -12,6 +14,7 @@ namespace YoCode
 
         public string StatLine { get; set; }
         public string Output { get; set; }
+        public string ErrorOutput { get; set; }
 
         private readonly int TestCountTreshold = 10;
 
@@ -20,14 +23,20 @@ namespace YoCode
 
         private const int TitleColumnFormatter = -25;
 
-
         public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
         {
+            workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
+
+            if (!Directory.Exists(workingDir))
+            {
+                UnitTestEvidence.SetInconclusive($"{workingDir} not found");
+                return;
+            }
+
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             processName = "dotnet";
-            workingDir = repositoryPath;
             arguments = "test";
             ExecuteTheCheck();
         }
@@ -36,17 +45,22 @@ namespace YoCode
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
-            if (evidence.FeatureFailed)
+
+            if (evidence.FeatureImplemented == null)
             {
+                UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
                 return;
             }
 
             Output = evidence.Output;
+            ErrorOutput = evidence.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
 
-            UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
+            if (UnitTestEvidence.FeatureImplemented == null)
+                return;
+
             StructuredOutput();
         }
 
@@ -57,15 +71,20 @@ namespace YoCode
                 stats.totalTests = tempStats[0];
                 stats.testsPassed = tempStats[1];
                 stats.testsFailed = tempStats[2];
-                stats.testsSkipped = tempStats[3];    
+                stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
+                UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
             }
             else
             {
-                UnitTestEvidence.SetFailed("Couldn't get information about tests");
-                UnitTestEvidence.FeatureRating = 0;
+                UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
             }
+        }
+
+        private string BuildErrorOutput()
+        {
+            return $"Error Running Tests: {ErrorOutput}";
         }
 
         public static List<string> GetTestKeyWords()

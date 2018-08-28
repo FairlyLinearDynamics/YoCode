@@ -11,11 +11,17 @@ namespace YoCode
         private static bool showLoadingAnim;
         private static bool isJunior;
 
+        public static bool OpenHTMLOnFinish { get; set; }
+        public static string OutputTo { get; set; }
+        public static bool GenerateHtml { get; set; }
+
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
+
             var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
 
-            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter) outputs.Find(a=> a is ConsoleWriter));
+            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
             var commandLinehandler = new CommandLineParser(args);
             var result = commandLinehandler.Parse();
@@ -23,6 +29,9 @@ namespace YoCode
             var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
 
             OpenHTMLOnFinish = !result.Silent;
+            OutputTo = result.OutputFilePath;
+            GenerateHtml = !result.NoHtml;
+
             isJunior = result.JuniorTest;
             if (!parameters.ParametersAreValid())
             {
@@ -37,7 +46,7 @@ namespace YoCode
                 return;
             }
 
-            var modifiedTestDirPath = result.modifiedFilePath;
+            var modifiedTestDirPath = result.InputFilePath;
 
             var dir = new PathManager(modifiedTestDirPath);
 
@@ -47,12 +56,10 @@ namespace YoCode
 
             showLoadingAnim = !result.NoLoadingScreen;
             var implementedFeatureList = PerformChecks(dir, parameters);
-            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a=>a.FeatureTitle),new Results(implementedFeatureList,TestType.Junior).FinalScore);
-            pr.ReportLefOverProcess();
 
+            compositeOutput.PrintFinalResults(implementedFeatureList.OrderBy(a => a.FeatureTitle)
+                , new Results(implementedFeatureList, (isJunior) ? TestType.Junior : TestType.Original).FinalScore);
         }
-
-        public static bool OpenHTMLOnFinish { get; set; }
 
         private static List<FeatureEvidence> PerformChecks(PathManager dir, RunParameterChecker p)
         {
@@ -63,7 +70,13 @@ namespace YoCode
             // Files changed check
             checkList.Add(fileCheck.FileChangeEvidence);
 
-            if(fileCheck.FileChangeEvidence.Evidence.Contains("No Files Changed"))
+            var stopEvidence = new List<string>()
+            {
+                "No Files Changed",
+                "Last Commit By Waters Employee"
+            };
+
+            if (fileCheck.FileChangeEvidence.Evidence.ListContainsAnyKeywords(stopEvidence))
             {
                 return checkList;
             }
@@ -79,6 +92,14 @@ namespace YoCode
                 loadingThread.Start();
             }
 
+            // CodeCoverage check
+            var codeCoverage = new Thread(() =>
+            {
+                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+            });
+            workThreads.Add(codeCoverage);
+            codeCoverage.Start();
+
             // Duplication check
             var dupFinderThread = new Thread(() =>
             {
@@ -87,15 +108,9 @@ namespace YoCode
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
 
-
-
-            // Solution file exists
-            checkList.Add(new FeatureEvidence()
-            {
-                FeatureTitle = "Solution File Exists",
-                FeatureImplemented = true,
-                FeatureRating = 1
-            });
+            // UI test
+            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
+            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
@@ -110,8 +125,8 @@ namespace YoCode
             // Unit test test
             checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
-            ////UI testing
-            checkList.AddRange(new UICheck(pr.GetPort()).UIFeatureEvidences);
+            //Front End Check
+            checkList.Add(new FrontEndCheck(pr.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
 
             UnitConverterCheck ucc = new UnitConverterCheck(pr.GetPort());
 
@@ -124,6 +139,7 @@ namespace YoCode
             workThreads.ForEach(a => a.Join());
             pr.KillProject();
 
+            pr.ReportLefOverProcess();
             return checkList;
         }
     }

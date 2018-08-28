@@ -20,6 +20,10 @@ namespace YoCode
             {
                 ExecuteTheCheck();
             }
+            else
+            {
+                GitEvidence.SetInconclusive("Invalid git repository");
+            }
         }
 
         public void ExecuteTheCheck()
@@ -38,9 +42,9 @@ namespace YoCode
         private void FillInEvidence(IQueryableCommitLog commitLog, string output)
         {
             GitEvidence.FeatureImplemented = LastCommitWasByNonEmployee(commitLog);
-            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented ? 1 : 0;
+            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented??false ? 1 : 0;
 
-            if (GitEvidence.FeatureImplemented)
+            if (GitEvidence.FeatureImplemented??false)
             {
                 GitEvidence.GiveEvidence("Commits:" + Environment.NewLine + output);
             }
@@ -50,7 +54,7 @@ namespace YoCode
         {
             const string RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
 
-            foreach (Commit c in commitLog)
+            foreach (Commit c in commitLog.Where(c => !c.Author.Email.ContainsAny(GetHostDomains())))
             {
                 output.Add(string.Format("commit {0}", c.Id));
 
@@ -66,7 +70,7 @@ namespace YoCode
             return string.Join(Environment.NewLine, output);
         }
 
-        public bool LastCommitWasByNonEmployee(IQueryableCommitLog c)
+        public static bool LastCommitWasByNonEmployee(IQueryableCommitLog c)
         {
             return !c.First().Author.Email.ContainsAny(GetHostDomains());
         }

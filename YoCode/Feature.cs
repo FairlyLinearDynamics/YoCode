@@ -13,13 +13,11 @@ namespace YoCode
         UICheck,
         FilesChangedCheck,
         GitCheck,
+        FrontEndCheck,
         ProjectBuilder,
         ProjectRunner,
         SolutionFileExists,
-        UnitConverterCheck,
-        UIBadInputCheck,
-        UIConversionCheck,
-        UIFeatureImplmeneted,
+        UnitConverterCheck
     }
 
 }

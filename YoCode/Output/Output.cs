@@ -2,7 +2,7 @@
 
 namespace YoCode
 {
-    class Output
+    internal class Output
     {
         IPrint outputWriter;
         IErrorReporter errOutput;
@@ -23,10 +23,14 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = feature.FeatureTitle;
-                featData.featureResult = $"Feature implemented: {((feature.FeatureImplemented) ? "Yes" : "No")}";
                 featData.evidence = feature.Evidence;
                 featData.featurePass = feature.FeatureImplemented;
                 featData.score = feature.FeatureRating;
+                var result = feature.FeatureImplemented.HasValue
+                    ? $"Feature implemented: {((feature.FeatureImplemented.Value) ? "Yes" : "No")}"
+                    : "Could not perform check";
+                featData.featureResult = result;
+
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();
@@ -53,8 +57,8 @@ namespace YoCode
 
         private void ShowHelpMsg()
         {
-            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.MODIFIED, 
-                CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT));
+            outputWriter.AddMessage(string.Format(messages.HelpMessage, CommandNames.INPUT, 
+                CommandNames.HELP, CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.OUTPUT, CommandNames.NOHTML));
         }
 
         private void ShowDupfinderHelp()

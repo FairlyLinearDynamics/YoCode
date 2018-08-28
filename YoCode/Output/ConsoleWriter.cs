@@ -29,6 +29,7 @@ namespace YoCode
         {
             consoleReport.AppendLine(data.title);
             consoleReport.AppendLine(data.featureResult);
+
             foreach(var evidence in data.evidence)
             {
                 consoleReport.AppendLine(evidence);
@@ -43,7 +44,7 @@ namespace YoCode
 
         public void AddBanner()
         {
-            AddNewBlock(messages.ConsoleFireplaceBanner);
+            AddNewBlock(messages.ConsoleFireplaceBannerFrame1);
         }
 
         private void AddNewBlock(string text)
