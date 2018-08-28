@@ -9,6 +9,7 @@ namespace YoCode
         private string Arguments { get; } = "build";
         private readonly string Output;
         private const string projectFolder = "UnitConverterWebApp";
+        private bool? buildSuccessful;
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
@@ -20,25 +21,27 @@ namespace YoCode
             workingDir = Path.Combine(workingDir, projectFolder);
             if (!Directory.Exists(workingDir))
             {
-                ProjectBuilderEvidence.SetFailed($"{workingDir} not found");
+                ProjectBuilderEvidence.SetInconclusive($"{workingDir} not found");
                 return;
             }
-
 
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);
             Output = evidence.Output;
 
+            var errs = evidence.ErrorOutput;
+            CheckBuildSuccess();
+
             bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-            if (evidence.FeatureFailed|| ErrorGettingErrorsOrWarnings)
+            if (evidence.FeatureImplemented == null|| ErrorGettingErrorsOrWarnings || buildSuccessful == null)
             {
-                ProjectBuilderEvidence.SetFailed("Timed Out");
                 return;
             }
-            ProjectBuilderEvidence.FeatureImplemented = BuildSuccessful();
-            ProjectBuilderEvidence.FeatureRating = BuildSuccessful() ? 1 : 0;
+
+            ProjectBuilderEvidence.FeatureImplemented = buildSuccessful.Value;
+            ProjectBuilderEvidence.FeatureRating = buildSuccessful.Value ? 1 : 0;
 
             ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
             if (GetNumberOfErrors() > 0)
@@ -63,11 +66,15 @@ namespace YoCode
             return "";
         }
 
-        private bool BuildSuccessful()
+        private void CheckBuildSuccess()
         {
-            var buildLine = Output.GetLineWithOneKeyword("Build succeeded");
-
-            return buildLine != "";
+            if(Output.Contains("is being used by another process"))
+            {
+                ProjectBuilderEvidence.SetInconclusive("Could not build the project. It is being used by another process");
+                return;
+            }
+            buildSuccessful = Output.Contains("Build succeeded");
+            return;
         }
 
         private int GetNumberOfWarnings()
