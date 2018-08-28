@@ -32,11 +32,22 @@ namespace YoCode
                 {
                     var selectors = form.FindElements(By.CssSelector("select"));
 
-                    var xpath = featureKeyWord != null ? $"//input[@value=\"{featureKeyWord}\"]" : "//input[@*]";
-                    var elementToClick = form.FindElement(By.XPath(xpath));
+                    var xpath = featureKeyWord != null ? $"//*[@value=\"{featureKeyWord}\" and @type=\"submit\"]" : "//*[@type=\"submit\"]";
+                    IWebElement elementToClick;
+
+                    try
+                    {
+                        elementToClick = form.FindElement(By.XPath(xpath));
+                    }
+                    catch
+                    {
+                        elementToClick = form.FindElement(By.XPath("//*[@type=\"submit\"]"));
+                    }
+
 
                     if (selectors.Count > 1)
                     {
+                        Console.WriteLine(featureKeyWord);
                         string selectedElem = null;
 
                         foreach (var select in selectors)
@@ -48,6 +59,7 @@ namespace YoCode
 
                         foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
+                            textField.Clear();
                             textField.SendKeys(applicantTestInput);
                         }
 
@@ -60,6 +72,7 @@ namespace YoCode
 
                         foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
+                            textField.Clear();
                             textField.SendKeys(applicantTestInput);
                         }
 
@@ -69,6 +82,7 @@ namespace YoCode
                     {
                         foreach (var textField in form.FindElements(By.CssSelector("textarea")))
                         {
+                            textField.Clear();
                             textField.SendKeys(applicantTestInput);
                         }
 

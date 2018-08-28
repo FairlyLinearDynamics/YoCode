@@ -45,7 +45,7 @@ namespace YoCode
                     service = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     var options = new FirefoxOptions();
-                    options.AddArgument("--headless");
+                    //options.AddArgument("--headless");
                     browser = new FirefoxDriver((FirefoxDriverService)service, options);
                 }
                 catch { };
@@ -57,7 +57,7 @@ namespace YoCode
                     service = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArgument("--headless");
+                    //chromeOptions.AddArgument("--headless");
 
                     browser = new ChromeDriver((ChromeDriverService)service, chromeOptions);
                 }

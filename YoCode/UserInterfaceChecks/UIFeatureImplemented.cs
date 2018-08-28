@@ -39,16 +39,13 @@ namespace YoCode
         {
             foreach (var tag in browser.FindElements(By.CssSelector(htmlTag.ToString())))
             {
-                if (tag.TagName == nameof(HtmlTags.input))
+                if (keyWords.Any(a => tag.GetAttribute("value").Contains(a, StringComparison.OrdinalIgnoreCase)))
                 {
-                    if (keyWords.Any(a => tag.GetAttribute("value").Contains(a, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        UIFeatureImplementedEvidence.FeatureImplemented = true;
-                        UIFeatureImplementedEvidence.FeatureRating = 1;
-                        UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
-                        FeatureTagFound = tag.GetAttribute("value");
-                        return true;
-                    }
+                    UIFeatureImplementedEvidence.FeatureImplemented = true;
+                    UIFeatureImplementedEvidence.FeatureRating = 1;
+                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{tag.GetAttribute("value")}\" keyword in user interface");
+                    FeatureTagFound = tag.GetAttribute("value");
+                    return true;
                 }
                 else if (keyWords.Any(a => tag.Text.Equals(a, StringComparison.OrdinalIgnoreCase)))
                 {

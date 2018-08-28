@@ -11,6 +11,7 @@ namespace YoCode
         IWebDriver browser;
         private const int TitleColumnFormatter = -40;
         private const int ValueColumnFormatter = -10;
+        private const int decimalPoints = 1000;
 
         private static double unitConvertValue = 1.60934;
 
@@ -27,7 +28,8 @@ namespace YoCode
                 uiInputhandler.InputData(key);
                 try
                 {
-                    browser.FindElement(By.XPath($"//*[contains(text(),{Double.Parse(key) * unitConvertValue})]"));
+                    Console.WriteLine($"Value looking for: {GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\nResult: {browser.FindElement(By.XPath($"//*[contains(text(),\"{GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\")]"))}");
+                    browser.FindElement(By.XPath($"//*[contains(text(),\"{GetCorrectClampedNum(Double.Parse(key) * unitConvertValue)}\")]"));
                 }
                 catch (NoSuchElementException)
                 {
@@ -42,6 +44,13 @@ namespace YoCode
             UIConversionEvidence.FeatureImplemented = true;
             UIConversionEvidence.FeatureRating = 1;
             UIConversionEvidence.GiveEvidence("Successfully converted from miles to kilometres");
+        }
+
+        private double GetCorrectClampedNum(double num)
+        {
+            num *= decimalPoints;
+            var temp = (int)num;
+            return (double)temp / decimalPoints;
         }
 
         public FeatureEvidence UIConversionEvidence { get; set; } = new FeatureEvidence();

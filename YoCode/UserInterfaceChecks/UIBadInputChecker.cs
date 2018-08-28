@@ -21,16 +21,17 @@ namespace YoCode
 
             this.browser = browser;
 
-            UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputCheckResult.Add(a,false));
+            //UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputCheckResult.Add(a, false));
 
-            var uiInputhandler = new InputingToUI(browser, foundKeyWord);
-            UIKeywords.GARBAGE_INPUT.ToList().ForEach(a=> {
-                uiInputhandler.InputData(a);
-                OutputCheck(a);
-            });
+            //var uiInputhandler = new InputingToUI(browser, foundKeyWord);
+            //UIKeywords.GARBAGE_INPUT.ToList().ForEach(a =>
+            //{
+            //    uiInputhandler.InputData(a);
+            //    OutputCheck(a);
+            //});
 
-            UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
-            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+            //UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
+            //UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
         }
 
         public double GetOutputCheckRating()
