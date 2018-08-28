@@ -4,10 +4,8 @@
   "CodeCoverageCheck": 1.32,
   "DuplicationCheck": 1.69,
   "UICheck": 1.03,
-  "FilesChangedCheck": 0,
   "GitCheck": 1,
   "FrontEndCheck": 0,
-  "ProjectBuilder": 1.107,
-  "ProjectRunner": 1.033,
-  "UnitConverterCheck": 1.09
+  "UnitConverterCheck": 1.09,
+  "FilesChangedCheck": 0
 }
