@@ -66,12 +66,19 @@ namespace YoCode
 
                 var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
 
-                if (unitConverterCheck.FeatureFailed)
-                {
-                    MaximumScore -= unitConverterCheck.FeatureWeighting;
-                    unitConverterCheck.FeatureWeighting = 0;
-                }
+                IgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
+                IgnoreWeighting(list.Find(e => e.Feature == Feature.UICheck));
             }
         }
+
+        public void IgnoreWeighting(FeatureEvidence evidence)
+        {
+            if (evidence.FeatureFailed)
+            {
+                MaximumScore -= evidence.FeatureWeighting;
+                evidence.FeatureWeighting = 0;
+            }
+        }
+
     }
 }
