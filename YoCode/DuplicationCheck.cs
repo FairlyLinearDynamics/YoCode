@@ -78,7 +78,7 @@ namespace YoCode
             ModiDuplicateCost = modDuplicateCost;
 
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating();
-            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= passPerc ? true : false;
+            DuplicationEvidence.FeatureImplemented = GetDuplicationCheckRating() >= passPerc;
 
         }
 
