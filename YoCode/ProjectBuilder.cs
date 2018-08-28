@@ -70,7 +70,7 @@ namespace YoCode
         {
             if(Output.Contains("is being used by another process"))
             {
-                ProjectBuilderEvidence.SetInconclusive("Could not project's build status. It is being used by another process");
+                ProjectBuilderEvidence.SetInconclusive("Could not build the project. It is being used by another process");
                 return;
             }
             buildSuccessful = Output.Contains("Build succeeded");
