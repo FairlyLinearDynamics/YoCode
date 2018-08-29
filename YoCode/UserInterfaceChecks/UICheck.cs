@@ -31,6 +31,37 @@ namespace YoCode
                 return CreateFailureEvidence("Could not retrieve the port number. Another program might be using it.");
             }
 
+            if (!OpenBrowser())
+            {
+                return CreateFailureEvidence($"Could not execute check: Did not find needed browser{Environment.NewLine}" +
+                    $"Please install Google Chrome or Mozilla Firefox internet browser");
+            }
+
+            try
+            {
+                browser.Navigate().GoToUrl(port);
+
+                var featureInUI = new UIFeatureImplemented(browser);
+
+                return new List<FeatureEvidence>
+                {
+                    featureInUI.UIFeatureImplementedEvidence,
+                    new UIBadInputChecker(browser, featureInUI.FoundTagsInfo).UIBadInputCheckEvidence,
+                    new UIConversionCheck(browser, featureInUI.FoundTagsInfo).UIConversionEvidence
+                };
+            }
+            catch
+            {
+                return CreateFailureEvidence("Unexpected closure of application, could not interact with browser.");
+            }
+            finally
+            {
+                CloseBrowser();
+            }
+        }
+
+        private static bool OpenBrowser()
+        {
             Running = true;
 
             DriverService service;
@@ -45,10 +76,15 @@ namespace YoCode
                     service = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     var options = new FirefoxOptions();
-                    //options.AddArgument("--headless");
+                    options.AddArgument("--headless");
                     browser = new FirefoxDriver((FirefoxDriverService)service, options);
+                    return true;
                 }
-                catch { };
+                catch
+                {
+                    CloseBrowser();
+                    return false;
+                }
             }
             else if (browsers.Any(a => a.Contains(CHROME)))
             {
@@ -57,37 +93,20 @@ namespace YoCode
                     service = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
                     service.HideCommandPromptWindow = true;
                     var chromeOptions = new ChromeOptions();
-                    //chromeOptions.AddArgument("--headless");
+                    chromeOptions.AddArgument("--headless");
 
                     browser = new ChromeDriver((ChromeDriverService)service, chromeOptions);
+                    return true;
                 }
-                catch { };
+                catch
+                {
+                    CloseBrowser();
+                    return false;
+                }
             }
             else
             {
-                return CreateFailureEvidence($"Could not execute check: Did not find needed browser{Environment.NewLine}Please install Google Chrome or Mozilla Firefox internet browser");
-            }
-
-            try
-            {
-                browser.Navigate().GoToUrl(port);
-
-                var featureInUI = new UIFeatureImplemented(browser, UIKeywords.UNIT_KEYWORDS);
-
-                return new List<FeatureEvidence>
-                {
-                    featureInUI.UIFeatureImplementedEvidence,
-                    new UIBadInputChecker(browser, featureInUI.FeatureTagFound).UIBadInputCheckEvidence,
-                    new UIConversionCheck(browser, featureInUI.FeatureTagFound).UIConversionEvidence
-                };
-            }
-            catch
-            {
-                return CreateFailureEvidence("Unexpected closure of application, could not interact with browser.");
-            }
-            finally
-            {
-                CloseBrowser();
+                return false;
             }
         }
 
@@ -103,7 +122,7 @@ namespace YoCode
         private static List<FeatureEvidence> CreateFailureEvidence(string failureReason)
         {
             var evidence = CreateDefaultFeatureEvidence();
-            evidence.ForEach(a => a.SetFailed(failureReason));
+            evidence.ForEach(a => a.SetInconclusive(failureReason));
             return evidence;
         }
 

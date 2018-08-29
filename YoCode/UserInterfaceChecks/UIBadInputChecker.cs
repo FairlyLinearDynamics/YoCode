@@ -1,9 +1,7 @@
 ﻿using System;
 using OpenQA.Selenium;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using OpenQA.Selenium.Support.UI;
 
 namespace YoCode
 {
@@ -14,7 +12,7 @@ namespace YoCode
         private const int ValueColumnFormatter = -10;
         private List<bool> ratingsList = new List<bool>();
 
-        public UIBadInputChecker(IWebDriver browser, string foundKeyWord)
+        public UIBadInputChecker(IWebDriver browser, UIFoundTags foundKeyWord)
         {
             UIBadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed in the UI";
             UIBadInputCheckEvidence.Feature = Feature.UIBadInputCheck;
@@ -24,14 +22,26 @@ namespace YoCode
             UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputCheckResult.Add(a, false));
 
             var uiInputhandler = new InputingToUI(browser, foundKeyWord);
-            UIKeywords.GARBAGE_INPUT.ToList().ForEach(a =>
+
+            foreach (var key in UIKeywords.GARBAGE_INPUT)
             {
-                uiInputhandler.InputData(a);
-                OutputCheck(a);
-            });
+                var errs = uiInputhandler.InputData(key);
+                if (errs.Any())
+                {
+                    SetCheckUndefined(errs);
+                    return;
+                }
+
+                OutputCheck(key);
+            }
 
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
             UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+        }
+
+        private void SetCheckUndefined(List<UICheckErrEnum> errs)
+        {
+            UIBadInputCheckEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs));
         }
 
         public double GetOutputCheckRating()

@@ -4,7 +4,8 @@ namespace YoCode
 {
     internal struct UIKeywords
     {
-        public static string[] UNIT_KEYWORDS = { "miles", "kilometres", "mile", "kilometre", "kilometers", "kilometer", "km", "mi" };
+        public static string[] MILE_KEYWORDS = { "miles", "mile", "mi" };
+        public static string[] KM_KEYWORDS = { "kilometres", "kilometre", "kilometers", "kilometer", "km"};
 
         public static string[] GARBAGE_INPUT = { "", $"{Environment.NewLine}5",
             $"5{Environment.NewLine}{Environment.NewLine}5", $"5{Environment.NewLine}{Environment.NewLine}", "a b c"};
