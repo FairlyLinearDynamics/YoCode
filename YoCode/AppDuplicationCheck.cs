@@ -10,6 +10,9 @@ namespace YoCode
 
         public AppDuplicationCheck(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
         {
+            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
+            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
+
             var dupcheck = new DuplicationCheck(dir, dupFinder, p, testFile);
 
             dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;
@@ -21,6 +24,7 @@ namespace YoCode
             AppDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterWebApp";
             AppDuplicationEvidence.Feature = Feature.AppDuplicationCheck;
             AppDuplicationEvidence.FeatureRating = dupcheck.GetDuplicationCheckRating(OrigDuplicateCost, 0);
+
         }
 
         public FeatureEvidence AppDuplicationEvidence { get; } = new FeatureEvidence();

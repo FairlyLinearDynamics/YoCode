@@ -13,6 +13,10 @@ namespace YoCode
 
         public TestDuplicationCheck(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
         {
+            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
+            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
+
+
             var dupcheck = new DuplicationCheck(dir, dupFinder, p, testFile);
             dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;
             dupcheck.OrigDuplicateCost = OrigDuplicateCost;
@@ -23,7 +27,6 @@ namespace YoCode
             TestDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterTests";
             TestDuplicationEvidence.Feature = Feature.TestDuplicationCheck;
             TestDuplicationEvidence.FeatureRating = dupcheck.GetDuplicationCheckRating(OrigDuplicateCost, 0);
-
         }
 
         public FeatureEvidence TestDuplicationEvidence { get; } = new FeatureEvidence();

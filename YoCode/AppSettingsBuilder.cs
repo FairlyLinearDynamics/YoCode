@@ -30,12 +30,12 @@ namespace YoCode
             return mode == TestType.Junior ? Configuration["featureWeightings:Junior"] : Configuration["featureWeightings:Original"];
         }
 
-        public (string,string) GetOriginalCosts()
+        public (string,string) GetJuniorTestsCosts()
         {
-            return (Configuration["OriginalTest:CodeBaseCost"], Configuration["OriginalTest:DuplicationCost"]);
+            return (Configuration["JuniorTest-Tests:CodeBaseCost"], Configuration["JuniorTest-Tests:DuplicationCost"]);
         }
 
-        public (string, string) GetJuniorCosts()
+        public (string, string) GetJuniorAppCosts()
         {
             return (Configuration["JuniorTest:CodeBaseCost"], Configuration["JuniorTest:DuplicationCost"]);
         }

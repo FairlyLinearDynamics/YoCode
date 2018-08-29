@@ -9,7 +9,7 @@ namespace YoCode
         string GetCMDToolsPath();
         string GetDotCoverDir();
         string ReturnPathByMode(TestType mode);
-        (string, string) GetOriginalCosts();
-        (string, string) GetJuniorCosts();
+        (string, string) GetJuniorAppCosts();
+        (string, string) GetJuniorTestsCosts();
     }
 }
