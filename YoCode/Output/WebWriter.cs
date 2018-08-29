@@ -72,7 +72,7 @@ namespace YoCode
                     File.WriteAllText(writeTo, BuildReport());
                     if (Program.OpenHTMLOnFinish)
                     {
-                        HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
+                        HtmlReportLauncher.LaunchReport(writeTo);
                     }
                     consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
                     consoleWriter.WriteReport();
