@@ -100,7 +100,7 @@ namespace YoCode
                 },
 
                 {
-                Feature.UIFeatureImplemeneted,
+                Feature.UIFeatureImplemented,
                 new FeatureDetails {
                     FeatureTitle = "Found feature evidence in user interface",
                 }
@@ -196,7 +196,7 @@ namespace YoCode
                 },
 
                 {
-                Feature.UIFeatureImplemeneted,
+                Feature.UIFeatureImplemented,
                 new FeatureDetails {
                     FeatureTitle = "Found feature evidence in user interface",
                 }
