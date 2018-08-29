@@ -15,7 +15,7 @@ namespace YoCode
         public UIFeatureImplemented(IWebDriver browser)
         {
             UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
-            UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplmeneted;
+            UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplemeneted;
 
             this.browser = browser;
             ExecuteCheck();

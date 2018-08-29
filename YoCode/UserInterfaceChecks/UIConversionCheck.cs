@@ -53,7 +53,7 @@ namespace YoCode
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)
         {
-            UIConversionEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs));
+            UIConversionEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs).ToArray());
         }
 
         private double GetCorrectClampedNum(double num)

@@ -41,7 +41,7 @@ namespace YoCode
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)
         {
-            UIBadInputCheckEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs));
+            UIBadInputCheckEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs).ToArray());
         }
 
         public double GetOutputCheckRating()

@@ -17,7 +17,7 @@ namespace YoCode
         ProjectRunner,
         SolutionFileExists,
         UnitConverterCheck,
-        UIFeatureImplmeneted,
+        UIFeatureImplemeneted,
         UIBadInputCheck,
         UIConversionCheck,
     }
