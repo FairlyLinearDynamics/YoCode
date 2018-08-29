@@ -25,6 +25,7 @@ namespace YoCode
                 return;
             }
 
+
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);

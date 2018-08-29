@@ -60,14 +60,6 @@ namespace YoCode
                         FeatureTitle = "Code quality improvement"
                     }
                 },
-
-                {
-                    Feature.FrontEndCheck,
-                    new FeatureDetails
-                    {
-                        FeatureTitle = "New feature found in front-end implementation"
-                    }
-                },
                 {
                     Feature.FilesChangedCheck,
                     new FeatureDetails
@@ -93,11 +85,39 @@ namespace YoCode
                 },
 
                 {
-                    Feature.UICheck,
+                    Feature.UICodeCheck,
                     new FeatureDetails
                     {
                         FeatureTitle = "Evidence present in UI"
                     }
+                },
+
+                {
+                Feature.UnitConverterCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully",
+                }
+                },
+
+                {
+                Feature.UIFeatureImplemented,
+                new FeatureDetails {
+                    FeatureTitle = "Found feature evidence in user interface",
+                }
+                },
+
+                {
+                Feature.UIBadInputCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Bad input crashes have been fixed in the UI",
+                }
+                },
+
+                {
+                Feature.UIConversionCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully using UI",
+                }
                 },
 
                 {
@@ -147,19 +167,10 @@ namespace YoCode
                  },
 
                 {
-                    Feature.FrontEndCheck,
-                    new FeatureDetails
-                    {
-                        FeatureTitle = "New feature found in front-end implementation"
-                    }
-                },
-
-                {
-                    Feature.GitCheck,
-                    new FeatureDetails
-                    {
-                        FeatureTitle = "Git was used"
-                    }
+                Feature.GitCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Git was used",
+                }
                 },
 
                 {
@@ -171,20 +182,40 @@ namespace YoCode
                 },
 
                 {
-                    Feature.UICheck,
-                    new FeatureDetails
-                    {
-                        FeatureTitle = "Evidence present in UI"
-                    }
+                Feature.UICodeCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Found feature keyword in UI implementation",
+                }
                 },
 
                 {
-                    Feature.UnitConverterCheck,
-                    new FeatureDetails
-                    {
-                        FeatureTitle = "Units were converted successfully"
-                    }
+                Feature.UnitConverterCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully",
                 }
+                },
+
+                {
+                Feature.UIFeatureImplemented,
+                new FeatureDetails {
+                    FeatureTitle = "Found feature evidence in user interface",
+                }
+                },
+
+                {
+                Feature.UIBadInputCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Bad input crashes have been fixed in the UI",
+                }
+                },
+
+                {
+                Feature.UIConversionCheck,
+                new FeatureDetails {
+                    FeatureTitle = "Units were converted successfully using UI",
+                }
+                },
+
             };
         }
 

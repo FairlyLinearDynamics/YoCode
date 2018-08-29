@@ -51,7 +51,7 @@ namespace YoCode
             if (list.Count > 1)
             {
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
-                var badInputUI = list.Find(e => e.Feature == Feature.FrontEndCheck);
+                var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
 
                 if (badInputBackEnd.FeatureImplemented==null) 
                 {
@@ -60,7 +60,7 @@ namespace YoCode
                 }
 
                 CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
             }
         }
 

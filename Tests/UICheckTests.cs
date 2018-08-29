@@ -13,7 +13,7 @@ namespace YoCode_XUnit
         [Fact]
         public void UICheck_FeatureImplementedBoolCheck()
         {
-            var uiCheck = new UICheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
 
             var evidence = uiCheck.UIEvidence;
 
@@ -23,7 +23,7 @@ namespace YoCode_XUnit
         [Fact]
         public void UICheck_FeatureEvidencePresent()
         {
-            var uiCheck = new UICheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
 
             var evidence = uiCheck.UIEvidence;
 
@@ -33,7 +33,7 @@ namespace YoCode_XUnit
         [Fact]
         public void UICheck_FeatureTitleSet()
         {
-            var uiCheck = new UICheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
 
             var evidence = uiCheck.UIEvidence;
 

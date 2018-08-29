@@ -6,17 +6,17 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    internal class UICheck
+    internal class UICodeCheck
     {
         // -------------------------------------------------------------------------------------------- Constructors
-        public UICheck(IEnumerable<string> userFilePaths, string[] keyWords)
+        public UICodeCheck(IEnumerable<string> userFilePaths, string[] keyWords)
         {
             UIContainsFeature(userFilePaths, keyWords);
-            UIEvidence.FeatureTitle = "Evidence present in UI";
-            UIEvidence.Feature = Feature.UICheck;
+            UIEvidence.FeatureTitle = "Found feature keyword in UI implementation";
+            UIEvidence.Feature = Feature.UICodeCheck;
         }
 
-        public UICheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
+        public UICodeCheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
         {
             UIContainsFeature(userFilePath, keyWords);
         }
