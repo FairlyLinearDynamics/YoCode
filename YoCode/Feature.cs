@@ -15,7 +15,6 @@ namespace YoCode
         GitCheck,
         ProjectBuilder,
         ProjectRunner,
-        SolutionFileExists,
         UnitConverterCheck,
         UIFeatureImplemeneted,
         UIBadInputCheck,
