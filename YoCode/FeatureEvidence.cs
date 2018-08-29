@@ -10,6 +10,9 @@ namespace YoCode
         public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
         public bool? FeatureImplemented { get; set; }
+        public bool Failed => FeatureImplemented.HasValue && !FeatureImplemented.Value;
+        public bool Passed => FeatureImplemented.HasValue && FeatureImplemented.Value;
+        public bool Inconclusive => !FeatureImplemented.HasValue;
         public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
         public string ErrorOutput { get; set; }

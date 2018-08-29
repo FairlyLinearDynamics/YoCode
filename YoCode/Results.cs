@@ -21,12 +21,11 @@ namespace YoCode
             AssignWeightings(list, thisDictionary);
             CalculateWeightedRatings(list);
             CalculateFinalScore();
-
         }
 
         public void AssignWeightings(List<FeatureEvidence> list, Dictionary<Feature, FeatureDetails> xTestDetails)
         {
-            list.FindAll(e=>e.FeatureImplemented.HasValue).ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
+            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
@@ -35,7 +34,7 @@ namespace YoCode
 
             foreach (var elem in list)
             {
-                elem.WeightedRating = Math.Round((elem.FeatureRating * elem.FeatureWeighting), 2);
+                elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
@@ -51,28 +50,25 @@ namespace YoCode
         {
             if (list.Count > 1)
             {
-                double badInputWeighting = 0;
-
-                badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
-                list.Find(e => e.Feature == Feature.UIBadInputCheck).FeatureWeighting = badInputWeighting;
-
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
                 var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
 
-                if (badInputBackEnd.FeatureImplemented==null && badInputUI.FeatureImplemented == true) 
+                if (badInputBackEnd.FeatureImplemented==null) 
                 {
                     badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
                     badInputBackEnd.FeatureWeighting = 0;
                 }
 
-                var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
+            }
+        }
 
-                if (unitConverterCheck.FeatureImplemented == null)
-                {
-                    MaximumScore -= unitConverterCheck.FeatureWeighting;
-                    unitConverterCheck.FeatureWeighting = 0;
-                }
-
+        public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
+        {
+            if (evidence.FeatureImplemented == null)
+            {
+                evidence.FeatureWeighting = 0;
             }
         }
     }

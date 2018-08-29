@@ -47,7 +47,7 @@ namespace YoCode
             else
             {
                 CodeCoverageEvidence.FeatureRating = ( (double) GetCodeCoverage(report) ) / 100;
-                CodeCoverageEvidence.FeatureImplemented = coverage > passPerc;
+                CodeCoverageEvidence.FeatureImplemented = coverage >= passPerc;
                 CodeCoverageEvidence.GiveEvidence($"Code Coverage: {coverage}%");
             }
         }

@@ -1,20 +1,19 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace YoCode
 {
-    class FeatureDetailsStorage
+    internal class FeatureDetailsStorage
     {
-        Dictionary<Feature, double> WeightingsFromJson;
-        TestType mode;
+        private readonly Dictionary<Feature, double> WeightingsFromJson;
+        private readonly TestType mode;
 
         public FeatureDetailsStorage(TestType mode)
         {
-            WeightingsFromJson = DeserializeJSONFile();
             this.mode = mode;
+            WeightingsFromJson = DeserializeJSONFile();
         }
 
         public Dictionary<Feature, double> DeserializeJSONFile()
@@ -29,179 +28,209 @@ namespace YoCode
             }
         }
 
-        public Dictionary<Feature,FeatureDetails> AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
+        public Dictionary<Feature, FeatureDetails> AssignWeightingsFromJSON(Dictionary<Feature, FeatureDetails> localDictionary)
         {
             return localDictionary.ToDictionary(kv => kv.Key, kv => ReturnFeatureDetails(kv.Value.FeatureTitle, WeightingsFromJson[kv.Key]));
         }
 
         public Dictionary<Feature, FeatureDetails> InitializeJuniorDetails()
         {
-            var JuniorTestDetails = new Dictionary<Feature, FeatureDetails>();
+            return new Dictionary<Feature, FeatureDetails>
+            {
+                {
+                    Feature.BadInputCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Bad input crashes have been fixed"
+                    }
+                },
 
-            JuniorTestDetails.Add(
-                Feature.BadInputCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Bad input crashes have been fixed",
-                    FeatureWeighting = 1 });
+                {
+                    Feature.CodeCoverageCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Code Coverage"
+                    }
+                },
 
-            JuniorTestDetails.Add(
-                Feature.CodeCoverageCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Code Coverage",
-                    FeatureWeighting = 1 });
+                {
+                    Feature.DuplicationCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Code quality improvement"
+                    }
+                },
+                {
+                    Feature.FilesChangedCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Files changed"
+                    }
+                 },
 
-            JuniorTestDetails.Add(
-                Feature.DuplicationCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Code quality improvement",
-                    FeatureWeighting = 1 });
+                {
+                    Feature.GitCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Git was used"
+                    }
+                },
 
-            JuniorTestDetails.Add(
-                Feature.FilesChangedCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Files changed",
-                    FeatureWeighting = 1 });
+                {
+                    Feature.TestCountCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "All unit tests have passed"
+                    }
+                },
 
-            JuniorTestDetails.Add(
-                Feature.GitCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Git was used",
-                    FeatureWeighting = 1 });
+                {
+                    Feature.UICodeCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Evidence present in UI"
+                    }
+                },
 
-            JuniorTestDetails.Add(
-                Feature.ProjectBuilder,
-                new FeatureDetails {
-                    FeatureTitle = "Project Build",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.ProjectRunner,
-                new FeatureDetails {
-                    FeatureTitle = "Project Run",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.TestCountCheck,
-                new FeatureDetails {
-                    FeatureTitle = "All unit tests have passed",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
-                Feature.UICodeCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Found feature keyword in UI implementation",
-                    FeatureWeighting = 1 });
-
-            JuniorTestDetails.Add(
+                {
                 Feature.UnitConverterCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
-                    FeatureWeighting = 1 });
+                }
+                },
 
-            JuniorTestDetails.Add(
+                {
                 Feature.UIFeatureImplmeneted,
                 new FeatureDetails {
                     FeatureTitle = "Found feature evidence in user interface",
-                    FeatureWeighting = 1 });
+                }
+                },
 
-            JuniorTestDetails.Add(
+                {
                 Feature.UIBadInputCheck,
                 new FeatureDetails {
                     FeatureTitle = "Bad input crashes have been fixed in the UI",
-                    FeatureWeighting = 1 });
+                }
+                },
 
-            JuniorTestDetails.Add(
+                {
                 Feature.UIConversionCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully using UI",
-                    FeatureWeighting = 1 });
+                }
+                },
 
-            return JuniorTestDetails;
+                {
+                    Feature.UnitConverterCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Units were converted successfully"
+                    }
+                }
+            };
         }
 
         public Dictionary<Feature, FeatureDetails> InitializeOriginalDetails()
         {
-            var OriginalTestDetails = new Dictionary<Feature, FeatureDetails>();
+            return new Dictionary<Feature, FeatureDetails>
+            {
+                {
+                    Feature.BadInputCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Bad input crashes have been fixed"
+                    }
+                },
 
-            OriginalTestDetails.Add(
-                Feature.BadInputCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Bad input crashes have been fixed",
-                    FeatureWeighting = 2.39 });
+                {
+                    Feature.CodeCoverageCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Code Coverage"
+                    }
+                },
 
-            OriginalTestDetails.Add(
-                Feature.CodeCoverageCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Code Coverage",
-                    FeatureWeighting = 0 });
+                {
+                    Feature.DuplicationCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Code quality improvement"
+                    }
+                },
 
-            OriginalTestDetails.Add(
-                Feature.DuplicationCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Code quality improvement",
-                    FeatureWeighting = 1.69 });
+                {
+                    Feature.FilesChangedCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "Files changed"
+                    }
+                 },
 
-            OriginalTestDetails.Add(
-                Feature.FilesChangedCheck,
-                new FeatureDetails {
-                    FeatureTitle = "Files changed",
-                    FeatureWeighting = 0 });
-
-            OriginalTestDetails.Add(
+                {
                 Feature.GitCheck,
                 new FeatureDetails {
                     FeatureTitle = "Git was used",
-                    FeatureWeighting = 1 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.ProjectBuilder,
                 new FeatureDetails {
                     FeatureTitle = "Project Build",
-                    FeatureWeighting = 1.107 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.ProjectRunner,
                 new FeatureDetails {
                     FeatureTitle = "Project Run",
-                    FeatureWeighting = 1.033 });
+                }
+                },
 
-            OriginalTestDetails.Add(
-                Feature.TestCountCheck,
-                new FeatureDetails {
-                    FeatureTitle = "All unit tests have passed",
-                    FeatureWeighting = 1.355 });
+                {
+                    Feature.TestCountCheck,
+                    new FeatureDetails
+                    {
+                        FeatureTitle = "All unit tests have passed"
+                    }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.UICodeCheck,
                 new FeatureDetails {
                     FeatureTitle = "Found feature keyword in UI implementation",
-                    FeatureWeighting = 1.03 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.UnitConverterCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully",
-                    FeatureWeighting = 1.09 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.UIFeatureImplmeneted,
                 new FeatureDetails {
                     FeatureTitle = "Found feature evidence in user interface",
-                    FeatureWeighting = 0 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.UIBadInputCheck,
                 new FeatureDetails {
                     FeatureTitle = "Bad input crashes have been fixed in the UI",
-                    FeatureWeighting = 0 });
+                }
+                },
 
-            OriginalTestDetails.Add(
+                {
                 Feature.UIConversionCheck,
                 new FeatureDetails {
                     FeatureTitle = "Units were converted successfully using UI",
-                    FeatureWeighting = 0 });
+                }
+                },
 
-            return OriginalTestDetails;
+            };
         }
 
         public Dictionary<Feature, FeatureDetails> ReturnDetailsByMode(TestType mode)
@@ -209,7 +238,7 @@ namespace YoCode
             return mode == TestType.Junior ? InitializeJuniorDetails() : InitializeOriginalDetails();
         }
 
-        public FeatureDetails ReturnFeatureDetails(string featureTitle,double featureWeighting)
+        public FeatureDetails ReturnFeatureDetails(string featureTitle, double featureWeighting)
         {
             return new FeatureDetails
             {
