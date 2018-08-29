@@ -27,8 +27,6 @@ namespace YoCode
             {
                 ProjectRunEvidence.SetFailed($"{this.workingDir} not found");
             }
-
-
         }
 
         public void Execute()
