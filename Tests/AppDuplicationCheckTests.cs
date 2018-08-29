@@ -6,8 +6,8 @@ using Moq;
 
 namespace YoCode_XUnit
 {
-    public class DuplicationCheckTests
-    {
+    public class AppDuplicationCheckTests
+    { 
 
     }
 }

@@ -60,7 +60,6 @@ namespace YoCode
             var dupFinderThread = new Thread(() =>
             {
                 checkList.Add(new AppDuplicationCheck(dir, new DupFinder(p.CMDToolsPath), p).AppDuplicationEvidence);
-                checkList.Add(new TestDuplicationCheck(dir, new DupFinder(p.CMDToolsPath), p).TestDuplicationEvidence);
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();

@@ -38,22 +38,21 @@ namespace YoCode
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
 
+        }
+
+        public void PerformDuplicationCheck()
+        {
             try
             {
-
+                ExecuteTheCheck();
+                StructuredOutput();
+                CheckForSpecialRepetition();
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
             {
                 DuplicationEvidence.SetInconclusive(messages.DupFinderHelp + "\n" + e);
             }
-        }
-
-        public void PerformDuplicationCheck()
-        {
-            ExecuteTheCheck();
-            StructuredOutput();
-            CheckForSpecialRepetition();
         }
 
         private void ExecuteTheCheck()
