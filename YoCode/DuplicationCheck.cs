@@ -14,11 +14,11 @@ namespace YoCode
         private readonly IDupFinder dupFinder;
         private readonly IPathManager dir;
 
-        private int ModiCodeBaseCost { get; set; }
-        private int ModiDuplicateCost { get; set; }
+        public int ModiCodeBaseCost { get; set; }
+        public int ModiDuplicateCost { get; set; }
 
-        private int OrigCodeBaseCost { get; }
-        private int OrigDuplicateCost { get; }
+        public int OrigCodeBaseCost { get; set; }
+        public int OrigDuplicateCost { get; set; }
 
         private const int VARIABLE_REPETITION_TRESHOLD = 1;
 
@@ -29,11 +29,8 @@ namespace YoCode
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p, string fileNameChecked)
         {
-            OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
-            OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
-
-            DuplicationEvidence.FeatureTitle = "Code quality improvement";
-            DuplicationEvidence.Feature = Feature.DuplicationCheck;
+            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
+            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
 
             this.dir = dir;
             this.dupFinder = dupFinder;
@@ -43,15 +40,20 @@ namespace YoCode
 
             try
             {
-                ExecuteTheCheck();
-                StructuredOutput();
-                CheckForSpecialRepetition();
+
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
             {
                 DuplicationEvidence.SetInconclusive(messages.DupFinderHelp + "\n" + e);
             }
+        }
+
+        public void PerformDuplicationCheck()
+        {
+            ExecuteTheCheck();
+            StructuredOutput(ModiCodeBaseCost, ModiDuplicateCost);
+            CheckForSpecialRepetition();
         }
 
         private void ExecuteTheCheck()
@@ -67,11 +69,9 @@ namespace YoCode
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            DuplicationEvidence.FeatureImplemented = HasTheCodeImproved();
-            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating(628,174);
         }
 
-        private void CheckForSpecialRepetition()
+        public void CheckForSpecialRepetition()
         {
             var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.cs);
 
@@ -144,7 +144,7 @@ namespace YoCode
         }
 
 
-        public void StructuredOutput()
+        public void StructuredOutput(int ModiCodeBaseCost,int ModiDuplicateCost)
         {
             DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
             DuplicationEvidence.GiveEvidence(messages.ParagraphDivider);
