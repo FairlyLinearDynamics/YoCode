@@ -20,8 +20,6 @@ namespace YoCode
         public string AppCodeBaseCost { get; set; }
         public string AppDuplicationCost { get; set; }
 
-
-
         public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
             this.compositeOutput = compositeOutput;
