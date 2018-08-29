@@ -21,6 +21,7 @@ namespace YoCode
 
             TestDuplicationEvidence = dupcheck.DuplicationEvidence;
             TestDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterTests";
+            TestDuplicationEvidence.Feature = Feature.TestDuplicationCheck;
             TestDuplicationEvidence.FeatureRating = dupcheck.GetDuplicationCheckRating(OrigDuplicateCost, 0);
 
         }

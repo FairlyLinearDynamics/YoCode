@@ -19,6 +19,7 @@ namespace YoCode
 
             AppDuplicationEvidence = dupcheck.DuplicationEvidence;
             AppDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterWebApp";
+            AppDuplicationEvidence.Feature = Feature.AppDuplicationCheck;
             AppDuplicationEvidence.FeatureRating = dupcheck.GetDuplicationCheckRating(OrigDuplicateCost, 0);
         }
 
