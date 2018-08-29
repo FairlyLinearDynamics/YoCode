@@ -13,8 +13,14 @@ namespace YoCode
         public List<string> Errs= new List<string>();
         public string CMDToolsPath { get; set; }
         public string DotCoverDir { get; set; }
-        public string CodeBaseCost { get; set; }
-        public string DuplicationCost { get; set; }
+
+        public string TestCodeBaseCost { get; set; }
+        public string TestDuplicationCost { get; set; }
+
+        public string AppCodeBaseCost { get; set; }
+        public string AppDuplicationCost { get; set; }
+
+
 
         public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
@@ -44,11 +50,13 @@ namespace YoCode
 
                 if (isJunior)
                 {
-                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetJuniorCosts();
+                    (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetJuniorTestsCosts();
+                    (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetJuniorAppCosts();
                 }
                 else
                 {
-                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetOriginalCosts();
+                    (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetOriginalTestsCosts();
+                    (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetOriginalAppCosts();
                 }
             }
             catch (FileNotFoundException)
@@ -62,7 +70,7 @@ namespace YoCode
 
             var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(CodeBaseCost, DuplicationCost, "Test cost values");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
 
             var juniorFileExists = FileExists(TestType.Junior, "JuniorWeightings.json");
             var originalFileExists = FileExists(TestType.Original, "OriginalWeightings.json");

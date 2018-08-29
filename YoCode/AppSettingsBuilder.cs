@@ -37,7 +37,18 @@ namespace YoCode
 
         public (string, string) GetJuniorAppCosts()
         {
-            return (Configuration["JuniorTest:CodeBaseCost"], Configuration["JuniorTest:DuplicationCost"]);
+            return (Configuration["JuniorTest-App:CodeBaseCost"], Configuration["JuniorTest-App:DuplicationCost"]);
         }
+
+        public (string, string) GetOriginalTestsCosts()
+        {
+            return (Configuration["OriginalTest-Tests:CodeBaseCost"], Configuration["OriginalTest-Tests:DuplicationCost"]);
+        }
+
+        public (string, string) GetOriginalAppCosts()
+        {
+            return (Configuration["OriginalTest-App:CodeBaseCost"], Configuration["OriginalTest-App:DuplicationCost"]);
+        }
+
     }
 }

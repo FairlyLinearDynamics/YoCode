@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace YoCode
 {
     class AppDuplicationCheck
@@ -10,8 +12,8 @@ namespace YoCode
 
         public AppDuplicationCheck(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
         {
-            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
-            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
+            OrigCodeBaseCost = Int32.Parse(p.AppCodeBaseCost);
+            OrigDuplicateCost = Int32.Parse(p.AppDuplicationCost);
 
             var dupcheck = new DuplicationCheck(dir, dupFinder, p, testFile);
 

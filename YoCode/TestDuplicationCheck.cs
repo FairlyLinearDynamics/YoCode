@@ -13,9 +13,8 @@ namespace YoCode
 
         public TestDuplicationCheck(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
         {
-            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
-            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
-
+            OrigCodeBaseCost = Int32.Parse(p.TestCodeBaseCost);
+            OrigDuplicateCost = Int32.Parse(p.TestDuplicationCost);
 
             var dupcheck = new DuplicationCheck(dir, dupFinder, p, testFile);
             dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;

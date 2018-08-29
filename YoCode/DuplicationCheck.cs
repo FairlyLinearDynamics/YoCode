@@ -31,8 +31,6 @@ namespace YoCode
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p, string fileNameChecked)
         {
-            //OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
-            //OrigDuplicateCost = Int32.Parse(p.DuplicationCost);
 
             this.dir = dir;
             this.dupFinder = dupFinder;
