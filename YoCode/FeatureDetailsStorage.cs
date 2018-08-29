@@ -174,20 +174,6 @@ namespace YoCode
                 },
 
                 {
-                Feature.ProjectBuilder,
-                new FeatureDetails {
-                    FeatureTitle = "Project Build",
-                }
-                },
-
-                {
-                Feature.ProjectRunner,
-                new FeatureDetails {
-                    FeatureTitle = "Project Run",
-                }
-                },
-
-                {
                     Feature.TestCountCheck,
                     new FeatureDetails
                     {
