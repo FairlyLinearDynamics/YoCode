@@ -8,13 +8,11 @@ namespace YoCode
     {
         private readonly IPathManager dir;
         private readonly List<Thread> workThreads;
-        private readonly bool isJunior;
 
-        public CheckManager(IPathManager dir, List<Thread> workThreads, bool isJunior)
+        public CheckManager(IPathManager dir, List<Thread> workThreads)
         {
             this.dir = dir;
             this.workThreads = workThreads;
-            this.isJunior = isJunior;
         }
 
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)

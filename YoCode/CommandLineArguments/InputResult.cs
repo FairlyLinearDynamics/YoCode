@@ -8,11 +8,11 @@ namespace YoCode
         public List<string> Errors { get; set; }
         public bool HasErrors => Errors.Any();
         public bool HelpAsked { get; set; }
-        public bool Silent { get; set; }
         public bool NoLoadingScreen { get; set; }
         public bool JuniorTest { get; set; }
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
-        public bool NoHtml { get; set; }
+        public bool CreateHtmlReport { get; set; } = true;
+        public bool OpenHtmlReport { get; set; } = true;
     }
 }

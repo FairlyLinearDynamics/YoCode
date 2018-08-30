@@ -7,7 +7,6 @@ namespace YoCode
 {
     internal class WebWriter : IPrint
     {
-        private const string OUTPUT_PATH = @"YoCodeReport.html";
         private const string FEATURE_TAG = "{FEATURE}";
         private const string SCORE_TAG = "{SCORE}";
 
@@ -16,12 +15,14 @@ namespace YoCode
         private readonly StringBuilder msg;
 
         private double score;
+        private readonly string nameOfReportFile;
 
-        public WebWriter()
+        public WebWriter(string outputPath)
         {
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
+            nameOfReportFile = outputPath;
         }
 
         public void AddMessage(string message)
@@ -62,25 +63,16 @@ namespace YoCode
 
         public void WriteReport()
         {
-            var writeTo = (Program.OutputTo != null) ? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
-
             var consoleWriter = new ConsoleWriter();
             try
             {
-                if (Program.GenerateHtml)
-                {
-                    File.WriteAllText(writeTo, BuildReport());
-                    if (Program.OpenHTMLOnFinish)
-                    {
-                        HtmlReportLauncher.LaunchReport(writeTo);
-                    }
-                    consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
-                    consoleWriter.WriteReport();
-                }
+                File.WriteAllText(nameOfReportFile, BuildReport());
+                consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(nameOfReportFile)));
+                consoleWriter.WriteReport();
             }
             catch
             {
-                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(writeTo), Environment.NewLine, Environment.NewLine) });
+                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(nameOfReportFile), Environment.NewLine, Environment.NewLine) });
             }
         }
     }

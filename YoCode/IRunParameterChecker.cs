@@ -6,7 +6,5 @@
         string CodeBaseCost { get; set; }
         string DotCoverDir { get; set; }
         string DuplicationCost { get; set; }
-
-        bool ParametersAreValid(bool isJunior);
     }
 }
