@@ -19,18 +19,18 @@ namespace YoCode_XUnit
 
         public RunParameterCheckerTests()
         {
-            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
+            var outputs = new List<IPrint> { new ConsoleWriter() };
             fakeOutput = new Output(new CompositeWriter(outputs));
 
             appsb = readMock.Object;
         }
 
-        private InputResult SetupMockInputResult(string args)
+        private static InputResult SetupMockInputResult(string args)
         {
             string[] arg = { args };
 
-            var commandLinehandler = new CommandLineParser(arg);
-            return commandLinehandler.Parse();
+            var commandLineHandler = new CommandLineParser(arg);
+            return commandLineHandler.Parse();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace YoCode_XUnit
 
             var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid(true).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Count.Should().Be(0);
         }
 
@@ -57,7 +57,7 @@ namespace YoCode_XUnit
 
             var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid(true).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo(errorList);
         }
 
@@ -72,7 +72,7 @@ namespace YoCode_XUnit
 
             var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid(true).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo("Did not find appsettings file");
         }
 
@@ -87,7 +87,7 @@ namespace YoCode_XUnit
 
             var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid(true).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo("Error reading JSON file");
         }
     }

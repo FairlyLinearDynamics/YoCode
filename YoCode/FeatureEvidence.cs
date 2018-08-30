@@ -28,10 +28,11 @@ namespace YoCode
             Evidence.Add(evidence);
         }
 
-        public void SetInconclusive(string reason)
+        public void SetInconclusive(params string[] reasons)
         {
             FeatureImplemented = null;
-            GiveEvidence(reason);
+            FeatureWeighting = 0;
+            reasons.ToList().ForEach(GiveEvidence);
         }
 
         public void SetFailed(string reason)

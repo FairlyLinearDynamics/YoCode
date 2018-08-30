@@ -27,7 +27,7 @@ namespace YoCode
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid(bool isJunior)
+        public bool ParametersAreValid()
         {
             if (result.HelpAsked)
             {
@@ -46,16 +46,7 @@ namespace YoCode
                 CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
                 DotCoverDir = appsettingsBuilder.GetDotCoverDir();
 
-                if (isJunior)
-                {
-                    (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetJuniorTestsCosts();
-                    (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetJuniorAppCosts();
-                }
-                else
-                {
-                    (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetOriginalTestsCosts();
-                    (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetOriginalAppCosts();
-                }
+                (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetCodebaseCosts();
             }
             catch (FileNotFoundException)
             {
@@ -85,7 +76,7 @@ namespace YoCode
 
         private bool FileExists(TestType type, string fileName)
         {
-            if(!File.Exists(appsettingsBuilder.ReturnPathByMode(type)))
+            if(!File.Exists(appsettingsBuilder.GetWeightingsPath()))
             {
                 return SetError($"{fileName} not found");
             }

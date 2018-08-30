@@ -8,13 +8,11 @@ namespace YoCode
     {
         private readonly IPathManager dir;
         private readonly List<Thread> workThreads;
-        private readonly bool isJunior;
 
-        public CheckManager(IPathManager dir, List<Thread> workThreads, bool isJunior)
+        public CheckManager(IPathManager dir, List<Thread> workThreads)
         {
             this.dir = dir;
             this.workThreads = workThreads;
-            this.isJunior = isJunior;
         }
 
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
@@ -74,7 +72,7 @@ namespace YoCode
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
-            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
+            checkList.Add(new UICodeCheck(modifiedHtmlFiles, UIKeywords.MILE_KEYWORDS).UIEvidence);
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
@@ -83,7 +81,7 @@ namespace YoCode
             checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
             //Front End Check
-            checkList.Add(new FrontEndCheck(projectRunner.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
+            checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);
 
             var ucc = new UnitConverterCheck(projectRunner.GetPort());
 

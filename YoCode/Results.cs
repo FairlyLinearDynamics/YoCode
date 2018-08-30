@@ -9,23 +9,16 @@ namespace YoCode
         public double FinalScore { get; set; }
         public double MaximumScore { get; set; }
 
-        public Results(List<FeatureEvidence> list, TestType mode)
+        public Results(List<FeatureEvidence> list, string jsonFilePath)
         {
-            var storage = new FeatureDetailsStorage(mode);
-
-            var thisDictionary = storage.ReturnDetailsByMode(mode);
-
-            storage.DeserializeJSONFile();
-            thisDictionary = storage.AssignWeightingsFromJSON(thisDictionary);
-
-            AssignWeightings(list, thisDictionary);
+            AssignWeightings(list, FeatureWeightingsReader.ReadFromJSON(jsonFilePath));
             CalculateWeightedRatings(list);
             CalculateFinalScore();
         }
 
-        public void AssignWeightings(List<FeatureEvidence> list, Dictionary<Feature, FeatureDetails> xTestDetails)
+        private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
         {
-            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
+            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature]);
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
@@ -52,7 +45,7 @@ namespace YoCode
             if (list.Count > 1)
             {
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
-                var badInputUI = list.Find(e => e.Feature == Feature.FrontEndCheck);
+                var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
 
                 if (badInputBackEnd.FeatureImplemented==null) 
                 {
@@ -61,7 +54,7 @@ namespace YoCode
                 }
 
                 CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
             }
         }
 

@@ -10,6 +10,5 @@
         string AppCodeBaseCost { get; set; }
         string AppDuplicationCost { get; set; }
 
-        bool ParametersAreValid(bool isJunior);
     }
 }

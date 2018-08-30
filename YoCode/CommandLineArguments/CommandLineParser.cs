@@ -27,22 +27,22 @@ namespace YoCode
                         ires.InputFilePath = arg.data;
                         break;
                     case CommandNames.HELP:
-                        ires.HelpAsked = arg.command == CommandNames.HELP;
+                        ires.HelpAsked = true;
                         break;
                     case CommandNames.SILENTREPORT:
-                        ires.Silent = arg.command == CommandNames.SILENTREPORT;
+                        ires.OpenHtmlReport = false;
                         break;
                     case CommandNames.NOLOADINGSCREEN:
-                        ires.NoLoadingScreen = arg.command == CommandNames.NOLOADINGSCREEN;
+                        ires.NoLoadingScreen = true;
                         break;
                     case CommandNames.JUNIORTEST:
-                        ires.JuniorTest = arg.command == CommandNames.JUNIORTEST;
+                        ires.JuniorTest = true;
                         break;
                     case CommandNames.OUTPUT:
                         ires.OutputFilePath = arg.data;
                         break;
                     case CommandNames.NOHTML:
-                        ires.NoHtml = arg.command == CommandNames.NOHTML;
+                        ires.CreateHtmlReport = false;
                         break;
                 }
             }
