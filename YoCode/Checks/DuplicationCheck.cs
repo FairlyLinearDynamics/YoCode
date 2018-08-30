@@ -29,7 +29,7 @@ namespace YoCode
 
         private double passPerc = 0.5;
 
-        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p, string fileNameChecked)
+        public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, string fileNameChecked)
         {
             this.dir = dir;
             this.dupFinder = dupFinder;

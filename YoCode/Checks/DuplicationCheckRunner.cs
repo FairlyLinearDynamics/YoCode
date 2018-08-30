@@ -27,7 +27,7 @@ namespace YoCode
 
         public FeatureEvidence RunAppDuplicationCheck(string file, int OrigCodeBaseCost,int OrigDuplicateCost)
         {
-            var dupcheck = new DuplicationCheck(dir, dupFinder, p, file);
+            var dupcheck = new DuplicationCheck(dir, dupFinder,file);
             dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;
             dupcheck.OrigDuplicateCost = OrigDuplicateCost;
             dupcheck.PerformDuplicationCheck();
