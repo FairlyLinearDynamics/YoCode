@@ -8,17 +8,12 @@ namespace YoCode
 {
     internal static class Program
     {
-        private static bool showLoadingAnim;
-        private static bool isJunior;
-
         private static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
             var commandLineHandler = new CommandLineParser(args);
             var result = commandLineHandler.Parse();
-
-            isJunior = result.JuniorTest;
 
             const string reportFilename = "YoCodeReport.html";
             var outputPath = result.OutputFilePath != null ? Path.Combine(result.OutputFilePath, reportFilename) : reportFilename;
@@ -32,9 +27,10 @@ namespace YoCode
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
-            var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
+            var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
+            var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);
 
-            if (!parameters.ParametersAreValid(isJunior))
+            if (!parameters.ParametersAreValid())
             {
                 if (!result.HelpAsked)
                 {
@@ -51,11 +47,9 @@ namespace YoCode
 
             var dir = new PathManager(modifiedTestDirPath);
 
-            showLoadingAnim = !result.NoLoadingScreen;
-
             var workThreads = new List<Thread>();
 
-            if (showLoadingAnim)
+            if (!result.NoLoadingScreen)
             {
                 var loadingThread = new Thread(LoadingAnimation.RunLoading)
                 {
@@ -67,7 +61,7 @@ namespace YoCode
 
             var evidenceList = new List<FeatureEvidence>();
 
-            var checkManager = new CheckManager(dir, workThreads, isJunior);
+            var checkManager = new CheckManager(dir, workThreads);
 
             var projectRunner = checkManager.PassGatewayChecks(evidenceList);
 
@@ -81,8 +75,10 @@ namespace YoCode
 
             evidenceList = checkManager.PerformChecks(parameters, projectRunner);
 
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
+
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
-                new Results(evidenceList, isJunior ? TestType.Junior : TestType.Original).FinalScore);
+                results.FinalScore);
 
             if (result.CreateHtmlReport && result.OpenHtmlReport)
             {
