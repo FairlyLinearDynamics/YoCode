@@ -32,7 +32,6 @@ namespace YoCode
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
-
         }
 
         public void CalculateFinalScore()

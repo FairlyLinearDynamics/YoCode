@@ -48,7 +48,6 @@ namespace YoCode
 
                 (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
                 (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
-
             }
             catch (FileNotFoundException)
             {
