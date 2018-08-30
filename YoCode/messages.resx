@@ -343,6 +343,19 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         color: var(--console-text);
         margin: 0px;
         counter-reset: line;
+        position: relative;
+        height: 275px;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .panel-info{
+        grid-column: 2;
+        position: sticky;
+        left: 98.5%;
+        top: 245px;
+        z-index: 10;
+        width: 18px;
       }
 
       .panel-content ul {
@@ -415,6 +428,20 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         color: var(--yellow-bg);
         font-weight: bold;
       }
+
+      .fa-info-circle{
+        color: var(--info-icon-solid);
+        font-size: 20px;
+      }
+
+      .fa-info-circle:hover{
+        color: var(--info-icon-hover);
+      }
+
+      .panel-info-text{
+        display: none;
+        opacity: 0;
+      }
     &lt;/style&gt;
   &lt;/head&gt;
 
@@ -460,7 +487,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
     &lt;script&gt;
       var acc = document.getElementsByClassName("accordion");
 
-      for (let i = 0; i &lt; acc.length; i++) 
+      for (let i = 0; i &lt; acc.length; ++i) 
       {
       acc[i].addEventListener("click", function() 
       {
@@ -491,6 +518,69 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
       document.getElementById('js-test-bar-passed').style.width = percentPassed+"%";
       document.getElementById('js-test-bar-failed').style.width = percentFailed+"%";
+
+      var animRunning = false;
+      var infoButtons = document.getElementsByClassName("panel-info");
+      for(let i=0; i&lt;infoButtons.length; ++i){
+        infoButtons[i].addEventListener("click",function(){
+          if(!animRunning){
+            this.classList.toggle("info");
+
+            var panelCheckText = this.parentElement.getElementsByClassName("panel-check-text");
+            var panelInfoText = this.parentElement.getElementsByClassName("panel-info-text");
+
+            
+
+            console.debug(animRunning);
+            if(this.classList.contains("info")){
+                animRunning = true;
+                fadeIn(panelCheckText[0],panelInfoText[0]);
+            }
+            else{
+                animRunning = true;
+                fadeIn(panelInfoText[0],panelCheckText[0]);
+            }
+          }
+        });
+      }
+
+      function fadeIn(front,back){
+
+        front.style.opacity = 1;
+        back.style.opacity = 0;
+
+        var opInc = .02;
+        var animTime = 1;
+
+        var Op1 = 0;
+        var Op2 = 1;
+
+        var remove, insert;
+
+        remove = setInterval(FadeOut, animTime);
+        function FadeOut()
+        {
+          front.style.opacity = Op2;
+          Op2 = Op2 - opInc;
+          if (Op2 &lt; 0)
+          {
+            clearInterval(remove);
+            front.style.display = "none"
+            back.style.display = "block";
+            insert = setInterval(FadeIn, animTime);
+          }
+        }
+
+        function FadeIn(){
+          back.style.opacity = Op1;
+          Op1 = Op1 + opInc;
+          if (Op1 &gt; 1)
+          {
+            clearInterval(insert);
+            animRunning = false;
+          }
+        }
+      }
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</value>
@@ -501,7 +591,17 @@ Example: --{0}=&lt;...&gt; --{5}</value>
                 &lt;/div&gt;
                 &lt;div class="panel"&gt;
                     &lt;div class="panel-content"&gt;
+                      &lt;div class="panel-info"&gt;
+                        &lt;span class="fa fa-info-circle"&gt;&lt;/span&gt;
+                      &lt;/div&gt;
+
+                      &lt;div class="panel-info-text"&gt;
+                        {INFO-CONTENT}
+                      &lt;/div&gt;
+
+                      &lt;div class="panel-check-text"&gt;
                         {CONTENT}
+                      &lt;/div&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;</value>
   </data>
@@ -698,5 +798,38 @@ _|___ || /,)/|`\``\\\  |||__/\
   </data>
   <data name="BadPort" xml:space="preserve">
     <value>Could not retrieve the port number. Another program might be using it.</value>
+  </data>
+  <data name="BadInputCheck" xml:space="preserve">
+    <value>Inputs certain values directly to the web app through the backend and checks if the issues deliberately left in the test project have been fixed. YoScore for this check is calculated by taking the percentage of issues fixed.</value>
+  </data>
+  <data name="CodeCoverageCheck" xml:space="preserve">
+    <value>Runs an external tool that calculates the code coverage. YoScore for this check is calculated by taking the code coverage and adding a certain weight to it.</value>
+  </data>
+  <data name="DuplicationCheck" xml:space="preserve">
+    <value>Runs an external tool that calculates how much code and duplication is in the project under test and compares it to the unmodified version of the project (note: Original Codebase Cost and Duplicate Cost is stored in appsettings.json). YoScore for this check is calculated by comparing unmodified and modified Codebase Costs and Duplicate Costs.</value>
+  </data>
+  <data name="FilesChangedCheck" xml:space="preserve">
+    <value>Uses Git to get the files modified/added/deleted, number of insertions and deletions in each file and Untracked/Uncommited files between the last commit made by a Waters employee and head. This check does not contribute to the overall YoScore.</value>
+  </data>
+  <data name="GitCheck" xml:space="preserve">
+    <value>Uses Git to check if the project under tests contains a valid Git Repository. YoScore for this check will be 100% if it finds a valid Repository and 0% if it doesn’t (also multiplied by its weighting).</value>
+  </data>
+  <data name="TestCountCheck" xml:space="preserve">
+    <value>Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass.</value>
+  </data>
+  <data name="UIBadInputCheck" xml:space="preserve">
+    <value>Uses Selenium to find the text box for the web app, tries to input certain values and checks if the issues deliberately left in the test project have been fixed. YoScore for this check is calculated by taking the percentage of issues fixed.</value>
+  </data>
+  <data name="UICodeCheck" xml:space="preserve">
+    <value>Checks .cshtml files for keywords that would suggest that the user interface was implemented. YoScore for this check will be 100% if it finds any evidence and 0% if it doesn’t (also multiplied by its weighting).</value>
+  </data>
+  <data name="UIConversionCheck" xml:space="preserve">
+    <value>Uses Selenium to look for places to input values and tries to input numbers, then tries to find buttons with keywords and click on it, checks if the output is correct. YoScore for this check will be 100% if all the values got expected results and 0% if they aren’t (also multiplied by its weighting).</value>
+  </data>
+  <data name="UIFeatureImplemented" xml:space="preserve">
+    <value>Looks at certain HTML elements of the web app and looks for evidence (keywords) that would suggest that the user interface was implemented. YoScore for this check will be 100% if it finds any evidence and 0% if it doesn’t (also multiplied by its weighting).</value>
+  </data>
+  <data name="UnitConverterCheck" xml:space="preserve">
+    <value>Inputs certain values directly to the web app through the backend and checks that those values will have the expected results. YoScore for this check is calculated by taking the percentage of inputs that had the expected values.</value>
   </data>
 </root>

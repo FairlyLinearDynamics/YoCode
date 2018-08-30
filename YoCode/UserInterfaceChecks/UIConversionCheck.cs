@@ -19,6 +19,7 @@ namespace YoCode
         {
             UIConversionEvidence.FeatureTitle = "Units were converted successfully using UI";
             UIConversionEvidence.Feature = Feature.UIConversionCheck;
+            UIConversionEvidence.HelperMessage = messages.UIConversionCheck;
 
             this.browser = browser;
 

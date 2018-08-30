@@ -36,9 +36,16 @@ namespace YoCode
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
             const char dash = (char)0x2013;
-            var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass, !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
+            var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass, 
+                !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
 
-            features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
+
+
+            features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData() {
+                featureTitle = featureTitle,
+                content = featureResults.ToString(),
+                helperMessage = data.featureHelperMessage,
+            }));
         }
 
         public void AddBanner()

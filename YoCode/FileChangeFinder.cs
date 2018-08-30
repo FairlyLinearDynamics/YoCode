@@ -14,6 +14,7 @@ namespace YoCode
         {
             FileChangeEvidence.FeatureTitle = "Files changed";
             FileChangeEvidence.Feature = Feature.FilesChangedCheck;
+            FileChangeEvidence.HelperMessage = messages.FilesChangedCheck;
 
             if (!Repository.IsValid(path))
             {

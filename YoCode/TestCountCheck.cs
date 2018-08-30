@@ -36,6 +36,7 @@ namespace YoCode
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             UnitTestEvidence.Feature = Feature.TestCountCheck;
+            UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
             arguments = "test";
             ExecuteTheCheck();

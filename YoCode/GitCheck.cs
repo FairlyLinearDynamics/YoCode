@@ -15,6 +15,7 @@ namespace YoCode
             repositoryPath = path;
             GitEvidence.FeatureTitle = "Git was used";
             GitEvidence.Feature = Feature.GitCheck;
+            GitEvidence.HelperMessage = messages.GitCheck;
 
             if (Repository.IsValid(repositoryPath))
             {
