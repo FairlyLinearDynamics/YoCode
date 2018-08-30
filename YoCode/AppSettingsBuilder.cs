@@ -36,9 +36,14 @@ namespace YoCode
             return juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"];
         }
 
-        public (string,string) GetCodebaseCosts()
+        public (string,string) GetWebAppCosts()
         {
-            return juniorTest ? (configuration["JuniorTest:CodeBaseCost"], configuration["JuniorTest:DuplicationCost"]) : (configuration["OriginalTest:CodeBaseCost"], configuration["OriginalTest:DuplicationCost"]);
+            return juniorTest ? (configuration["JuniorTest-App:CodeBaseCost"], configuration["JuniorTest-App:DuplicationCost"]) : (configuration["OriginalTest-App:CodeBaseCost"], configuration["OriginalTest-App:DuplicationCost"]);
+        }
+
+        public (string,string) GetTestsCosts()
+        {
+            return juniorTest ? (configuration["JuniorTest-Tests:CodeBaseCost"], configuration["JuniorTest-Tests:DuplicationCost"]) : (configuration["OriginalTest-Tests:CodeBaseCost"], configuration["OriginalTest-Tests:DuplicationCost"]);
         }
 
     }

@@ -46,7 +46,9 @@ namespace YoCode
                 CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
                 DotCoverDir = appsettingsBuilder.GetDotCoverDir();
 
-                (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetCodebaseCosts();
+                (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
+                (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
+
             }
             catch (FileNotFoundException)
             {

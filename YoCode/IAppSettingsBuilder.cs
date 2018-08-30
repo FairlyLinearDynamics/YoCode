@@ -9,6 +9,8 @@ namespace YoCode
         string GetCMDToolsPath();
         string GetDotCoverDir();
         string GetWeightingsPath();
-        (string, string) GetCodebaseCosts();
+        (string, string) GetWebAppCosts();
+        (string, string) GetTestsCosts();
+
     }
 }
