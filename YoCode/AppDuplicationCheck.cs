@@ -6,8 +6,8 @@ namespace YoCode
     class AppDuplicationCheck
     {
         private readonly string webAppFile = "UnitConverterWebApp\\UnitConverterWebApp.csproj";
-        FeatureEvidence AppEvidence;
-        FeatureEvidence TestEvidence;
+        private readonly string testFile = "UnitConverterTests\\UnitConverterTests.csproj";
+
         IRunParameterChecker p;
         IPathManager dir;
         IDupFinder dupFinder;
@@ -18,45 +18,31 @@ namespace YoCode
             this.dupFinder = dupFinder;
             this.p = p;
 
-            AppEvidence = RunAppDuplicationCheck(webAppFile);
+            AppDuplicationEvidence = RunAppDuplicationCheck(webAppFile,AppDuplicationEvidence,Int32.Parse(p.AppCodeBaseCost),Int32.Parse(p.AppDuplicationCost));
+            AppDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterWebApp";
+            AppDuplicationEvidence.Feature = Feature.AppDuplicationCheck;
+
+            TestDuplicationEvidence = RunAppDuplicationCheck(testFile, TestDuplicationEvidence, Int32.Parse(p.TestCodeBaseCost), Int32.Parse(p.TestDuplicationCost));
+            TestDuplicationEvidence.FeatureTitle = "Duplication improvement: UnitConverterTests";
+            TestDuplicationEvidence.Feature = Feature.TestDuplicationCheck;
         }
 
-        public FeatureEvidence RunAppDuplicationCheck(string webAppFile)
+        public FeatureEvidence RunAppDuplicationCheck(string webAppFile,FeatureEvidence evidence, int OrigCodeBaseCost,int OrigDuplicateCost)
         {
             var dupcheck = new DuplicationCheck(dir, dupFinder, p, webAppFile);
-            dupcheck.OrigCodeBaseCost = Int32.Parse(p.AppCodeBaseCost);
-            dupcheck.OrigDuplicateCost = Int32.Parse(p.AppDuplicationCost);
+            dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;
+            dupcheck.OrigDuplicateCost = OrigDuplicateCost;
             dupcheck.PerformDuplicationCheck();
 
-            var evidence = dupcheck.DuplicationEvidence;
-            evidence.FeatureTitle = "Duplication improvement: UnitConverterWebApp";
-            evidence.Feature = Feature.AppDuplicationCheck;
-            evidence.FeatureRating = dupcheck.GetDuplicationCheckRating(dupcheck.OrigDuplicateCost, 0);
+            evidence = dupcheck.DuplicationEvidence;
 
-            return evidence;
-
-        }
-
-        public FeatureEvidence RunTestDuplicationCheck(string testFile)
-        {
-            var dupcheck = new DuplicationCheck(dir, dupFinder, p, testFile);
-            dupcheck.OrigCodeBaseCost = Int32.Parse(p.TestCodeBaseCost);
-            dupcheck.OrigDuplicateCost = Int32.Parse(p.TestDuplicationCost);
-            dupcheck.PerformDuplicationCheck();
-
-            var evidence = dupcheck.DuplicationEvidence;
-            evidence.FeatureTitle = "Duplication improvement: UnitConverterTests";
-            evidence.Feature = Feature.AppDuplicationCheck;
             evidence.FeatureRating = dupcheck.GetDuplicationCheckRating(dupcheck.OrigDuplicateCost, 0);
 
             return evidence;
         }
-
-
-
-
-
 
         public FeatureEvidence AppDuplicationEvidence { get; } = new FeatureEvidence();
+        public FeatureEvidence TestDuplicationEvidence { get; } = new FeatureEvidence();
+
     }
 }
