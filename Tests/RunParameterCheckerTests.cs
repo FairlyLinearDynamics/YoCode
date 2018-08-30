@@ -19,18 +19,18 @@ namespace YoCode_XUnit
 
         public RunParameterCheckerTests()
         {
-            var outputs = new List<IPrint> { new WebWriter(false, false, null), new ConsoleWriter() };
+            var outputs = new List<IPrint> { new ConsoleWriter() };
             fakeOutput = new Output(new CompositeWriter(outputs));
 
             appsb = readMock.Object;
         }
 
-        private InputResult SetupMockInputResult(string args)
+        private static InputResult SetupMockInputResult(string args)
         {
             string[] arg = { args };
 
-            var commandLinehandler = new CommandLineParser(arg);
-            return commandLinehandler.Parse();
+            var commandLineHandler = new CommandLineParser(arg);
+            return commandLineHandler.Parse();
         }
 
         [Fact]

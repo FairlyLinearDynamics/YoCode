@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace YoCode
@@ -19,7 +20,15 @@ namespace YoCode
 
             isJunior = result.JuniorTest;
 
-            var outputs = new List<IPrint> { new WebWriter(!result.NoHtml, !result.Silent, result.OutputFilePath), new ConsoleWriter() };
+            const string reportFilename = "YoCodeReport.html";
+            var outputPath = result.OutputFilePath != null ? Path.Combine(result.OutputFilePath, reportFilename) : reportFilename;
+
+            var outputs = new List<IPrint> { new ConsoleWriter() };
+
+            if (result.CreateHtmlReport)
+            {
+                outputs.Add(new WebWriter(outputPath));
+            }
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
@@ -74,6 +83,11 @@ namespace YoCode
 
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
                 new Results(evidenceList, isJunior ? TestType.Junior : TestType.Original).FinalScore);
+
+            if (result.CreateHtmlReport && result.OpenHtmlReport)
+            {
+                HtmlReportLauncher.LaunchReport(outputPath);
+            }
         }
     }
 }
