@@ -10,27 +10,20 @@ namespace YoCode
         private static bool showLoadingAnim;
         private static bool isJunior;
 
-        public static bool OpenHTMLOnFinish { get; set; }
-        public static string OutputTo { get; set; }
-        public static bool GenerateHtml { get; set; }
-
         private static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
-            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
+            var commandLineHandler = new CommandLineParser(args);
+            var result = commandLineHandler.Parse();
+
+            isJunior = result.JuniorTest;
+
+            var outputs = new List<IPrint> { new WebWriter(!result.NoHtml, !result.Silent, result.OutputFilePath), new ConsoleWriter() };
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
-            var commandLinehandler = new CommandLineParser(args);
-            var result = commandLinehandler.Parse();
-
             var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
-
-            OpenHTMLOnFinish = !result.Silent;
-            OutputTo = result.OutputFilePath;
-            GenerateHtml = !result.NoHtml;
-            isJunior = result.JuniorTest;
 
             if (!parameters.ParametersAreValid(isJunior))
             {

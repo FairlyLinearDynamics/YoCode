@@ -16,12 +16,18 @@ namespace YoCode
         private readonly StringBuilder msg;
 
         private double score;
+        private readonly bool generateHtml;
+        private readonly bool openHtmlOnFinish;
+        private readonly string outputTo;
 
-        public WebWriter()
+        public WebWriter(bool generateHtml, bool openHtmlOnFinish, string outputTo)
         {
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
+            this.generateHtml = generateHtml;
+            this.openHtmlOnFinish = openHtmlOnFinish;
+            this.outputTo = outputTo;
         }
 
         public void AddMessage(string message)
@@ -62,15 +68,15 @@ namespace YoCode
 
         public void WriteReport()
         {
-            var writeTo = (Program.OutputTo != null) ? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
+            var writeTo = (outputTo != null) ? Path.Combine(outputTo, OUTPUT_PATH) : OUTPUT_PATH;
 
             var consoleWriter = new ConsoleWriter();
             try
             {
-                if (Program.GenerateHtml)
+                if (generateHtml)
                 {
                     File.WriteAllText(writeTo, BuildReport());
-                    if (Program.OpenHTMLOnFinish)
+                    if (openHtmlOnFinish)
                     {
                         HtmlReportLauncher.LaunchReport(writeTo);
                     }

@@ -19,7 +19,7 @@ namespace YoCode_XUnit
 
         public RunParameterCheckerTests()
         {
-            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
+            var outputs = new List<IPrint> { new WebWriter(false, false, null), new ConsoleWriter() };
             fakeOutput = new Output(new CompositeWriter(outputs));
 
             appsb = readMock.Object;
