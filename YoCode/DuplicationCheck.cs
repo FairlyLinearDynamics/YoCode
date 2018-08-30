@@ -31,13 +31,11 @@ namespace YoCode
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p, string fileNameChecked)
         {
-
             this.dir = dir;
             this.dupFinder = dupFinder;
             this.fileNameChecked = fileNameChecked;
 
             modifiedSolutionPath = Path.Combine(dir.ModifiedTestDirPath, fileNameChecked);
-
         }
 
         public void PerformDuplicationCheck()
@@ -70,7 +68,6 @@ namespace YoCode
 
             DuplicationEvidence.FeatureRating = GetDuplicationCheckRating(OrigDuplicateCost,0);
             DuplicationEvidence.FeatureImplemented = DuplicationEvidence.FeatureRating >= passPerc;
-
         }
 
         public void CheckForSpecialRepetition()
