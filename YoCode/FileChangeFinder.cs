@@ -18,7 +18,6 @@ namespace YoCode
             if (!Repository.IsValid(path))
             {
                 FileChangeEvidence.SetInconclusive("Git Repository Not Found");
-                return;
             }
             else
             {
