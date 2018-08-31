@@ -15,6 +15,7 @@ namespace YoCode
             repositoryPath = path;
             GitEvidence.FeatureTitle = "Git was used";
             GitEvidence.Feature = Feature.GitCheck;
+            GitEvidence.HelperMessage = messages.GitCheck;
 
             if (Repository.IsValid(repositoryPath))
             {
@@ -41,12 +42,14 @@ namespace YoCode
 
         private void FillInEvidence(IQueryableCommitLog commitLog, string output)
         {
-            GitEvidence.FeatureImplemented = LastCommitWasByNonEmployee(commitLog);
-            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented??false ? 1 : 0;
-
-            if (GitEvidence.FeatureImplemented??false)
+            if (LastCommitWasByNonEmployee(commitLog))
             {
-                GitEvidence.GiveEvidence("Commits:" + Environment.NewLine + output);
+                GitEvidence.FeatureRating = 1;
+                GitEvidence.SetPassed("Commits:" + Environment.NewLine + output);
+            }
+            else
+            {
+                GitEvidence.SetFailed("Last Commit By Waters Employee");
             }
         }
 

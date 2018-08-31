@@ -79,11 +79,29 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inputs certain values directly to the web app through the backend and checks if the issues deliberately left in the test project have been fixed. YoScore for this check is calculated by taking the percentage of issues fixed..
+        /// </summary>
+        public static string BadInputCheck {
+            get {
+                return ResourceManager.GetString("BadInputCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not retrieve the port number. Another program might be using it..
         /// </summary>
         public static string BadPort {
             get {
                 return ResourceManager.GetString("BadPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runs an external tool that calculates the code coverage. YoScore for this check is calculated by taking the code coverage and adding a certain weight to it..
+        /// </summary>
+        public static string CodeCoverageCheck {
+            get {
+                return ResourceManager.GetString("CodeCoverageCheck", resourceCulture);
             }
         }
         
@@ -229,6 +247,33 @@ namespace YoCode {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Runs an external tool that calculates how much code and duplication is in the project under test and compares it to the unmodified version of the project (note: Original Codebase Cost and Duplicate Cost is stored in appsettings.json). YoScore for this check is calculated by comparing unmodified and modified Codebase Costs and Duplicate Costs..
+        /// </summary>
+        public static string DuplicationCheck {
+            get {
+                return ResourceManager.GetString("DuplicationCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses Git to get the files modified/added/deleted, number of insertions and deletions in each file and Untracked/Uncommited files between the last commit made by a Waters employee and head. This check does not contribute to the overall YoScore..
+        /// </summary>
+        public static string FilesChangedCheck {
+            get {
+                return ResourceManager.GetString("FilesChangedCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses Git to check if the project under tests contains a valid Git Repository. YoScore for this check will be 100% if it finds a valid Repository and 0% if it doesn’t (also multiplied by its weighting)..
+        /// </summary>
+        public static string GitCheck {
+            get {
+                return ResourceManager.GetString("GitCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application takes only one parameter: path to the modified test directory
         ///Possible commands: --{0}; --{1}; --{2}; --{3}; --{4}; --{5};
         ///Example use: --{0}=&lt;path-to-modified-test&gt;
@@ -343,9 +388,16 @@ namespace YoCode {
         ///                &lt;/div&gt;
         ///                &lt;div class=&quot;panel&quot;&gt;
         ///                    &lt;div class=&quot;panel-content&quot;&gt;
-        ///                        {CONTENT}
-        ///                    &lt;/div&gt;
-        ///                &lt;/div&gt;.
+        ///                      &lt;div class=&quot;panel-info&quot;&gt;
+        ///                        &lt;span class=&quot;fa fa-info-circle&quot;&gt;&lt;/span&gt;
+        ///                      &lt;/div&gt;
+        ///
+        ///                      &lt;div class=&quot;panel-info-text&quot;&gt;
+        ///                        {INFO-CONTENT}
+        ///                      &lt;/div&gt;
+        ///
+        ///                      &lt;div class=&quot;panel-check-text&quot;&gt;
+        ///                         [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ListElementTemplate {
             get {
@@ -377,6 +429,60 @@ namespace YoCode {
         public static string SuccessfullyWroteReport {
             get {
                 return ResourceManager.GetString("SuccessfullyWroteReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass..
+        /// </summary>
+        public static string TestCountCheck {
+            get {
+                return ResourceManager.GetString("TestCountCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses Selenium to find the text box for the web app, tries to input certain values and checks if the issues deliberately left in the test project have been fixed. YoScore for this check is calculated by taking the percentage of issues fixed..
+        /// </summary>
+        public static string UIBadInputCheck {
+            get {
+                return ResourceManager.GetString("UIBadInputCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checks .cshtml files for keywords that would suggest that the user interface was implemented. YoScore for this check will be 100% if it finds any evidence and 0% if it doesn’t (also multiplied by its weighting)..
+        /// </summary>
+        public static string UICodeCheck {
+            get {
+                return ResourceManager.GetString("UICodeCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses Selenium to look for places to input values and tries to input numbers, then tries to find buttons with keywords and click on it, checks if the output is correct. YoScore for this check will be 100% if all the values got expected results and 0% if they aren’t (also multiplied by its weighting)..
+        /// </summary>
+        public static string UIConversionCheck {
+            get {
+                return ResourceManager.GetString("UIConversionCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks at certain HTML elements of the web app and looks for evidence (keywords) that would suggest that the user interface was implemented. YoScore for this check will be 100% if it finds any evidence and 0% if it doesn’t (also multiplied by its weighting)..
+        /// </summary>
+        public static string UIFeatureImplemented {
+            get {
+                return ResourceManager.GetString("UIFeatureImplemented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inputs certain values directly to the web app through the backend and checks that those values will have the expected results. YoScore for this check is calculated by taking the percentage of inputs that had the expected values..
+        /// </summary>
+        public static string UnitConverterCheck {
+            get {
+                return ResourceManager.GetString("UnitConverterCheck", resourceCulture);
             }
         }
         

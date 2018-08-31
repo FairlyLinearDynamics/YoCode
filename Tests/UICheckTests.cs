@@ -17,7 +17,7 @@ namespace YoCode_XUnit
 
             var evidence = uiCheck.UIEvidence;
 
-            evidence.FeatureImplemented.Should().Be(true);
+            evidence.Passed.Should().Be(true);
         }
 
         [Fact]

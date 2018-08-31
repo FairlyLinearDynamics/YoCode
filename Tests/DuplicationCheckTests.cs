@@ -11,11 +11,12 @@ namespace YoCode_XUnit
     {
         private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)
         {
-            return new FeatureEvidence()
+            var e = new FeatureEvidence()
             {
-                Output = outputToBeSet,
-                FeatureImplemented = true,
+                Output = outputToBeSet
             };
+            e.SetPassed("");
+            return e;
         }
 
         [Fact]
@@ -55,8 +56,8 @@ namespace YoCode_XUnit
 
             dupCheck.PerformDuplicationCheck();
 
-            dupCheck.DuplicationEvidence.FeatureImplemented.Should()
-                .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.FeatureImplemented}, " +
+            dupCheck.DuplicationEvidence.Passed.Should()
+                .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.Passed}, " +
                 $"Feature evidence: {dupCheck.DuplicationEvidence.Evidence}");
         }
     }

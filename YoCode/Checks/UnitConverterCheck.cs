@@ -45,9 +45,11 @@ namespace YoCode
         {
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
             UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+            UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
 
             BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
             BadInputCheckEvidence.Feature = Feature.BadInputCheck;
+            BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
 
             if (String.IsNullOrEmpty(port))
             {
@@ -65,10 +67,25 @@ namespace YoCode
                     actual = fetcher.GetActualValues(texts, actions);
 
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
-                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+
+                    if (OutputsAreEqual())
+                    {
+                        UnitConverterCheckEvidence.SetPassed("All conversions matched expectations.");
+                    }
+                    else
+                    {
+                        UnitConverterCheckEvidence.SetFailed("At least one conversion did not match expectations.");
+                    }
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
-                    BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
+                    if (BadInputsAreFixed())
+                    {
+                        BadInputCheckEvidence.SetPassed("All bad inputs have been handled.");
+                    }
+                    else
+                    {
+                        BadInputCheckEvidence.SetFailed("At least one bad input has not been handled.");
+                    }
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
                 catch (Exception)
@@ -192,7 +209,7 @@ namespace YoCode
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
-                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider + ("---------------"));
+                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider);
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
@@ -211,7 +228,7 @@ namespace YoCode
             }
             catch (Exception)
             {
-                UnitConverterCheckEvidence.SetFailed("Unit converting has failed");
+                UnitConverterCheckEvidence.SetInconclusive("Unit converting has failed");
                 ret = false;
             }
             return ret;

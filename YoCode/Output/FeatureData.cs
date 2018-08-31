@@ -9,5 +9,6 @@ namespace YoCode
         public List<string> evidence;
         public double score;
         public string featureResult;
+        public string featureHelperMessage;
     }
 }

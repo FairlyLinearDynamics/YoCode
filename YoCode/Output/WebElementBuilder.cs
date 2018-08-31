@@ -7,10 +7,17 @@ using System.Linq;
 
 namespace YoCode
 {
+    internal struct WebAccordionData{
+        public string featureTitle;
+        public string content;
+        public string helperMessage;
+    }
+
     internal static class WebElementBuilder
     {
         private const string TITLE_TAG = "{TITLE}";
         private const string CONTENT_TAG = "{CONTENT}";
+        private const string CONTENT_INFO_TAG = "{INFO-CONTENT}";
 
         const string PARAGRAPH_OPEN = "<p>";
         const string PARAGRAPH_CLOSE = "</p>";
@@ -31,10 +38,10 @@ namespace YoCode
         private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
         private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
 
-        public static string FormatAccordionElement(string featureTitle, string content)
+        public static string FormatAccordionElement(WebAccordionData data)
         {
             return messages.ListElementTemplate
-                .Replace(TITLE_TAG, featureTitle).Replace(CONTENT_TAG, content);
+                .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
         public static string FormatParagraph(string text)
@@ -71,34 +78,28 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormatFeatureTitle(string title, bool? featurePassed, string score)
+        public static string FormatPassedFeatureTitle(string title, string score)
         {
             const string passIcon = "accordion-icon-pass";
-            const string failIcon = "accordion-icon-fail";
-            const string undefinedIcon = "accordion-icon-undefinded";
             const string passIconStyle = "fa-check-circle-o";
+
+            return string.Format(messages.HtmlTitleTemplate, passIcon, passIconStyle, score, title);
+        }
+
+        public static string FormatFailedFeatureTitle(string title, string score)
+        {
+            const string failIcon = "accordion-icon-fail";
             const string failIconStyle = "fa-times-circle-o";
+            
+            return string.Format(messages.HtmlTitleTemplate, failIcon, failIconStyle, score, title);
+        }
+
+        public static string FormatInconclusiveFeatureTitle(string title, string score)
+        {
+            const string undefinedIcon = "accordion-icon-undefinded";
             const string undefinedStyle = "fa-question-circle-o";
 
-            var chosenIcon = "";
-            var chosenIconStyle = "";
-            switch (featurePassed)
-            {
-                case true:
-                    chosenIcon = passIcon;
-                    chosenIconStyle = passIconStyle;
-                    break;
-                case false:
-                    chosenIcon = failIcon;
-                    chosenIconStyle = failIconStyle;
-                    break;
-                default:
-                    chosenIcon = undefinedIcon;
-                    chosenIconStyle = undefinedStyle;
-                    break;
-            }
-
-            return String.Format(messages.HtmlTitleTemplate, chosenIcon, chosenIconStyle, score, title);
+            return string.Format(messages.HtmlTitleTemplate, undefinedIcon, undefinedStyle, score, title);
         }
 
         public static string FormatLink(string url, string title)

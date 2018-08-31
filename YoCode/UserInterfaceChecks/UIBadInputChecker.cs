@@ -16,12 +16,16 @@ namespace YoCode
         {
             UIBadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed in the UI";
             UIBadInputCheckEvidence.Feature = Feature.UIBadInputCheck;
+            UIBadInputCheckEvidence.HelperMessage = messages.UIBadInputCheck;
 
             this.browser = browser;
 
             UIKeywords.GARBAGE_INPUT.ToList().ForEach(a => InputCheckResult.Add(a, false));
 
             var uiInputhandler = new InputingToUI(browser, foundKeyWord);
+
+            UIBadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            UIBadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
 
             foreach (var key in UIKeywords.GARBAGE_INPUT)
             {
@@ -36,7 +40,16 @@ namespace YoCode
             }
 
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
-            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+
+            var featureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+            if (featureImplemented)
+            {
+                UIBadInputCheckEvidence.SetPassed("All exceptions were handled.");
+            }
+            else
+            {
+                UIBadInputCheckEvidence.SetFailed("At least one exception was not handled.");
+            }
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)

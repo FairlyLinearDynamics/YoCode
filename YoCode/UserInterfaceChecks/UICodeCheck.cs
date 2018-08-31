@@ -14,6 +14,8 @@ namespace YoCode
             UIContainsFeature(userFilePaths, keyWords);
             UIEvidence.FeatureTitle = "Found feature keyword in UI implementation";
             UIEvidence.Feature = Feature.UICodeCheck;
+            UIEvidence.HelperMessage = messages.UICodeCheck;
+
         }
 
         public UICodeCheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
@@ -32,10 +34,8 @@ namespace YoCode
             {
                 if (ContainsKeyWord(userFile[i], keyWords))
                 {
-                    UIEvidence.FeatureImplemented = true;
+                    UIEvidence.SetPassed($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                     UIEvidence.FeatureRating = 1;
-
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                 }
             }
         }
