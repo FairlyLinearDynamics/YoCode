@@ -37,7 +37,16 @@ namespace YoCode
             }
 
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
-            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+
+            var featureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+            if (featureImplemented)
+            {
+                UIBadInputCheckEvidence.SetPassed("All exceptions were handled.");
+            }
+            else
+            {
+                UIBadInputCheckEvidence.SetFailed("At least one exception was not handled.");
+            }
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)

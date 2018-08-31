@@ -67,10 +67,25 @@ namespace YoCode
                     actual = fetcher.GetActualValues(texts, actions);
 
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
-                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
+
+                    if (OutputsAreEqual())
+                    {
+                        UnitConverterCheckEvidence.SetPassed("All conversions matched expectations.");
+                    }
+                    else
+                    {
+                        UnitConverterCheckEvidence.SetFailed("At least one conversion did not match expectations.");
+                    }
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
-                    BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
+                    if (BadInputsAreFixed())
+                    {
+                        BadInputCheckEvidence.SetPassed("All bad inputs have been handled.");
+                    }
+                    else
+                    {
+                        BadInputCheckEvidence.SetFailed("At least one bad input has not been handled.");
+                    }
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
                 catch (Exception)
@@ -213,7 +228,7 @@ namespace YoCode
             }
             catch (Exception)
             {
-                UnitConverterCheckEvidence.SetFailed("Unit converting has failed");
+                UnitConverterCheckEvidence.SetInconclusive("Unit converting has failed");
                 ret = false;
             }
             return ret;

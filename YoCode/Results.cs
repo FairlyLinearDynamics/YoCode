@@ -46,7 +46,7 @@ namespace YoCode
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
                 var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
 
-                if (badInputBackEnd.FeatureImplemented==null) 
+                if (badInputBackEnd.Inconclusive) 
                 {
                     badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
                     badInputBackEnd.FeatureWeighting = 0;
@@ -59,7 +59,7 @@ namespace YoCode
 
         public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
         {
-            if (evidence.FeatureImplemented == null)
+            if (evidence.Inconclusive)
             {
                 evidence.FeatureWeighting = 0;
             }

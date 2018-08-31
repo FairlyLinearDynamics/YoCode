@@ -23,18 +23,13 @@ namespace YoCode
             ProjectRunEvidence.Feature = Feature.ProjectRunner;
 
             this.workingDir = workingDir + projectFolder;
-            if (!Directory.Exists(this.workingDir))
-            {
-                ProjectRunEvidence.SetFailed($"{this.workingDir} not found");
-            }
-
-
         }
 
         public void Execute()
         {
-            if (ProjectRunEvidence.FeatureImplemented == false) 
+            if (!Directory.Exists(workingDir))
             {
+                ProjectRunEvidence.SetInconclusive($"{workingDir} not found");
                 return;
             }
 
@@ -58,18 +53,18 @@ namespace YoCode
                 return;
             }
 
-            ProjectRunEvidence.FeatureImplemented = ApplicationStarted();
-            ProjectRunEvidence.FeatureRating = ApplicationStarted() ? 1 : 0;
+            var applicationStarted = ApplicationStarted();
 
-            if (ProjectRunEvidence.FeatureImplemented.Value)
+            if (applicationStarted)
             {
-                ProjectRunEvidence.GiveEvidence($"Port: {GetPort()}");
+                ProjectRunEvidence.SetPassed($"Port: {GetPort()}");
+                ProjectRunEvidence.FeatureRating = 1;
             }
             else
             {
                 ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
+                ProjectRunEvidence.FeatureRating = 0;
             }
-
         }
 
         private string CreateArgument(string workingDir)

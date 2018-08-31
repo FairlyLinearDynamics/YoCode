@@ -34,10 +34,8 @@ namespace YoCode
             {
                 if (ContainsKeyWord(userFile[i], keyWords))
                 {
-                    UIEvidence.FeatureImplemented = true;
+                    UIEvidence.SetPassed($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                     UIEvidence.FeatureRating = 1;
-
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
                 }
             }
         }
