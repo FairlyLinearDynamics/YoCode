@@ -45,9 +45,11 @@ namespace YoCode
         {
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
             UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+            UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
 
             BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
             BadInputCheckEvidence.Feature = Feature.BadInputCheck;
+            BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
 
             if (String.IsNullOrEmpty(port))
             {
@@ -192,7 +194,7 @@ namespace YoCode
             try
             {
                 UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
-                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider + ("---------------"));
+                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider);
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;

@@ -30,6 +30,7 @@ namespace YoCode
                     ? $"Feature implemented: {((feature.FeatureImplemented.Value) ? "Yes" : "No")}"
                     : "Could not perform check";
                 featData.featureResult = result;
+                featData.featureHelperMessage = feature.HelperMessage;
 
                 outputWriter.AddFeature(featData);
             }

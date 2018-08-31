@@ -7,10 +7,17 @@ using System.Linq;
 
 namespace YoCode
 {
+    internal struct WebAccordionData{
+        public string featureTitle;
+        public string content;
+        public string helperMessage;
+    }
+
     internal static class WebElementBuilder
     {
         private const string TITLE_TAG = "{TITLE}";
         private const string CONTENT_TAG = "{CONTENT}";
+        private const string CONTENT_INFO_TAG = "{INFO-CONTENT}";
 
         const string PARAGRAPH_OPEN = "<p>";
         const string PARAGRAPH_CLOSE = "</p>";
@@ -31,10 +38,10 @@ namespace YoCode
         private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
         private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
 
-        public static string FormatAccordionElement(string featureTitle, string content)
+        public static string FormatAccordionElement(WebAccordionData data)
         {
             return messages.ListElementTemplate
-                .Replace(TITLE_TAG, featureTitle).Replace(CONTENT_TAG, content);
+                .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
         public static string FormatParagraph(string text)

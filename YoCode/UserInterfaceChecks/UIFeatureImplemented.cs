@@ -16,6 +16,7 @@ namespace YoCode
         {
             UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
             UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplemented;
+            UIFeatureImplementedEvidence.HelperMessage = messages.UIFeatureImplemented;
 
             this.browser = browser;
             ExecuteCheck();

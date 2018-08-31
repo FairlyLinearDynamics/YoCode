@@ -87,9 +87,11 @@ namespace YoCode
 
             checkList.Add(ucc.BadInputCheckEvidence);
 
+            workThreads.Where(a=>a.Name!="loadingThread").ToList().ForEach(a => a.Join());
+            projectRunner.KillProject();
+
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
-            projectRunner.KillProject();
 
             projectRunner.ReportLefOverProcess();
             return checkList;

@@ -10,7 +10,7 @@ namespace YoCode
         private readonly IInputResult result;
         private readonly IAppSettingsBuilder appsettingsBuilder;
 
-        public List<string> Errs= new List<string>();
+        public List<string> Errs = new List<string>();
         public string CMDToolsPath { get; set; }
         public string DotCoverDir { get; set; }
         public string CodeBaseCost { get; set; }
@@ -57,8 +57,8 @@ namespace YoCode
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
             var costValuesProvided = CheckIfCostsProvided(CodeBaseCost, DuplicationCost, "Test cost values");
 
-            var juniorFileExists = FileExists(TestType.Junior, "JuniorWeightings.json");
-            var originalFileExists = FileExists(TestType.Original, "OriginalWeightings.json");
+            var juniorFileExists = FileExists("JuniorWeightings.json");
+            var originalFileExists = FileExists("OriginalWeightings.json");
 
             bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
 
@@ -70,9 +70,9 @@ namespace YoCode
             return CheckIfToolExecutablesExist();
         }
 
-        private bool FileExists(TestType type, string fileName)
+        private bool FileExists(string fileName)
         {
-            if(!File.Exists(appsettingsBuilder.GetWeightingsPath()))
+            if (!File.Exists(appsettingsBuilder.GetWeightingsPath()))
             {
                 return SetError($"{fileName} not found");
             }

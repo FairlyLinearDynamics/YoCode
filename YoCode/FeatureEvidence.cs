@@ -21,6 +21,8 @@ namespace YoCode
         public double FeatureWeighting { get; set; }
         public double WeightedRating { get; set; }
 
+        public string HelperMessage { get; set; }
+
         public List<string> Evidence { get; set; } = new List<string>();
 
         public void GiveEvidence(string evidence)
