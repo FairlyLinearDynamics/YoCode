@@ -31,7 +31,7 @@ namespace YoCode
                     : "Could not perform check";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
-
+                featData.FilesChanged = feature.FileChanges;
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

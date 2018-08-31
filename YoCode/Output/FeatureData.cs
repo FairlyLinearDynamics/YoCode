@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LibGit2Sharp;
+using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -10,5 +11,6 @@ namespace YoCode
         public double score;
         public string featureResult;
         public string featureHelperMessage;
+        public Patch FilesChanged { get; set; }
     }
 }

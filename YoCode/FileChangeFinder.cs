@@ -85,6 +85,7 @@ namespace YoCode
                 var lineDifference = pec.LinesAdded + pec.LinesDeleted;
                 FileList.Add($"{pec.Status} : {pec.Path} = {lineDifference} ({pec.LinesAdded}+ and {pec.LinesDeleted}-)");
             }
+            FileChangeEvidence.FileChanges = Repo.Diff.Compare<Patch>(lastNonlinearCommit, head);
         }
 
         public string BuildFileChangeOutput()

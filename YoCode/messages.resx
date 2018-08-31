@@ -369,10 +369,12 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       }
 
       .green-text {
+        background-color: var(--green-bg-transparent);
         color: var(--green-bg);
       }
 
       .red-text {
+        background-color: var(--red-bg-transparent);
         color: var(--red-bg);
       }
 
@@ -442,6 +444,16 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         display: none;
         opacity: 0;
       }
+      
+      .changedFile:hover{
+        border-bottom: 1px solid var(--console-text);
+        cursor: pointer;
+      }
+
+      .changedFileText{
+        display: none;
+        white-space: pre-wrap
+      }
     &lt;/style&gt;
   &lt;/head&gt;
 
@@ -485,6 +497,22 @@ Example: --{0}=&lt;...&gt; --{5}</value>
     &lt;/div&gt;
 
     &lt;script&gt;
+      var changedFilesButtons = document.getElementsByClassName("changedFile");
+      for(let i=0; i&lt;changedFilesButtons.length; ++i){
+        changedFilesButtons[i].addEventListener("click", function(){
+          
+          this.classList.toggle("fileChangesShowing");
+
+          var textField = this.nextElementSibling;
+          if(this.classList.contains("fileChangesShowing")){
+            textField.style.display = "block";
+          }
+          else{
+            textField.style.display = "none";
+          }
+        });
+      }
+
       var acc = document.getElementsByClassName("accordion");
 
       for (let i = 0; i &lt; acc.length; ++i) 

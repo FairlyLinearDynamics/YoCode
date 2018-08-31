@@ -44,6 +44,19 @@ namespace YoCode
                 .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
+        public static string FormatFileDiff(List<string> file)
+        {
+            var sb = new StringBuilder();
+            sb.Append("<span class=\"changedFileText\">");
+            foreach(var line in file)
+            {
+                if(line.Length>1)
+                sb.AppendLine(line[0] == '+' ? $"<span class=\"green-text\">{line}</span>" : $"<span class=\"red-text\">{line}</span>");
+            }
+            sb.Append("</span>");
+            return sb.ToString();
+        }
+
         public static string FormatParagraph(string text)
         {
             text = EscapeCharacters(text);

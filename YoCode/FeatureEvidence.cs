@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LibGit2Sharp;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace YoCode
@@ -22,6 +23,8 @@ namespace YoCode
         public double WeightedRating { get; set; }
 
         public string HelperMessage { get; set; }
+
+        public Patch FileChanges { get; set; }
 
         public List<string> Evidence { get; set; } = new List<string>();
 
