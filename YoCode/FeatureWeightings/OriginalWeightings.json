@@ -2,12 +2,13 @@
   "TestCountCheck": 1.355,
   "BadInputCheck": 2.39,
   "CodeCoverageCheck": 1.32,
-  "DuplicationCheck": 1.69,
+  "TestDuplicationCheck": 0,
+  "AppDuplicationCheck": 1.69,
   "UICodeCheck": 1.03,
   "FilesChangedCheck": 0,
   "GitCheck": 1,
   "UnitConverterCheck": 1.09,
   "UIFeatureImplemented": 0,
-  "UIBadInputCheck": 0,
-  "UIConversionCheck": 0
+  "UIBadInputCheck": 2.39,
+  "UIConversionCheck": 1.09
 }
