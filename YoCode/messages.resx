@@ -549,7 +549,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         front.style.opacity = 1;
         back.style.opacity = 0;
 
-        var opInc = .02;
+        var opInc = .1;
         var animTime = 1;
 
         var Op1 = 0;
