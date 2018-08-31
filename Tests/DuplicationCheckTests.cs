@@ -29,14 +29,11 @@ namespace YoCode_XUnit
             var mockDir = new Mock<IPathManager>();
             var mockDupFinder = new Mock<IDupFinder>();
 
-
             const string fakeModified = @"\fake\modified\dir";
 
             StringBuilder fakeModifiedCodeScore = new StringBuilder();
             fakeModifiedCodeScore.Append("<CodebaseCost>0");
             fakeModifiedCodeScore.Append("TotalDuplicatesCost>10");
-
-
 
             const string fileNameChecked =  "UnitConverterWebApp\\UnitConverterWebApp.csproj";
 
