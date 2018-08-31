@@ -29,19 +29,10 @@ namespace YoCode
             {
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
 
-                Console.WriteLine(elem.Feature.ToString());
-                Console.WriteLine("Rating: " + elem.FeatureRating);
-                Console.WriteLine("Weight: " + elem.FeatureWeighting);
-                Console.WriteLine("Weighted Rating : " + elem.WeightedRating);
-                Console.WriteLine(messages.ParagraphDivider);
-
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
-             Console.WriteLine("User score: " + FinalScore);
-            Console.WriteLine("Maximum score: " + MaximumScore);
-            Console.WriteLine("Percentage: " + (FinalScore / MaximumScore));
         }
 
         public void CalculateFinalScore()
@@ -62,18 +53,6 @@ namespace YoCode
                     list.Find(e => e.Feature == Feature.UnitConverterCheck),
                     list.Find(e => e.Feature == Feature.UIConversionCheck)
                     );
-
-                CheckAndIgnoreWeighting(list);
-            }
-        }
-        public void CheckAndIgnoreWeighting(List<FeatureEvidence> list)
-        {
-            foreach(var evidence in list)
-            {
-                if (evidence.FeatureImplemented == null)
-                {
-                    evidence.FeatureWeighting = 0;
-                }
             }
         }
 
