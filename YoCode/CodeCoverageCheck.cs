@@ -16,6 +16,7 @@ namespace YoCode
         {
             CodeCoverageEvidence.FeatureTitle = "Code Coverage";
             CodeCoverageEvidence.Feature = Feature.CodeCoverageCheck;
+            CodeCoverageEvidence.HelperMessage = messages.CodeCoverageCheck;
 
             FullReportPath = Path.Combine(dotCoverDir, ReportName);
 

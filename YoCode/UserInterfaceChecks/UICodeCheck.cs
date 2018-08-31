@@ -14,6 +14,8 @@ namespace YoCode
             UIContainsFeature(userFilePaths, keyWords);
             UIEvidence.FeatureTitle = "Found feature keyword in UI implementation";
             UIEvidence.Feature = Feature.UICodeCheck;
+            UIEvidence.HelperMessage = messages.UICodeCheck;
+
         }
 
         public UICodeCheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)

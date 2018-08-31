@@ -45,9 +45,11 @@ namespace YoCode
         {
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
             UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+            UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
 
             BadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed";
             BadInputCheckEvidence.Feature = Feature.BadInputCheck;
+            BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
 
             if (String.IsNullOrEmpty(port))
             {

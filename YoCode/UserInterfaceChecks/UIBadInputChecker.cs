@@ -16,6 +16,7 @@ namespace YoCode
         {
             UIBadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed in the UI";
             UIBadInputCheckEvidence.Feature = Feature.UIBadInputCheck;
+            UIBadInputCheckEvidence.HelperMessage = messages.UIBadInputCheck;
 
             this.browser = browser;
 

@@ -36,6 +36,7 @@ namespace YoCode
 
             DuplicationEvidence.FeatureTitle = "Code quality improvement";
             DuplicationEvidence.Feature = Feature.DuplicationCheck;
+            DuplicationEvidence.HelperMessage = messages.DuplicationCheck;
 
 
             this.dir = dir;
