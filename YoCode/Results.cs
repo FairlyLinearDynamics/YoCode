@@ -53,43 +53,39 @@ namespace YoCode
         {
            if (list.Count > 1)
             {
-                var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
-                var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
-                badInputUI.FeatureWeighting = 0;
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.BadInputCheck),
+                    list.Find(e => e.Feature == Feature.UIBadInputCheck)
+                    );
 
-                if (badInputBackEnd.FeatureImplemented != true) 
-                {
-                    badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
-                    badInputBackEnd.FeatureWeighting = 0;
-                }
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.UnitConverterCheck),
+                    list.Find(e => e.Feature == Feature.UIConversionCheck)
+                    );
 
-                var unitConverter = list.Find(e => e.Feature == Feature.UnitConverterCheck);
-                var unitConverterUI = list.Find(e => e.Feature == Feature.UIConversionCheck);
-
-                if(unitConverter.FeatureImplemented != true)
-                {
-                    unitConverterUI.FeatureWeighting = unitConverter.FeatureWeighting;
-                    unitConverter.FeatureWeighting = 0;
-                }
-
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
+                CheckAndIgnoreWeighting(list);
             }
         }
-        public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
+        public void CheckAndIgnoreWeighting(List<FeatureEvidence> list)
         {
-            if (evidence.FeatureImplemented == null)
+            foreach(var evidence in list)
             {
-                evidence.FeatureWeighting = 0;
+                if (evidence.FeatureImplemented == null)
+                {
+                    evidence.FeatureWeighting = 0;
+                }
             }
         }
 
         public void AssignToEquivalentCheck(FeatureEvidence oldCheck,FeatureEvidence newCheck)
         {
+            newCheck.FeatureWeighting = 0;
 
-
-
-
+            if (oldCheck.FeatureImplemented != true)
+            {
+                newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
+                oldCheck.FeatureWeighting = 0;
+            }
         }
 
 
