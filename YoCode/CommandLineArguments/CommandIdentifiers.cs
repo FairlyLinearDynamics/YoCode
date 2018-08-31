@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace YoCode
+﻿namespace YoCode
 {
-    public struct CommandIdentifiers
+    internal struct CommandIdentifiers
     {
         public static string commandIdentifier = "--";
         public static string dataIdentifier = "=";

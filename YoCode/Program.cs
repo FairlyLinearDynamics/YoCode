@@ -18,12 +18,14 @@ namespace YoCode
             const string reportFilename = "YoCodeReport.html";
             var outputPath = result.OutputFilePath != null ? Path.Combine(result.OutputFilePath, reportFilename) : reportFilename;
 
-            var outputs = new List<IPrint> { new ConsoleWriter() };
+            var outputs = new List<IPrint>();
 
             if (result.CreateHtmlReport)
             {
                 outputs.Add(new WebWriter(outputPath));
             }
+
+            outputs.Add(new ConsoleWriter());
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
@@ -40,6 +42,7 @@ namespace YoCode
                 {
                     compositeOutput.ShowHelp();
                 }
+                LaunchReport(result, outputPath);
                 return;
             }
 
@@ -55,6 +58,7 @@ namespace YoCode
                 {
                     IsBackground = true
                 };
+                loadingThread.Name = "loadingThread";
                 workThreads.Add(loadingThread);
                 loadingThread.Start();
             }
@@ -80,6 +84,11 @@ namespace YoCode
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
                 results.FinalScore);
 
+            LaunchReport(result, outputPath);
+        }
+
+        private static void LaunchReport(InputResult result, string outputPath)
+        {
             if (result.CreateHtmlReport && result.OpenHtmlReport)
             {
                 HtmlReportLauncher.LaunchReport(outputPath);
