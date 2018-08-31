@@ -24,6 +24,9 @@ namespace YoCode
 
             var uiInputhandler = new InputingToUI(browser, foundKeyWord);
 
+            UIBadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            UIBadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+
             foreach (var key in UIKeywords.GARBAGE_INPUT)
             {
                 var errs = uiInputhandler.InputData(key);
