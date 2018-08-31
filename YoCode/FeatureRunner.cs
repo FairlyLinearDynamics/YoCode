@@ -20,7 +20,7 @@
                 evidence.SetInconclusive("Timed out");
                 return evidence;
             }
-            evidence.FeatureImplemented = true;
+            evidence.SetPassed("???");
             return evidence;
         }
 

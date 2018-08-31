@@ -24,6 +24,9 @@ namespace YoCode
 
             var uiInputhandler = new InputingToUI(browser, foundKeyWord);
 
+            UIBadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            UIBadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+
             foreach (var key in UIKeywords.GARBAGE_INPUT)
             {
                 var errs = uiInputhandler.InputData(key);
@@ -37,7 +40,16 @@ namespace YoCode
             }
 
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
-            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+
+            var featureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+            if (featureImplemented)
+            {
+                UIBadInputCheckEvidence.SetPassed("All exceptions were handled.");
+            }
+            else
+            {
+                UIBadInputCheckEvidence.SetFailed("At least one exception was not handled.");
+            }
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)

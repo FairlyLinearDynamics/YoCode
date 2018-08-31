@@ -24,11 +24,11 @@ namespace YoCode
             {
                 featData.title = feature.FeatureTitle;
                 featData.evidence = feature.Evidence;
-                featData.featurePass = feature.FeatureImplemented;
+                featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
                 featData.score = feature.FeatureRating;
-                var result = feature.FeatureImplemented.HasValue
-                    ? $"Feature implemented: {((feature.FeatureImplemented.Value) ? "Yes" : "No")}"
-                    : "Could not perform check";
+                var result = feature.Inconclusive
+                    ? "Could not perform check"
+                    : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
 

@@ -35,11 +35,22 @@ namespace YoCode
             var featureResults = new StringBuilder();
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
-            const char dash = (char)0x2013;
-            var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass, 
-                !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
+            string featureTitle;
+            switch (data.featurePass)
+            {
+                case true:
+                    featureTitle = WebElementBuilder.FormatPassedFeatureTitle(data.title, data.score + "%");
+                    break;
 
+                case false:
+                    featureTitle = WebElementBuilder.FormatFailedFeatureTitle(data.title, data.score + "%");
+                    break;
 
+                default:
+                    const char dash = (char)0x2013;
+                    featureTitle = WebElementBuilder.FormatInconclusiveFeatureTitle(data.title, dash.ToString());
+                    break;
+            }
 
             features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData() {
                 featureTitle = featureTitle,
