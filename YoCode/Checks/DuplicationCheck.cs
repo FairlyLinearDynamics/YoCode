@@ -164,11 +164,6 @@ namespace YoCode
             return dupFinder.Execute("Dup check", solutionPath);
         }
 
-        private bool HasTheCodeImproved()
-        {
-            return OrigDuplicateCost > ModiDuplicateCost;
-        }
-
         private List<String> GetCodeBaseCostKeyword()
         {
             return new List<string> { "<CodebaseCost>" };
