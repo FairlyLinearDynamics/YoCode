@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// This is warning about things that are done implicitly by Newtonsoft (I think)
+#pragma warning disable 649
+
 namespace YoCode
 {
     public static class DotCover

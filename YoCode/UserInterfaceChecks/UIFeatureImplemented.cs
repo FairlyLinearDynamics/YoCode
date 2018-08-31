@@ -16,6 +16,7 @@ namespace YoCode
         {
             UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
             UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplemented;
+            UIFeatureImplementedEvidence.HelperMessage = messages.UIFeatureImplemented;
 
             this.browser = browser;
             ExecuteCheck();
@@ -28,9 +29,6 @@ namespace YoCode
 
             if (milesTag != null && kmTag != null) 
             {
-                UIFeatureImplementedEvidence.FeatureImplemented = true;
-                UIFeatureImplementedEvidence.FeatureRating = 1;
-
                 FoundTagsInfo.mileTagText = UIKeywords.MILE_KEYWORDS.Any(a => milesTag.Text.ToLower().Contains(a)) 
                     ? milesTag.Text : milesTag.GetAttribute("value");
 
@@ -40,22 +38,23 @@ namespace YoCode
                 FoundTagsInfo.mileTagValue = milesTag.GetAttribute("value");
                 FoundTagsInfo.kmTagValue = kmTag.GetAttribute("value");
 
-
+                string evidence;
                 if (FoundTagsInfo.SeparateTags)
                 {
-                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{FoundTagsInfo.mileTagText}\"" +
-                        $" and \"{FoundTagsInfo.kmtagText}\" keywords in user interface");
+                    evidence = $"Found \"{FoundTagsInfo.mileTagText}\"" + $" and \"{FoundTagsInfo.kmtagText}\" keywords in user interface";
                 }
                 else
                 {
-                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface");
+                    evidence = $"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface";
                 }
+
+                UIFeatureImplementedEvidence.SetPassed(evidence);
+                UIFeatureImplementedEvidence.FeatureRating = 1;
             }
             else
             {
-                UIFeatureImplementedEvidence.FeatureImplemented = false;
+                UIFeatureImplementedEvidence.SetFailed("Did not find any evidence in user interface");
                 UIFeatureImplementedEvidence.FeatureRating = 0;
-                UIFeatureImplementedEvidence.GiveEvidence($"Did not find any evidence in user interface");
             }
         }
 

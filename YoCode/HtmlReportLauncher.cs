@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace YoCode
 {
-    static class HtmlReportLauncher
+    internal static class HtmlReportLauncher
     {
         public static void LaunchReport(string nameOfReportFile)
         {
@@ -21,15 +21,10 @@ namespace YoCode
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     Process.Start("xdg-open", nameOfReportFile);
-                    return;
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     Process.Start("open", nameOfReportFile);
-                    return;
-                }
-                else
-                {
                     return;
                 }
             }

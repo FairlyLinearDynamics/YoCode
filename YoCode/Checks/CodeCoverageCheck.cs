@@ -16,6 +16,7 @@ namespace YoCode
         {
             CodeCoverageEvidence.FeatureTitle = "Code Coverage";
             CodeCoverageEvidence.Feature = Feature.CodeCoverageCheck;
+            CodeCoverageEvidence.HelperMessage = messages.CodeCoverageCheck;
 
             FullReportPath = Path.Combine(dotCoverDir, ReportName);
 
@@ -29,7 +30,7 @@ namespace YoCode
 
             Argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
 
-            var evidence = featureRunner.Execute(CreateProcessDetails(dotCoverDir));
+            featureRunner.Execute(CreateProcessDetails(dotCoverDir));
 
             var report = ReadReport();
             CleanUp();
@@ -47,8 +48,16 @@ namespace YoCode
             else
             {
                 CodeCoverageEvidence.FeatureRating = ( (double) GetCodeCoverage(report) ) / 100;
-                CodeCoverageEvidence.FeatureImplemented = coverage >= passPerc;
-                CodeCoverageEvidence.GiveEvidence($"Code Coverage: {coverage}%");
+                var featureImplemented = coverage >= passPerc;
+                var evidence = $"Code Coverage: {coverage}%";
+                if (featureImplemented)
+                {
+                    CodeCoverageEvidence.SetPassed(evidence);
+                }
+                else
+                {
+                    CodeCoverageEvidence.SetFailed(evidence);
+                }
             }
         }
 

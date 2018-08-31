@@ -5,14 +5,11 @@ namespace YoCode
 {
     internal class FeatureEvidence
     {
-        // TODO: Maybe should be 3 methods: SetFailed(reason); SetInconclusive(reason); SetPassed(reason)
-        // Each method would set featureImplemented; FeatureRatings and weights; Evidence
         public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
-        public bool? FeatureImplemented { get; set; }
-        public bool Failed => FeatureImplemented.HasValue && !FeatureImplemented.Value;
-        public bool Passed => FeatureImplemented.HasValue && FeatureImplemented.Value;
-        public bool Inconclusive => !FeatureImplemented.HasValue;
+        public bool Failed => featureImplemented.HasValue && !featureImplemented.Value;
+        public bool Passed => featureImplemented.HasValue && featureImplemented.Value;
+        public bool Inconclusive => !featureImplemented.HasValue;
         public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
@@ -21,7 +18,11 @@ namespace YoCode
         public double FeatureWeighting { get; set; }
         public double WeightedRating { get; set; }
 
-        public List<string> Evidence { get; set; } = new List<string>();
+        public string HelperMessage { get; set; }
+
+        public List<string> Evidence { get; } = new List<string>();
+
+        private bool? featureImplemented;
 
         public void GiveEvidence(string evidence)
         {
@@ -30,14 +31,20 @@ namespace YoCode
 
         public void SetInconclusive(params string[] reasons)
         {
-            FeatureImplemented = null;
+            featureImplemented = null;
             FeatureWeighting = 0;
             reasons.ToList().ForEach(GiveEvidence);
         }
 
+        public void SetPassed(string reason)
+        {
+            featureImplemented = true;
+            GiveEvidence(reason);
+        }
+
         public void SetFailed(string reason)
         {
-            FeatureImplemented = false;
+            featureImplemented = false;
             GiveEvidence(reason);
         }
     }

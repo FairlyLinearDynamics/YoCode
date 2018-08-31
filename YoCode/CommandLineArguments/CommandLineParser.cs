@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace YoCode
 {
-    public class CommandLineParser
+    internal class CommandLineParser
     {
         private readonly List<string> implementedCommands = new List<string>() { CommandNames.INPUT, CommandNames.HELP,
             CommandNames.NOLOADINGSCREEN, CommandNames.SILENTREPORT, CommandNames.JUNIORTEST, CommandNames.OUTPUT, CommandNames.NOHTML };

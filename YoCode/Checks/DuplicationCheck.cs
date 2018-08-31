@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace YoCode
@@ -43,7 +44,6 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
-                StructuredOutput();
                 CheckForSpecialRepetition();
             }
             catch (FileNotFoundException) { }
@@ -55,19 +55,30 @@ namespace YoCode
 
         private void ExecuteTheCheck()
         {
-            (var modEvidence, var modCodeBaseCost, var modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
+            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
 
-            if (modEvidence.FeatureImplemented == null)
+            if (modEvidence.Inconclusive)
             {
-                DuplicationEvidence.SetInconclusive($"Failed: {modEvidence.FeatureImplemented}");
+                DuplicationEvidence.SetInconclusive("No evidence found.");
                 return;
             }
 
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            DuplicationEvidence.FeatureRating = GetDuplicationCheckRating(OrigDuplicateCost,0);
-            DuplicationEvidence.FeatureImplemented = DuplicationEvidence.FeatureRating >= passPerc;
+            var rating = GetDuplicationCheckRating();
+            DuplicationEvidence.FeatureRating = rating;
+
+            var evidence = StructuredOutput();
+
+            if (rating >= passPerc)
+            {
+                DuplicationEvidence.SetPassed(evidence);
+            }
+            else
+            {
+                DuplicationEvidence.SetFailed(evidence);
+            }
         }
 
         public void CheckForSpecialRepetition()
@@ -143,13 +154,17 @@ namespace YoCode
         }
 
 
-        public void StructuredOutput()
+        private string StructuredOutput()
         {
-            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
-            DuplicationEvidence.GiveEvidence(messages.ParagraphDivider);
-            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
-            DuplicationEvidence.GiveEvidence(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
-            DuplicationEvidence.GiveEvidence(Environment.NewLine);
+            var builder = new StringBuilder();
+
+            builder.AppendLine(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            builder.AppendLine(messages.ParagraphDivider);
+            builder.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
+            builder.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
+            builder.AppendLine(Environment.NewLine);
+
+            return builder.ToString();
         }
 
         private string BuildEvidenceString(string whichDir, int codebaseCost, int duplicateCost)
