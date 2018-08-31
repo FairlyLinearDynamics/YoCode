@@ -66,7 +66,7 @@ namespace YoCode
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            var rating = GetDuplicationCheckRating();
+            var rating = GetDuplicationCheckRating(OrigDuplicateCost,0);
             DuplicationEvidence.FeatureRating = rating;
 
             var evidence = StructuredOutput();

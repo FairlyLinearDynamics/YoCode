@@ -9,22 +9,12 @@ namespace YoCode_XUnit
 {
     public class DuplicationCheckTests
     {
-        private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)
-        {
-            var e = new FeatureEvidence()
-            {
-                Output = outputToBeSet
-            };
-            e.SetPassed("");
-            return e;
-        }
 
         [Fact]
-        public void DuplicationCheck_FeatureImplemented_TRUE()
+        public void DuplicationCheck_Should_Set_Inconclusive_DueToNoDupfinderOutput()
         {
             IPathManager fakeDir;
             IDupFinder fakeDupFinder;
-            IRunParameterChecker fakeRunCheck;
             DuplicationCheck dupCheck;
 
             var mockDir = new Mock<IPathManager>();
@@ -32,22 +22,10 @@ namespace YoCode_XUnit
 
             const string fakeModified = @"\fake\modified\dir";
 
-            StringBuilder fakeModifiedCodeScore = new StringBuilder();
-            fakeModifiedCodeScore.Append("<CodebaseCost>0");
-            fakeModifiedCodeScore.Append("TotalDuplicatesCost>10");
-
             const string fileNameChecked =  "UnitConverterWebApp\\UnitConverterWebApp.csproj";
 
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
 
-            mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
-
-            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(new FeatureEvidence()
-                {
-                    FeatureImplemented = true,
-                    Output = fakeModifiedCodeScore.ToString()
-                });
 
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
@@ -56,7 +34,7 @@ namespace YoCode_XUnit
 
             dupCheck.PerformDuplicationCheck();
 
-            dupCheck.DuplicationEvidence.Passed.Should()
+            dupCheck.DuplicationEvidence.Inconclusive.Should()
                 .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.Passed}, " +
                 $"Feature evidence: {dupCheck.DuplicationEvidence.Evidence}");
         }
