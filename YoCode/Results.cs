@@ -58,10 +58,9 @@ namespace YoCode
 
         public void AssignToEquivalentCheck(FeatureEvidence oldCheck,FeatureEvidence newCheck)
         {
-            newCheck.FeatureWeighting = 0;
-
-            if (oldCheck.FeatureImplemented != true)
+            if (oldCheck.Inconclusive)
             {
+                newCheck.FeatureWeighting = 0;
                 newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
                 oldCheck.FeatureWeighting = 0;
             }
