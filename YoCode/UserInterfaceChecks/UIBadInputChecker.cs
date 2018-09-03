@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace YoCode
 {
@@ -11,6 +12,7 @@ namespace YoCode
         private const int TitleColumnFormatter = -40;
         private const int ValueColumnFormatter = -10;
         private List<bool> ratingsList = new List<bool>();
+        private StringBuilder resultsOutput = new StringBuilder();
 
         public UIBadInputChecker(IWebDriver browser, UIFoundTags foundKeyWord)
         {
@@ -36,6 +38,7 @@ namespace YoCode
                 OutputCheck(key);
             }
 
+            UIBadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(resultsOutput.ToString()));
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
             UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
         }
@@ -56,12 +59,12 @@ namespace YoCode
             var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
             if (exception.Any())
             {
-                UIBadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}")));
+                resultsOutput.AppendLine(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
                 ratingsList.Add(false);
             }
             else
             {
-                UIBadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}")));
+                resultsOutput.AppendLine(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}"));
                 ratingsList.Add(true);
             }
 

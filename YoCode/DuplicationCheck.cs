@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace YoCode
@@ -29,6 +30,8 @@ namespace YoCode
 
         private double passPerc = 0.5;
 
+        private StringBuilder resultsOutput = new StringBuilder();
+
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, IRunParameterChecker p)
         {
             OrigCodeBaseCost = Int32.Parse(p.CodeBaseCost);
@@ -49,6 +52,8 @@ namespace YoCode
                 ExecuteTheCheck();
                 StructuredOutput();
                 CheckForSpecialRepetition();
+
+                DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(resultsOutput.ToString()));
             }
             catch (FileNotFoundException) { }
             catch (Exception e)
@@ -105,19 +110,19 @@ namespace YoCode
 
             if (yardRepetition > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Number {yardsToMeters} duplicated {yardRepetition} times"));
+                resultsOutput.AppendLine($"Number {yardsToMeters} duplicated {yardRepetition} times");
             }
             if (inchRepetition > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Number {inchToCentimeter} duplicated {inchRepetition} times"));
+                resultsOutput.AppendLine($"Number {inchToCentimeter} duplicated {inchRepetition} times");
             }
             if (mileRepetition > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Number {mileToKilometer} duplicated {mileRepetition} times"));
+                resultsOutput.AppendLine($"Number {mileToKilometer} duplicated {mileRepetition} times");
             }
             if (stringRep > VARIABLE_REPETITION_TRESHOLD)
             {
-                DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder($"String \"Yards to meters\" duplicated {stringRep} times"));
+                resultsOutput.AppendLine($"String \"Yards to meters\" duplicated {stringRep} times");
             }
         }
 
@@ -152,11 +157,11 @@ namespace YoCode
 
         public void StructuredOutput()
         {
-            DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost")));
-            DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(messages.ParagraphDivider));
-            DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost)));
-            DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost)));
-            DuplicationEvidence.GiveEvidence(new SimpleEvidenceBuilder(Environment.NewLine));
+            resultsOutput.AppendLine(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            resultsOutput.AppendLine(messages.ParagraphDivider);
+            resultsOutput.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
+            resultsOutput.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
+            resultsOutput.AppendLine(Environment.NewLine);
         }
 
         private string BuildEvidenceString(string whichDir, int codebaseCost, int duplicateCost)
