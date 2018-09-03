@@ -21,7 +21,7 @@ namespace YoCode
             workingDir = Path.Combine(workingDir, projectFolder);
             if (!Directory.Exists(workingDir))
             {
-                ProjectBuilderEvidence.SetInconclusive($"{workingDir} not found");
+                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
                 return;
             }
 
@@ -44,10 +44,10 @@ namespace YoCode
             ProjectBuilderEvidence.FeatureImplemented = buildSuccessful.Value;
             ProjectBuilderEvidence.FeatureRating = buildSuccessful.Value ? 1 : 0;
 
-            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
+            ProjectBuilderEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}"));
             if (GetNumberOfErrors() > 0)
             {
-                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");
+                ProjectBuilderEvidence.SetFailed(new SimpleEvidenceBuilder($"Error message: {GetErrorOutput(Output)}"));
             }
         }
 
@@ -71,7 +71,7 @@ namespace YoCode
         {
             if(Output.Contains("is being used by another process"))
             {
-                ProjectBuilderEvidence.SetInconclusive("Could not build the project. It is being used by another process");
+                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not build the project. It is being used by another process"));
                 return;
             }
             buildSuccessful = Output.Contains("Build succeeded");

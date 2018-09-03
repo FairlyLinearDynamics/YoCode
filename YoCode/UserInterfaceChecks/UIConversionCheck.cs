@@ -39,7 +39,7 @@ namespace YoCode
                 }
                 catch (NoSuchElementException)
                 {
-                    UIConversionEvidence.SetFailed("Values were converted incorrectly");
+                    UIConversionEvidence.SetFailed(new SimpleEvidenceBuilder("Values were converted incorrectly"));
                     UIConversionEvidence.FeatureRating = 0;
                     browser.Navigate().Back();
                     return;
@@ -49,12 +49,12 @@ namespace YoCode
 
             UIConversionEvidence.FeatureImplemented = true;
             UIConversionEvidence.FeatureRating = 1;
-            UIConversionEvidence.GiveEvidence("Successfully converted from miles to kilometres");
+            UIConversionEvidence.GiveEvidence(new SimpleEvidenceBuilder("Successfully converted from miles to kilometres"));
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)
         {
-            UIConversionEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs).ToArray());
+            UIConversionEvidence.SetInconclusive(new SimpleEvidenceBuilder(UIEnumErrFormat.ConvertEnum(errs).ToList()));
         }
 
         private double GetCorrectClampedNum(double num)

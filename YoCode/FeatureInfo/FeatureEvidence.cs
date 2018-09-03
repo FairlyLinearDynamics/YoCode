@@ -1,9 +1,6 @@
-﻿using LibGit2Sharp;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace YoCode
+﻿namespace YoCode
 {
+
     internal class FeatureEvidence
     {
         // TODO: Maybe should be 3 methods: SetFailed(reason); SetInconclusive(reason); SetPassed(reason)
@@ -14,7 +11,6 @@ namespace YoCode
         public bool Failed => FeatureImplemented.HasValue && !FeatureImplemented.Value;
         public bool Passed => FeatureImplemented.HasValue && FeatureImplemented.Value;
         public bool Inconclusive => !FeatureImplemented.HasValue;
-        public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
@@ -24,26 +20,24 @@ namespace YoCode
 
         public string HelperMessage { get; set; }
 
-        public Patch FileChanges { get; set; }
+        public IEvidence Evidence { get; set; } = new SimpleEvidenceBuilder("");
 
-        public List<string> Evidence { get; set; } = new List<string>();
-
-        public void GiveEvidence(string evidence)
+        public void GiveEvidence(IEvidence reason)
         {
-            Evidence.Add(evidence);
+            Evidence = reason;
         }
 
-        public void SetInconclusive(params string[] reasons)
+        public void SetInconclusive(IEvidence reason)
         {
             FeatureImplemented = null;
             FeatureWeighting = 0;
-            reasons.ToList().ForEach(GiveEvidence);
+            Evidence = reason;
         }
 
-        public void SetFailed(string reason)
+        public void SetFailed(IEvidence reason)
         {
             FeatureImplemented = false;
-            GiveEvidence(reason);
+            Evidence = reason;
         }
     }
 }

@@ -42,7 +42,7 @@ namespace YoCode
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)
         {
-            UIBadInputCheckEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs).ToArray());
+            UIBadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(UIEnumErrFormat.ConvertEnum(errs).ToList()));
         }
 
         public double GetOutputCheckRating()
@@ -56,12 +56,12 @@ namespace YoCode
             var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
             if (exception.Any())
             {
-                UIBadInputCheckEvidence.SetFailed(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
+                UIBadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}")));
                 ratingsList.Add(false);
             }
             else
             {
-                UIBadInputCheckEvidence.GiveEvidence(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}"));
+                UIBadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(string.Format($"{x,TitleColumnFormatter} {true,ValueColumnFormatter}")));
                 ratingsList.Add(true);
             }
 

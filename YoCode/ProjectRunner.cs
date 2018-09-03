@@ -25,7 +25,7 @@ namespace YoCode
             this.workingDir = workingDir + projectFolder;
             if (!Directory.Exists(this.workingDir))
             {
-                ProjectRunEvidence.SetFailed($"{this.workingDir} not found");
+                ProjectRunEvidence.SetFailed(new SimpleEvidenceBuilder($"{this.workingDir} not found"));
             }
 
 
@@ -54,7 +54,7 @@ namespace YoCode
 
             if (String.IsNullOrEmpty(port))
             {
-                ProjectRunEvidence.SetInconclusive(messages.BadPort);
+                ProjectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
                 return;
             }
 
@@ -63,11 +63,11 @@ namespace YoCode
 
             if (ProjectRunEvidence.FeatureImplemented.Value)
             {
-                ProjectRunEvidence.GiveEvidence($"Port: {GetPort()}");
+                ProjectRunEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
             }
             else
             {
-                ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
+                ProjectRunEvidence.SetFailed(new SimpleEvidenceBuilder($"Error Output: {ErrorOutput}"));
             }
 
         }

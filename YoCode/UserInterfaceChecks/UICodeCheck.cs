@@ -37,7 +37,7 @@ namespace YoCode
                     UIEvidence.FeatureImplemented = true;
                     UIEvidence.FeatureRating = 1;
 
-                    UIEvidence.GiveEvidence($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}");
+                    UIEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Found  on line {i + 1} in file \\{new DirectoryInfo(userFilePath).Parent.Name}\\{Path.GetFileName(userFilePath)}"));
                 }
             }
         }

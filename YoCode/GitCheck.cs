@@ -23,7 +23,7 @@ namespace YoCode
             }
             else
             {
-                GitEvidence.SetInconclusive("Invalid git repository");
+                GitEvidence.SetInconclusive(new SimpleEvidenceBuilder("Invalid git repository"));
             }
         }
 
@@ -47,7 +47,7 @@ namespace YoCode
 
             if (GitEvidence.FeatureImplemented??false)
             {
-                GitEvidence.GiveEvidence("Commits:" + Environment.NewLine + output);
+                GitEvidence.GiveEvidence(new SimpleEvidenceBuilder("Commits:" + Environment.NewLine + output));
             }
         }
 

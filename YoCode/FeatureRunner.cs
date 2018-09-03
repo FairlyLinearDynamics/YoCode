@@ -17,7 +17,7 @@
 
             if (pr.TimedOut)
             {
-                evidence.SetInconclusive("Timed out");
+                evidence.SetInconclusive(new SimpleEvidenceBuilder("Timed out"));
                 return evidence;
             }
             evidence.FeatureImplemented = true;

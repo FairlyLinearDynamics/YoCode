@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 
 namespace YoCode
 {
@@ -29,7 +30,7 @@ namespace YoCode
 
             if (!Directory.Exists(workingDir))
             {
-                UnitTestEvidence.SetInconclusive($"{workingDir} not found");
+                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
                 return;
             }
 
@@ -49,7 +50,7 @@ namespace YoCode
 
             if (evidence.FeatureImplemented == null)
             {
-                UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
+                UnitTestEvidence.SetInconclusive(evidence.Evidence);
                 return;
             }
 
@@ -79,7 +80,7 @@ namespace YoCode
             }
             else
             {
-                UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
+                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder("Error while getting tests from applicant's project"));
             }
         }
 
@@ -107,14 +108,17 @@ namespace YoCode
 
         public void StructuredOutput()
         {
-            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
-            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            var sb = new StringBuilder();
+            sb.AppendLine(messages.ParagraphDivider);
+            sb.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            sb.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            sb.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            sb.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            sb.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            sb.AppendLine(messages.ParagraphDivider);
+            sb.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+
+            UnitTestEvidence.GiveEvidence(new SimpleEvidenceBuilder(sb.ToString()));
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

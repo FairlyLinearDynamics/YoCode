@@ -452,7 +452,9 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
       .changedFileText{
         display: none;
-        white-space: pre-wrap
+        white-space: pre-wrap;
+        padding: 10px;
+        border-left: 1px solid var(--console-text);
       }
     &lt;/style&gt;
   &lt;/head&gt;
@@ -503,7 +505,8 @@ Example: --{0}=&lt;...&gt; --{5}</value>
           
           this.classList.toggle("fileChangesShowing");
 
-          var textField = this.nextElementSibling;
+          var line = this.closest(".paragraph-block");
+          textField = line.nextElementSibling;
           if(this.classList.contains("fileChangesShowing")){
             textField.style.display = "block";
           }

@@ -23,7 +23,7 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = feature.FeatureTitle;
-                featData.evidence = feature.Evidence;
+                featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.FeatureImplemented;
                 featData.score = feature.FeatureRating;
                 var result = feature.FeatureImplemented.HasValue
@@ -31,7 +31,6 @@ namespace YoCode
                     : "Could not perform check";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
-                featData.FilesChanged = feature.FileChanges;
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

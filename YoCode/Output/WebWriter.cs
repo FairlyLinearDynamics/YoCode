@@ -31,48 +31,24 @@ namespace YoCode
 
         public void AddMessage(string message)
         {
-            msg.Append(WebElementBuilder.FormatParagraph(message));
+            msg.Append(WebElementBuilder.FormatAndEncapsulateParagraph(message));
         }
 
         public void AddFeature(FeatureData data)
         {
-            var featureResults = new StringBuilder();
-            var pecs = data.FilesChanged;
-            if (data.FilesChanged!=null)
-            {
-                featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
-                foreach (var pec in pecs)
-                {
-                    var lineDifference = pec.LinesAdded + pec.LinesDeleted;
-                    featureResults.AppendLine($"{pec.Status} : <span class=\"changedFile\">{pec.Path}</span> = {lineDifference} ({pec.LinesAdded}+ and {pec.LinesDeleted}-)");
-                    featureResults.AppendLine(WebElementBuilder.FormatFileDiff(pec.Patch.Split("\n").ToList()));
-                }
-                const char dash = (char)0x2013;
-                var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass,
-                    !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
-                features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData()
-                {
-                    featureTitle = featureTitle,
-                    content = featureResults.ToString(),
-                    helperMessage = data.featureHelperMessage,
-                }));
-            }
-            else
-            {
-                featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
-                featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
-                const char dash = (char)0x2013;
-                var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass,
-                    !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
+            var featureResult = new StringBuilder();
+            const char dash = (char)0x2013;
+            var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass,
+                !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
+            featureResult.Append(WebElementBuilder.FormatAndEncapsulateParagraph(data.featureResult));
+            featureResult.Append(data.featureEvidence.BuildEvidenceForHTML());
 
-                features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData()
-                {
-                    featureTitle = featureTitle,
-                    content = featureResults.ToString(),
-                    helperMessage = data.featureHelperMessage,
-                }));
-            }
-
+            features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData()
+            {
+                featureTitle = featureTitle,
+                content = featureResult.ToString(),
+                helperMessage = data.featureHelperMessage,
+            }));
         }
 
         public void AddBanner()

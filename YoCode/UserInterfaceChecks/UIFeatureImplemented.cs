@@ -44,19 +44,19 @@ namespace YoCode
 
                 if (FoundTagsInfo.SeparateTags)
                 {
-                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{FoundTagsInfo.mileTagText}\"" +
-                        $" and \"{FoundTagsInfo.kmtagText}\" keywords in user interface");
+                    UIFeatureImplementedEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Found \"{FoundTagsInfo.mileTagText}\"" +
+                        $" and \"{FoundTagsInfo.kmtagText}\" keywords in user interface"));
                 }
                 else
                 {
-                    UIFeatureImplementedEvidence.GiveEvidence($"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface");
+                    UIFeatureImplementedEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface"));
                 }
             }
             else
             {
                 UIFeatureImplementedEvidence.FeatureImplemented = false;
                 UIFeatureImplementedEvidence.FeatureRating = 0;
-                UIFeatureImplementedEvidence.GiveEvidence($"Did not find any evidence in user interface");
+                UIFeatureImplementedEvidence.GiveEvidence(new SimpleEvidenceBuilder($"Did not find any evidence in user interface"));
             }
         }
 
