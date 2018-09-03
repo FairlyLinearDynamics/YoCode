@@ -36,17 +36,30 @@ namespace YoCode
 
         public void AddFeature(FeatureData data)
         {
-            var featureResult = new StringBuilder();
-            const char dash = (char)0x2013;
-            var featureTitle = WebElementBuilder.FormatFeatureTitle(data.title, data.featurePass,
-                !data.featurePass.HasValue ? dash.ToString() : data.score.ToString() + "%");
-            featureResult.Append(WebElementBuilder.FormatAndEncapsulateParagraph(data.featureResult));
-            featureResult.Append(data.featureEvidence.BuildEvidenceForHTML());
+            var featureResults = new StringBuilder();
+            featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
+            featureResults.Append(data.featureEvidence.BuildEvidenceForHTML());
+            string featureTitle;
+            switch (data.featurePass)
+            {
+                case true:
+                    featureTitle = WebElementBuilder.FormatPassedFeatureTitle(data.title, data.score + "%");
+                    break;
+
+                case false:
+                    featureTitle = WebElementBuilder.FormatFailedFeatureTitle(data.title, data.score + "%");
+                    break;
+
+                default:
+                    const char dash = (char)0x2013;
+                    featureTitle = WebElementBuilder.FormatInconclusiveFeatureTitle(data.title, dash.ToString());
+                    break;
+            }
 
             features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData()
             {
                 featureTitle = featureTitle,
-                content = featureResult.ToString(),
+                content = featureResults.ToString(),
                 helperMessage = data.featureHelperMessage,
             }));
         }

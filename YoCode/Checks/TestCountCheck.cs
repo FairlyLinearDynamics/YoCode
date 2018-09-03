@@ -43,12 +43,12 @@ namespace YoCode
             ExecuteTheCheck();
         }
 
-        public void ExecuteTheCheck()
+        private void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
 
-            if (evidence.FeatureImplemented == null)
+            if (evidence.Inconclusive)
             {
                 UnitTestEvidence.SetInconclusive(evidence.Evidence);
                 return;
@@ -59,11 +59,6 @@ namespace YoCode
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
-
-            if (UnitTestEvidence.FeatureImplemented == null)
-                return;
-
-            StructuredOutput();
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -76,17 +71,20 @@ namespace YoCode
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
-                UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
+                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountTreshold;
+                if (featureImplemented)
+                {
+                    UnitTestEvidence.SetPassed(new SimpleEvidenceBuilder(StructuredOutput()));
+                }
+                else
+                {
+                    UnitTestEvidence.SetFailed(new SimpleEvidenceBuilder(StructuredOutput()));
+                }
             }
             else
             {
                 UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder("Error while getting tests from applicant's project"));
             }
-        }
-
-        private string BuildErrorOutput()
-        {
-            return $"Error Running Tests: {ErrorOutput}";
         }
 
         public static List<string> GetTestKeyWords()
@@ -106,19 +104,20 @@ namespace YoCode
             return rating - deduction;
         }
 
-        public void StructuredOutput()
+        private string StructuredOutput()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(messages.ParagraphDivider);
-            sb.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            sb.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            sb.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            sb.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            sb.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
-            sb.AppendLine(messages.ParagraphDivider);
-            sb.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            var builder = new StringBuilder();
 
-            UnitTestEvidence.GiveEvidence(new SimpleEvidenceBuilder(sb.ToString()));
+            builder.AppendLine(messages.ParagraphDivider);
+            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            builder.AppendLine(messages.ParagraphDivider);
+            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+
+            return builder.ToString();
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

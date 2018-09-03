@@ -37,10 +37,17 @@ namespace YoCode
 
                 OutputCheck(key);
             }
-
-            UIBadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(resultsOutput.ToString()));
             UIBadInputCheckEvidence.FeatureRating = GetOutputCheckRating();
-            UIBadInputCheckEvidence.FeatureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+
+            var featureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
+            if (featureImplemented)
+            {
+                UIBadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All exceptions were handled."));
+            }
+            else
+            {
+                UIBadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one exception was not handled."));
+            }
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)

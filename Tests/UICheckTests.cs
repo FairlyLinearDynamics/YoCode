@@ -17,17 +17,7 @@ namespace YoCode_XUnit
 
             var evidence = uiCheck.UIEvidence;
 
-            evidence.FeatureImplemented.Should().Be(true);
-        }
-
-        [Fact]
-        public void UICheck_FeatureEvidencePresent()
-        {
-            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
-
-            var evidence = uiCheck.UIEvidence;
-
-            evidence.EvidencePresent.Should().Be(true);
+            evidence.Passed.Should().Be(true);
         }
 
         [Fact]

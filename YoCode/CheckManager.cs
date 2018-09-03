@@ -55,9 +55,12 @@ namespace YoCode
             codeCoverage.Start();
 
             // Duplication check
+            var dupcheck = new DuplicationCheckRunner(dir, new DupFinder(p.CMDToolsPath), p);
+
             var dupFinderThread = new Thread(() =>
             {
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), p).DuplicationEvidence);
+                checkList.Add(dupcheck.AppDuplicationEvidence);
+                checkList.Add(dupcheck.TestDuplicationEvidence);
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();

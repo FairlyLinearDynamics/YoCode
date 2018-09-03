@@ -49,11 +49,8 @@ namespace YoCode
                 browser.Navigate().Back();
             }
 
-            uiConversionResultsOutput.AppendLine("Successfully converted from miles to kilometres");
-
-            UIConversionEvidence.FeatureImplemented = true;
+            UIConversionEvidence.SetPassed(new SimpleEvidenceBuilder("Successfully converted from miles to kilometres"));
             UIConversionEvidence.FeatureRating = 1;
-            UIConversionEvidence.GiveEvidence(new SimpleEvidenceBuilder(uiConversionResultsOutput.ToString()));
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)

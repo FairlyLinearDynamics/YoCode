@@ -71,13 +71,26 @@ namespace YoCode
                     actual = fetcher.GetActualValues(texts, actions);
 
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
-                    UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
-                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
-                    UnitConverterCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
 
-                    BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
+                    if (OutputsAreEqual())
+                    {
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
+                    }
+                    else
+                    {
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
+                    }
+                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+
+                    if (BadInputsAreFixed())
+                    {
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
+                    }
+                    else
+                    {
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
+                    }
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
-                    BadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                 }
                 catch (Exception)
                 {
@@ -221,7 +234,7 @@ namespace YoCode
             }
             catch (Exception)
             {
-                UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("Unit converting has failed"));
+                UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Unit converting has failed"));
                 ret = false;
             }
             return ret;

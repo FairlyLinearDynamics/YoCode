@@ -42,12 +42,14 @@ namespace YoCode
 
         private void FillInEvidence(IQueryableCommitLog commitLog, string output)
         {
-            GitEvidence.FeatureImplemented = LastCommitWasByNonEmployee(commitLog);
-            GitEvidence.FeatureRating = GitEvidence.FeatureImplemented??false ? 1 : 0;
-
-            if (GitEvidence.FeatureImplemented??false)
+            if (LastCommitWasByNonEmployee(commitLog))
             {
-                GitEvidence.GiveEvidence(new SimpleEvidenceBuilder("Commits:" + Environment.NewLine + output));
+                GitEvidence.FeatureRating = 1;
+                GitEvidence.SetPassed(new SimpleEvidenceBuilder("Commits:" + Environment.NewLine + output));
+            }
+            else
+            {
+                GitEvidence.SetFailed(new SimpleEvidenceBuilder("Last Commit By Waters Employee"));
             }
         }
 

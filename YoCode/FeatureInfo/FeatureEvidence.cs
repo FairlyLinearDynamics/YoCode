@@ -3,14 +3,11 @@
 
     internal class FeatureEvidence
     {
-        // TODO: Maybe should be 3 methods: SetFailed(reason); SetInconclusive(reason); SetPassed(reason)
-        // Each method would set featureImplemented; FeatureRatings and weights; Evidence
         public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
-        public bool? FeatureImplemented { get; set; }
-        public bool Failed => FeatureImplemented.HasValue && !FeatureImplemented.Value;
-        public bool Passed => FeatureImplemented.HasValue && FeatureImplemented.Value;
-        public bool Inconclusive => !FeatureImplemented.HasValue;
+        public bool Failed => featureImplemented.HasValue && !featureImplemented.Value;
+        public bool Passed => featureImplemented.HasValue && featureImplemented.Value;
+        public bool Inconclusive => !featureImplemented.HasValue;
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
@@ -20,24 +17,31 @@
 
         public string HelperMessage { get; set; }
 
+        private bool? featureImplemented;
         public IEvidence Evidence { get; set; } = new SimpleEvidenceBuilder("");
 
-        public void GiveEvidence(IEvidence reason)
+        private void GiveEvidence(IEvidence reason)
         {
             Evidence = reason;
         }
 
         public void SetInconclusive(IEvidence reason)
         {
-            FeatureImplemented = null;
+            featureImplemented = null;
             FeatureWeighting = 0;
             Evidence = reason;
         }
 
+        public void SetPassed(IEvidence reason)
+        {
+            featureImplemented = true;
+            GiveEvidence(reason);
+        }
+
         public void SetFailed(IEvidence reason)
         {
-            FeatureImplemented = false;
-            Evidence = reason;
+            featureImplemented = false;
+            GiveEvidence(reason);
         }
     }
 }

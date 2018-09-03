@@ -46,9 +46,8 @@ namespace YoCode
 
         private void FillInEvidence(Repository repo)
         {
-            FileChangeEvidence.FeatureImplemented = true;
+            FileChangeEvidence.SetPassed(new FileDiffEvidenceBuilder(GetFileDifferences(repo), BuildFileChangeOutput()));
             FileChangeEvidence.FeatureRating = 1;
-            FileChangeEvidence.GiveEvidence(new FileDiffEvidenceBuilder(GetFileDifferences(repo),BuildFileChangeOutput()));
         }
 
         private static List<string> GetUncommitedFiles(Repository repository)
