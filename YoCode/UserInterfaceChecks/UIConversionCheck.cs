@@ -17,7 +17,6 @@ namespace YoCode
 
         public UIConversionCheck(IWebDriver browser, UIFoundTags foundKeyWord)
         {
-            UIConversionEvidence.FeatureTitle = "Units were converted successfully using UI";
             UIConversionEvidence.Feature = Feature.UIConversionCheck;
             UIConversionEvidence.HelperMessage = messages.UIConversionCheck;
 

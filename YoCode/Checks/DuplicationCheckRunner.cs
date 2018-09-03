@@ -19,10 +19,10 @@ namespace YoCode
             this.p = p;
 
             AppDuplicationEvidence = RunAppDuplicationCheck(webAppFile,Int32.Parse(p.AppCodeBaseCost),Int32.Parse(p.AppDuplicationCost));
-            SetFeatureAndTitle(AppDuplicationEvidence, "Duplication improvement: UnitConverterWebApp", Feature.AppDuplicationCheck);
+            SetFeature(AppDuplicationEvidence,Feature.AppDuplicationCheck);
 
             TestDuplicationEvidence = RunAppDuplicationCheck(testFile,Int32.Parse(p.TestCodeBaseCost), Int32.Parse(p.TestDuplicationCost));
-            SetFeatureAndTitle(TestDuplicationEvidence, "Duplication improvement: UnitConverterTests", Feature.TestDuplicationCheck);
+            SetFeature(TestDuplicationEvidence, Feature.TestDuplicationCheck);
         }
 
         public FeatureEvidence RunAppDuplicationCheck(string file, int OrigCodeBaseCost,int OrigDuplicateCost)
@@ -35,9 +35,8 @@ namespace YoCode
             return dupcheck.DuplicationEvidence;
         }
 
-        public void SetFeatureAndTitle(FeatureEvidence evidence,string title,Feature feature)
+        public void SetFeature(FeatureEvidence evidence,Feature feature)
         {
-            evidence.FeatureTitle = title;
             evidence.Feature = feature;
         }
 

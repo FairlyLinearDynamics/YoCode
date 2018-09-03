@@ -14,7 +14,6 @@ namespace YoCode
 
         public UIBadInputChecker(IWebDriver browser, UIFoundTags foundKeyWord)
         {
-            UIBadInputCheckEvidence.FeatureTitle = "Bad input crashes have been fixed in the UI";
             UIBadInputCheckEvidence.Feature = Feature.UIBadInputCheck;
             UIBadInputCheckEvidence.HelperMessage = messages.UIBadInputCheck;
 

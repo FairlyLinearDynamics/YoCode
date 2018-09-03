@@ -12,7 +12,6 @@ namespace YoCode
 
         public FileChangeFinder(string path)
         {
-            FileChangeEvidence.FeatureTitle = "Files changed";
             FileChangeEvidence.Feature = Feature.FilesChangedCheck;
             FileChangeEvidence.HelperMessage = messages.FilesChangedCheck;
 

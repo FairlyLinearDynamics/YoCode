@@ -5,7 +5,6 @@ namespace YoCode
 {
     internal class FeatureEvidence
     {
-        public string FeatureTitle { get; set; }
         public Feature Feature { get; set; }
         public bool Failed => featureImplemented.HasValue && !featureImplemented.Value;
         public bool Passed => featureImplemented.HasValue && featureImplemented.Value;
@@ -47,5 +46,6 @@ namespace YoCode
             featureImplemented = false;
             GiveEvidence(reason);
         }
+
     }
 }

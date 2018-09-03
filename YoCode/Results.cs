@@ -27,7 +27,6 @@ namespace YoCode
 
             foreach (var elem in list)
             {
-                Console.WriteLine(elem.Feature.ToString());
                 
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
                 MaximumScore += elem.FeatureWeighting;
