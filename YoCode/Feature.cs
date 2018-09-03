@@ -9,14 +9,17 @@ namespace YoCode
         TestCountCheck,
         BadInputCheck,
         CodeCoverageCheck,
-        DuplicationCheck,
-        UICheck,
+        TestDuplicationCheck,
+        AppDuplicationCheck,
+        UICodeCheck,
         FilesChangedCheck,
         GitCheck,
-        FrontEndCheck,
         ProjectBuilder,
         ProjectRunner,
-        UnitConverterCheck
+        UnitConverterCheck,
+        UIFeatureImplemented,
+        UIBadInputCheck,
+        UIConversionCheck,
     }
 
 }

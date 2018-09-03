@@ -2,27 +2,27 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 
 namespace YoCode
 {
-    public class WebWriter : IPrint
+    internal class WebWriter : IPrint
     {
-        const string OUTPUT_PATH = @"YoCodeReport.html";
-        const string FEATURE_TAG = "{FEATURE}";
-        const string SCORE_TAG = "{SCORE}";
+        private const string FEATURE_TAG = "{FEATURE}";
+        private const string SCORE_TAG = "{SCORE}";
 
-        StringBuilder features;
-        StringBuilder errors;
-        StringBuilder msg;
+        private readonly StringBuilder features;
+        private readonly StringBuilder errors;
+        private readonly StringBuilder msg;
 
         private double score;
+        private readonly string nameOfReportFile;
 
-        public WebWriter()
+        public WebWriter(string outputPath)
         {
             features = new StringBuilder();
             errors = new StringBuilder();
             msg = new StringBuilder();
+            nameOfReportFile = outputPath;
         }
 
         public void AddMessage(string message)
@@ -35,10 +35,28 @@ namespace YoCode
             var featureResults = new StringBuilder();
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
             featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
+            string featureTitle;
+            switch (data.featurePass)
+            {
+                case true:
+                    featureTitle = WebElementBuilder.FormatPassedFeatureTitle(data.title, data.score + "%");
+                    break;
 
-            var featureTitle = WebElementBuilder.FormaFeatureTitle(data.title, data.featurePass, data.score);
+                case false:
+                    featureTitle = WebElementBuilder.FormatFailedFeatureTitle(data.title, data.score + "%");
+                    break;
 
-            features.Append(WebElementBuilder.FormatAccordionElement(featureTitle, featureResults.ToString()));
+                default:
+                    const char dash = (char)0x2013;
+                    featureTitle = WebElementBuilder.FormatInconclusiveFeatureTitle(data.title, dash.ToString());
+                    break;
+            }
+
+            features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData() {
+                featureTitle = featureTitle,
+                content = featureResults.ToString(),
+                helperMessage = data.featureHelperMessage,
+            }));
         }
 
         public void AddBanner()
@@ -63,26 +81,16 @@ namespace YoCode
 
         public void WriteReport()
         {
-            var writeTo = (Program.OutputTo!=null)? Path.Combine(Program.OutputTo, OUTPUT_PATH) : OUTPUT_PATH;
-
             var consoleWriter = new ConsoleWriter();
             try
             {
-                if (Program.GenerateHtml)
-                {
-                    File.WriteAllText(writeTo, BuildReport());
-                    if (Program.OpenHTMLOnFinish)
-                    {
-                        HtmlReportLauncher.LaunchReport(OUTPUT_PATH);
-                    }
-                    consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(writeTo)));
-                    consoleWriter.WriteReport();
-                }
+                File.WriteAllText(nameOfReportFile, BuildReport());
+                consoleWriter.AddMessage(String.Format(messages.SuccessfullyWroteReport, Environment.NewLine, Path.GetFullPath(nameOfReportFile)));
+                consoleWriter.WriteReport();
             }
             catch
             {
-                
-                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(writeTo), Environment.NewLine, Environment.NewLine) });
+                consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(nameOfReportFile), Environment.NewLine, Environment.NewLine) });
             }
         }
     }

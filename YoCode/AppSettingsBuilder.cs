@@ -6,38 +6,45 @@ namespace YoCode
 {
     internal class AppSettingsBuilder : IAppSettingsBuilder
     {
-        private static IConfiguration Configuration;
+        private static IConfiguration configuration;
+        private readonly bool juniorTest;
+
+        public AppSettingsBuilder(bool juniorTest)
+        {
+            this.juniorTest = juniorTest;
+        }
 
         public IConfiguration ReadJSONFile()
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-            Configuration = builder.Build();
-            return Configuration;
+            configuration = builder.Build();
+            return configuration;
         }
 
         public string GetCMDToolsPath()
         {
-            return Configuration["duplicationCheckSetup:CMDtoolsDir"];
+            return configuration["duplicationCheckSetup:CMDtoolsDir"];
         }
 
         public string GetDotCoverDir()
         {
-            return Configuration["codeCoverageCheckSetup:dotCoverDir"];
+            return configuration["codeCoverageCheckSetup:dotCoverDir"];
         }
 
-        public string ReturnPathByMode(TestType mode)
+        public string GetWeightingsPath()
         {
-            return mode == TestType.Junior ? Configuration["featureWeightings:Junior"] : Configuration["featureWeightings:Original"];
+            return juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"];
         }
 
-        public (string,string) GetOriginalCosts()
+        public (string,string) GetWebAppCosts()
         {
-            return (Configuration["OriginalTest:CodeBaseCost"], Configuration["OriginalTest:DuplicationCost"]);
+            return juniorTest ? (configuration["JuniorTest-App:CodeBaseCost"], configuration["JuniorTest-App:DuplicationCost"]) : (configuration["OriginalTest-App:CodeBaseCost"], configuration["OriginalTest-App:DuplicationCost"]);
         }
 
-        public (string, string) GetJuniorCosts()
+        public (string,string) GetTestsCosts()
         {
-            return (Configuration["JuniorTest:CodeBaseCost"], Configuration["JuniorTest:DuplicationCost"]);
+            return juniorTest ? (configuration["JuniorTest-Tests:CodeBaseCost"], configuration["JuniorTest-Tests:DuplicationCost"]) : (configuration["OriginalTest-Tests:CodeBaseCost"], configuration["OriginalTest-Tests:DuplicationCost"]);
         }
+
     }
 }

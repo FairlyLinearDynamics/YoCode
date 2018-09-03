@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 
 namespace YoCode
 {
@@ -36,17 +37,18 @@ namespace YoCode
             this.featureRunner = featureRunner;
             UnitTestEvidence.FeatureTitle = "All unit tests have passed";
             UnitTestEvidence.Feature = Feature.TestCountCheck;
+            UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
             arguments = "test";
             ExecuteTheCheck();
         }
 
-        public void ExecuteTheCheck()
+        private void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
             var evidence = featureRunner.Execute(pr);
 
-            if (evidence.FeatureImplemented == null)
+            if (evidence.Inconclusive)
             {
                 UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
                 return;
@@ -57,11 +59,6 @@ namespace YoCode
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);
-
-            if (UnitTestEvidence.FeatureImplemented == null)
-                return;
-
-            StructuredOutput();
         }
 
         public void StoreCalculations(List<int> tempStats)
@@ -74,17 +71,20 @@ namespace YoCode
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
-                UnitTestEvidence.FeatureImplemented = stats.PercentagePassed == 100 && stats.totalTests > TestCountTreshold;
+                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountTreshold;
+                if (featureImplemented)
+                {
+                    UnitTestEvidence.SetPassed(StructuredOutput());
+                }
+                else
+                {
+                    UnitTestEvidence.SetFailed(StructuredOutput());
+                }
             }
             else
             {
                 UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
             }
-        }
-
-        private string BuildErrorOutput()
-        {
-            return $"Error Running Tests: {ErrorOutput}";
         }
 
         public static List<string> GetTestKeyWords()
@@ -104,16 +104,20 @@ namespace YoCode
             return rating - deduction;
         }
 
-        public void StructuredOutput()
+        private string StructuredOutput()
         {
-            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
-            UnitTestEvidence.GiveEvidence(messages.ParagraphDivider);
-            UnitTestEvidence.GiveEvidence(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            var builder = new StringBuilder();
+
+            builder.AppendLine(messages.ParagraphDivider);
+            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            builder.AppendLine(messages.ParagraphDivider);
+            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+
+            return builder.ToString();
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

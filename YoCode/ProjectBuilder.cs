@@ -9,7 +9,7 @@ namespace YoCode
         private string Arguments { get; } = "build";
         private readonly string Output;
         private const string projectFolder = "UnitConverterWebApp";
-        private bool? buildSuccessful;
+        private bool buildSuccessful;
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
@@ -25,6 +25,7 @@ namespace YoCode
                 return;
             }
 
+
             var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
             var evidence = featureRunner.Execute(processDetails);
@@ -33,20 +34,25 @@ namespace YoCode
             var errs = evidence.ErrorOutput;
             CheckBuildSuccess();
 
-            bool ErrorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
+            var errorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-            if (evidence.FeatureImplemented == null|| ErrorGettingErrorsOrWarnings || buildSuccessful == null)
+            if (evidence.Inconclusive || errorGettingErrorsOrWarnings)
             {
+                ProjectBuilderEvidence.SetInconclusive($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} ");
                 return;
             }
 
-            ProjectBuilderEvidence.FeatureImplemented = buildSuccessful.Value;
-            ProjectBuilderEvidence.FeatureRating = buildSuccessful.Value ? 1 : 0;
-
-            ProjectBuilderEvidence.GiveEvidence($"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}");
-            if (GetNumberOfErrors() > 0)
+            var buildOutput = $"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}";
+            if (buildSuccessful)
             {
+                ProjectBuilderEvidence.SetPassed(buildOutput);
+                ProjectBuilderEvidence.FeatureRating = 1;
+            }
+            else
+            {
+                ProjectBuilderEvidence.GiveEvidence(buildOutput);
                 ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");
+                ProjectBuilderEvidence.FeatureRating = 0;
             }
         }
 
@@ -74,7 +80,6 @@ namespace YoCode
                 return;
             }
             buildSuccessful = Output.Contains("Build succeeded");
-            return;
         }
 
         private int GetNumberOfWarnings()

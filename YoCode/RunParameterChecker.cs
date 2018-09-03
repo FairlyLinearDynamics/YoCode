@@ -10,11 +10,15 @@ namespace YoCode
         private readonly IInputResult result;
         private readonly IAppSettingsBuilder appsettingsBuilder;
 
-        public List<string> Errs= new List<string>();
+        public List<string> Errs = new List<string>();
         public string CMDToolsPath { get; set; }
         public string DotCoverDir { get; set; }
-        public string CodeBaseCost { get; set; }
-        public string DuplicationCost { get; set; }
+
+        public string TestCodeBaseCost { get; set; }
+        public string TestDuplicationCost { get; set; }
+
+        public string AppCodeBaseCost { get; set; }
+        public string AppDuplicationCost { get; set; }
 
         public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
@@ -23,7 +27,7 @@ namespace YoCode
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid(bool isJunior)
+        public bool ParametersAreValid()
         {
             if (result.HelpAsked)
             {
@@ -42,14 +46,8 @@ namespace YoCode
                 CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
                 DotCoverDir = appsettingsBuilder.GetDotCoverDir();
 
-                if (isJunior)
-                {
-                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetJuniorCosts();
-                }
-                else
-                {
-                    (CodeBaseCost, DuplicationCost) = appsettingsBuilder.GetOriginalCosts();
-                }
+                (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
+                (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
             }
             catch (FileNotFoundException)
             {
@@ -62,10 +60,10 @@ namespace YoCode
 
             var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(CodeBaseCost, DuplicationCost, "Test cost values");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
 
-            var juniorFileExists = FileExists(TestType.Junior, "JuniorWeightings.json");
-            var originalFileExists = FileExists(TestType.Original, "OriginalWeightings.json");
+            var juniorFileExists = FileExists("JuniorWeightings.json");
+            var originalFileExists = FileExists("OriginalWeightings.json");
 
             bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
 
@@ -77,9 +75,9 @@ namespace YoCode
             return CheckIfToolExecutablesExist();
         }
 
-        private bool FileExists(TestType type, string fileName)
+        private bool FileExists(string fileName)
         {
-            if(!File.Exists(appsettingsBuilder.ReturnPathByMode(type)))
+            if (!File.Exists(appsettingsBuilder.GetWeightingsPath()))
             {
                 return SetError($"{fileName} not found");
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace YoCode
 {
     internal static class CommandErrorChecking
     {
-        public static List<string> ContainsErrors(List<SplitArg> currentCommands,List<string> implementedCommands)
+        public static List<string> ContainsErrors(List<SplitArg> currentCommands, List<string> implementedCommands)
         {
             var errList = new List<string>();
 

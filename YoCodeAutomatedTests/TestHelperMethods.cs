@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using System.IO;
+using Xunit.Abstractions;
 using YoCode;
 
 namespace YoCodeAutomatedTests
@@ -45,6 +47,15 @@ namespace YoCodeAutomatedTests
             pr.ExecuteTheCheck("Units were converted successfully");
 
             return pr.Output;
+        }
+
+        public void OutputTestDebugInfo(ITestOutputHelper testOutputHelper, string argument)
+        {
+            testOutputHelper.WriteLine($"Arguments to dotnet: {argument}");
+            testOutputHelper.WriteLine($"YoCode DLL path: {DllPath}");
+            testOutputHelper.WriteLine($"Working directory: {Directory.GetCurrentDirectory()}");
+            testOutputHelper.WriteLine($"Test assembly version: {ThisAssembly.AssemblyInformationalVersion}");
+            testOutputHelper.WriteLine($"YoCode assembly version: {FileVersionInfo.GetVersionInfo(Path.Combine(DllPath, "YoCode.dll")).ProductVersion}");
         }
     }
 }

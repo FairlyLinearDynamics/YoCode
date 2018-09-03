@@ -7,34 +7,41 @@ using System.Linq;
 
 namespace YoCode
 {
-    static class WebElementBuilder
+    internal struct WebAccordionData{
+        public string featureTitle;
+        public string content;
+        public string helperMessage;
+    }
+
+    internal static class WebElementBuilder
     {
-        const string TITLE_TAG = "{TITLE}";
-        const string CONTENT_TAG = "{CONTENT}";
+        private const string TITLE_TAG = "{TITLE}";
+        private const string CONTENT_TAG = "{CONTENT}";
+        private const string CONTENT_INFO_TAG = "{INFO-CONTENT}";
 
         const string PARAGRAPH_OPEN = "<p>";
         const string PARAGRAPH_CLOSE = "</p>";
-        const string HEADER_OPEN = "<h1>";
-        const string HEADER_CLOSE = "</h1>";
-        const string LIST_OPEN = "<ul>";
-        const string LIST_CLOSE = "</ul>";
-        const string LIST_ELEM_OPEN = "<li>";
-        const string LIST_ELEM_CLSOE = "</li>";
-        const string LINE_BREAK = "<br/>";
-        const string SPAN_OPEN = "<span>";
-        const string SPAN_CLOSE = "</span>";
+        private const string HEADER_OPEN = "<h1>";
+        private const string HEADER_CLOSE = "</h1>";
+        private const string LIST_OPEN = "<ul>";
+        private const string LIST_CLOSE = "</ul>";
+        private const string LIST_ELEM_OPEN = "<li>";
+        private const string LIST_ELEM_CLSOE = "</li>";
+        private const string LINE_BREAK = "<br/>";
+        private const string SPAN_OPEN = "<span>";
+        private const string SPAN_CLOSE = "</span>";
 
         const string ESCAPE_AND = "&amp";
-        const string ESCAPE_LESS = "&lt";
-        const string ESCAPE_GREATER = "&gt";
+        private const string ESCAPE_LESS = "&lt";
+        private const string ESCAPE_GREATER = "&gt";
 
-        static Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
-        static Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
+        private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
+        private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
 
-        public static string FormatAccordionElement(string featureTitle, string content)
+        public static string FormatAccordionElement(WebAccordionData data)
         {
             return messages.ListElementTemplate
-                .Replace(TITLE_TAG,featureTitle).Replace(CONTENT_TAG,content);
+                .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
         public static string FormatParagraph(string text)
@@ -45,9 +52,9 @@ namespace YoCode
             var lines = text.Split(Environment.NewLine);
             var par = new StringBuilder();
             par.Append(SPAN_OPEN);
-            foreach(var line in lines)
+            foreach (var line in lines)
             {
-                par.Append(line+LINE_BREAK);
+                par.Append(line).Append(LINE_BREAK);
             }
             par.Append(SPAN_CLOSE);
             return messages.HtmlParagraphBlock
@@ -63,48 +70,36 @@ namespace YoCode
         {
             var result = new StringBuilder();
             result.AppendLine(LIST_OPEN);
-            foreach(var elem in list)
+            foreach (var elem in list)
             {
-                result.AppendLine(LIST_ELEM_OPEN + elem + LIST_ELEM_CLSOE);
+                result.Append(LIST_ELEM_OPEN).Append(elem).AppendLine(LIST_ELEM_CLSOE);
             }
             result.AppendLine(LIST_CLOSE);
             return result.ToString();
         }
 
-        public static string FormaFeatureTitle(string title, bool? featurePassed, double score = 0.0)
+        public static string FormatPassedFeatureTitle(string title, string score)
         {
-            var passIcon = "accordion-icon-pass";
-            var failIcon = "accordion-icon-fail";
-            var undefinedIcon = "accordion-icon-undefinded";
-            var passIconStyle = "fa-check-circle-o";
-            var failIconStyle = "fa-times-circle-o";
-            var undefinedStyle = "fa-question-circle-o";
+            const string passIcon = "accordion-icon-pass";
+            const string passIconStyle = "fa-check-circle-o";
 
-            var chosenIcon = "";
-            var chosenIconStyle = "";
-            switch (featurePassed)
-            {
-                case true:
-                    chosenIcon = passIcon;
-                    chosenIconStyle = passIconStyle;
-                    break;
-                case false:
-                    chosenIcon = failIcon;
-                    chosenIconStyle = failIconStyle;
-                    break;
-                default:
-                    chosenIcon = undefinedIcon;
-                    chosenIconStyle = undefinedStyle;
-                    break;
-            }
-
-            return String.Format(messages.HtmlTitleTemplate, chosenIcon, chosenIconStyle, score+"%",title);
+            return string.Format(messages.HtmlTitleTemplate, passIcon, passIconStyle, score, title);
         }
 
-        private static string FormatCheckIcont(bool checkMark)
+        public static string FormatFailedFeatureTitle(string title, string score)
         {
-            return checkMark ? "<span class=\"accordion-icon accordion-icon-pass\"><span class=\"fa fa-check-circle-o\"></span></span>" 
-                : "<span class=\"accordion-icon accordion-icon-fail\"><span class=\"fa fa-times-circle-o\"></span></span>";
+            const string failIcon = "accordion-icon-fail";
+            const string failIconStyle = "fa-times-circle-o";
+            
+            return string.Format(messages.HtmlTitleTemplate, failIcon, failIconStyle, score, title);
+        }
+
+        public static string FormatInconclusiveFeatureTitle(string title, string score)
+        {
+            const string undefinedIcon = "accordion-icon-undefinded";
+            const string undefinedStyle = "fa-question-circle-o";
+
+            return string.Format(messages.HtmlTitleTemplate, undefinedIcon, undefinedStyle, score, title);
         }
 
         public static string FormatLink(string url, string title)
@@ -122,7 +117,7 @@ namespace YoCode
             var linksInText = urlPattern.Matches(text);
             if (linksInText.Any())
             {
-                foreach(var link in linksInText)
+                foreach (var link in linksInText)
                 {
                     text = text.Replace(link.ToString(), FormatLink(link.ToString(), urlTitlePattern.Match(link.ToString()).ToString()));
                 }

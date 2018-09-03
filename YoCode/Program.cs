@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace YoCode
 {
     internal static class Program
     {
-        private static bool showLoadingAnim;
-        private static bool isJunior;
-
-        public static bool OpenHTMLOnFinish { get; set; }
-        public static string OutputTo { get; set; }
-        public static bool GenerateHtml { get; set; }
-
         private static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
-            var outputs = new List<IPrint> { new WebWriter(), new ConsoleWriter() };
+            var commandLineHandler = new CommandLineParser(args);
+            var result = commandLineHandler.Parse();
+
+            const string reportFilename = "YoCodeReport.html";
+            var outputPath = result.OutputFilePath != null ? Path.Combine(result.OutputFilePath, reportFilename) : reportFilename;
+
+            var outputs = new List<IPrint>();
+
+            if (result.CreateHtmlReport)
+            {
+                outputs.Add(new WebWriter(outputPath));
+            }
+
+            outputs.Add(new ConsoleWriter());
 
             var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
-            var commandLinehandler = new CommandLineParser(args);
-            var result = commandLinehandler.Parse();
+            var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
+            var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);
 
-            var parameters = new RunParameterChecker(compositeOutput, result, new AppSettingsBuilder());
-
-            OpenHTMLOnFinish = !result.Silent;
-            OutputTo = result.OutputFilePath;
-            GenerateHtml = !result.NoHtml;
-            isJunior = result.JuniorTest;
-
-            if (!parameters.ParametersAreValid(isJunior))
+            if (!parameters.ParametersAreValid())
             {
                 if (!result.HelpAsked)
                 {
@@ -42,6 +42,7 @@ namespace YoCode
                 {
                     compositeOutput.ShowHelp();
                 }
+                LaunchReport(result, outputPath);
                 return;
             }
 
@@ -49,23 +50,22 @@ namespace YoCode
 
             var dir = new PathManager(modifiedTestDirPath);
 
-            showLoadingAnim = !result.NoLoadingScreen;
-
             var workThreads = new List<Thread>();
 
-            if (showLoadingAnim)
+            if (!result.NoLoadingScreen)
             {
                 var loadingThread = new Thread(LoadingAnimation.RunLoading)
                 {
                     IsBackground = true
                 };
+                loadingThread.Name = "loadingThread";
                 workThreads.Add(loadingThread);
                 loadingThread.Start();
             }
 
             var evidenceList = new List<FeatureEvidence>();
 
-            var checkManager = new CheckManager(dir, workThreads, isJunior);
+            var checkManager = new CheckManager(dir, workThreads);
 
             var projectRunner = checkManager.PassGatewayChecks(evidenceList);
 
@@ -79,8 +79,20 @@ namespace YoCode
 
             evidenceList = checkManager.PerformChecks(parameters, projectRunner);
 
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
+
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
-                new Results(evidenceList, isJunior ? TestType.Junior : TestType.Original).FinalScore);
+                results.FinalScore);
+
+            LaunchReport(result, outputPath);
+        }
+
+        private static void LaunchReport(InputResult result, string outputPath)
+        {
+            if (result.CreateHtmlReport && result.OpenHtmlReport)
+            {
+                HtmlReportLauncher.LaunchReport(outputPath);
+            }
         }
     }
 }

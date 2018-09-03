@@ -9,23 +9,16 @@ namespace YoCode
         public double FinalScore { get; set; }
         public double MaximumScore { get; set; }
 
-        public Results(List<FeatureEvidence> list, TestType mode)
+        public Results(List<FeatureEvidence> list, string jsonFilePath)
         {
-            var storage = new FeatureDetailsStorage(mode);
-
-            var thisDictionary = storage.ReturnDetailsByMode(mode);
-
-            storage.DeserializeJSONFile();
-            thisDictionary = storage.AssignWeightingsFromJSON(thisDictionary);
-
-            AssignWeightings(list, thisDictionary);
+            AssignWeightings(list, FeatureWeightingsReader.ReadFromJSON(jsonFilePath));
             CalculateWeightedRatings(list);
             CalculateFinalScore();
         }
 
-        public void AssignWeightings(List<FeatureEvidence> list, Dictionary<Feature, FeatureDetails> xTestDetails)
+        private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
         {
-            list.FindAll(e=>e.FeatureImplemented.HasValue).ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature].FeatureWeighting);
+            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature]);
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
@@ -37,7 +30,6 @@ namespace YoCode
                 Console.WriteLine(elem.Feature.ToString());
                 
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
-
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
@@ -53,28 +45,25 @@ namespace YoCode
         {
             if (list.Count > 1)
             {
-                double badInputWeighting = 0;
-
-                badInputWeighting = list.Find(e => e.Feature == Feature.BadInputCheck && e.FeatureRating == 0)?.FeatureWeighting ?? 0;
-                list.Find(e => e.Feature == Feature.FrontEndCheck).FeatureWeighting = badInputWeighting;
-
                 var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
-                var badInputUI = list.Find(e => e.Feature == Feature.FrontEndCheck);
+                var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
 
-                if (badInputBackEnd.FeatureImplemented==null && badInputUI.FeatureImplemented == true) 
+                if (badInputBackEnd.Inconclusive) 
                 {
                     badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
                     badInputBackEnd.FeatureWeighting = 0;
                 }
 
-                var unitConverterCheck = list.Find(e => e.Feature == Feature.UnitConverterCheck);
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
+                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
+            }
+        }
 
-                if (unitConverterCheck.FeatureImplemented == null)
-                {
-                    MaximumScore -= unitConverterCheck.FeatureWeighting;
-                    unitConverterCheck.FeatureWeighting = 0;
-                }
-
+        public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
+        {
+            if (evidence.Inconclusive)
+            {
+                evidence.FeatureWeighting = 0;
             }
         }
     }

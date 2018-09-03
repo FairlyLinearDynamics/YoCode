@@ -3,54 +3,39 @@ using FluentAssertions;
 using System.IO;
 using YoCode;
 using Moq;
+using System.Text;
 
 namespace YoCode_XUnit
 {
     public class DuplicationCheckTests
     {
-        private FeatureEvidence SetUpFeatureEvidence(string outputToBeSet)
-        {
-            return new FeatureEvidence()
-            {
-                Output = outputToBeSet,
-                FeatureImplemented = true,
-            };
-        }
 
         [Fact]
-        public void DuplicationCheck_FeatureImplemented_TRUE()
+        public void DuplicationCheck_Should_Set_Inconclusive_DueToNoDupfinderOutput()
         {
             IPathManager fakeDir;
             IDupFinder fakeDupFinder;
-            IRunParameterChecker fakeRunCheck;
             DuplicationCheck dupCheck;
 
             var mockDir = new Mock<IPathManager>();
             var mockDupFinder = new Mock<IDupFinder>();
-            var mockRunCheck = new Mock<IRunParameterChecker>();
 
             const string fakeModified = @"\fake\modified\dir";
 
-            const string fakeModifiedCodeScore = "<CodebaseCost>10 <TotalDuplicatesCost>10";
-
-            const string fileNameChecked = "UnitConverterWebApp.sln";
+            const string fileNameChecked =  "UnitConverterWebApp\\UnitConverterWebApp.csproj";
 
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
 
-            mockRunCheck.Setup(w => w.CodeBaseCost).Returns("69");
-            mockRunCheck.Setup(w => w.DuplicationCost).Returns("420");
-
-            mockDupFinder.Setup(w => w.Execute(It.IsAny<string>(), Path.Combine(fakeModified, fileNameChecked)))
-                .Returns(SetUpFeatureEvidence(fakeModifiedCodeScore));
 
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;
-            fakeRunCheck = mockRunCheck.Object;
 
-            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder, fakeRunCheck);
+            dupCheck = new DuplicationCheck(fakeDir, fakeDupFinder,fileNameChecked);
 
-            dupCheck.DuplicationEvidence.FeatureImplemented.Should()
-                .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.FeatureImplemented}, " +
+            dupCheck.PerformDuplicationCheck();
+
+            dupCheck.DuplicationEvidence.Inconclusive.Should()
+                .BeTrue($"Feature implemented: {dupCheck.DuplicationEvidence.Passed}, " +
                 $"Feature evidence: {dupCheck.DuplicationEvidence.Evidence}");
         }
     }

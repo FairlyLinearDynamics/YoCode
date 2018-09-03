@@ -8,13 +8,11 @@ namespace YoCode
     {
         private readonly IPathManager dir;
         private readonly List<Thread> workThreads;
-        private readonly bool isJunior;
 
-        public CheckManager(IPathManager dir, List<Thread> workThreads, bool isJunior)
+        public CheckManager(IPathManager dir, List<Thread> workThreads)
         {
             this.dir = dir;
             this.workThreads = workThreads;
-            this.isJunior = isJunior;
         }
 
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
@@ -57,9 +55,12 @@ namespace YoCode
             codeCoverage.Start();
 
             // Duplication check
+            var dupcheck = new DuplicationCheckRunner(dir, new DupFinder(p.CMDToolsPath), p);
+
             var dupFinderThread = new Thread(() =>
             {
-                checkList.Add(new DuplicationCheck(dir, new DupFinder(p.CMDToolsPath), p).DuplicationEvidence);
+                checkList.Add(dupcheck.AppDuplicationEvidence);
+                checkList.Add(dupcheck.TestDuplicationEvidence);
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
@@ -71,7 +72,7 @@ namespace YoCode
             // UI test
             var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
 
-            checkList.Add(new UICheck(modifiedHtmlFiles, UIKeywords.UNIT_KEYWORDS).UIEvidence);
+            checkList.Add(new UICodeCheck(modifiedHtmlFiles, UIKeywords.MILE_KEYWORDS).UIEvidence);
 
             // Git repo used
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
@@ -80,7 +81,7 @@ namespace YoCode
             checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
 
             //Front End Check
-            checkList.Add(new FrontEndCheck(projectRunner.GetPort(), UIKeywords.UNIT_KEYWORDS).FrontEndEvidence);
+            checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);
 
             var ucc = new UnitConverterCheck(projectRunner.GetPort());
 
@@ -89,9 +90,11 @@ namespace YoCode
 
             checkList.Add(ucc.BadInputCheckEvidence);
 
+            workThreads.Where(a=>a.Name!="loadingThread").ToList().ForEach(a => a.Join());
+            projectRunner.KillProject();
+
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
-            projectRunner.KillProject();
 
             projectRunner.ReportLefOverProcess();
             return checkList;
