@@ -25,7 +25,7 @@ namespace YoCode
                 featData.title = feature.FeatureTitle;
                 featData.evidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
-                featData.score = feature.FeatureRating;
+                featData.score = feature.FeatureRating * 100;
                 var result = feature.Inconclusive
                     ? "Could not perform check"
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";

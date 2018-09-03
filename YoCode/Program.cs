@@ -81,6 +81,8 @@ namespace YoCode
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
+            evidenceList.Add(new ResultSummary(evidenceList).ResultEvidence);
+
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
                 results.FinalScore);
 
