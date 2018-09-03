@@ -7,13 +7,18 @@ namespace YoCode
 {
     internal class ResultSummary
     {
-        List<FeatureEvidence> list;
+        private List<FeatureEvidence> list;
 
         public double TotalFeatureRating { get; set; }
         public double TotalFeatureWeighting { get; set; }
         public double TotalWeightedRating { get; set; }
         public double FinalScore { get; set; }
         public double PassPerc { get; set; }
+
+        // Formatting
+
+        private const int titleFormatter = -50;
+        private const int featureFormatter = -15;
 
         public ResultSummary(List<FeatureEvidence> list)
         {
@@ -27,7 +32,7 @@ namespace YoCode
             FinalScore = Math.Round((TotalWeightedRating / TotalFeatureWeighting), 2) * 100;
 
             CheckAndSetRating();
-            ResultEvidence.GiveEvidence(PrintResultTable());
+            ResultEvidence.GiveEvidence(GetResultTable());
         }
 
         private void CheckAndSetRating()
@@ -44,20 +49,21 @@ namespace YoCode
             }
         }
 
-        public string PrintResultTable()
+        private string GetResultTable()
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine(String.Format("{0,-50}{1,-15}{2,-15}{3,-15}", "Feature", "Rating", "Weighting","Weighted Rating"));
+            builder.AppendLine(String.Format($"{"Feature",titleFormatter}{"Rating",featureFormatter}{"Weighting",featureFormatter}{"Weighted Rating",featureFormatter}"));
             builder.AppendLine(messages.ParagraphDivider);
 
             foreach(var elem in list) {
-                builder.AppendLine(String.Format("{0,-50}{1,-15}{2,-15}{3,-15}",elem.FeatureTitle,elem.FeatureRating,elem.FeatureWeighting,elem.WeightedRating));
+                builder.AppendLine(String.Format($"{elem.FeatureTitle,titleFormatter}{elem.FeatureRating,featureFormatter}{elem.FeatureWeighting,featureFormatter}{elem.WeightedRating,featureFormatter}"));
             }
 
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(String.Format("{0,-50}{1,-15}{2,-15}{3,-15}", "Total",TotalFeatureRating, TotalFeatureWeighting,TotalWeightedRating));
-            builder.AppendLine(String.Format("{0,-50}{1,-15}","YoScore",FinalScore));
+            builder.AppendLine(String.Format($"{"Total",titleFormatter}{TotalFeatureRating,featureFormatter}{TotalFeatureWeighting,featureFormatter}"));
+
+            builder.AppendLine(String.Format($"{"YoScore",titleFormatter}{FinalScore,featureFormatter}"));
 
             return builder.ToString();
         }
