@@ -78,7 +78,7 @@ namespace YoCode
             checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
 
             // Unit test test
-            checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+            checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner(), dir).UnitTestEvidence);
 
             //Front End Check
             checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);

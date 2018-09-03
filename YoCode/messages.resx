@@ -815,7 +815,8 @@ _|___ || /,)/|`\``\\\  || __/\
     <value>Uses Git to check if the project under tests contains a valid Git Repository. YoScore for this check will be 100% if it finds a valid Repository and 0% if it doesn’t (also multiplied by its weighting).</value>
   </data>
   <data name="TestCountCheck" xml:space="preserve">
-    <value>Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass.</value>
+    <value>Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass.
+Broken tests refer to purposely included tests without the "Theory" tag at the top in the Original project</value>
   </data>
   <data name="UIBadInputCheck" xml:space="preserve">
     <value>Uses Selenium to find the text box for the web app, tries to input certain values and checks if the issues deliberately left in the test project have been fixed. YoScore for this check is calculated by taking the percentage of issues fixed.</value>
