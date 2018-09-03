@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace YoCode
 {
@@ -41,6 +42,9 @@ namespace YoCode
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -10;
 
+        private StringBuilder unitConverterResultsOutput = new StringBuilder();
+        private StringBuilder badInputResultsOutput= new StringBuilder();
+
         public UnitConverterCheck(string port)
         {
             UnitConverterCheckEvidence.FeatureTitle = "Units were converted successfully";
@@ -69,9 +73,11 @@ namespace YoCode
                     badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
                     UnitConverterCheckEvidence.FeatureImplemented = OutputsAreEqual();
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+                    UnitConverterCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
 
                     BadInputCheckEvidence.FeatureImplemented = BadInputsAreFixed();
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
+                    BadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                 }
                 catch (Exception)
                 {
@@ -193,17 +199,17 @@ namespace YoCode
             var ret = true;
             try
             {
-                UnitConverterCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder("\n" + string.Format(
-                    "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n")));
+                unitConverterResultsOutput.AppendLine("\n" + string.Format(
+                    "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
 
-                UnitConverterCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(messages.ParagraphDivider));
+                unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
                     var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
-                    UnitConverterCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(x));
+                    unitConverterResultsOutput.AppendLine(x);
 
                     UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
 
@@ -225,8 +231,8 @@ namespace YoCode
         {
             bool ret = true;
 
-            BadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}")));
-            BadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(messages.ParagraphDivider));
+            badInputResultsOutput.AppendLine(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            badInputResultsOutput.AppendLine(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
             {
@@ -238,7 +244,7 @@ namespace YoCode
                     ret = false;
                 }
 
-                BadInputCheckEvidence.GiveEvidence(new SimpleEvidenceBuilder(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}")));
+                badInputResultsOutput.AppendLine(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
             }
             return ret;
         }
