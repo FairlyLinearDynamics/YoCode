@@ -68,6 +68,5 @@ namespace YoCode
             return builder.ToString();
         }
         public FeatureEvidence ResultEvidence { get; } = new FeatureEvidence();
-
     }
 }
