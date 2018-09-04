@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -96,9 +97,9 @@ namespace YoCode
 
         private FeatureEvidence FileChangeEvidence { get; } = new FeatureEvidence();
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            return new[] {FileChangeEvidence};
+            return Task.FromResult(new List<FeatureEvidence>{FileChangeEvidence});
         }
     }
 }

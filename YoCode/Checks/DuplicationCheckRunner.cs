@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -39,10 +40,10 @@ namespace YoCode
             return dupCheck.DuplicationEvidence;
         }
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
             // TODO Background
-            return new[] {AppDuplicationEvidence, TestDuplicationEvidence};
+            return Task.FromResult(new List<FeatureEvidence>{ AppDuplicationEvidence, TestDuplicationEvidence});
         }
 
         private FeatureEvidence AppDuplicationEvidence { get; }

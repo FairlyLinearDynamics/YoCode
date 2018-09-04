@@ -3,12 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
@@ -65,19 +66,20 @@ namespace YoCode
 
             var evidenceList = new List<FeatureEvidence>();
 
-            var checkManager = new CheckManager(workThreads, new CheckConfig(dir, parameters));
+            var checkManager = new CheckManager(new CheckConfig(dir, parameters));
 
-            var projectRunner = checkManager.PassGatewayChecks(evidenceList);
+            var projectRunner = await checkManager.PassGatewayChecksAsync(evidenceList);
 
             if (projectRunner == null)
             {
-                LoadingAnimation.LoadingFinished = true;
-                workThreads.ForEach(a => a.Join());
+                StopLoadingAnimation(workThreads);
                 compositeOutput.PrintFinalResults(evidenceList, 0);
                 return;
             }
 
-            evidenceList = checkManager.PerformChecks(projectRunner);
+            evidenceList = await checkManager.PerformChecks(projectRunner);
+
+            StopLoadingAnimation(workThreads);
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
@@ -85,6 +87,12 @@ namespace YoCode
                 results.FinalScore);
 
             LaunchReport(result, outputPath);
+        }
+
+        private static void StopLoadingAnimation(List<Thread> workThreads)
+        {
+            LoadingAnimation.LoadingFinished = true;
+            workThreads.ForEach(a => a.Join());
         }
 
         private static void LaunchReport(InputResult result, string outputPath)

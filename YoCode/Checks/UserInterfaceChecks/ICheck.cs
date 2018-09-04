@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal interface ICheck
     {
-        IEnumerable<FeatureEvidence> Execute();
+        Task<List<FeatureEvidence>> Execute();
     }
 }

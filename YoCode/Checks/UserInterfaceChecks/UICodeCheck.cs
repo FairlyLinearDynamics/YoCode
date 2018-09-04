@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -56,9 +57,9 @@ namespace YoCode
         // -------------------------------------------------------------------------------------------- Return methods
         private FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            return new[] { UIEvidence };
+            return Task.FromResult(new List<FeatureEvidence>{UIEvidence});
         }
     }
 }

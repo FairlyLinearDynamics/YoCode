@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -275,9 +276,9 @@ namespace YoCode
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            return new[] {UnitConverterCheckEvidence, BadInputCheckEvidence};
+            return Task.FromResult(new List<FeatureEvidence>{ UnitConverterCheckEvidence, BadInputCheckEvidence});
         }
 
         private FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();

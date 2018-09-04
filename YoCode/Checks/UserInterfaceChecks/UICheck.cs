@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 
 namespace YoCode
@@ -141,9 +142,9 @@ namespace YoCode
 
         private List<FeatureEvidence> UIFeatureEvidences { get; }
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            return UIFeatureEvidences;
+            return Task.FromResult(UIFeatureEvidences);
         }
     }
 }

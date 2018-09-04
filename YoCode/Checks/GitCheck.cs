@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 
 namespace YoCode
@@ -84,9 +85,9 @@ namespace YoCode
 
         private FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            return new[] {GitEvidence};
+            return Task.FromResult(new List<FeatureEvidence>{GitEvidence});
         }
     }
 }

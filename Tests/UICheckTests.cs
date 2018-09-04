@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 using Moq;
@@ -22,21 +23,21 @@ namespace YoCode_XUnit
         }
 
         [Fact]
-        public void UICheck_FeatureImplementedBoolCheck()
+        public async Task UICheck_FeatureImplementedBoolCheck()
         {
             var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
-            var evidence = uiCheck.Execute();
+            var evidence = await uiCheck.Execute();
 
             evidence.Single().Passed.Should().Be(true);
         }
 
         [Fact]
-        public void UICheck_FeatureTitleSet()
+        public async Task UICheck_FeatureTitleSet()
         {
             var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
-            var evidence = uiCheck.Execute();
+            var evidence = await uiCheck.Execute();
 
             FeatureTitleStorage.GetFeatureTitle(evidence.Single().Feature).Should().NotBeEmpty();
         }

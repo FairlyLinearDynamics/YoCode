@@ -1,24 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal class CheckManager
     {
-        private readonly List<Thread> workThreads;
         private readonly CheckConfig checkConfig;
 
-        public CheckManager(List<Thread> workThreads, CheckConfig checkConfig)
+        public CheckManager(CheckConfig checkConfig)
         {
-            this.workThreads = workThreads;
             this.checkConfig = checkConfig;
         }
 
-        public ProjectRunner PassGatewayChecks(List<FeatureEvidence> evidenceList)
+        public async Task<ProjectRunner> PassGatewayChecksAsync(List<FeatureEvidence> evidenceList)
         {
             var fileCheck = new FileChangeFinder(checkConfig);
-            var fileChangeEvidence = fileCheck.Execute().ToArray();
+            var fileChangeEvidence = (await fileCheck.Execute()).ToArray();
             if (fileChangeEvidence.Any(e => e.Failed))
             {
                 evidenceList.AddRange(fileChangeEvidence);
@@ -43,36 +41,27 @@ namespace YoCode
             return projectRunner;
         }
 
-        public List<FeatureEvidence> PerformChecks(ProjectRunner projectRunner)
+        public async Task<List<FeatureEvidence>> PerformChecks(ProjectRunner projectRunner)
         {
-            var checkList = new List<FeatureEvidence>();
+            var checks = new ICheck[]
+            {
+                new CodeCoverageCheck(checkConfig),
+                new DuplicationCheckRunner(checkConfig),
+                new FileChangeFinder(checkConfig),
+                new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig),
+                new GitCheck(checkConfig),
+                new TestCountCheck(checkConfig),
+                new UICheck(projectRunner.GetPort()),
+                new UnitConverterCheck(projectRunner.GetPort())
+            };
 
-            var codeCoverageCheck = new CodeCoverageCheck(checkConfig);
-            var dupcheck = new DuplicationCheckRunner(checkConfig);
-            var fileCheck = new FileChangeFinder(checkConfig);
-            var uiCodeCheck = new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig);
-            var gitCheck = new GitCheck(checkConfig);
-            var testCountCheck = new TestCountCheck(checkConfig);
-            var uiCheck = new UICheck(projectRunner.GetPort());
-            var ucc = new UnitConverterCheck(projectRunner.GetPort());
+            var featureTasks = checks.Select(c => c.Execute()).ToArray();
+            var featureEvidences = await Task.WhenAll(featureTasks);
 
-            checkList.AddRange(codeCoverageCheck.Execute());
-            checkList.AddRange(dupcheck.Execute());
-            checkList.AddRange(fileCheck.Execute());
-            checkList.AddRange(uiCodeCheck.Execute());
-            checkList.AddRange(gitCheck.Execute());
-            checkList.AddRange(testCountCheck.Execute());
-            checkList.AddRange(uiCheck.Execute());
-            checkList.AddRange(ucc.Execute());
-
-            workThreads.Where(a=>a.Name!="loadingThread").ToList().ForEach(a => a.Join());
             projectRunner.KillProject();
 
-            LoadingAnimation.LoadingFinished = true;
-            workThreads.ForEach(a => a.Join());
-
             projectRunner.ReportLefOverProcess();
-            return checkList;
+            return featureEvidences.SelectMany(x => x).ToList();
         }
     }
 }

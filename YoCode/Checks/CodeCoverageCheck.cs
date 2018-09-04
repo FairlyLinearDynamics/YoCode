@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -104,10 +105,10 @@ namespace YoCode
 
         private FeatureEvidence CodeCoverageEvidence { get; } = new FeatureEvidence();
 
-        public IEnumerable<FeatureEvidence> Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
             // TODO Background
-            return new[] {CodeCoverageEvidence};
+            return Task.FromResult(new List<FeatureEvidence>{CodeCoverageEvidence});
         }
     }
 }
