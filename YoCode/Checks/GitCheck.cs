@@ -13,7 +13,6 @@ namespace YoCode
         public GitCheck(string path)
         {
             repositoryPath = path;
-            GitEvidence.FeatureTitle = "Git was used";
             GitEvidence.Feature = Feature.GitCheck;
             GitEvidence.HelperMessage = messages.GitCheck;
 

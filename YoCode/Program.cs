@@ -81,10 +81,7 @@ namespace YoCode
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
-            //var fd = new FileDifference(dir.ModifiedTestDirPath);
-
-
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
+            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
                 results.FinalScore);
 
             LaunchReport(result, outputPath);
