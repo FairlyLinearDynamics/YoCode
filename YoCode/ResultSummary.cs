@@ -23,7 +23,6 @@ namespace YoCode
         public ResultSummary(List<FeatureEvidence> list)
         {
             this.list = list;
-            ResultEvidence.FeatureTitle = "Scoring summary";
 
             TotalFeatureRating = list.Sum(e => e.FeatureRating);
             TotalFeatureWeighting = list.Sum(e => e.FeatureWeighting);
@@ -56,7 +55,7 @@ namespace YoCode
             builder.AppendLine(messages.ParagraphDivider);
 
             foreach(var elem in list) {
-                builder.AppendLine(String.Format($"{elem.FeatureTitle,titleFormatter}{elem.FeatureRating,featureFormatter}{elem.FeatureWeighting,featureFormatter}{elem.WeightedRating,featureFormatter}"));
+                builder.AppendLine(String.Format($"{FeatureTitleStorage.GetFeatureTitle(elem.Feature),titleFormatter}{elem.FeatureRating,featureFormatter}{elem.FeatureWeighting,featureFormatter}{elem.WeightedRating,featureFormatter}"));
             }
 
             builder.AppendLine(messages.ParagraphDivider);
