@@ -31,7 +31,6 @@ namespace YoCode
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
-
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

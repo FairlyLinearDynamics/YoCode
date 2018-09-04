@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace YoCode
 {
@@ -41,6 +42,9 @@ namespace YoCode
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -10;
 
+        private StringBuilder unitConverterResultsOutput = new StringBuilder();
+        private StringBuilder badInputResultsOutput= new StringBuilder();
+
         public UnitConverterCheck(string port)
         {
             UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
@@ -51,8 +55,8 @@ namespace YoCode
 
             if (String.IsNullOrEmpty(port))
             {
-                UnitConverterCheckEvidence.SetInconclusive(messages.BadPort);
-                BadInputCheckEvidence.SetInconclusive(messages.BadPort);
+                UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
+                BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
             }
             else
             {
@@ -68,28 +72,28 @@ namespace YoCode
 
                     if (OutputsAreEqual())
                     {
-                        UnitConverterCheckEvidence.SetPassed("All conversions matched expectations.");
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
                     }
                     else
                     {
-                        UnitConverterCheckEvidence.SetFailed("At least one conversion did not match expectations.");
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
                     }
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
                     if (BadInputsAreFixed())
                     {
-                        BadInputCheckEvidence.SetPassed("All bad inputs have been handled.");
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
                     }
                     else
                     {
-                        BadInputCheckEvidence.SetFailed("At least one bad input has not been handled.");
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
                     }
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
                 catch (Exception)
                 {
-                    UnitConverterCheckEvidence.SetInconclusive("Could not check this feature");
-                    BadInputCheckEvidence.SetInconclusive("Could not check this feature");
+                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
+                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
                 }
             }
         }
@@ -206,15 +210,17 @@ namespace YoCode
             var ret = true;
             try
             {
-                UnitConverterCheckEvidence.GiveEvidence("\n" + string.Format("{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
-                UnitConverterCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+                unitConverterResultsOutput.AppendLine("\n" + string.Format(
+                    "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
+
+                unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
                     var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
-                    UnitConverterCheckEvidence.GiveEvidence(x);
+                    unitConverterResultsOutput.AppendLine(x);
 
                     UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
 
@@ -226,7 +232,7 @@ namespace YoCode
             }
             catch (Exception)
             {
-                UnitConverterCheckEvidence.SetInconclusive("Unit converting has failed");
+                UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Unit converting has failed"));
                 ret = false;
             }
             return ret;
@@ -236,8 +242,8 @@ namespace YoCode
         {
             bool ret = true;
 
-            BadInputCheckEvidence.GiveEvidence(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
-            BadInputCheckEvidence.GiveEvidence(messages.ParagraphDivider);
+            badInputResultsOutput.AppendLine(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            badInputResultsOutput.AppendLine(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
             {
@@ -249,7 +255,7 @@ namespace YoCode
                     ret = false;
                 }
 
-                BadInputCheckEvidence.GiveEvidence(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
+                badInputResultsOutput.AppendLine(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
             }
             return ret;
         }

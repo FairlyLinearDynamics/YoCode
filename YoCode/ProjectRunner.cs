@@ -28,7 +28,7 @@ namespace YoCode
         {
             if (!Directory.Exists(workingDir))
             {
-                ProjectRunEvidence.SetInconclusive($"{workingDir} not found");
+                ProjectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
                 return;
             }
 
@@ -48,7 +48,7 @@ namespace YoCode
 
             if (String.IsNullOrEmpty(port))
             {
-                ProjectRunEvidence.SetInconclusive(messages.BadPort);
+                ProjectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
                 return;
             }
 
@@ -56,12 +56,12 @@ namespace YoCode
 
             if (applicationStarted)
             {
-                ProjectRunEvidence.SetPassed($"Port: {GetPort()}");
+                ProjectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
                 ProjectRunEvidence.FeatureRating = 1;
             }
             else
             {
-                ProjectRunEvidence.SetFailed($"Error Output: {ErrorOutput}");
+                ProjectRunEvidence.SetFailed(new SimpleEvidenceBuilder($"Error Output: {ErrorOutput}"));
                 ProjectRunEvidence.FeatureRating = 0;
             }
         }

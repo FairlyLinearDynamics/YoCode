@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace YoCode
+﻿namespace YoCode
 {
+
     internal class FeatureEvidence
     {
         public Feature Feature { get; set; }
         public bool Failed => featureImplemented.HasValue && !featureImplemented.Value;
         public bool Passed => featureImplemented.HasValue && featureImplemented.Value;
         public bool Inconclusive => !featureImplemented.HasValue;
-        public bool EvidencePresent => Evidence.Any();
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
@@ -19,29 +16,28 @@ namespace YoCode
 
         public string HelperMessage { get; set; }
 
-        public List<string> Evidence { get; } = new List<string>();
-
         private bool? featureImplemented;
+        public IEvidence Evidence { get; set; } = new SimpleEvidenceBuilder("");
 
-        public void GiveEvidence(string evidence)
+        private void GiveEvidence(IEvidence reason)
         {
-            Evidence.Add(evidence);
+            Evidence = reason;
         }
 
-        public void SetInconclusive(params string[] reasons)
+        public void SetInconclusive(IEvidence reason)
         {
             featureImplemented = null;
             FeatureWeighting = 0;
-            reasons.ToList().ForEach(GiveEvidence);
+            Evidence = reason;
         }
 
-        public void SetPassed(string reason)
+        public void SetPassed(IEvidence reason)
         {
             featureImplemented = true;
             GiveEvidence(reason);
         }
 
-        public void SetFailed(string reason)
+        public void SetFailed(IEvidence reason)
         {
             featureImplemented = false;
             GiveEvidence(reason);

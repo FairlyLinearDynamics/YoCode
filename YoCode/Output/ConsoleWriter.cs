@@ -29,11 +29,7 @@ namespace YoCode
         {
             consoleReport.AppendLine(data.title);
             consoleReport.AppendLine(data.featureResult);
-
-            foreach(var evidence in data.evidence)
-            {
-                consoleReport.AppendLine(evidence);
-            }
+            consoleReport.AppendLine(data.featureEvidence.BuildEvidenceForConsole());
             consoleReport.AppendLine(messages.Divider);
         }
 

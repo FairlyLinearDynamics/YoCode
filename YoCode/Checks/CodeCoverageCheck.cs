@@ -23,7 +23,7 @@ namespace YoCode
 
             if (!Directory.Exists(targetWorkingDir))
             {
-                CodeCoverageEvidence.SetInconclusive($"{testFolder} Directory Not Found");
+                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{testFolder} Directory Not Found"));
                 return;
             }
 
@@ -38,11 +38,11 @@ namespace YoCode
 
             if (coverage == 0)
             {
-                CodeCoverageEvidence.SetInconclusive("Code Coverage Not Found");
+                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
             }
             else if (coverage == -1)
             {
-                CodeCoverageEvidence.SetInconclusive("Failed to Generate/Read Report");
+                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
             }
             else
             {
@@ -51,11 +51,11 @@ namespace YoCode
                 var evidence = $"Code Coverage: {coverage}%";
                 if (featureImplemented)
                 {
-                    CodeCoverageEvidence.SetPassed(evidence);
+                    CodeCoverageEvidence.SetPassed(new SimpleEvidenceBuilder(evidence));
                 }
                 else
                 {
-                    CodeCoverageEvidence.SetFailed(evidence);
+                    CodeCoverageEvidence.SetFailed(new SimpleEvidenceBuilder(evidence));
                 }
             }
         }
