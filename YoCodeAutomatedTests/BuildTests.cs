@@ -1,13 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using System.IO;
 using Xunit.Abstractions;
+using System.Threading;
+using System;
 
 namespace YoCodeAutomatedTests
 {
-    //Compares projects against junior-test unmodified project
+    //Compares projects against unmodified project
     public class BuildTests
     {
         private readonly ITestOutputHelper xunitOutput;
@@ -18,26 +18,26 @@ namespace YoCodeAutomatedTests
         }
 
         [Theory]
-        [InlineData("P1.txt", "\\Project1")]
-        [InlineData("P2.txt", "\\Project2")]
-        [InlineData("P3.txt", "\\Project3")]
-        [InlineData("P4.txt", "\\Project4")]
+        [InlineData("P1.html", "\\Project1")]
+        [InlineData("P2.html", "\\Project2")]
+        [InlineData("P3.html", "\\Project3")]
+        [InlineData("P4.html", "\\Project4")]
         public void CompareProjects(string outputFile, string project)
         {
             var helper = new TestHelperMethods();
 
-            string argument = $"YoCode.dll --input={helper.TestPath}\\TestProjects{project} --noloading --nohtml";
+            string argument = $"YoCode.dll --input={helper.TestPath}\\TestProjects{project} --noloading --silent";
 
             helper.OutputTestDebugInfo(xunitOutput, argument);
 
-            var processOutput = helper.RunProcess("dotnet", helper.DllPath, argument);
+            File.Delete(helper.YoCodeReportPath);
+
+            helper.RunProcessAndGatherOutput("dotnet", helper.DllPath, argument, xunitOutput);
 
             var actualPath = Path.Combine(helper.TestPath, "ActualOutputs", outputFile);
             var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs", outputFile);
 
-            var actualOutput = processOutput.Trim();
-
-            helper.WriteToFile(actualPath, actualOutput);
+            File.Copy(helper.YoCodeReportPath, actualPath, true);
 
             helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
         }
