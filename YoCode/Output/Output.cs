@@ -23,7 +23,7 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
-                featData.evidence = feature.Evidence;
+                featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
                 featData.score = feature.FeatureRating;
                 var result = feature.Inconclusive

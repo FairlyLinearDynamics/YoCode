@@ -27,7 +27,7 @@ namespace YoCode_XUnit
 
             var evidence = uiCheck.UIEvidence;
 
-            evidence.FeatureTitle.Should().NotBeEmpty();
+            FeatureTitleStorage.GetFeatureTitle(evidence.Feature).Should().NotBeEmpty();
         }
     }
 }
