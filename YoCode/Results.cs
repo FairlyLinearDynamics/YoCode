@@ -52,6 +52,11 @@ namespace YoCode
                     list.Find(e => e.Feature == Feature.UnitConverterCheck),
                     list.Find(e => e.Feature == Feature.UIConversionCheck)
                     );
+
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.UIFeatureImplemented),
+                    list.Find(e => e.Feature == Feature.UICodeCheck)
+                    );
             }
         }
 
