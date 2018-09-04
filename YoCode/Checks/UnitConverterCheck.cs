@@ -74,21 +74,21 @@ namespace YoCode
 
                     if (OutputsAreEqual())
                     {
-                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
                     else
                     {
-                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
                     if (BadInputsAreFixed())
                     {
-                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
                     else
                     {
-                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
                 }
@@ -212,7 +212,7 @@ namespace YoCode
             var ret = true;
             try
             {
-                unitConverterResultsOutput.AppendLine("\n" + string.Format(
+                unitConverterResultsOutput.AppendLine(Environment.NewLine + string.Format(
                     "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
 
                 unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
