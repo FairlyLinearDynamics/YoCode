@@ -1,4 +1,6 @@
-﻿namespace YoCode
+﻿using System;
+
+namespace YoCode
 {
 
     internal class FeatureEvidence
@@ -30,6 +32,11 @@
             featureImplemented = null;
             FeatureWeighting = 0;
             Evidence = reason;
+        }
+
+        internal void GiveEvidence(string v)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetPassed(IEvidence reason)

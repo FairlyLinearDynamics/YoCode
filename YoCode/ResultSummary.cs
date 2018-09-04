@@ -32,19 +32,18 @@ namespace YoCode
             FinalScore = Math.Round((TotalWeightedRating / TotalFeatureWeighting), 2) * 100;
 
             CheckAndSetRating();
-            ResultEvidence.GiveEvidence(GetResultTable());
         }
 
         private void CheckAndSetRating()
         {
             if (FinalScore >= PassPerc)
             {
-                ResultEvidence.SetPassed("This person should get an interview!");
+                ResultEvidence.SetPassed(new SimpleEvidenceBuilder(GetResultTable()));
                 ResultEvidence.FeatureRating = 1;
             }
             else
             {
-                ResultEvidence.SetFailed("This person should not get an interview!");
+                ResultEvidence.SetFailed(new SimpleEvidenceBuilder(GetResultTable()));
                 ResultEvidence.FeatureRating = 0;
             }
         }
