@@ -33,7 +33,6 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_GetLineWithAllKeywords()
         {
-            //testLastAuthor.ContainsAll(GitCheck.GetKeyWords()).Should().Be(true);
             string testResult = testTestOutput.GetLineWithAllKeywords(TestCountCheck.GetTestKeyWords());
 
             testStatLine.Should().BeEquivalentTo(testResult);
@@ -52,6 +51,19 @@ namespace YoCode_XUnit
                 11
             };
             expected.Should().BeEquivalentTo(actual.GetNumbersInALine());
+        }
+
+        [Fact]
+        public void Test_NumberOfUnfixedTests()
+        {
+            var fakefiles = new List<string[]>
+            {
+                new string[] { "asfasf", "asfafs" },
+                new string[] { "", "", "InlineData" },
+                new string[] { "", "", "InlineData", "[InlineData()]", "[InlineData()]", "[InlineData()]" },
+                new string[] { "", "", "InlineData", "[Theory]", "[InlineData()]", "[InlineData()]", "[InlineData()]" }
+            };
+            TestCountCheck.NumberOfUnfixedTests(fakefiles).Should().Be(1);
         }
     }
 }

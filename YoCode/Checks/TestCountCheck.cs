@@ -12,7 +12,7 @@ namespace YoCode
         private readonly string workingDir;
         private readonly string arguments;
         private readonly FeatureRunner featureRunner;
-
+        private IPathManager dir;
         public string StatLine { get; set; }
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
@@ -24,8 +24,9 @@ namespace YoCode
 
         private const int TitleColumnFormatter = -25;
 
-        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
+        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner, IPathManager dir)
         {
+            this.dir = dir;
             workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
 
             if (!Directory.Exists(workingDir))
@@ -108,15 +109,54 @@ namespace YoCode
             var builder = new StringBuilder();
 
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            builder.AppendLine(string.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            builder.AppendLine(string.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            builder.AppendLine(string.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            builder.AppendLine(string.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            builder.AppendLine(string.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            builder.AppendLine(string.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+
+            if(NumberOfUnfixedTests(GetFileText()) > 0)
+            {
+                builder.AppendLine(string.Format($"{"Broken tests not fixed:",TitleColumnFormatter}{NumberOfUnfixedTests(GetFileText())}"));
+            }
 
             return builder.ToString();
+        }
+
+        public static int NumberOfUnfixedTests(List<string[]> files)
+        {
+            var unfixedTests = 0;
+
+            var keywords = new List<string>()
+            {
+                "[Theory]",
+                "[InlineData("
+            };
+
+            foreach (var file in files)
+            {
+                for (int i = 1; i < file.Length; i++)
+                {
+                    if(file[i].Contains(keywords[1]) && !file[i-1].ContainsAny(keywords))
+                    {
+                        unfixedTests++;
+                    }
+                }
+            }
+            return unfixedTests;
+        }
+
+        private List<string[]> GetFileText()
+        {
+            var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.cs);
+
+            List<string[]> fileText = new List<string[]>();
+
+            csUris.Where(a => a.Contains("UnitConverterTests")).ToList().ForEach(i => fileText.Add(File.ReadAllLines(i)));
+
+            return fileText;
         }
 
         public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
