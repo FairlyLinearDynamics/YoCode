@@ -118,9 +118,9 @@ namespace YoCode
             builder.AppendLine(messages.ParagraphDivider);
             builder.AppendLine(string.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
 
-            if(NumberOfUnfixedTests(GetTestClasses()) > 0)
+            if(NumberOfUnfixedTests(GetFileText()) > 0)
             {
-                builder.AppendLine(string.Format($"{"Broken tests not fixed:",TitleColumnFormatter}{NumberOfUnfixedTests(GetTestClasses())}"));
+                builder.AppendLine(string.Format($"{"Broken tests not fixed:",TitleColumnFormatter}{NumberOfUnfixedTests(GetFileText())}"));
             }
 
             return builder.ToString();
@@ -149,7 +149,7 @@ namespace YoCode
             return unfixedTests;
         }
 
-        private List<string[]> GetTestClasses()
+        private List<string[]> GetFileText()
         {
             var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.cs);
 
