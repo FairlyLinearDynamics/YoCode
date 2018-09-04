@@ -17,10 +17,10 @@
 
             if (pr.TimedOut)
             {
-                evidence.SetInconclusive("Timed out");
+                evidence.SetInconclusive(new SimpleEvidenceBuilder("Timed out"));
                 return evidence;
             }
-            evidence.SetPassed("???");
+            evidence.SetPassed(new SimpleEvidenceBuilder("???"));
             return evidence;
         }
 

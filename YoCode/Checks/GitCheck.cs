@@ -23,7 +23,7 @@ namespace YoCode
             }
             else
             {
-                GitEvidence.SetInconclusive("Invalid git repository");
+                GitEvidence.SetInconclusive(new SimpleEvidenceBuilder("Invalid git repository"));
             }
         }
 
@@ -45,11 +45,11 @@ namespace YoCode
             if (LastCommitWasByNonEmployee(commitLog))
             {
                 GitEvidence.FeatureRating = 1;
-                GitEvidence.SetPassed("Commits:" + Environment.NewLine + output);
+                GitEvidence.SetPassed(new SimpleEvidenceBuilder("Commits:" + Environment.NewLine + output));
             }
             else
             {
-                GitEvidence.SetFailed("Last Commit By Waters Employee");
+                GitEvidence.SetFailed(new SimpleEvidenceBuilder("Last Commit By Waters Employee"));
             }
         }
 

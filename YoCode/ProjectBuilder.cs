@@ -21,7 +21,7 @@ namespace YoCode
             workingDir = Path.Combine(workingDir, projectFolder);
             if (!Directory.Exists(workingDir))
             {
-                ProjectBuilderEvidence.SetInconclusive($"{workingDir} not found");
+                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
                 return;
             }
 
@@ -38,20 +38,19 @@ namespace YoCode
 
             if (evidence.Inconclusive || errorGettingErrorsOrWarnings)
             {
-                ProjectBuilderEvidence.SetInconclusive($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} ");
+                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} "));
                 return;
             }
 
             var buildOutput = $"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}";
             if (buildSuccessful)
             {
-                ProjectBuilderEvidence.SetPassed(buildOutput);
+                ProjectBuilderEvidence.SetPassed(new SimpleEvidenceBuilder(buildOutput));
                 ProjectBuilderEvidence.FeatureRating = 1;
             }
             else
             {
-                ProjectBuilderEvidence.GiveEvidence(buildOutput);
-                ProjectBuilderEvidence.SetFailed($"Error message: {GetErrorOutput(Output)}");
+                ProjectBuilderEvidence.SetFailed(new SimpleEvidenceBuilder($"Error message: {GetErrorOutput(Output)}"));
                 ProjectBuilderEvidence.FeatureRating = 0;
             }
         }
@@ -76,7 +75,7 @@ namespace YoCode
         {
             if(Output.Contains("is being used by another process"))
             {
-                ProjectBuilderEvidence.SetInconclusive("Could not build the project. It is being used by another process");
+                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not build the project. It is being used by another process"));
                 return;
             }
             buildSuccessful = Output.Contains("Build succeeded");

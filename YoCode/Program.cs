@@ -81,6 +81,9 @@ namespace YoCode
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
+            //var fd = new FileDifference(dir.ModifiedTestDirPath);
+
+
             evidenceList.Add(new ResultSummary(evidenceList).ResultEvidence);
 
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),

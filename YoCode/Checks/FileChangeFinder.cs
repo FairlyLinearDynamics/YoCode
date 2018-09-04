@@ -18,8 +18,7 @@ namespace YoCode
 
             if (!Repository.IsValid(path))
             {
-                FileChangeEvidence.SetInconclusive("Git Repository Not Found");
-                return;
+                FileChangeEvidence.SetInconclusive(new SimpleEvidenceBuilder("Git Repository Not Found"));
             }
             else
             {
@@ -29,25 +28,25 @@ namespace YoCode
 
         public void ExecuteTheCheck(string path)
         {
-            using (var Repo = new Repository(path))
+            using (var repo = new Repository(path))
             {
-                UncommitedFiles = GetUncommitedFiles(Repo);
+                UncommitedFiles = GetUncommitedFiles(repo);
 
-                if (!GitCheck.LastCommitWasByNonEmployee(Repo.Commits) && !UncommitedFiles.Any())
+                if (!GitCheck.LastCommitWasByNonEmployee(repo.Commits) && !UncommitedFiles.Any())
                 {
-                    FileChangeEvidence.SetFailed("Last Commit By Waters Employee");
+                    FileChangeEvidence.SetFailed(new SimpleEvidenceBuilder("Git Repository Not Found"));
                     return;
                 }
 
-                GetFileDifferences(Repo);
+                GetFileDifferences(repo);
 
-                FillInEvidence();
+                FillInEvidence(repo);
             }
         }
 
-        private void FillInEvidence()
+        private void FillInEvidence(Repository repo)
         {
-            FileChangeEvidence.SetPassed(BuildFileChangeOutput());
+            FileChangeEvidence.SetPassed(new FileDiffEvidenceBuilder(GetFileDifferences(repo), BuildFileChangeOutput()));
             FileChangeEvidence.FeatureRating = 1;
         }
 
@@ -73,18 +72,14 @@ namespace YoCode
                 item.State == FileStatus.ModifiedInWorkdir || item.State == FileStatus.ModifiedInIndex;
         }
 
-        private void GetFileDifferences(Repository Repo)
+        private Patch GetFileDifferences(Repository Repo)
         {
             Tree head = Repo.Head.Tip.Tree;
 
             Tree lastNonlinearCommit = Repo.Head.Commits.ToList().First
                 (a => a.Author.Email.ContainsAny(GitCheck.GetHostDomains())).Tree;
 
-            foreach (var pec in Repo.Diff.Compare<Patch>(lastNonlinearCommit, head))
-            {
-                var lineDifference = pec.LinesAdded + pec.LinesDeleted;
-                FileList.Add($"{pec.Status} : {pec.Path} = {lineDifference} ({pec.LinesAdded}+ and {pec.LinesDeleted}-)");
-            }
+            return Repo.Diff.Compare<Patch>(lastNonlinearCommit, head);
         }
 
         public string BuildFileChangeOutput()
