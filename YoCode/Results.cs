@@ -28,10 +28,20 @@ namespace YoCode
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
+
+                Console.WriteLine(elem.Feature.ToString());
+                Console.WriteLine("Rating: " + elem.FeatureRating);
+                Console.WriteLine("Weight: " + elem.FeatureWeighting);
+                Console.WriteLine("Weighted Rating : " + elem.WeightedRating);
+                Console.WriteLine(messages.ParagraphDivider);
+
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
                 elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
             }
+            Console.WriteLine("User score: " + FinalScore);
+            Console.WriteLine("Maximum score: " + MaximumScore);
+            Console.WriteLine("Percentage: " + (FinalScore / MaximumScore));
         }
 
         public void CalculateFinalScore()
@@ -41,28 +51,29 @@ namespace YoCode
 
         public void ApplySpecialCases(List<FeatureEvidence> list)
         {
-            if (list.Count > 1)
+           if (list.Count > 1)
             {
-                var badInputBackEnd = list.Find(e => e.Feature == Feature.BadInputCheck);
-                var badInputUI = list.Find(e => e.Feature == Feature.UIBadInputCheck);
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.BadInputCheck),
+                    list.Find(e => e.Feature == Feature.UIBadInputCheck)
+                    );
 
-                if (badInputBackEnd.Inconclusive) 
-                {
-                    badInputUI.FeatureWeighting = badInputBackEnd.FeatureWeighting;
-                    badInputBackEnd.FeatureWeighting = 0;
-                }
-
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UnitConverterCheck));
-                CheckAndIgnoreWeighting(list.Find(e => e.Feature == Feature.UICodeCheck));
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.UnitConverterCheck),
+                    list.Find(e => e.Feature == Feature.UIConversionCheck)
+                    );
             }
         }
 
-        public void CheckAndIgnoreWeighting(FeatureEvidence evidence)
+        public void AssignToEquivalentCheck(FeatureEvidence oldCheck,FeatureEvidence newCheck)
         {
-            if (evidence.Inconclusive)
+            if (oldCheck.Inconclusive)
             {
-                evidence.FeatureWeighting = 0;
+                newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
+                oldCheck.FeatureWeighting = 0;
             }
         }
+
+
     }
 }
