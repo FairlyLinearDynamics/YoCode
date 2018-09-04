@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Xunit.Abstractions;
 using YoCode;
+using System;
 
 namespace YoCodeAutomatedTests
 {
@@ -11,10 +12,12 @@ namespace YoCodeAutomatedTests
         private IConfiguration Configuration;
         public string TestPath { get; set; }
         public string DllPath { get; set; }
+        public string YoCodeReportPath { get; set; }
 
         public TestHelperMethods()
         {
             Setup();
+            YoCodeReportPath = Path.Combine(DllPath, "YoCodeReport.html");
         }
 
         public void Setup()
@@ -26,14 +29,8 @@ namespace YoCodeAutomatedTests
             DllPath = Configuration["YoCodeLocation:DLLFolderPath"];
         }
 
-        public void WriteToFile(string path, string content)
-        {
-            File.WriteAllLines(path, new string[] { content });
-        }
-
         public bool FilesAreDifferent(string path1, string path2)
         {
-
             using (FileStream f1 = File.OpenRead(path1))
             using (FileStream f2 = File.OpenRead(path2))
             {
@@ -41,12 +38,16 @@ namespace YoCodeAutomatedTests
             }
         }
 
-        public string RunProcess(string processName, string workingDir, string arguments)
+        public void RunProcessAndGatherOutput(string processName, string workingDir, string arguments, ITestOutputHelper testOutputHelper)
         {
             ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
             pr.ExecuteTheCheck("Units were converted successfully");
 
-            return pr.Output;
+            testOutputHelper.WriteLine("Error Output: ");
+            testOutputHelper.WriteLine(pr.ErrorOutput);
+
+            testOutputHelper.WriteLine("Standard Output: ");
+            testOutputHelper.WriteLine(pr.Output);
         }
 
         public void OutputTestDebugInfo(ITestOutputHelper testOutputHelper, string argument)
@@ -55,7 +56,8 @@ namespace YoCodeAutomatedTests
             testOutputHelper.WriteLine($"YoCode DLL path: {DllPath}");
             testOutputHelper.WriteLine($"Working directory: {Directory.GetCurrentDirectory()}");
             testOutputHelper.WriteLine($"Test assembly version: {ThisAssembly.AssemblyInformationalVersion}");
-            testOutputHelper.WriteLine($"YoCode assembly version: {FileVersionInfo.GetVersionInfo(Path.Combine(DllPath, "YoCode.dll")).ProductVersion}");
+            testOutputHelper.WriteLine($"YoCode assembly version: {FileVersionInfo.GetVersionInfo(Path.Combine(DllPath, "YoCode.dll")).ProductVersion}"
+                + Environment.NewLine);
         }
     }
 }
