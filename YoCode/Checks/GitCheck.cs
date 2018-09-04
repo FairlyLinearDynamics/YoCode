@@ -10,9 +10,9 @@ namespace YoCode
     {
         private readonly string repositoryPath;
 
-        public GitCheck(string path)
+        public GitCheck(ICheckConfig checkConfig)
         {
-            repositoryPath = path;
+            repositoryPath = checkConfig.PathManager.ModifiedTestDirPath;
             GitEvidence.Feature = Feature.GitCheck;
             GitEvidence.HelperMessage = messages.GitCheck;
 

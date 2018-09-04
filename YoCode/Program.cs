@@ -65,7 +65,7 @@ namespace YoCode
 
             var evidenceList = new List<FeatureEvidence>();
 
-            var checkManager = new CheckManager(dir, workThreads);
+            var checkManager = new CheckManager(workThreads, new CheckConfig(dir, parameters));
 
             var projectRunner = checkManager.PassGatewayChecks(evidenceList);
 
@@ -77,7 +77,7 @@ namespace YoCode
                 return;
             }
 
-            evidenceList = checkManager.PerformChecks(parameters, projectRunner);
+            evidenceList = checkManager.PerformChecks(projectRunner);
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 

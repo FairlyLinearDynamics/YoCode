@@ -10,8 +10,9 @@ namespace YoCode
         private List<string> FileList { get; } = new List<string>();
         private List<string> UncommitedFiles { get; set; } = new List<string>();
 
-        public FileChangeFinder(string path)
+        public FileChangeFinder(ICheckConfig checkConfig)
         {
+            var path = checkConfig.PathManager.ModifiedTestDirPath;
             FileChangeEvidence.Feature = Feature.FilesChangedCheck;
             FileChangeEvidence.HelperMessage = messages.FilesChangedCheck;
 

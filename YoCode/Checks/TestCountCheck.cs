@@ -11,22 +11,21 @@ namespace YoCode
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
-        private readonly FeatureRunner featureRunner;
 
         public string StatLine { get; set; }
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
-        private readonly int TestCountTreshold = 10;
+        private const int TestCountThreshold = 10;
 
         private TestStats stats;
         private List<int> tempStats;
 
         private const int TitleColumnFormatter = -25;
 
-        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner)
+        public TestCountCheck(ICheckConfig checkConfig)
         {
-            workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
+            workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
 
             if (!Directory.Exists(workingDir))
             {
@@ -34,7 +33,6 @@ namespace YoCode
                 return;
             }
 
-            this.featureRunner = featureRunner;
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
@@ -45,7 +43,7 @@ namespace YoCode
         private void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = featureRunner.Execute(pr);
+            var evidence = new FeatureRunner().Execute(pr);
 
             if (evidence.Inconclusive)
             {
@@ -70,7 +68,7 @@ namespace YoCode
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
-                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountTreshold;
+                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountThreshold;
                 if (featureImplemented)
                 {
                     UnitTestEvidence.SetPassed(new SimpleEvidenceBuilder(StructuredOutput()));
@@ -95,11 +93,11 @@ namespace YoCode
         {
             double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
 
-            if(stats.totalTests >= TestCountTreshold)
+            if(stats.totalTests >= TestCountThreshold)
             {
                 return rating;
             }
-            double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+            double deduction = (TestCountThreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountThreshold));
             return rating - deduction;
         }
 
@@ -114,7 +112,7 @@ namespace YoCode
             builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
             builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountThreshold}"));
 
             return builder.ToString();
         }

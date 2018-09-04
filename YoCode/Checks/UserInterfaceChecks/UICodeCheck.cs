@@ -9,17 +9,13 @@ namespace YoCode
     internal class UICodeCheck
     {
         // -------------------------------------------------------------------------------------------- Constructors
-        public UICodeCheck(IEnumerable<string> userFilePaths, string[] keyWords)
+        public UICodeCheck(string[] keyWords, ICheckConfig checkConfig)
         {
-            UIContainsFeature(userFilePaths, keyWords);
+            var modifiedHtmlFiles = checkConfig.PathManager.GetFilesInDirectory(checkConfig.PathManager.ModifiedTestDirPath, FileTypes.html).ToList();
+            UIContainsFeature(modifiedHtmlFiles, keyWords);
             UIEvidence.Feature = Feature.UICodeCheck;
             UIEvidence.HelperMessage = messages.UICodeCheck;
 
-        }
-
-        public UICodeCheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
-        {
-            UIContainsFeature(userFilePath, keyWords);
         }
 
         // -------------------------------------------------------------------------------------------- Single UI check

@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
+using Moq;
 using YoCode;
 
 namespace YoCode_XUnit
@@ -8,12 +9,21 @@ namespace YoCode_XUnit
     {
         private readonly string fakeFilePath = @"..\..\..\TestData\MockHTML.cshtml";
         private readonly string[] keyWords = { "miles", "kilometer" };
+        private readonly Mock<ICheckConfig> checkConfig;
 
-        // Write better testing mehod
+        public UICheckTests()
+        {
+            var pathManager = new Mock<IPathManager>();
+            pathManager.Setup(m => m.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<FileTypes>())).Returns(new []{fakeFilePath});
+
+            checkConfig = new Mock<ICheckConfig>();
+            checkConfig.Setup(m => m.PathManager).Returns(pathManager.Object);
+        }
+
         [Fact]
         public void UICheck_FeatureImplementedBoolCheck()
         {
-            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
             var evidence = uiCheck.UIEvidence;
 
@@ -23,7 +33,7 @@ namespace YoCode_XUnit
         [Fact]
         public void UICheck_FeatureTitleSet()
         {
-            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
             var evidence = uiCheck.UIEvidence;
 

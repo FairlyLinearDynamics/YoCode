@@ -3,39 +3,41 @@ using System;
 
 namespace YoCode
 {
-    class DuplicationCheckRunner
+    internal class DuplicationCheckRunner
     {
-        private readonly string webAppFile = "UnitConverterWebApp\\UnitConverterWebApp.csproj";
-        private readonly string testFile = "UnitConverterTests\\UnitConverterTests.csproj";
+        private const string webAppFile = "UnitConverterWebApp\\UnitConverterWebApp.csproj";
+        private const string testFile = "UnitConverterTests\\UnitConverterTests.csproj";
 
-        IRunParameterChecker p;
-        IPathManager dir;
-        IDupFinder dupFinder;
+        private readonly CheckConfig checkConfig;
 
-        public DuplicationCheckRunner(IPathManager dir,IDupFinder dupFinder,IRunParameterChecker p)
+        public DuplicationCheckRunner(CheckConfig checkConfig)
         {
-            this.dir = dir;
-            this.dupFinder = dupFinder;
-            this.p = p;
+            IRunParameterChecker parameters = checkConfig.RunParameters;
+            this.checkConfig = checkConfig;
 
-            AppDuplicationEvidence = RunAppDuplicationCheck(webAppFile,Int32.Parse(p.AppCodeBaseCost),Int32.Parse(p.AppDuplicationCost));
+            AppDuplicationEvidence = RunAppDuplicationCheck(webAppFile, Int32.Parse(parameters.AppCodeBaseCost), Int32.Parse(parameters.AppDuplicationCost));
             AppDuplicationEvidence.Feature = Feature.AppDuplicationCheck;
 
-            TestDuplicationEvidence = RunAppDuplicationCheck(testFile,Int32.Parse(p.TestCodeBaseCost), Int32.Parse(p.TestDuplicationCost));
+            TestDuplicationEvidence = RunAppDuplicationCheck(testFile, Int32.Parse(parameters.TestCodeBaseCost), Int32.Parse(parameters.TestDuplicationCost));
             TestDuplicationEvidence.Feature = Feature.TestDuplicationCheck;
         }
 
-        public FeatureEvidence RunAppDuplicationCheck(string file, int OrigCodeBaseCost,int OrigDuplicateCost)
+        private FeatureEvidence RunAppDuplicationCheck(string file, int origCodeBaseCost, int origDuplicateCost)
         {
-            var dupcheck = new DuplicationCheck(dir, dupFinder,file);
-            dupcheck.OrigCodeBaseCost = OrigCodeBaseCost;
-            dupcheck.OrigDuplicateCost = OrigDuplicateCost;
-            dupcheck.PerformDuplicationCheck();
+            var dupFinder = new DupFinder(checkConfig.RunParameters.CMDToolsPath);
 
-            return dupcheck.DuplicationEvidence;
+            var dupCheck = new DuplicationCheck(checkConfig.PathManager, dupFinder, file)
+            {
+                OrigCodeBaseCost = origCodeBaseCost,
+                OrigDuplicateCost = origDuplicateCost
+            };
+
+            dupCheck.PerformDuplicationCheck();
+
+            return dupCheck.DuplicationEvidence;
         }
 
-        public FeatureEvidence AppDuplicationEvidence { get; set; } = new FeatureEvidence();
-        public FeatureEvidence TestDuplicationEvidence { get; set; } = new FeatureEvidence();
+        public FeatureEvidence AppDuplicationEvidence { get; }
+        public FeatureEvidence TestDuplicationEvidence { get; }
     }
 }

@@ -6,32 +6,32 @@ namespace YoCode
 {
     internal class CheckManager
     {
-        private readonly IPathManager dir;
         private readonly List<Thread> workThreads;
+        private readonly CheckConfig checkConfig;
 
-        public CheckManager(IPathManager dir, List<Thread> workThreads)
+        public CheckManager(List<Thread> workThreads, CheckConfig checkConfig)
         {
-            this.dir = dir;
             this.workThreads = workThreads;
+            this.checkConfig = checkConfig;
         }
 
         public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
         {
-            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
+            var fileCheck = new FileChangeFinder(checkConfig);
             if (fileCheck.FileChangeEvidence.Failed)
             {
                 evidenceList.Add(fileCheck.FileChangeEvidence);
                 return null;
             }
 
-            var projectBuilder = new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner());
+            var projectBuilder = new ProjectBuilder(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
             if (projectBuilder.ProjectBuilderEvidence.Failed)
             {
                 evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
                 return null;
             }
 
-            var projectRunner = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
+            var projectRunner = new ProjectRunner(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
             ConsoleCloseHandler.StartHandler(projectRunner);
             projectRunner.Execute();
             if(projectRunner.ProjectRunEvidence.Failed)
@@ -42,20 +42,20 @@ namespace YoCode
             return projectRunner;
         }
 
-        public List<FeatureEvidence> PerformChecks(RunParameterChecker p, ProjectRunner projectRunner)
+        public List<FeatureEvidence> PerformChecks(ProjectRunner projectRunner)
         {
             var checkList = new List<FeatureEvidence>();
 
             // CodeCoverage check
             var codeCoverage = new Thread(() =>
             {
-                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
+                checkList.Add(new CodeCoverageCheck(checkConfig).CodeCoverageEvidence);
             });
             workThreads.Add(codeCoverage);
             codeCoverage.Start();
 
             // Duplication check
-            var dupcheck = new DuplicationCheckRunner(dir, new DupFinder(p.CMDToolsPath), p);
+            var dupcheck = new DuplicationCheckRunner(checkConfig);
 
             var dupFinderThread = new Thread(() =>
             {
@@ -66,19 +66,17 @@ namespace YoCode
             dupFinderThread.Start();
 
             //File Change
-            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
+            var fileCheck = new FileChangeFinder(checkConfig);
             checkList.Add(fileCheck.FileChangeEvidence);
 
             // UI test
-            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
-
-            checkList.Add(new UICodeCheck(modifiedHtmlFiles, UIKeywords.MILE_KEYWORDS).UIEvidence);
+            checkList.Add(new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig).UIEvidence);
 
             // Git repo used
-            checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
+            checkList.Add(new GitCheck(checkConfig).GitEvidence);
 
             // Unit test test
-            checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
+            checkList.Add(new TestCountCheck(checkConfig).UnitTestEvidence);
 
             //Front End Check
             checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);

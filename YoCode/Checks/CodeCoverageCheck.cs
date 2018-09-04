@@ -12,14 +12,15 @@ namespace YoCode
         private const int passPerc = 45;
         private const string testFolder = "UnitConverterTests";
 
-        public CodeCoverageCheck(string dotCoverDir, string workingDir, FeatureRunner featureRunner)
+        public CodeCoverageCheck(CheckConfig checkConfig)
         {
             CodeCoverageEvidence.Feature = Feature.CodeCoverageCheck;
             CodeCoverageEvidence.HelperMessage = messages.CodeCoverageCheck;
 
+            var dotCoverDir = checkConfig.RunParameters.DotCoverDir;
             FullReportPath = Path.Combine(dotCoverDir, ReportName);
 
-            var targetWorkingDir = Path.Combine(workingDir, testFolder);
+            var targetWorkingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, testFolder);
 
             if (!Directory.Exists(targetWorkingDir))
             {
@@ -29,7 +30,7 @@ namespace YoCode
 
             Argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
 
-            featureRunner.Execute(CreateProcessDetails(dotCoverDir));
+            new FeatureRunner().Execute(CreateProcessDetails(dotCoverDir));
 
             var report = ReadReport();
             CleanUp();
