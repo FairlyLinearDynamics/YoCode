@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace YoCode
 {
@@ -32,11 +29,12 @@ namespace YoCode
             map.Add(Feature.UnitConverterCheck, "Units were converted successfully");
             map.Add(Feature.BadInputCheck, "Bad input crashes have been fixed");
             return map;
+
         }
 
         public static string GetFeatureTitle(Feature lookup)
         {
-            return map.ToList().Find(e => e.Key == lookup).Value;
+            return map[lookup];
         }
     }
 }
