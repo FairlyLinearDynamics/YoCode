@@ -6,7 +6,7 @@ using System.Text;
 
 namespace YoCode
 {
-    internal class TestCountCheck
+    internal class TestCountCheck : ICheck
     {
         private readonly string processName;
         private readonly string workingDir;
@@ -117,6 +117,11 @@ namespace YoCode
             return builder.ToString();
         }
 
-        public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] { UnitTestEvidence };
+        }
     }
 }

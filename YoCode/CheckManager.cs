@@ -15,12 +15,13 @@ namespace YoCode
             this.checkConfig = checkConfig;
         }
 
-        public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
+        public ProjectRunner PassGatewayChecks(List<FeatureEvidence> evidenceList)
         {
             var fileCheck = new FileChangeFinder(checkConfig);
-            if (fileCheck.FileChangeEvidence.Failed)
+            var fileChangeEvidence = fileCheck.Execute().ToArray();
+            if (fileChangeEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(fileCheck.FileChangeEvidence);
+                evidenceList.AddRange(fileChangeEvidence);
                 return null;
             }
 
@@ -49,7 +50,9 @@ namespace YoCode
             // CodeCoverage check
             var codeCoverage = new Thread(() =>
             {
-                checkList.Add(new CodeCoverageCheck(checkConfig).CodeCoverageEvidence);
+                var codeCoverageCheck = new CodeCoverageCheck(checkConfig);
+                var codeCoverageEvidence = codeCoverageCheck.Execute();
+                checkList.AddRange(codeCoverageEvidence);
             });
             workThreads.Add(codeCoverage);
             codeCoverage.Start();
@@ -59,27 +62,26 @@ namespace YoCode
 
             var dupFinderThread = new Thread(() =>
             {
-                checkList.Add(dupcheck.AppDuplicationEvidence);
-                checkList.Add(dupcheck.TestDuplicationEvidence);
+                checkList.AddRange(dupcheck.Execute());
             });
             workThreads.Add(dupFinderThread);
             dupFinderThread.Start();
 
             //File Change
             var fileCheck = new FileChangeFinder(checkConfig);
-            checkList.Add(fileCheck.FileChangeEvidence);
+            checkList.AddRange(fileCheck.Execute());
 
             // UI test
-            checkList.Add(new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig).UIEvidence);
+            checkList.AddRange(new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig).Execute());
 
             // Git repo used
-            checkList.Add(new GitCheck(checkConfig).GitEvidence);
+            checkList.AddRange(new GitCheck(checkConfig).Execute());
 
             // Unit test test
-            checkList.Add(new TestCountCheck(checkConfig).UnitTestEvidence);
+            checkList.AddRange(new TestCountCheck(checkConfig).Execute());
 
             //Front End Check
-            checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);
+            checkList.AddRange(new UICheck(projectRunner.GetPort()).Execute());
 
             var ucc = new UnitConverterCheck(projectRunner.GetPort());
 

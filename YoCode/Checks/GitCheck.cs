@@ -6,7 +6,7 @@ using LibGit2Sharp;
 
 namespace YoCode
 {
-    internal class GitCheck
+    internal class GitCheck : ICheck
     {
         private readonly string repositoryPath;
 
@@ -82,6 +82,11 @@ namespace YoCode
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] {GitEvidence};
+        }
     }
 }

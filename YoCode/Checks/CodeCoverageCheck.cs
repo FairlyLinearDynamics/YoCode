@@ -1,15 +1,16 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace YoCode
 {
-    internal class CodeCoverageCheck
+    internal class CodeCoverageCheck : ICheck
     {
         private string Argument { get; }
         private string ProcessName { get; } = "dotCover.exe";
 
         private string ReportName { get; } = "report.json";
         private string FullReportPath { get; }
-        private const int passPerc = 45;
+        private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
         public CodeCoverageCheck(CheckConfig checkConfig)
@@ -48,7 +49,7 @@ namespace YoCode
             else
             {
                 CodeCoverageEvidence.FeatureRating = ( (double) GetCodeCoverage(report) ) / 100;
-                var featureImplemented = coverage >= passPerc;
+                var featureImplemented = coverage >= passPercentage;
                 var evidence = $"Code Coverage: {coverage}%";
                 if (featureImplemented)
                 {
@@ -101,6 +102,11 @@ namespace YoCode
             File.Delete(FullReportPath);
         }
 
-        public FeatureEvidence CodeCoverageEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence CodeCoverageEvidence { get; } = new FeatureEvidence();
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] {CodeCoverageEvidence};
+        }
     }
 }

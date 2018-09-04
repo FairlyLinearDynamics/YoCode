@@ -1,9 +1,11 @@
 ﻿
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace YoCode
 {
-    internal class DuplicationCheckRunner
+    internal class DuplicationCheckRunner : ICheck
     {
         private const string webAppFile = "UnitConverterWebApp\\UnitConverterWebApp.csproj";
         private const string testFile = "UnitConverterTests\\UnitConverterTests.csproj";
@@ -37,7 +39,12 @@ namespace YoCode
             return dupCheck.DuplicationEvidence;
         }
 
-        public FeatureEvidence AppDuplicationEvidence { get; }
-        public FeatureEvidence TestDuplicationEvidence { get; }
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] {AppDuplicationEvidence, TestDuplicationEvidence};
+        }
+
+        private FeatureEvidence AppDuplicationEvidence { get; }
+        private FeatureEvidence TestDuplicationEvidence { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 using FluentAssertions;
 using Moq;
 using YoCode;
@@ -25,9 +26,9 @@ namespace YoCode_XUnit
         {
             var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
-            var evidence = uiCheck.UIEvidence;
+            var evidence = uiCheck.Execute();
 
-            evidence.Passed.Should().Be(true);
+            evidence.Single().Passed.Should().Be(true);
         }
 
         [Fact]
@@ -35,9 +36,9 @@ namespace YoCode_XUnit
         {
             var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
-            var evidence = uiCheck.UIEvidence;
+            var evidence = uiCheck.Execute();
 
-            FeatureTitleStorage.GetFeatureTitle(evidence.Feature).Should().NotBeEmpty();
+            FeatureTitleStorage.GetFeatureTitle(evidence.Single().Feature).Should().NotBeEmpty();
         }
     }
 }

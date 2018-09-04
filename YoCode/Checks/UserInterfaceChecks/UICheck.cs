@@ -11,7 +11,7 @@ using Microsoft.Win32;
 
 namespace YoCode
 {
-    class UICheck 
+    class UICheck : ICheck
     {
         private static IWebDriver browser;
         private const string CHROME = "Google Chrome";
@@ -139,6 +139,11 @@ namespace YoCode
             return !Running;
         }
 
-        public List<FeatureEvidence> UIFeatureEvidences { get; }
+        private List<FeatureEvidence> UIFeatureEvidences { get; }
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return UIFeatureEvidences;
+        }
     }
 }

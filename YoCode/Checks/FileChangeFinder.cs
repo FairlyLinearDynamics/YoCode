@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace YoCode
 {
-    internal class FileChangeFinder
+    internal class FileChangeFinder : ICheck
     {
         private List<string> FileList { get; } = new List<string>();
         private List<string> UncommitedFiles { get; set; } = new List<string>();
@@ -94,6 +94,11 @@ namespace YoCode
             return String.Join(Environment.NewLine, FileList);
         }
 
-        public FeatureEvidence FileChangeEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence FileChangeEvidence { get; } = new FeatureEvidence();
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] {FileChangeEvidence};
+        }
     }
 }

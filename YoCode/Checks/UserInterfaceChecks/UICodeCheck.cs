@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace YoCode
 {
-    internal class UICodeCheck
+    internal class UICodeCheck : ICheck
     {
         // -------------------------------------------------------------------------------------------- Constructors
         public UICodeCheck(string[] keyWords, ICheckConfig checkConfig)
@@ -54,6 +54,11 @@ namespace YoCode
         }
 
         // -------------------------------------------------------------------------------------------- Return methods
-        public FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
+
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] { UIEvidence };
+        }
     }
 }
