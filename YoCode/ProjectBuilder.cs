@@ -15,7 +15,6 @@ namespace YoCode
         {
             CleanBuildOutput(workingDir);
 
-            ProjectBuilderEvidence.FeatureTitle = "Project build";
             ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
 
             workingDir = Path.Combine(workingDir, projectFolder);

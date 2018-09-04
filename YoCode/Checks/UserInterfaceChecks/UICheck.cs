@@ -113,9 +113,9 @@ namespace YoCode
         private static List<FeatureEvidence> CreateDefaultFeatureEvidence()
         {
             return new List<FeatureEvidence> {
-                new FeatureEvidence(){ FeatureTitle = "Found feature evidence in user interface", Feature = Feature.UIFeatureImplemented },
-                new FeatureEvidence(){ FeatureTitle = "Bad input crashes have been fixed in the UI", Feature = Feature.UIBadInputCheck},
-                new FeatureEvidence(){ FeatureTitle = "Units were converted successfully using UI", Feature = Feature.UIConversionCheck}
+                new FeatureEvidence(){ Feature = Feature.UIFeatureImplemented },
+                new FeatureEvidence(){ Feature = Feature.UIBadInputCheck},
+                new FeatureEvidence(){ Feature = Feature.UIConversionCheck}
             };
         }
 
