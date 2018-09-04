@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using System.Collections.Generic;
+using System.IO;
 
 namespace YoCode
 {
@@ -11,7 +12,7 @@ namespace YoCode
         static string writeTo;
 
 
-        public Output(IPrint printTo, string outputPath, IErrorReporter errorReporter = null)
+        public Output(IPrint printTo, string outputPath = null, IErrorReporter errorReporter = null)
         {
             outputWriter = printTo;
 
@@ -41,9 +42,9 @@ namespace YoCode
             outputWriter.WriteReport();
         }
 
-        public static void PrintScreenShot(Screenshot screenshot)
+        public static void PrintScreenShot(Screenshot screenshot, string fileName)
         {
-            screenshot.SaveAsFile();
+            screenshot.SaveAsFile(Path.Combine(Path.GetDirectoryName(writeTo), fileName),ScreenshotImageFormat.Png);
         }
 
         public void ShowInputErrors(List<string> errs)

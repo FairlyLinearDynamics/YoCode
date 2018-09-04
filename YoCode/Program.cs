@@ -27,7 +27,7 @@ namespace YoCode
 
             outputs.Add(new ConsoleWriter());
 
-            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
+            var compositeOutput = new Output(new CompositeWriter(outputs), outputPath, (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
             var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
             var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);

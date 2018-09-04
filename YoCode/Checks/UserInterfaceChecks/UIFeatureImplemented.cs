@@ -14,6 +14,8 @@ namespace YoCode
         private readonly string[] mileKeyWords = UIKeywords.MILE_KEYWORDS;
         private readonly string[] kmKeyWords = UIKeywords.KM_KEYWORDS;
 
+        private const string SCREENSHOT_NAME = "screenShot.png";
+
         StringBuilder evidence = new StringBuilder();
         Screenshot screenShot;
 
@@ -22,10 +24,10 @@ namespace YoCode
             UIFeatureImplementedEvidence.FeatureTitle = "Found feature evidence in user interface";
             UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplemented;
             UIFeatureImplementedEvidence.HelperMessage = messages.UIFeatureImplemented;
-
-            screenShot = ((ITakesScreenshot)browser).GetScreenshot();
-
             this.browser = browser;
+            screenShot = ((ITakesScreenshot)browser).GetScreenshot();
+            Output.PrintScreenShot(screenShot, SCREENSHOT_NAME);
+
             ExecuteCheck();
         }
 
@@ -55,7 +57,7 @@ namespace YoCode
                     evidence = $"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface";
                 }
 
-                UIFeatureImplementedEvidence.SetPassed(new UIScreenShotEvidenceBuilder(screenShot, evidence));
+                UIFeatureImplementedEvidence.SetPassed(new UIScreenShotEvidenceBuilder(SCREENSHOT_NAME, evidence));
                 UIFeatureImplementedEvidence.FeatureRating = 1;
             }
             else

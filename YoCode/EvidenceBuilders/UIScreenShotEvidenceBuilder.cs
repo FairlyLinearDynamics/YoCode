@@ -7,10 +7,10 @@ namespace YoCode
 {
     class UIScreenShotEvidenceBuilder : IEvidence
     {
-        public Screenshot ScreenShot { get; set; }
-        string bonusEvidence;
+        private string ScreenShot;
+        private string bonusEvidence;
 
-        public UIScreenShotEvidenceBuilder(Screenshot screenShot, string evidence)
+        public UIScreenShotEvidenceBuilder(string screenShot, string evidence)
         {
             ScreenShot = screenShot;
             bonusEvidence = evidence;
@@ -18,12 +18,15 @@ namespace YoCode
 
         public string BuildEvidenceForConsole()
         {
-            throw new NotImplementedException();
+            return bonusEvidence;
         }
 
         public string BuildEvidenceForHTML()
         {
-            return WebElementBuilder.FormatAndEncapsulateParagraph(bonusEvidence);
+            var resultEvidence = new StringBuilder();
+            resultEvidence.AppendLine(WebElementBuilder.FormatAndEncapsulateParagraph(bonusEvidence));
+            resultEvidence.AppendLine(WebElementBuilder.FormatImageElement(ScreenShot));
+            return resultEvidence.ToString();
         }
     }
 }
