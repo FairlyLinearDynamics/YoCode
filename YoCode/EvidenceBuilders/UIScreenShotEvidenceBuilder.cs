@@ -25,7 +25,8 @@ namespace YoCode
         {
             var resultEvidence = new StringBuilder();
             resultEvidence.AppendLine(WebElementBuilder.FormatAndEncapsulateParagraph(bonusEvidence));
-            resultEvidence.AppendLine(WebElementBuilder.FormatImageElement(ScreenShot));
+            resultEvidence.AppendLine(WebElementBuilder.FormatParagraph("User Interface Screenshot: "
+                +Environment.NewLine+WebElementBuilder.FormatImageElement(ScreenShot)));
             return resultEvidence.ToString();
         }
     }
