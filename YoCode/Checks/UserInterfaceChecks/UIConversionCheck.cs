@@ -15,6 +15,8 @@ namespace YoCode
 
         private static double unitConvertValue = 1.60934;
 
+        private StringBuilder uiConversionResultsOutput = new StringBuilder();
+
         public UIConversionCheck(IWebDriver browser, UIFoundTags foundKeyWord)
         {
             UIConversionEvidence.FeatureTitle = "Units were converted successfully using UI";
@@ -39,7 +41,7 @@ namespace YoCode
                 }
                 catch (NoSuchElementException)
                 {
-                    UIConversionEvidence.SetFailed("Values were converted incorrectly");
+                    uiConversionResultsOutput.AppendLine("Values were converted incorrectly");
                     UIConversionEvidence.FeatureRating = 0;
                     browser.Navigate().Back();
                     return;
@@ -47,13 +49,13 @@ namespace YoCode
                 browser.Navigate().Back();
             }
 
-            UIConversionEvidence.SetPassed("Successfully converted from miles to kilometres");
+            UIConversionEvidence.SetPassed(new SimpleEvidenceBuilder("Successfully converted from miles to kilometres"));
             UIConversionEvidence.FeatureRating = 1;
         }
 
         private void SetCheckUndefined(List<UICheckErrEnum> errs)
         {
-            UIConversionEvidence.SetInconclusive(UIEnumErrFormat.ConvertEnum(errs).ToArray());
+            UIConversionEvidence.SetInconclusive(new SimpleEvidenceBuilder(UIEnumErrFormat.ConvertEnum(errs).ToList()));
         }
 
         private double GetCorrectClampedNum(double num)

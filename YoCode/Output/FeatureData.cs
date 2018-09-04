@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace YoCode
+﻿namespace YoCode
 {
     public struct FeatureData
     {
         public string title;
         public bool? featurePass;
-        public List<string> evidence;
+        public IEvidence featureEvidence;
         public double score;
         public string featureResult;
         public string featureHelperMessage;

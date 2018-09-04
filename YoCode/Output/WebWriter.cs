@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace YoCode
 {
@@ -9,6 +10,9 @@ namespace YoCode
     {
         private const string FEATURE_TAG = "{FEATURE}";
         private const string SCORE_TAG = "{SCORE}";
+
+        private const string FILECHANGESPAN_OPEN = "<span class=\"changedFileText\">";
+        private const string FILECHANGESPAN_CLOSE = "</span>";
 
         private readonly StringBuilder features;
         private readonly StringBuilder errors;
@@ -27,14 +31,14 @@ namespace YoCode
 
         public void AddMessage(string message)
         {
-            msg.Append(WebElementBuilder.FormatParagraph(message));
+            msg.Append(WebElementBuilder.FormatAndEncapsulateParagraph(message));
         }
 
         public void AddFeature(FeatureData data)
         {
             var featureResults = new StringBuilder();
             featureResults.Append(WebElementBuilder.FormatParagraph(data.featureResult));
-            featureResults.Append(WebElementBuilder.FormatListOfStrings(data.evidence));
+            featureResults.Append(data.featureEvidence.BuildEvidenceForHTML());
             string featureTitle;
             switch (data.featurePass)
             {
@@ -52,7 +56,8 @@ namespace YoCode
                     break;
             }
 
-            features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData() {
+            features.Append(WebElementBuilder.FormatAccordionElement(new WebAccordionData()
+            {
                 featureTitle = featureTitle,
                 content = featureResults.ToString(),
                 helperMessage = data.featureHelperMessage,

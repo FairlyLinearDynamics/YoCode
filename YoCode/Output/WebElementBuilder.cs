@@ -31,9 +31,11 @@ namespace YoCode
         private const string SPAN_OPEN = "<span>";
         private const string SPAN_CLOSE = "</span>";
 
-        const string ESCAPE_AND = "&amp";
+        private const string ESCAPE_AND = "&amp";
         private const string ESCAPE_LESS = "&lt";
         private const string ESCAPE_GREATER = "&gt";
+        private const string ESCAPE_QUOT = "&quot";
+        private const string ESCAPE_APOS = "&apos";
 
         private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
         private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
@@ -44,11 +46,48 @@ namespace YoCode
                 .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
-        public static string FormatParagraph(string text)
+        public static string FormatFileDiff(List<string> file)
+        {
+            var sb = new StringBuilder();
+            var escapedFile = EscapeCharacters(String.Join(Environment.NewLine,file)).Split(Environment.NewLine).ToList();
+
+            sb.Append("<span class=\"changedFileText\">");
+            foreach(var line in escapedFile)
+            {
+                if (line.Length > 0)
+                {
+                    if (line[0] == '+')
+                    {
+                        sb.AppendLine($"<span class=\"green-text\">{line}</span>");
+                    }
+                    else if (line[0] == '-') 
+                    {
+                        sb.AppendLine($"<span class=\"red-text\">{line}</span>");
+                    }
+                    else
+                    {
+                        sb.AppendLine(line);
+                    }
+                }
+            }
+            sb.Append("</span>");
+            return sb.ToString();
+        }
+
+        public static string FormatFileDiffButton(string buttonName)
+        {
+            return $"<span class=\"changedFile\">{buttonName}</span>";
+        }
+
+        public static string FormatAndEncapsulateParagraph(string text)
         {
             text = EscapeCharacters(text);
             text = FindAndEncapsulateLink(text);
+            return FormatParagraph(text);
+        }
 
+        public static string FormatParagraph(string text)
+        {
             var lines = text.Split(Environment.NewLine);
             var par = new StringBuilder();
             par.Append(SPAN_OPEN);
@@ -109,7 +148,7 @@ namespace YoCode
 
         private static string EscapeCharacters(string text)
         {
-            return text.Replace("<", ESCAPE_LESS).Replace(">", ESCAPE_GREATER);
+            return text.Replace("&", ESCAPE_AND).Replace("<", ESCAPE_LESS).Replace(">", ESCAPE_GREATER).Replace("\"",ESCAPE_QUOT).Replace("\'",ESCAPE_APOS);
         }
 
         private static string FindAndEncapsulateLink(string text)

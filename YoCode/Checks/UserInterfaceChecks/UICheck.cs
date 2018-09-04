@@ -122,7 +122,7 @@ namespace YoCode
         private static List<FeatureEvidence> CreateFailureEvidence(string failureReason)
         {
             var evidence = CreateDefaultFeatureEvidence();
-            evidence.ForEach(a => a.SetInconclusive(failureReason));
+            evidence.ForEach(a => a.SetInconclusive(new SimpleEvidenceBuilder(failureReason)));
             return evidence;
         }
 

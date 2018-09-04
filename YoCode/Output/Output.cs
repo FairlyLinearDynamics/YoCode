@@ -23,7 +23,7 @@ namespace YoCode
             foreach (var feature in featureList)
             {
                 featData.title = feature.FeatureTitle;
-                featData.evidence = feature.Evidence;
+                featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
                 featData.score = feature.FeatureRating;
                 var result = feature.Inconclusive
@@ -31,7 +31,6 @@ namespace YoCode
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
-
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

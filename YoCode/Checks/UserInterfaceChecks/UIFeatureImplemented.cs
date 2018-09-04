@@ -48,12 +48,12 @@ namespace YoCode
                     evidence = $"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface";
                 }
 
-                UIFeatureImplementedEvidence.SetPassed(evidence);
+                UIFeatureImplementedEvidence.SetPassed(new SimpleEvidenceBuilder(evidence));
                 UIFeatureImplementedEvidence.FeatureRating = 1;
             }
             else
             {
-                UIFeatureImplementedEvidence.SetFailed("Did not find any evidence in user interface");
+                UIFeatureImplementedEvidence.SetFailed(new SimpleEvidenceBuilder("Did not find any evidence in user interface"));
                 UIFeatureImplementedEvidence.FeatureRating = 0;
             }
         }

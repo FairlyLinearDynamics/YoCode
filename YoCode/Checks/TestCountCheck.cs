@@ -30,7 +30,7 @@ namespace YoCode
 
             if (!Directory.Exists(workingDir))
             {
-                UnitTestEvidence.SetInconclusive($"{workingDir} not found");
+                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace YoCode
 
             if (evidence.Inconclusive)
             {
-                UnitTestEvidence.SetInconclusive(evidence.Evidence.First());
+                UnitTestEvidence.SetInconclusive(evidence.Evidence);
                 return;
             }
 
@@ -74,16 +74,16 @@ namespace YoCode
                 var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountTreshold;
                 if (featureImplemented)
                 {
-                    UnitTestEvidence.SetPassed(StructuredOutput());
+                    UnitTestEvidence.SetPassed(new SimpleEvidenceBuilder(StructuredOutput()));
                 }
                 else
                 {
-                    UnitTestEvidence.SetFailed(StructuredOutput());
+                    UnitTestEvidence.SetFailed(new SimpleEvidenceBuilder(StructuredOutput()));
                 }
             }
             else
             {
-                UnitTestEvidence.SetInconclusive("Error while getting tests from applicant's project");
+                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder("Error while getting tests from applicant's project"));
             }
         }
 
