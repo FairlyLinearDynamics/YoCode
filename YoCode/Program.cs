@@ -86,7 +86,7 @@ namespace YoCode
 
             evidenceList.Add(new ResultSummary(evidenceList).ResultEvidence);
 
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => a.FeatureTitle),
+            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
                 results.FinalScore);
 
             LaunchReport(result, outputPath);
