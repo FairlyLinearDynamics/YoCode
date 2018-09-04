@@ -1,6 +1,8 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -11,13 +13,20 @@ namespace YoCode
         private readonly IWebDriver browser;
         private readonly string[] mileKeyWords = UIKeywords.MILE_KEYWORDS;
         private readonly string[] kmKeyWords = UIKeywords.KM_KEYWORDS;
-        
+
+        private const string SCREENSHOT_NAME = "screenShot.png";
+
+        StringBuilder evidence = new StringBuilder();
+        Screenshot screenShot;
+
         public UIFeatureImplemented(IWebDriver browser)
         {
             UIFeatureImplementedEvidence.Feature = Feature.UIFeatureImplemented;
             UIFeatureImplementedEvidence.HelperMessage = messages.UIFeatureImplemented;
-
             this.browser = browser;
+            screenShot = ((ITakesScreenshot)browser).GetScreenshot();
+            Output.PrintScreenShot(screenShot, SCREENSHOT_NAME);
+
             ExecuteCheck();
         }
 
@@ -47,7 +56,7 @@ namespace YoCode
                     evidence = $"Found \"{FoundTagsInfo.mileTagText}\" keyword in user interface";
                 }
 
-                UIFeatureImplementedEvidence.SetPassed(new SimpleEvidenceBuilder(evidence));
+                UIFeatureImplementedEvidence.SetPassed(new UIScreenShotEvidenceBuilder(SCREENSHOT_NAME, evidence));
                 UIFeatureImplementedEvidence.FeatureRating = 1;
             }
             else

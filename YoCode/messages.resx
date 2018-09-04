@@ -456,6 +456,10 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         padding: 10px;
         border-left: 1px solid var(--console-text);
       }
+
+      #img-UIScreenShot{
+        padding: 5px;
+      }
     &lt;/style&gt;
   &lt;/head&gt;
 
