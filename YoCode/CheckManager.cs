@@ -47,48 +47,23 @@ namespace YoCode
         {
             var checkList = new List<FeatureEvidence>();
 
-            // CodeCoverage check
-            var codeCoverage = new Thread(() =>
-            {
-                var codeCoverageCheck = new CodeCoverageCheck(checkConfig);
-                var codeCoverageEvidence = codeCoverageCheck.Execute();
-                checkList.AddRange(codeCoverageEvidence);
-            });
-            workThreads.Add(codeCoverage);
-            codeCoverage.Start();
-
-            // Duplication check
+            var codeCoverageCheck = new CodeCoverageCheck(checkConfig);
             var dupcheck = new DuplicationCheckRunner(checkConfig);
-
-            var dupFinderThread = new Thread(() =>
-            {
-                checkList.AddRange(dupcheck.Execute());
-            });
-            workThreads.Add(dupFinderThread);
-            dupFinderThread.Start();
-
-            //File Change
             var fileCheck = new FileChangeFinder(checkConfig);
-            checkList.AddRange(fileCheck.Execute());
-
-            // UI test
-            checkList.AddRange(new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig).Execute());
-
-            // Git repo used
-            checkList.AddRange(new GitCheck(checkConfig).Execute());
-
-            // Unit test test
-            checkList.AddRange(new TestCountCheck(checkConfig).Execute());
-
-            //Front End Check
-            checkList.AddRange(new UICheck(projectRunner.GetPort()).Execute());
-
+            var uiCodeCheck = new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig);
+            var gitCheck = new GitCheck(checkConfig);
+            var testCountCheck = new TestCountCheck(checkConfig);
+            var uiCheck = new UICheck(projectRunner.GetPort());
             var ucc = new UnitConverterCheck(projectRunner.GetPort());
 
-            // Unit converter test
-            checkList.Add(ucc.UnitConverterCheckEvidence);
-
-            checkList.Add(ucc.BadInputCheckEvidence);
+            checkList.AddRange(codeCoverageCheck.Execute());
+            checkList.AddRange(dupcheck.Execute());
+            checkList.AddRange(fileCheck.Execute());
+            checkList.AddRange(uiCodeCheck.Execute());
+            checkList.AddRange(gitCheck.Execute());
+            checkList.AddRange(testCountCheck.Execute());
+            checkList.AddRange(uiCheck.Execute());
+            checkList.AddRange(ucc.Execute());
 
             workThreads.Where(a=>a.Name!="loadingThread").ToList().ForEach(a => a.Join());
             projectRunner.KillProject();

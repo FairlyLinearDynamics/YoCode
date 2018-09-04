@@ -5,7 +5,7 @@ using System.Text;
 
 namespace YoCode
 {
-    internal class UnitConverterCheck
+    internal class UnitConverterCheck : ICheck
     {
         private Dictionary<List<string>, List<double>> KeywordMap;
         private Dictionary<string, string> badInputs;
@@ -275,7 +275,12 @@ namespace YoCode
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
 
-        public FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
-        public FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
+        public IEnumerable<FeatureEvidence> Execute()
+        {
+            return new[] {UnitConverterCheckEvidence, BadInputCheckEvidence};
+        }
+
+        private FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
     }
 }

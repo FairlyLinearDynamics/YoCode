@@ -106,6 +106,7 @@ namespace YoCode
 
         public IEnumerable<FeatureEvidence> Execute()
         {
+            // TODO Background
             return new[] {CodeCoverageEvidence};
         }
     }
