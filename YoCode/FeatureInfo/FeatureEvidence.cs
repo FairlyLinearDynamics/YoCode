@@ -33,11 +33,6 @@ namespace YoCode
             Evidence = reason;
         }
 
-        internal void GiveEvidence(string v)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetPassed(IEvidence reason)
         {
             featureImplemented = true;
