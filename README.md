@@ -4,7 +4,7 @@ A code analysis tool to help evaluate code faster and more comfortably than ever
 ![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/YoCode2.gif)
 
 ## About
-YoCode is a .NET Core application and it only really works on very specific kinds of projects, but it always tries to do the following checks:
+YoCode is a .NET Core application that is designed to work on a specific kind of projects, however it always tries to do the following checks:
 * Runs all unit tests of the project under test.
 * Inputs certain values directly to the web app (if one exists) through the backend and check the output.
 * Uses Selenium to find a text box for the web app, tries to input certain values and checks the output.
@@ -19,6 +19,8 @@ YoCode is a .NET Core application and it only really works on very specific kind
 * Takes a screenshot of the web apps UI (if there is one).
 
 ![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/YoCode_ScreenShot.png)
+
+![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/File_Diff_Demo.gif)
 
 ## To Set Up YoCode:
 
