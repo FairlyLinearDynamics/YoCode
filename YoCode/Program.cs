@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace YoCode
     {
         private static async Task Main(string[] args)
         {
+            var stopwatch = Stopwatch.StartNew();
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
             var commandLineHandler = new CommandLineParser(args);
@@ -87,6 +89,8 @@ namespace YoCode
                 results.FinalScore);
 
             LaunchReport(result, outputPath);
+
+            Console.WriteLine($"YoCode run time: {stopwatch.Elapsed}");
         }
 
         private static void StopLoadingAnimation(List<Thread> workThreads)

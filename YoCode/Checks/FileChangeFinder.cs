@@ -8,26 +8,18 @@ namespace YoCode
 {
     internal class FileChangeFinder : ICheck
     {
+        private string modifiedTestDir;
         private List<string> FileList { get; } = new List<string>();
         private List<string> UncommitedFiles { get; set; } = new List<string>();
 
         public FileChangeFinder(ICheckConfig checkConfig)
         {
-            var path = checkConfig.PathManager.ModifiedTestDirPath;
+            modifiedTestDir = checkConfig.PathManager.ModifiedTestDirPath;
             FileChangeEvidence.Feature = Feature.FilesChangedCheck;
             FileChangeEvidence.HelperMessage = messages.FilesChangedCheck;
-
-            if (!Repository.IsValid(path))
-            {
-                FileChangeEvidence.SetInconclusive(new SimpleEvidenceBuilder("Git Repository Not Found"));
-            }
-            else
-            {
-                ExecuteTheCheck(path);
-            }
         }
 
-        public void ExecuteTheCheck(string path)
+        private void ExecuteTheCheck(string path)
         {
             using (var repo = new Repository(path))
             {
@@ -51,7 +43,7 @@ namespace YoCode
             FileChangeEvidence.FeatureRating = 1;
         }
 
-        private static List<string> GetUncommitedFiles(Repository repository)
+        private static List<string> GetUncommitedFiles(IRepository repository)
         {
 
             var newInIndex = new List<string>();
@@ -83,15 +75,17 @@ namespace YoCode
             return Repo.Diff.Compare<Patch>(lastNonlinearCommit, head);
         }
 
-        public string BuildFileChangeOutput()
+        private string BuildFileChangeOutput()
         {
-            if (UncommitedFiles.Any())
+            if (!UncommitedFiles.Any())
             {
-                FileList.Add(String.Empty);
-                FileList.Add("Untracked/Uncommited Files:");
-                FileList.Add(String.Empty);
-                FileList.AddRange(UncommitedFiles);
+                return String.Join(Environment.NewLine, FileList);
             }
+
+            FileList.Add(String.Empty);
+            FileList.Add("Untracked/Uncommited Files:");
+            FileList.Add(String.Empty);
+            FileList.AddRange(UncommitedFiles);
             return String.Join(Environment.NewLine, FileList);
         }
 
@@ -99,7 +93,19 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.FromResult(new List<FeatureEvidence>{FileChangeEvidence});
+            return Task.Run(() =>
+            {
+                if (!Repository.IsValid(modifiedTestDir))
+                {
+                    FileChangeEvidence.SetInconclusive(new SimpleEvidenceBuilder("Git Repository Not Found"));
+                }
+                else
+                {
+                    ExecuteTheCheck(modifiedTestDir);
+                }
+
+                return new List<FeatureEvidence> {FileChangeEvidence};
+            });
         }
     }
 }

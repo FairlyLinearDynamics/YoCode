@@ -24,18 +24,19 @@ namespace YoCode
             }
 
             var projectBuilder = new ProjectBuilder(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
-            if (projectBuilder.ProjectBuilderEvidence.Failed)
+            var projectBuilderEvidence = (await projectBuilder.Execute()).ToArray();
+            if (projectBuilderEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
+                evidenceList.AddRange(projectBuilderEvidence);
                 return null;
             }
 
             var projectRunner = new ProjectRunner(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
             ConsoleCloseHandler.StartHandler(projectRunner);
-            projectRunner.Execute();
-            if(projectRunner.ProjectRunEvidence.Failed)
+            var projectRunnerEvidence = (await projectRunner.Execute()).ToArray();
+            if(projectRunnerEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(projectRunner.ProjectRunEvidence);
+                evidenceList.AddRange(projectRunnerEvidence);
                 return null;
             }
             return projectRunner;

@@ -28,17 +28,10 @@ namespace YoCode
         {
             workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
 
-            if (!Directory.Exists(workingDir))
-            {
-                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
-                return;
-            }
-
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
             arguments = "test";
-            ExecuteTheCheck();
         }
 
         private void ExecuteTheCheck()
@@ -122,7 +115,18 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.FromResult(new List<FeatureEvidence>{UnitTestEvidence});
+            return Task.Run(() =>
+            {
+                if (!Directory.Exists(workingDir))
+                {
+                    UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
+                    return new List<FeatureEvidence> {UnitTestEvidence};
+                }
+
+                ExecuteTheCheck();
+
+                return new List<FeatureEvidence> {UnitTestEvidence};
+            });
         }
     }
 }

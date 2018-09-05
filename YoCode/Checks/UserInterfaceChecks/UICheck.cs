@@ -14,6 +14,7 @@ namespace YoCode
 {
     class UICheck : ICheck
     {
+        private readonly string port;
         private static IWebDriver browser;
         private const string CHROME = "Google Chrome";
         private const string FIREFOX = "Firefox";
@@ -22,7 +23,7 @@ namespace YoCode
 
         public UICheck(string port)
         {
-            UIFeatureEvidences = ExecuteChecks(port);
+            this.port = port;
         }
 
         private static List<FeatureEvidence> ExecuteChecks(string port)
@@ -67,7 +68,7 @@ namespace YoCode
 
             DriverService service;
 
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+            var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
             var browsers = key.GetSubKeyNames();
 
             if (browsers.Any(a => a.Contains(FIREFOX)))
@@ -140,11 +141,9 @@ namespace YoCode
             return !Running;
         }
 
-        private List<FeatureEvidence> UIFeatureEvidences { get; }
-
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.FromResult(UIFeatureEvidences);
+            return Task.Run(() => ExecuteChecks(port));
         }
     }
 }

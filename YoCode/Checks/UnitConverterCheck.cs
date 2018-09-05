@@ -8,10 +8,9 @@ namespace YoCode
 {
     internal class UnitConverterCheck : ICheck
     {
+        private readonly string port;
         private Dictionary<List<string>, List<double>> KeywordMap;
         private Dictionary<string, string> badInputs;
-
-        private readonly List<string> badInputResults;
 
         private List<UnitConverterResults> actual;
         private List<UnitConverterResults> expected;
@@ -38,8 +37,6 @@ namespace YoCode
         string from = "value=\"";
         string to = "\"";
 
-        private readonly string HTMLcode;
-
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -10;
 
@@ -48,58 +45,10 @@ namespace YoCode
 
         public UnitConverterCheck(string port)
         {
-            UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
-            UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
-
-            BadInputCheckEvidence.Feature = Feature.BadInputCheck;
-            BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
-
-            if (String.IsNullOrEmpty(port))
-            {
-                UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
-                BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
-            }
-            else
-            {
-                try
-                {
-                    var fetcher = new HTMLFetcher(port);
-
-                    HTMLcode = fetcher.GetHTMLCodeAsString();
-                    InitializeDataStructures();
-                    actual = fetcher.GetActualValues(texts, actions);
-
-                    badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
-
-                    if (OutputsAreEqual())
-                    {
-                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
-                    }
-                    else
-                    {
-                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
-                    }
-                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
-
-                    if (BadInputsAreFixed())
-                    {
-                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
-                    }
-                    else
-                    {
-                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
-                    }
-                    BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
-                }
-                catch (Exception)
-                {
-                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
-                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
-                }
-            }
+            this.port = port;
         }
 
-        private void InitializeDataStructures()
+        private void InitializeDataStructures(string htmlCode)
         {
             KeywordMap = new Dictionary<List<string>, List<double>>();
 
@@ -125,7 +74,7 @@ namespace YoCode
             MiToKmKeys = new List<string> { "miles", "mi", "mile", "kilo", "kilometres", "kilometre" };
             YdToMeKeys = new List<string> { "yards", "yard", "yardstometers", "tometers" };
 
-            actions = GetListOfActions(HTMLcode);
+            actions = GetListOfActions(htmlCode);
 
             KeywordMap.Add(InToCmKeys, InchesToCentimetres);
             KeywordMap.Add(MiToKmKeys, MilesToKilometres);
@@ -239,7 +188,7 @@ namespace YoCode
             return ret;
         }
 
-        public bool BadInputsAreFixed()
+        public bool BadInputsAreFixed(List<string> badInputResults)
         {
             bool ret = true;
 
@@ -278,7 +227,61 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.FromResult(new List<FeatureEvidence>{ UnitConverterCheckEvidence, BadInputCheckEvidence});
+            return Task.Run(() =>
+            {
+                UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
+                UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
+
+                BadInputCheckEvidence.Feature = Feature.BadInputCheck;
+                BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
+
+                if (string.IsNullOrEmpty(port))
+                {
+                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
+                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
+                    return new List<FeatureEvidence> { UnitConverterCheckEvidence, BadInputCheckEvidence };
+                }
+
+                try
+                {
+                    var fetcher = new HTMLFetcher(port);
+
+                    var htmlCode = fetcher.GetHTMLCodeAsString();
+                    InitializeDataStructures(htmlCode);
+                    actual = fetcher.GetActualValues(texts, actions);
+
+                    var badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
+
+                    if (OutputsAreEqual())
+                    {
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
+                    }
+                    else
+                    {
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
+                    }
+
+                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
+
+                    if (BadInputsAreFixed(badInputResults))
+                    {
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
+                    }
+                    else
+                    {
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
+                    }
+
+                    BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
+                }
+                catch (Exception)
+                {
+                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
+                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
+                }
+
+                return new List<FeatureEvidence> {UnitConverterCheckEvidence, BadInputCheckEvidence};
+            });
         }
 
         private FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
