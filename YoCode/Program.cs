@@ -87,9 +87,6 @@ namespace YoCode
 
             //var fd = new FileDifference(dir.ModifiedTestDirPath);
 
-
-            evidenceList.Add(new ResultSummary(evidenceList).ResultEvidence);
-
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
                 results.FinalScore);
 
