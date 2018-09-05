@@ -45,7 +45,7 @@ namespace YoCode_XUnit
         [Fact]
         public void Test_ExtractActionsFromList()
         {
-            expectedActionLinesResult.Should().BeEquivalentTo(Test.ExtractActionsFromList(expectedActionLines));
+            expectedActionLinesResult.Should().BeEquivalentTo(Test.ExtractActionsFromList(expectedActionLines,"value=\"","\""));
         }
 
         [Fact]

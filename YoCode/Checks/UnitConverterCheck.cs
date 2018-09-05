@@ -10,7 +10,6 @@ namespace YoCode
     {
         private readonly string port;
         private Dictionary<List<string>, List<double>> KeywordMap;
-        private Dictionary<string, string> badInputs;
 
         private List<UnitConverterResults> actual;
         private List<UnitConverterResults> expected;
@@ -31,14 +30,12 @@ namespace YoCode
         private List<string> MiToKmKeys { get; set; }
         private List<string> YdToMeKeys { get; set; }
 
-        List<bool> BadInputBoolResults;
         List<bool> UnitConverterBoolResults;
         
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -15;
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
-        private StringBuilder badInputResultsOutput= new StringBuilder();
 
         BackEndStringHandling handler;
 
@@ -59,15 +56,6 @@ namespace YoCode
 
             texts = new List<double> { 5, 25, 125 };
 
-            badInputs = new Dictionary<string, string>
-            {
-                { "Empty input", " " },
-                { "Blank lines at the start", "\n10" },
-                { "Blank lines at the middle", "10 \n\n 10" },
-                { "Blank lines at the end", "10 \n\n" },
-                { "Not numbers", "Y..@" }
-            };
-
             InchesToCentimetres = handler.MakeConversion(texts, InToCm);
             MilesToKilometres = handler.MakeConversion(texts, MiToKm);
             YardsToMeters = handler.MakeConversion(texts, YdToMe);
@@ -84,7 +72,6 @@ namespace YoCode
 
             InitializeExpectedValues();
 
-            BadInputBoolResults = new List<bool>();
             UnitConverterBoolResults = new List<bool>();
         }
 
@@ -139,33 +126,6 @@ namespace YoCode
             return ret;
         }
 
-        public bool BadInputsAreFixed(List<string> badInputResults)
-        {
-            bool ret = true;
-
-            badInputResultsOutput.AppendLine(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
-            badInputResultsOutput.AppendLine(messages.ParagraphDivider);
-
-            foreach (var a in badInputs)
-            {
-                bool isFixed = !badInputResults.Contains(a.Key);
-                BadInputBoolResults.Add(isFixed);
-
-                if (!isFixed)
-                {
-                    ret = false;
-                }
-
-                badInputResultsOutput.AppendLine(string.Format($"{a.Key,TitleColumnFormatter} {isFixed,ValueColumnFormatter}"));
-            }
-            return ret;
-        }
-
-        private double GetBadInputCheckRating()
-        {
-            return HelperMethods.GetRatingFromBoolList(BadInputBoolResults);
-        }
-
         private double GetUnitConverterCheckRating()
         {
             return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
@@ -183,14 +143,11 @@ namespace YoCode
                 UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
                 UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
 
-                BadInputCheckEvidence.Feature = Feature.BadInputCheck;
-                BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
 
                 if (string.IsNullOrEmpty(port))
                 {
                     UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
-                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
-                    return new List<FeatureEvidence> { UnitConverterCheckEvidence, BadInputCheckEvidence };
+                    return new List<FeatureEvidence> { UnitConverterCheckEvidence};
                 }
 
                 try
@@ -202,8 +159,6 @@ namespace YoCode
                     InitializeDataStructures(htmlCode);
                     actual = fetcher.GetActualValues(texts, actions);
 
-                    var badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
-
                     if (OutputsAreEqual())
                     {
                         UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
@@ -214,29 +169,17 @@ namespace YoCode
                     }
 
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
-
-                    if (BadInputsAreFixed(badInputResults))
-                    {
-                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
-                    }
-                    else
-                    {
-                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
-                    }
-
-                    BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
+                
                 }
                 catch (Exception)
                 {
                     UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
-                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Could not check this feature"));
                 }
 
-                return new List<FeatureEvidence> {UnitConverterCheckEvidence, BadInputCheckEvidence};
+                return new List<FeatureEvidence> {UnitConverterCheckEvidence};
             });
         }
 
         private FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
-        private FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
     }
 }

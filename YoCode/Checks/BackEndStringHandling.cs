@@ -8,7 +8,6 @@ namespace YoCode
 {
     internal class BackEndStringHandling
     {     
-
         public List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());

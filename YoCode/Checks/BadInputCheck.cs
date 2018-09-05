@@ -23,9 +23,10 @@ namespace YoCode
         public BadInputCheck(string port)
         {
             this.port = port;
+            InitializeDataStructures();
         }
 
-        private void InitializeDataStructures(string htmlCode)
+        private void InitializeDataStructures()
         {
             badInputs = new Dictionary<string, string>
             {
@@ -84,7 +85,7 @@ namespace YoCode
                     var fetcher = new HTMLFetcher(port);
 
                     var htmlCode = fetcher.GetHTMLCodeAsString();
-                    InitializeDataStructures(htmlCode);
+                    InitializeDataStructures();
 
                     var badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
 
