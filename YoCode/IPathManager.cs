@@ -4,8 +4,8 @@ namespace YoCode
 {
     internal interface IPathManager
     {
-        string ModifiedTestDirPath { get; set; }
+        string ModifiedTestDirPath { get; }
 
-        IEnumerable<string> GetFilesInDirectory(string PATH, FileTypes type);
+        IEnumerable<string> GetFilesInDirectory(string path, FileTypes type);
     }
 }

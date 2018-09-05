@@ -10,7 +10,7 @@ namespace YoCode
         private const string CS = "*.cs";
         private const string SLN = "*.sln";
 
-        public string ModifiedTestDirPath { get; set; }
+        public string ModifiedTestDirPath { get; }
 
         private readonly Dictionary<FileTypes, string> fileExtensions = new Dictionary<FileTypes, string>();
 
@@ -25,12 +25,12 @@ namespace YoCode
         }
 
         //Will return a list of files from a directory given a pattern
-        public IEnumerable<string> GetFilesInDirectory(string PATH, FileTypes type)
+        public IEnumerable<string> GetFilesInDirectory(string path, FileTypes type)
         {
             var files = new List<string>();
-            var di = new DirectoryInfo(PATH);
+            var di = new DirectoryInfo(path);
 
-            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), PATH);
+            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), path);
             return files;
         }
     }

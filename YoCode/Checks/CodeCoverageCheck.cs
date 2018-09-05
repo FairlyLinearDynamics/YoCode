@@ -6,83 +6,37 @@ namespace YoCode
 {
     internal class CodeCoverageCheck : ICheck
     {
-        private string Argument { get; }
-        private string ProcessName { get; } = "dotCover.exe";
-
-        private string ReportName { get; } = "report.json";
-        private string FullReportPath { get; }
+        private readonly CheckConfig checkConfig;
+        private const string processName = "dotCover.exe";
+        private const string reportName = "report.json";
         private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
         public CodeCoverageCheck(CheckConfig checkConfig)
         {
-            CodeCoverageEvidence.Feature = Feature.CodeCoverageCheck;
-            CodeCoverageEvidence.HelperMessage = messages.CodeCoverageCheck;
-
-            var dotCoverDir = checkConfig.RunParameters.DotCoverDir;
-            FullReportPath = Path.Combine(dotCoverDir, ReportName);
-
-            var targetWorkingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, testFolder);
-
-            if (!Directory.Exists(targetWorkingDir))
-            {
-                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{testFolder} Directory Not Found"));
-                return;
-            }
-
-            Argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
-
-            new FeatureRunner().Execute(CreateProcessDetails(dotCoverDir));
-
-            var report = ReadReport();
-            CleanUp();
-
-            var coverage = GetCodeCoverage(report);
-
-            if (coverage == 0)
-            {
-                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
-            }
-            else if (coverage == -1)
-            {
-                CodeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
-            }
-            else
-            {
-                CodeCoverageEvidence.FeatureRating = ( (double) GetCodeCoverage(report) ) / 100;
-                var featureImplemented = coverage >= passPercentage;
-                var evidence = $"Code Coverage: {coverage}%";
-                if (featureImplemented)
-                {
-                    CodeCoverageEvidence.SetPassed(new SimpleEvidenceBuilder(evidence));
-                }
-                else
-                {
-                    CodeCoverageEvidence.SetFailed(new SimpleEvidenceBuilder(evidence));
-                }
-            }
+            this.checkConfig = checkConfig;
         }
 
-        private string CreateArgument(string dotnetDir, string targetWorkingDir)
+        private static string CreateArgument(string dotnetDir, string targetWorkingDir)
         {
             var dotnetExecutablePath = Path.Combine(dotnetDir, "dotnet.exe");
 
             return $"analyse /TargetExecutable=\"{dotnetExecutablePath}\" /TargetArguments=\"test\" /TargetWorkingDir=\"{targetWorkingDir}\"" +
-                $" /ReportType=\"JSON\" /Output=\"{ReportName}\"";
+                $" /ReportType=\"JSON\" /Output=\"{reportName}\"";
         }
 
-        private ProcessDetails CreateProcessDetails(string dotCoverDir)
+        private static ProcessDetails CreateProcessDetails(string arguments, string processName, string dotCoverDir)
         {
-            var processPath = Path.Combine(dotCoverDir, ProcessName);
+            var processPath = Path.Combine(dotCoverDir, processName);
 
-            return new ProcessDetails(processPath, dotCoverDir, Argument);
+            return new ProcessDetails(processPath, dotCoverDir, arguments);
         }
 
-        private string ReadReport()
+        private static string ReadReport(string fullReportPath)
         {
-            if (File.Exists(FullReportPath))
+            if (File.Exists(fullReportPath))
             {
-                using (StreamReader sr = File.OpenText(FullReportPath))
+                using (StreamReader sr = File.OpenText(fullReportPath))
                 {
                     return sr.ReadToEnd();
                 }
@@ -93,22 +47,67 @@ namespace YoCode
             }
         }
 
-        private int GetCodeCoverage(string json)
+        private static int GetCodeCoverage(string json)
         {
             return DotCover.CalculateCoverageFromJsonReport(json);
         }
 
-        private void CleanUp()
-        {
-            File.Delete(FullReportPath);
-        }
-
-        private FeatureEvidence CodeCoverageEvidence { get; } = new FeatureEvidence();
-
         public Task<List<FeatureEvidence>> Execute()
         {
-            // TODO Background
-            return Task.FromResult(new List<FeatureEvidence>{CodeCoverageEvidence});
+            return Task.Run(() => {
+                var codeCoverageEvidence = RunCodeCoverage(checkConfig);
+                return new List<FeatureEvidence> { codeCoverageEvidence };
+            });
+        }
+
+        private static FeatureEvidence RunCodeCoverage(CheckConfig checkConfig)
+        {
+            var codeCoverageEvidence = new FeatureEvidence {Feature = Feature.CodeCoverageCheck, HelperMessage = messages.CodeCoverageCheck};
+
+            var dotCoverDir = checkConfig.RunParameters.DotCoverDir;
+            var fullReportPath = Path.Combine(dotCoverDir, reportName);
+
+            var targetWorkingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, testFolder);
+
+            if (!Directory.Exists(targetWorkingDir))
+            {
+                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{testFolder} Directory Not Found"));
+                return codeCoverageEvidence;
+            }
+
+            var argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
+
+            new FeatureRunner().Execute(CreateProcessDetails(argument, processName, dotCoverDir));
+
+            var report = ReadReport(fullReportPath);
+            File.Delete(fullReportPath);
+
+            var coverage = GetCodeCoverage(report);
+
+            if (coverage == 0)
+            {
+                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
+            }
+            else if (coverage == -1)
+            {
+                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
+            }
+            else
+            {
+                codeCoverageEvidence.FeatureRating = ((double)GetCodeCoverage(report)) / 100;
+                var featureImplemented = coverage >= passPercentage;
+                var evidence = $"Code Coverage: {coverage}%";
+                if (featureImplemented)
+                {
+                    codeCoverageEvidence.SetPassed(new SimpleEvidenceBuilder(evidence));
+                }
+                else
+                {
+                    codeCoverageEvidence.SetFailed(new SimpleEvidenceBuilder(evidence));
+                }
+            }
+
+            return codeCoverageEvidence;
         }
     }
 }
