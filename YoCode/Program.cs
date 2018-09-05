@@ -44,8 +44,8 @@ namespace YoCode
                 else
                 {
                     compositeOutput.ShowHelp();
+                    LaunchReport(result, outputPath);
                 }
-                LaunchReport(result, outputPath);
                 return;
             }
 
