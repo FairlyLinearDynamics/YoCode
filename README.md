@@ -14,9 +14,9 @@ YoCode is a .NET Core application and it only really works on very specific kind
 * Looks for certain HTML elements of the web app and checks for evidence (keywords) that would suggest that the user interface was implemented.
 * Checks .cshtml files of the project under test for keywords that would suggest that the user interface was implemented.
 * Uses Git to check if the project under tests contains a valid Git Repository, displays the commits if it does.
-* Inputs certain values directly to the web app through the backend and checks that those values will have the expected results
-* Uses Selenium to look for places to input values and tries to input numbers, then tries to find buttons with keywords and click on it, checks if the output is correct
-* Takes a screenshot of the web apps UI (if there is one)
+* Inputs certain values directly to the web app through the backend and checks that those values will have the expected results.
+* Uses Selenium to look for places to input values and tries to input numbers, then tries to find buttons with keywords and click on it, checks if the output is correct.
+* Takes a screenshot of the web apps UI (if there is one).
 
 ![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/YoCode_ScreenShot.png)
 
@@ -57,7 +57,7 @@ YoCode is a .NET Core application and it only really works on very specific kind
   }
 }
 ```
-  
+  ### If you wish to use automated tests:
 * Create testappsettings.json file inside YoCodeAutomatedTests project with the following code:
 ```
 {
