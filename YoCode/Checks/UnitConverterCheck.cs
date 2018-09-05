@@ -254,22 +254,22 @@ namespace YoCode
 
                     if (OutputsAreEqual())
                     {
-                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
                     else
                     {
-                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
 
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
                     if (BadInputsAreFixed(badInputResults))
                     {
-                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
                     else
                     {
-                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
 
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
