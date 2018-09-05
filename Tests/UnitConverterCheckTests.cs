@@ -7,7 +7,7 @@ namespace YoCode_XUnit
 {
     public class UnitConverterCheckTests
     {
-        internal UnitConverterCheck test;
+        internal BackEndStringHandling test;
 
         public List<double> expectedConversionResults;
         public List<double> expectedConversionInputs;
@@ -16,11 +16,11 @@ namespace YoCode_XUnit
         private readonly List<string> expectedActionLines;
         private readonly List<string> expectedActionLinesResult;
 
-        internal UnitConverterCheck Test { get => test; set => test = value; }
+        internal BackEndStringHandling Test { get => test; set => test = value; }
 
         public UnitConverterCheckTests()
         {
-            Test = new UnitConverterCheck("fake port");
+            Test = new BackEndStringHandling();
 
             expectedActionLines = new List<string>
             {

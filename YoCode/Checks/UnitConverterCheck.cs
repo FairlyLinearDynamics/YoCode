@@ -17,7 +17,7 @@ namespace YoCode
 
         private List<double> texts;
 
-        private List<string> actions;
+        public List<string> actions { get; set; }
 
         private List<double> InchesToCentimetres;
         private List<double> MilesToKilometres;
@@ -34,14 +34,16 @@ namespace YoCode
         List<bool> BadInputBoolResults;
         List<bool> UnitConverterBoolResults;
         
-        private string from = "value=\"";
-        private string to = "\"";
-
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -15;
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
         private StringBuilder badInputResultsOutput= new StringBuilder();
+
+        BackEndStringHandling handler;
+
+        private string from = "value=\"";
+        private string to = "\"";
 
         public UnitConverterCheck(string port)
         {
@@ -66,15 +68,15 @@ namespace YoCode
                 { "Not numbers", "Y..@" }
             };
 
-            InchesToCentimetres = MakeConversion(texts, InToCm);
-            MilesToKilometres = MakeConversion(texts, MiToKm);
-            YardsToMeters = MakeConversion(texts, YdToMe);
+            InchesToCentimetres = handler.MakeConversion(texts, InToCm);
+            MilesToKilometres = handler.MakeConversion(texts, MiToKm);
+            YardsToMeters = handler.MakeConversion(texts, YdToMe);
 
             InToCmKeys = new List<string> { "inc", "in", "inch", "inches", "cm", "centimetres", "centimetre" };
             MiToKmKeys = new List<string> { "miles", "mi", "mile", "kilo", "kilometres", "kilometre" };
             YdToMeKeys = new List<string> { "yards", "yard", "yardstometers", "tometers" };
 
-            actions = GetListOfActions(htmlCode);
+            actions = handler.GetListOfActions(htmlCode,from,to);
 
             KeywordMap.Add(InToCmKeys, InchesToCentimetres);
             KeywordMap.Add(MiToKmKeys, MilesToKilometres);
@@ -93,7 +95,7 @@ namespace YoCode
             {
                 for (var y = 0; y < actions.Count; y++)
                 {
-                    var OutputsForThisAction = CheckActions(actions[y]);
+                    var OutputsForThisAction = handler.CheckActions(actions[y],KeywordMap);
 
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
@@ -102,57 +104,6 @@ namespace YoCode
                     expected.Add(ToBeAdded);
                 }
             }
-        }
-
-        private List<string> GetActionLines(string file)
-        {
-            return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
-        }
-
-        private List<string> GetListOfActions(string HTMLfile)
-        {
-            var actionlines = GetActionLines(HTMLfile);
-            return ExtractActionsFromList(actionlines);
-        }
-
-        public List<string> ExtractActionsFromList(List<string> actionLines)
-        {
-            var list = new List<string>();
-
-            foreach (var line in actionLines)
-            {
-                var res = line.GetStringBetweenStrings(from, to);
-
-                list.Add(res);
-            }
-            return list;
-        }
-
-        public List<double> MakeConversion(List<double> inputs, double mult)
-        {
-            var list = new List<double>();
-            foreach (var x in inputs)
-            {
-                list.Add(x * mult);
-            }
-            return list;
-        }
-
-        private List<string> GetActionKeywords()
-        {
-            return new List<string> { "action", "value" };
-        }
-
-        private List<double> CheckActions(string action)
-        {
-            foreach (var keywords in KeywordMap)
-            {
-                if (action.ToLower().ContainsAny(keywords.Key))
-                {
-                    return keywords.Value;
-                }
-            }
-            return new List<double> { 0.1 };
         }
 
         private bool OutputsAreEqual()
@@ -245,6 +196,7 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
+                    handler = new BackEndStringHandling();
 
                     var htmlCode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures(htmlCode);
