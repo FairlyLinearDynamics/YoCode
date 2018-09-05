@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace YoCode
 {
-    // TODO: find other way of running .dll file instead of hardcoding the name 
     internal class ProjectRunner : ICheck
     {
         internal string Output { get; set; }
@@ -45,7 +44,6 @@ namespace YoCode
                 Output = evidence.Output;
                 ErrorOutput = evidence.ErrorOutput;
 
-                // TODO: Refactor Project Runner
                 const string portKeyword = "Now listening on: ";
                 var line = Output.GetLineWithOneKeyword(portKeyword);
                 var splitLine = line.Split(portKeyword, StringSplitOptions.None);
@@ -105,7 +103,11 @@ namespace YoCode
 
         public void ReportLefOverProcess()
         {
-            featureRunner.FindLeftOverProcess();
+            try
+            {
+                featureRunner.FindLeftOverProcess();
+            }
+            catch (NullReferenceException) { }
         }
     }
 }
