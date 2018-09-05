@@ -30,6 +30,10 @@ namespace YoCode
 
         private double passPerc = 0.5;
 
+        private const int TitleColumnFormatter = -25;
+        private const int ValueColumnFormatter = -20;
+
+
         private StringBuilder resultsOutput = new StringBuilder();
 
         public DuplicationCheck(IPathManager dir, IDupFinder dupFinder, string fileNameChecked)
@@ -46,8 +50,8 @@ namespace YoCode
             try
             {
                 ExecuteTheCheck();
-                CheckForSpecialRepetition();
                 StructuredOutput();
+                CheckForSpecialRepetition();
                 if (DuplicationEvidence.FeatureRating >= passPerc)
                 {
                     DuplicationEvidence.SetPassed(new SimpleEvidenceBuilder(resultsOutput.ToString()));
@@ -66,7 +70,7 @@ namespace YoCode
 
         private void ExecuteTheCheck()
         {
-            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
+            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath);
 
             if (modEvidence.Inconclusive)
             {
@@ -77,8 +81,7 @@ namespace YoCode
             ModiCodeBaseCost = modCodeBaseCost;
             ModiDuplicateCost = modDuplicateCost;
 
-            var rating = GetDuplicationCheckRating(OrigDuplicateCost,0);
-            DuplicationEvidence.FeatureRating = rating;
+            DuplicationEvidence.FeatureRating =GetDuplicationCheckRating(OrigDuplicateCost,0);
         }
 
         public void CheckForSpecialRepetition()
@@ -141,7 +144,7 @@ namespace YoCode
             return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
         }
 
-        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath, string whichDir)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath)
         {
             var evidence = RunOneCheck(solutionPath);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
@@ -155,20 +158,12 @@ namespace YoCode
 
         private string StructuredOutput()
         {
-            resultsOutput.AppendLine(String.Format("{0,-15}{1}{2,20}", "Version", "Codebase Cost", "Duplicate Cost"));
+            resultsOutput.AppendLine(String.Format($"{"Version",TitleColumnFormatter}{"Codebase Cost",ValueColumnFormatter}{"Duplicate Cost",ValueColumnFormatter}"));
             resultsOutput.AppendLine(messages.ParagraphDivider);
-            resultsOutput.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Original", OrigCodeBaseCost, OrigDuplicateCost));
-            resultsOutput.AppendLine(String.Format("{0,-15}{1,8}{2,18}", "Modified", ModiCodeBaseCost, ModiDuplicateCost));
-            resultsOutput.AppendLine(Environment.NewLine);
+            resultsOutput.AppendLine(String.Format($"{"Original",TitleColumnFormatter}{OrigCodeBaseCost,ValueColumnFormatter}{OrigDuplicateCost,ValueColumnFormatter}"));
+            resultsOutput.AppendLine(String.Format($"{"Modified",TitleColumnFormatter}{ModiCodeBaseCost,ValueColumnFormatter}{ModiDuplicateCost,ValueColumnFormatter}"));
 
             return resultsOutput.ToString();
-        }
-
-        private string BuildEvidenceString(string whichDir, int codebaseCost, int duplicateCost)
-        {
-            return "Original" + Environment.NewLine + "Codebase cost: " + OrigCodeBaseCost + Environment.NewLine +
-                   "Duplicate cost: " + OrigDuplicateCost + Environment.NewLine + whichDir + Environment.NewLine +
-                   $"Codebase cost: {codebaseCost} {Environment.NewLine}Duplicate cost: {duplicateCost}";
         }
 
         private FeatureEvidence RunOneCheck(string solutionPath)

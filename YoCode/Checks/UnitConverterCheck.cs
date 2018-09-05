@@ -27,15 +27,15 @@ namespace YoCode
         private const double MiToKm = 1.60934;
         private const double YdToMe = 0.9144;
 
-        public List<string> InToCmKeys { get; set; }
-        public List<string> MiToKmKeys { get; set; }
-        public List<string> YdToMeKeys { get; set; }
+        private List<string> InToCmKeys { get; set; }
+        private List<string> MiToKmKeys { get; set; }
+        private List<string> YdToMeKeys { get; set; }
 
         List<bool> BadInputBoolResults;
         List<bool> UnitConverterBoolResults;
         
-        string from = "value=\"";
-        string to = "\"";
+        private string from = "value=\"";
+        private string to = "\"";
 
         private readonly string HTMLcode;
 
@@ -154,7 +154,7 @@ namespace YoCode
             }
         }
 
-        public List<string> GetActionLines(string file)
+        private List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
@@ -165,7 +165,7 @@ namespace YoCode
             return ExtractActionsFromList(actionlines);
         }
 
-        public List<string> ExtractActionsFromList(List<string> actionLines)
+        private List<string> ExtractActionsFromList(List<string> actionLines)
         {
             var list = new List<string>();
 
@@ -178,7 +178,7 @@ namespace YoCode
             return list;
         }
 
-        public List<double> MakeConversion(List<double> inputs, double mult)
+        private List<double> MakeConversion(List<double> inputs, double mult)
         {
             var list = new List<double>();
             foreach (var x in inputs)
@@ -238,7 +238,7 @@ namespace YoCode
             return ret;
         }
 
-        public bool BadInputsAreFixed()
+        private bool BadInputsAreFixed()
         {
             bool ret = true;
 
@@ -260,17 +260,17 @@ namespace YoCode
             return ret;
         }
 
-        public double GetBadInputCheckRating()
+        private double GetBadInputCheckRating()
         {
             return HelperMethods.GetRatingFromBoolList(BadInputBoolResults);
         }
 
-        public double GetUnitConverterCheckRating()
+        private double GetUnitConverterCheckRating()
         {
             return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
         }
 
-        public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
+        private static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
