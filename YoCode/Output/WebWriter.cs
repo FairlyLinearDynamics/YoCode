@@ -10,6 +10,7 @@ namespace YoCode
     {
         private const string FEATURE_TAG = "{FEATURE}";
         private const string SCORE_TAG = "{SCORE}";
+        private const string TEST_TYPE = "{TEST-TYPE}";
 
         private const string FILECHANGESPAN_OPEN = "<span class=\"changedFileText\">";
         private const string FILECHANGESPAN_CLOSE = "</span>";
@@ -18,7 +19,8 @@ namespace YoCode
         private readonly StringBuilder errors;
         private readonly StringBuilder msg;
 
-        private double score;
+        private double totalScore;
+        private bool isJunior;
         private readonly string nameOfReportFile;
 
         public WebWriter(string outputPath)
@@ -71,7 +73,7 @@ namespace YoCode
 
         public void AddFinalScore(double score)
         {
-            this.score = score;
+            totalScore = score;
         }
 
         private string BuildReport()
@@ -81,7 +83,10 @@ namespace YoCode
                 return messages.HtmlTemplate_HelpPage.Replace(FEATURE_TAG, msg.ToString());
             }
 
-            return messages.HtmlTemplate.Replace(FEATURE_TAG, features.Append(msg).ToString()).Replace(SCORE_TAG, score + "%");
+            return messages.HtmlTemplate
+                .Replace(FEATURE_TAG, features.Append(msg).ToString())
+                .Replace(SCORE_TAG, totalScore + "%")
+                .Replace(TEST_TYPE, isJunior?"Junior":"Original");
         }
 
         public void WriteReport()
@@ -97,6 +102,11 @@ namespace YoCode
             {
                 consoleWriter.PrintErrors(new List<string>() { String.Format(messages.WrongWritePermission, Path.GetFullPath(nameOfReportFile), Environment.NewLine, Environment.NewLine) });
             }
+        }
+
+        public void AddTestType(bool isJunior)
+        {
+            this.isJunior = isJunior;
         }
     }
 }

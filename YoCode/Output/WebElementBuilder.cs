@@ -48,7 +48,7 @@ namespace YoCode
 
         public static string FormatImageElement(string src)
         {
-            return $"<img src=\"{src}\" alr=\"UI Screenshot\" id=\"img-UIScreenShot\">";
+            return $"<img src=\"{src}\" alr=\"UI Screenshot\" id=\"js-UIScreenShot\">";
         }
 
         public static string FormatFileDiff(List<string> file)
