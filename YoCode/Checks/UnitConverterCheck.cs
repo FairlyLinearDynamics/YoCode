@@ -115,7 +115,7 @@ namespace YoCode
             return ExtractActionsFromList(actionlines);
         }
 
-        private List<string> ExtractActionsFromList(List<string> actionLines)
+        public List<string> ExtractActionsFromList(List<string> actionLines)
         {
             var list = new List<string>();
 
@@ -128,7 +128,7 @@ namespace YoCode
             return list;
         }
 
-        private List<double> MakeConversion(List<double> inputs, double mult)
+        public List<double> MakeConversion(List<double> inputs, double mult)
         {
             var list = new List<double>();
             foreach (var x in inputs)
@@ -220,7 +220,7 @@ namespace YoCode
             return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
         }
 
-        private static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
+        public static UnitConverterResults FindActualResultForExpectation(UnitConverterResults expectation, List<UnitConverterResults> listOfActualResults)
         {
             return listOfActualResults.Single(result => result.action == expectation.action && result.input.ApproximatelyEquals(expectation.input));
         }
