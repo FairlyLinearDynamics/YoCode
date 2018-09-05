@@ -9,7 +9,6 @@ namespace YoCode_XUnit
 {
     public class DuplicationCheckTests
     {
-
         [Fact]
         public void DuplicationCheck_Should_Set_Inconclusive_DueToNoDupfinderOutput()
         {
@@ -25,7 +24,6 @@ namespace YoCode_XUnit
             const string fileNameChecked =  "UnitConverterWebApp\\UnitConverterWebApp.csproj";
 
             mockDir.Setup(w => w.ModifiedTestDirPath).Returns(fakeModified);
-
 
             fakeDir = mockDir.Object;
             fakeDupFinder = mockDupFinder.Object;

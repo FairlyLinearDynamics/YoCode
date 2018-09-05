@@ -21,12 +21,14 @@ namespace YoCode
 
         private TestStats stats;
         private List<int> tempStats;
+        private readonly IPathManager pathManager;
 
         private const int TitleColumnFormatter = -25;
 
         public TestCountCheck(ICheckConfig checkConfig)
         {
             workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
+            this.pathManager = checkConfig.PathManager;
 
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;
@@ -108,7 +110,46 @@ namespace YoCode
             builder.AppendLine(messages.ParagraphDivider);
             builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountThreshold}"));
 
+            if (NumberOfUnfixedTests(GetFileText()) > 0)
+            {
+                builder.AppendLine(string.Format($"{"Broken tests not fixed:",TitleColumnFormatter}{NumberOfUnfixedTests(GetFileText())}"));
+            }
+
             return builder.ToString();
+        }
+
+        public static int NumberOfUnfixedTests(List<string[]> files)
+        {
+            var unfixedTests = 0;
+
+            var keywords = new List<string>()
+            {
+                "[Theory]",
+                "[InlineData("
+            };
+
+            foreach (var file in files)
+            {
+                for (int i = 1; i < file.Length; i++)
+                {
+                    if (file[i].Contains(keywords[1]) && !file[i - 1].ContainsAny(keywords))
+                    {
+                        unfixedTests++;
+                    }
+                }
+            }
+            return unfixedTests;
+        }
+
+        private List<string[]> GetFileText()
+        {
+            var csUris = pathManager.GetFilesInDirectory(pathManager.ModifiedTestDirPath, FileTypes.cs);
+
+            List<string[]> fileText = new List<string[]>();
+
+            csUris.Where(a => a.Contains("UnitConverterTests")).ToList().ForEach(i => fileText.Add(File.ReadAllLines(i)));
+
+            return fileText;
         }
 
         private FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();

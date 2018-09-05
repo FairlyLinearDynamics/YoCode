@@ -433,7 +433,8 @@ namespace YoCode {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass..
+        ///   Looks up a localized string similar to Runs all unit tests of the project under test. YoScore for this check depends on how many tests are written and how many pass.
+        ///Broken tests refer to purposely included tests without the &quot;Theory&quot; tag at the top in the Original project.
         /// </summary>
         public static string TestCountCheck {
             get {
