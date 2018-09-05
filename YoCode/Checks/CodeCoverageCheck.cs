@@ -21,7 +21,7 @@ namespace YoCode
         {
             var dotnetExecutablePath = Path.Combine(dotnetDir, "dotnet.exe");
 
-            return $"analyse /TargetExecutable=\"{dotnetExecutablePath}\" /TargetArguments=\"test\" /TargetWorkingDir=\"{targetWorkingDir}\"" +
+            return $"analyse /TargetExecutable=\"{dotnetExecutablePath}\" /TargetArguments=\"test --no-build\" /TargetWorkingDir=\"{targetWorkingDir}\"" +
                 $" /ReportType=\"JSON\" /Output=\"{reportName}\"";
         }
 

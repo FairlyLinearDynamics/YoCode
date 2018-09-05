@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace YoCode
@@ -80,14 +79,7 @@ namespace YoCode
             {
                 CleanBuildOutput(workingDir);
 
-                var projectDir = Path.Combine(workingDir, projectFolder);
-                if (!Directory.Exists(projectDir))
-                {
-                    ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{projectDir} not found"));
-                    return new List<FeatureEvidence> {ProjectBuilderEvidence};
-                }
-
-                var processDetails = new ProcessDetails(ProcessName, projectDir, Arguments);
+                var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
                 var evidence = featureRunner.Execute(processDetails);
                 Output = evidence.Output;

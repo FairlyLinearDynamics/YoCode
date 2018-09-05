@@ -33,7 +33,7 @@ namespace YoCode
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
-            arguments = "test";
+            arguments = "test --no-build";
         }
 
         private void ExecuteTheCheck()
