@@ -16,7 +16,7 @@ namespace YoCode
             GetHTMLCodeAsString();
         }
 
-        public Task<string> GetHTMLCodeAsTask()
+        private Task<string> GetHTMLCodeAsTask()
         {
             return client.GetStringAsync("/");
         }
@@ -26,7 +26,7 @@ namespace YoCode
             return GetHTMLCodeAsTask().Result;
         }
 
-        public async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<double> texts, List<string> actions)
+        private async Task<List<UnitConverterResults>> GetActionNamesAndOutputsViaHTTP(List<double> texts, List<string> actions)
         {
             var actual = new List<UnitConverterResults>();
 
@@ -50,7 +50,7 @@ namespace YoCode
             return actual;
         }
 
-        public Task<HttpResponseMessage> SubmitForm(string inputForm, string action)
+        private Task<HttpResponseMessage> SubmitForm(string inputForm, string action)
         {
             var formContent = GetEncodedContent(inputForm, action);
 
