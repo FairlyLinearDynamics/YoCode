@@ -3,31 +3,26 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
-    internal class UICodeCheck
+    internal class UICodeCheck : ICheck
     {
-        // -------------------------------------------------------------------------------------------- Constructors
-        public UICodeCheck(IEnumerable<string> userFilePaths, string[] keyWords)
+        private readonly string[] keyWords;
+        private readonly ICheckConfig checkConfig;
+
+        public UICodeCheck(string[] keyWords, ICheckConfig checkConfig)
         {
-            UIContainsFeature(userFilePaths, keyWords);
+            this.keyWords = keyWords;
+            this.checkConfig = checkConfig;
             UIEvidence.Feature = Feature.UICodeCheck;
             UIEvidence.HelperMessage = messages.UICodeCheck;
-
         }
 
-        public UICodeCheck(string userFilePath, string[] keyWords) : this(new List<string> { userFilePath }, keyWords)
-        {
-            UIContainsFeature(userFilePath, keyWords);
-        }
-
-        // -------------------------------------------------------------------------------------------- Single UI check
-        private void UIContainsFeature(string userFilePath, string[] keyWords)
+        private void UIContainsFeature(string userFilePath)
         {
             var userFile = File.ReadAllLines(userFilePath);
-
-            //ListOfMatches.add
 
             for (var i = 0; i < userFile.Length; i++)
             {
@@ -39,25 +34,31 @@ namespace YoCode
             }
         }
 
-        // -------------------------------------------------------------------------------------------- List of UI to check
-        private void UIContainsFeature(IEnumerable<string> userFilePaths, string[] keyWords)
+        private void UIContainsFeature(IEnumerable<string> userFilePaths)
         {
             foreach (var path in userFilePaths)
             {
-                UIContainsFeature(path, keyWords);
+                UIContainsFeature(path);
             }
         }
 
-        // -------------------------------------------------------------------------------------------- Check logic
         private static bool ContainsKeyWord(string line, IEnumerable<string> keyWords)
         {
-            //Console.WriteLine(keyWords.Select(key => line.ToLower().Contains(key)));
             var words = Regex.Split(line, "[^A-Za-z0-9]").ToList();
 
             return words.Any(word => keyWords.ToList().Any(keyword => word.Equals(keyword, StringComparison.OrdinalIgnoreCase)));
         }
 
-        // -------------------------------------------------------------------------------------------- Return methods
-        public FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence UIEvidence { get; } = new FeatureEvidence();
+
+        public Task<List<FeatureEvidence>> Execute()
+        {
+            return Task.Run(() =>
+            {
+                var modifiedHtmlFiles = checkConfig.PathManager.GetFilesInDirectory(checkConfig.PathManager.ModifiedTestDirPath, FileTypes.html).ToList();
+                UIContainsFeature(modifiedHtmlFiles);
+                return new List<FeatureEvidence> {UIEvidence};
+            });
+        }
     }
 }

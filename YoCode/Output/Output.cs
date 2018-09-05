@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using OpenQA.Selenium;
+using System.Collections.Generic;
+using System.IO;
 
 namespace YoCode
 {
@@ -7,14 +9,18 @@ namespace YoCode
         IPrint outputWriter;
         IErrorReporter errOutput;
         FeatureData featData;
+        static string writeTo;
 
-        public Output(IPrint printTo, IErrorReporter errorReporter = null)
+
+        public Output(IPrint printTo, string outputPath = null, IErrorReporter errorReporter = null)
         {
             outputWriter = printTo;
 
             errOutput = errorReporter ?? new NullErrorObject();
 
             featData = new FeatureData();
+
+            writeTo = outputPath;
         }
 
         public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList,double finalScore)
@@ -34,6 +40,11 @@ namespace YoCode
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();
+        }
+
+        public static void PrintScreenShot(Screenshot screenshot, string fileName)
+        {
+            screenshot.SaveAsFile(Path.Combine(Path.GetDirectoryName(writeTo), fileName),ScreenshotImageFormat.Png);
         }
 
         public void ShowInputErrors(List<string> errs)

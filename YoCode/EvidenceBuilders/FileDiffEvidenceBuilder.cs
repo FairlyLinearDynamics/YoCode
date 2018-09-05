@@ -8,12 +8,12 @@ namespace YoCode
     internal class FileDiffEvidenceBuilder : IEvidence
     {
         private Patch diffs;
-        private string otherChanges;
+        private string bonusEvidence;
 
         public FileDiffEvidenceBuilder(Patch diffs, string otherChanges)
         {
             this.diffs = diffs;
-            this.otherChanges = otherChanges;
+            bonusEvidence = otherChanges;
         }
 
         public string BuildEvidenceForConsole()
@@ -25,7 +25,7 @@ namespace YoCode
                 evidence.AppendLine($"{diff.Status} : {diff.Path} = " +
                             $"{lineDifference} ({diff.LinesAdded}+ and {diff.LinesDeleted}-)");
             }
-            evidence.AppendLine(otherChanges);
+            evidence.AppendLine(bonusEvidence);
             return evidence.ToString();
         }
 
@@ -40,7 +40,7 @@ namespace YoCode
 
                 evidence.AppendLine(WebElementBuilder.FormatFileDiff(diff.Patch.Split("\n").ToList()));
             }
-            evidence.AppendLine(WebElementBuilder.FormatParagraph(otherChanges));
+            evidence.AppendLine(WebElementBuilder.FormatParagraph(this.bonusEvidence));
             return evidence.ToString();
         }
     }

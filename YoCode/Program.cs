@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
+            var stopwatch = Stopwatch.StartNew();
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler.CurrentDomain_UnhandledException;
 
             var commandLineHandler = new CommandLineParser(args);
@@ -27,7 +30,7 @@ namespace YoCode
 
             outputs.Add(new ConsoleWriter());
 
-            var compositeOutput = new Output(new CompositeWriter(outputs), (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
+            var compositeOutput = new Output(new CompositeWriter(outputs), outputPath, (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
             var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
             var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);
@@ -65,19 +68,20 @@ namespace YoCode
 
             var evidenceList = new List<FeatureEvidence>();
 
-            var checkManager = new CheckManager(dir, workThreads);
+            var checkManager = new CheckManager(new CheckConfig(dir, parameters));
 
-            var projectRunner = checkManager.PassGatewayChecks(evidenceList);
+            var projectRunner = await checkManager.PassGatewayChecksAsync(evidenceList);
 
             if (projectRunner == null)
             {
-                LoadingAnimation.LoadingFinished = true;
-                workThreads.ForEach(a => a.Join());
+                StopLoadingAnimation(workThreads);
                 compositeOutput.PrintFinalResults(evidenceList, 0);
                 return;
             }
 
-            evidenceList = checkManager.PerformChecks(parameters, projectRunner);
+            evidenceList = await checkManager.PerformChecks(projectRunner);
+
+            StopLoadingAnimation(workThreads);
 
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
@@ -90,6 +94,14 @@ namespace YoCode
                 results.FinalScore);
 
             LaunchReport(result, outputPath);
+
+            Console.WriteLine($"YoCode run time: {stopwatch.Elapsed}");
+        }
+
+        private static void StopLoadingAnimation(List<Thread> workThreads)
+        {
+            LoadingAnimation.LoadingFinished = true;
+            workThreads.ForEach(a => a.Join());
         }
 
         private static void LaunchReport(InputResult result, string outputPath)

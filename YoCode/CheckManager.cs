@@ -1,103 +1,68 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal class CheckManager
     {
-        private readonly IPathManager dir;
-        private readonly List<Thread> workThreads;
+        private readonly CheckConfig checkConfig;
 
-        public CheckManager(IPathManager dir, List<Thread> workThreads)
+        public CheckManager(CheckConfig checkConfig)
         {
-            this.dir = dir;
-            this.workThreads = workThreads;
+            this.checkConfig = checkConfig;
         }
 
-        public ProjectRunner PassGatewayChecks(ICollection<FeatureEvidence> evidenceList)
+        public async Task<ProjectRunner> PassGatewayChecksAsync(List<FeatureEvidence> evidenceList)
         {
-            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-            if (fileCheck.FileChangeEvidence.Failed)
+            var fileCheck = new FileChangeFinder(checkConfig);
+            var fileChangeEvidence = (await fileCheck.Execute()).ToArray();
+            if (fileChangeEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(fileCheck.FileChangeEvidence);
+                evidenceList.AddRange(fileChangeEvidence);
                 return null;
             }
 
-            var projectBuilder = new ProjectBuilder(dir.ModifiedTestDirPath, new FeatureRunner());
-            if (projectBuilder.ProjectBuilderEvidence.Failed)
+            var projectBuilder = new ProjectBuilder(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
+            var projectBuilderEvidence = (await projectBuilder.Execute()).ToArray();
+            if (projectBuilderEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(projectBuilder.ProjectBuilderEvidence);
+                evidenceList.AddRange(projectBuilderEvidence);
                 return null;
             }
 
-            var projectRunner = new ProjectRunner(dir.ModifiedTestDirPath, new FeatureRunner());
+            var projectRunner = new ProjectRunner(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
             ConsoleCloseHandler.StartHandler(projectRunner);
-            projectRunner.Execute();
-            if(projectRunner.ProjectRunEvidence.Failed)
+            var projectRunnerEvidence = (await projectRunner.Execute()).ToArray();
+            if(projectRunnerEvidence.Any(e => e.Failed))
             {
-                evidenceList.Add(projectRunner.ProjectRunEvidence);
+                evidenceList.AddRange(projectRunnerEvidence);
                 return null;
             }
             return projectRunner;
         }
 
-        public List<FeatureEvidence> PerformChecks(RunParameterChecker p, ProjectRunner projectRunner)
+        public async Task<List<FeatureEvidence>> PerformChecks(ProjectRunner projectRunner)
         {
-            var checkList = new List<FeatureEvidence>();
-
-            // CodeCoverage check
-            var codeCoverage = new Thread(() =>
+            var checks = new ICheck[]
             {
-                checkList.Add(new CodeCoverageCheck(p.DotCoverDir, dir.ModifiedTestDirPath, new FeatureRunner()).CodeCoverageEvidence);
-            });
-            workThreads.Add(codeCoverage);
-            codeCoverage.Start();
+                new CodeCoverageCheck(checkConfig),
+                new DuplicationCheckRunner(checkConfig),
+                new FileChangeFinder(checkConfig),
+                new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig),
+                new GitCheck(checkConfig),
+                new TestCountCheck(checkConfig),
+                new UICheck(projectRunner.GetPort()),
+                new UnitConverterCheck(projectRunner.GetPort())
+            };
 
-            // Duplication check
-            var dupcheck = new DuplicationCheckRunner(dir, new DupFinder(p.CMDToolsPath), p);
+            var featureTasks = checks.Select(c => c.Execute()).ToArray();
+            var featureEvidences = await Task.WhenAll(featureTasks);
 
-            var dupFinderThread = new Thread(() =>
-            {
-                checkList.Add(dupcheck.AppDuplicationEvidence);
-                checkList.Add(dupcheck.TestDuplicationEvidence);
-            });
-            workThreads.Add(dupFinderThread);
-            dupFinderThread.Start();
-
-            //File Change
-            var fileCheck = new FileChangeFinder(dir.ModifiedTestDirPath);
-            checkList.Add(fileCheck.FileChangeEvidence);
-
-            // UI test
-            var modifiedHtmlFiles = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.html).ToList();
-
-            checkList.Add(new UICodeCheck(modifiedHtmlFiles, UIKeywords.MILE_KEYWORDS).UIEvidence);
-
-            // Git repo used
-            checkList.Add(new GitCheck(dir.ModifiedTestDirPath).GitEvidence);
-
-            // Unit test test
-            checkList.Add(new TestCountCheck(dir.ModifiedTestDirPath, new FeatureRunner()).UnitTestEvidence);
-
-            //Front End Check
-            checkList.AddRange(new UICheck(projectRunner.GetPort()).UIFeatureEvidences);
-
-            var ucc = new UnitConverterCheck(projectRunner.GetPort());
-
-            // Unit converter test
-            checkList.Add(ucc.UnitConverterCheckEvidence);
-
-            checkList.Add(ucc.BadInputCheckEvidence);
-
-            workThreads.Where(a=>a.Name!="loadingThread").ToList().ForEach(a => a.Join());
             projectRunner.KillProject();
 
-            LoadingAnimation.LoadingFinished = true;
-            workThreads.ForEach(a => a.Join());
-
             projectRunner.ReportLefOverProcess();
-            return checkList;
+            return featureEvidences.SelectMany(x => x).ToList();
         }
     }
 }

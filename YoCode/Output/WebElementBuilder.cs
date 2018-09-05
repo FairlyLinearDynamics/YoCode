@@ -46,6 +46,11 @@ namespace YoCode
                 .Replace(TITLE_TAG, data.featureTitle).Replace(CONTENT_TAG, data.content).Replace(CONTENT_INFO_TAG, data.helperMessage);
         }
 
+        public static string FormatImageElement(string src)
+        {
+            return $"<img src=\"{src}\" alr=\"UI Screenshot\" id=\"img-UIScreenShot\">";
+        }
+
         public static string FormatFileDiff(List<string> file)
         {
             var sb = new StringBuilder();

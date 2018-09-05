@@ -1,5 +1,8 @@
-﻿using Xunit;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 using FluentAssertions;
+using Moq;
 using YoCode;
 
 namespace YoCode_XUnit
@@ -8,26 +11,35 @@ namespace YoCode_XUnit
     {
         private readonly string fakeFilePath = @"..\..\..\TestData\MockHTML.cshtml";
         private readonly string[] keyWords = { "miles", "kilometer" };
+        private readonly Mock<ICheckConfig> checkConfig;
 
-        // Write better testing mehod
-        [Fact]
-        public void UICheck_FeatureImplementedBoolCheck()
+        public UICheckTests()
         {
-            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
+            var pathManager = new Mock<IPathManager>();
+            pathManager.Setup(m => m.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<FileTypes>())).Returns(new []{fakeFilePath});
 
-            var evidence = uiCheck.UIEvidence;
-
-            evidence.Passed.Should().Be(true);
+            checkConfig = new Mock<ICheckConfig>();
+            checkConfig.Setup(m => m.PathManager).Returns(pathManager.Object);
         }
 
         [Fact]
-        public void UICheck_FeatureTitleSet()
+        public async Task UICheck_FeatureImplementedBoolCheck()
         {
-            var uiCheck = new UICodeCheck(fakeFilePath, keyWords);
+            var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
 
-            var evidence = uiCheck.UIEvidence;
+            var evidence = await uiCheck.Execute();
 
-            FeatureTitleStorage.GetFeatureTitle(evidence.Feature).Should().NotBeEmpty();
+            evidence.Single().Passed.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task UICheck_FeatureTitleSet()
+        {
+            var uiCheck = new UICodeCheck(keyWords, checkConfig.Object);
+
+            var evidence = await uiCheck.Execute();
+
+            FeatureTitleStorage.GetFeatureTitle(evidence.Single().Feature).Should().NotBeEmpty();
         }
     }
 }

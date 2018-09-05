@@ -1,57 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
-    internal class ProjectBuilder
+    internal class ProjectBuilder : ICheck
     {
+        private readonly string workingDir;
+        private readonly FeatureRunner featureRunner;
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
-        private readonly string Output;
+        private string Output;
         private const string projectFolder = "UnitConverterWebApp";
         private bool buildSuccessful;
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
         {
-            CleanBuildOutput(workingDir);
-
+            this.workingDir = workingDir;
+            this.featureRunner = featureRunner;
             ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
-
-            workingDir = Path.Combine(workingDir, projectFolder);
-            if (!Directory.Exists(workingDir))
-            {
-                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
-                return;
-            }
-
-
-            var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
-
-            var evidence = featureRunner.Execute(processDetails);
-            Output = evidence.Output;
-
-            var errs = evidence.ErrorOutput;
-            CheckBuildSuccess();
-
-            var errorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
-
-            if (evidence.Inconclusive || errorGettingErrorsOrWarnings)
-            {
-                ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} "));
-                return;
-            }
-
-            var buildOutput = $"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}";
-            if (buildSuccessful)
-            {
-                ProjectBuilderEvidence.SetPassed(new SimpleEvidenceBuilder(buildOutput));
-                ProjectBuilderEvidence.FeatureRating = 1;
-            }
-            else
-            {
-                ProjectBuilderEvidence.SetFailed(new SimpleEvidenceBuilder($"Error message: {GetErrorOutput(Output)}"));
-                ProjectBuilderEvidence.FeatureRating = 0;
-            }
         }
 
         public static string GetErrorOutput(string output)
@@ -104,6 +72,51 @@ namespace YoCode
             pr.ExecuteTheCheck();
         }
 
-        public FeatureEvidence ProjectBuilderEvidence { get; set; } = new FeatureEvidence();
+        private FeatureEvidence ProjectBuilderEvidence { get; } = new FeatureEvidence();
+
+        public Task<List<FeatureEvidence>> Execute()
+        {
+            return Task.Run(() =>
+            {
+                CleanBuildOutput(workingDir);
+
+                var projectDir = Path.Combine(workingDir, projectFolder);
+                if (!Directory.Exists(projectDir))
+                {
+                    ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{projectDir} not found"));
+                    return new List<FeatureEvidence> {ProjectBuilderEvidence};
+                }
+
+                var processDetails = new ProcessDetails(ProcessName, projectDir, Arguments);
+
+                var evidence = featureRunner.Execute(processDetails);
+                Output = evidence.Output;
+
+                var errs = evidence.ErrorOutput;
+                CheckBuildSuccess();
+
+                var errorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
+
+                if (evidence.Inconclusive || errorGettingErrorsOrWarnings)
+                {
+                    ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} "));
+                    return new List<FeatureEvidence> { ProjectBuilderEvidence };
+                }
+
+                var buildOutput = $"Warning count: {GetNumberOfWarnings()}\nError count: {GetNumberOfErrors()}";
+                if (buildSuccessful)
+                {
+                    ProjectBuilderEvidence.SetPassed(new SimpleEvidenceBuilder(buildOutput));
+                    ProjectBuilderEvidence.FeatureRating = 1;
+                }
+                else
+                {
+                    ProjectBuilderEvidence.SetFailed(new SimpleEvidenceBuilder($"Error message: {GetErrorOutput(Output)}"));
+                    ProjectBuilderEvidence.FeatureRating = 0;
+                }
+
+                return new List<FeatureEvidence> { ProjectBuilderEvidence };
+            });
+        }
     }
 }
