@@ -66,7 +66,7 @@ namespace YoCode
 
         private void ExecuteTheCheck()
         {
-            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath, "Modified");
+            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath);
 
             if (modEvidence.Inconclusive)
             {
@@ -141,7 +141,7 @@ namespace YoCode
             return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
         }
 
-        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath, string whichDir)
+        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath)
         {
             var evidence = RunOneCheck(solutionPath);
             var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());

@@ -2,40 +2,31 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 
 namespace YoCode
 {
-    internal class GitCheck
+    internal class GitCheck : ICheck
     {
         private readonly string repositoryPath;
 
-        public GitCheck(string path)
+        public GitCheck(ICheckConfig checkConfig)
         {
-            repositoryPath = path;
+            repositoryPath = checkConfig.PathManager.ModifiedTestDirPath;
             GitEvidence.Feature = Feature.GitCheck;
             GitEvidence.HelperMessage = messages.GitCheck;
-
-            if (Repository.IsValid(repositoryPath))
-            {
-                ExecuteTheCheck();
-            }
-            else
-            {
-                GitEvidence.SetInconclusive(new SimpleEvidenceBuilder("Invalid git repository"));
-            }
         }
 
-        public void ExecuteTheCheck()
+        private void ExecuteTheCheck()
         {
-            var output = new List<string>();
             using (var repo = new Repository(repositoryPath))
             {
                 var commitLog = repo.Commits;
 
-                var Output = CollectGitLogOutput(output, commitLog);
+                var gitLogOutput = CollectGitLogOutput(commitLog);
 
-                FillInEvidence(commitLog, Output);
+                FillInEvidence(commitLog, gitLogOutput);
             }
         }
 
@@ -52,11 +43,13 @@ namespace YoCode
             }
         }
 
-        private static string CollectGitLogOutput(List<string> output, IQueryableCommitLog commitLog)
+        private static string CollectGitLogOutput(IQueryableCommitLog commitLog)
         {
             const string RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
 
-            foreach (Commit c in commitLog.Where(c => !c.Author.Email.ContainsAny(GetHostDomains())))
+            var output = new List<string>();
+
+            foreach (var c in commitLog.Where(c => !c.Author.Email.ContainsAny(GetHostDomains())))
             {
                 output.Add(string.Format("commit {0}", c.Id));
 
@@ -77,11 +70,28 @@ namespace YoCode
             return !c.First().Author.Email.ContainsAny(GetHostDomains());
         }
 
-        public static List<string> GetHostDomains()
+        public static IEnumerable<string> GetHostDomains()
         {
             return new List<string> { "@nonlinear.com", "@waters.com" };
         }
 
-        public FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence GitEvidence { get; } = new FeatureEvidence();
+
+        public Task<List<FeatureEvidence>> Execute()
+        {
+            return Task.Run(() =>
+            {
+                if (Repository.IsValid(repositoryPath))
+                {
+                    ExecuteTheCheck();
+                }
+                else
+                {
+                    GitEvidence.SetInconclusive(new SimpleEvidenceBuilder("Invalid git repository"));
+                }
+
+                return new List<FeatureEvidence> {GitEvidence};
+            });
+        }
     }
 }
