@@ -1,29 +1,46 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace YoCode
 {
     internal class DupFinder : IDupFinder
     {
-        private readonly string CMDtoolsDir;
-        private readonly string CMDtoolFileName = "dupfinder.exe";
-        private readonly string outputFile = "report.xml";
-        private readonly string outputArg = " --discard-cost=5 -o=\"";
+        private const string cmdToolFileName = "dupfinder.exe";
+        private const string arguments = " --discard-cost=5 -o=\"";
         private readonly string processName;
         private readonly string workingDir;
 
-        public DupFinder(string CMDtoolsDirConfig)
+        public DupFinder(string cmdToolsDirConfig)
         {
-            CMDtoolsDir = CMDtoolsDirConfig;
-            processName = Path.Combine(CMDtoolsDir, CMDtoolFileName);
-            workingDir = CMDtoolsDir;
+            var cmdToolsDir = cmdToolsDirConfig;
+            processName = Path.Combine(cmdToolsDir, cmdToolFileName);
+            workingDir = cmdToolsDir;
         }
 
         public FeatureEvidence Execute(string featureTitle, string solutionPath)
         {
-            var proc = new ProcessDetails(processName, workingDir, solutionPath + outputArg + outputFile);
-            var evidence = new FeatureRunner().Execute(proc);
-            evidence.Output = File.ReadAllText(Path.Combine(workingDir, outputFile));
-            return evidence;
+            try
+            {
+                var outputFilePath = Path.GetTempFileName();
+
+                try
+                {
+                    var proc = new ProcessDetails(processName, workingDir, solutionPath + arguments + outputFilePath);
+                    var evidence = new FeatureRunner().Execute(proc);
+                    evidence.Output = File.ReadAllText(outputFilePath);
+                    return evidence;
+                }
+                finally
+                {
+                    File.Delete(outputFilePath);
+                }
+            }
+            catch (IOException e)
+            {
+                var featureEvidence = new FeatureEvidence();
+                featureEvidence.SetInconclusive(new SimpleEvidenceBuilder(e.Message));
+                return featureEvidence;
+            }
         }
     }
 }
