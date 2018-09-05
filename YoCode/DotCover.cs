@@ -43,12 +43,9 @@ namespace YoCode
                 var coveredRelevantStatements = filteredTypesInWebApp.Sum(t => t.CoveredStatements);
                 return (int)(coveredRelevantStatements * 100.0 / totalRelevantStatements);
             }
-            catch (ArgumentNullException)
-            {
-            }
-            catch (JsonReaderException)
-            {
-            }
+            catch (ArgumentNullException) { }
+            catch (JsonReaderException) { }
+            catch (JsonSerializationException) { }
 
             return -1;
         }
