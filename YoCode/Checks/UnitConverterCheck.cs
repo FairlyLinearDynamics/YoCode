@@ -40,7 +40,7 @@ namespace YoCode
         private readonly string HTMLcode;
 
         private const int TitleColumnFormatter = -30;
-        private const int ValueColumnFormatter = -10;
+        private const int ValueColumnFormatter = -15;
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
         private StringBuilder badInputResultsOutput= new StringBuilder();
@@ -211,7 +211,7 @@ namespace YoCode
             try
             {
                 unitConverterResultsOutput.AppendLine(Environment.NewLine + string.Format(
-                    "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
+                    $"{"Action",TitleColumnFormatter} {"Input",ValueColumnFormatter} {"Expected",ValueColumnFormatter} {"Actual",ValueColumnFormatter} {"Are equal\n",ValueColumnFormatter}"));
 
                 unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
                 foreach (var expectation in expected)
@@ -219,7 +219,7 @@ namespace YoCode
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
-                    var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
+                    var x = string.Format($"{expectation.action,TitleColumnFormatter} {expectation.input,ValueColumnFormatter} {expectedOutput,ValueColumnFormatter} {actualOutput,ValueColumnFormatter} {actualOutput.ApproximatelyEquals(expectedOutput),ValueColumnFormatter} ");
                     unitConverterResultsOutput.AppendLine(x);
 
                     UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
