@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
     // TODO: find other way of running .dll file instead of hardcoding the name 
-    internal class ProjectRunner
+    internal class ProjectRunner : ICheck
     {
         internal string Output { get; set; }
 
@@ -19,51 +21,57 @@ namespace YoCode
         public ProjectRunner(string workingDir, FeatureRunner featureRunner)
         {
             this.featureRunner = featureRunner;
-            ProjectRunEvidence.Feature = Feature.ProjectRunner;
 
             this.workingDir = workingDir + projectFolder;
         }
 
-        public void Execute()
+        public Task<List<FeatureEvidence>> Execute()
         {
-            if (!Directory.Exists(workingDir))
+            return Task.Run(() =>
             {
-                ProjectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
-                return;
-            }
+                var projectRunEvidence = new FeatureEvidence {Feature = Feature.ProjectRunner};
 
-            Argument = CreateArgument(workingDir);
+                if (!Directory.Exists(workingDir))
+                {
+                    projectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
+                    return new List<FeatureEvidence> {projectRunEvidence};
+                }
 
-            var processDetails = new ProcessDetails(ProcessName, workingDir, Argument);
+                Argument = CreateArgument(workingDir);
 
-            var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
-            Output = evidence.Output;
-            ErrorOutput = evidence.ErrorOutput;
+                var processDetails = new ProcessDetails(ProcessName, workingDir, Argument);
 
-            // TODO: Refactor Project Runner
-            var portKeyword = "Now listening on: ";
-            var line = Output.GetLineWithOneKeyword(portKeyword);
-            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
-            var port = splitLine.Length > 1 ? splitLine[1] : "";
+                var evidence = featureRunner.Execute(processDetails, "Application started. Press Ctrl+C to shut down.", false);
+                Output = evidence.Output;
+                ErrorOutput = evidence.ErrorOutput;
 
-            if (String.IsNullOrEmpty(port))
-            {
-                ProjectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
-                return;
-            }
+                // TODO: Refactor Project Runner
+                const string portKeyword = "Now listening on: ";
+                var line = Output.GetLineWithOneKeyword(portKeyword);
+                var splitLine = line.Split(portKeyword, StringSplitOptions.None);
+                var port = splitLine.Length > 1 ? splitLine[1] : "";
 
-            var applicationStarted = ApplicationStarted();
+                if (String.IsNullOrEmpty(port))
+                {
+                    projectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder(messages.BadPort));
+                    return new List<FeatureEvidence> {projectRunEvidence};
+                }
 
-            if (applicationStarted)
-            {
-                ProjectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
-                ProjectRunEvidence.FeatureRating = 1;
-            }
-            else
-            {
-                ProjectRunEvidence.SetFailed(new SimpleEvidenceBuilder($"Error Output: {ErrorOutput}"));
-                ProjectRunEvidence.FeatureRating = 0;
-            }
+                var applicationStarted = ApplicationStarted();
+
+                if (applicationStarted)
+                {
+                    projectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
+                    projectRunEvidence.FeatureRating = 1;
+                }
+                else
+                {
+                    projectRunEvidence.SetFailed(new SimpleEvidenceBuilder($"Error Output: {ErrorOutput}"));
+                    projectRunEvidence.FeatureRating = 0;
+                }
+
+                return new List<FeatureEvidence> {projectRunEvidence};
+            });
         }
 
         private string CreateArgument(string workingDir)
@@ -99,7 +107,5 @@ namespace YoCode
         {
             featureRunner.FindLeftOverProcess();
         }
-
-        public FeatureEvidence ProjectRunEvidence { get; } = new FeatureEvidence();
     }
 }

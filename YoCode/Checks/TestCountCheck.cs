@@ -3,50 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
-    internal class TestCountCheck
+    internal class TestCountCheck : ICheck
     {
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
-        private readonly FeatureRunner featureRunner;
-        private IPathManager dir;
+
         public string StatLine { get; set; }
         public string Output { get; set; }
         public string ErrorOutput { get; set; }
 
-        private readonly int TestCountTreshold = 10;
+        private const int TestCountThreshold = 10;
 
         private TestStats stats;
         private List<int> tempStats;
+        private readonly IPathManager pathManager;
 
         private const int TitleColumnFormatter = -25;
 
-        public TestCountCheck(string repositoryPath, FeatureRunner featureRunner, IPathManager dir)
+        public TestCountCheck(ICheckConfig checkConfig)
         {
-            this.dir = dir;
-            workingDir = Path.Combine(repositoryPath, "UnitConverterTests");
+            workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
+            this.pathManager = checkConfig.PathManager;
 
-            if (!Directory.Exists(workingDir))
-            {
-                UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
-                return;
-            }
-
-            this.featureRunner = featureRunner;
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;
             processName = "dotnet";
             arguments = "test";
-            ExecuteTheCheck();
         }
 
         private void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = featureRunner.Execute(pr);
+            var evidence = new FeatureRunner().Execute(pr);
 
             if (evidence.Inconclusive)
             {
@@ -71,7 +64,7 @@ namespace YoCode
                 stats.testsSkipped = tempStats[3];
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
-                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountTreshold;
+                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountThreshold;
                 if (featureImplemented)
                 {
                     UnitTestEvidence.SetPassed(new SimpleEvidenceBuilder(StructuredOutput()));
@@ -96,11 +89,11 @@ namespace YoCode
         {
             double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
 
-            if(stats.totalTests >= TestCountTreshold)
+            if(stats.totalTests >= TestCountThreshold)
             {
                 return rating;
             }
-            double deduction = (TestCountTreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountTreshold));
+            double deduction = (TestCountThreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountThreshold));
             return rating - deduction;
         }
 
@@ -109,15 +102,15 @@ namespace YoCode
             var builder = new StringBuilder();
 
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(string.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            builder.AppendLine(string.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            builder.AppendLine(string.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            builder.AppendLine(string.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            builder.AppendLine(string.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
+            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
+            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
+            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
+            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(string.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountTreshold}"));
+            builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountThreshold}"));
 
-            if(NumberOfUnfixedTests(GetFileText()) > 0)
+            if (NumberOfUnfixedTests(GetFileText()) > 0)
             {
                 builder.AppendLine(string.Format($"{"Broken tests not fixed:",TitleColumnFormatter}{NumberOfUnfixedTests(GetFileText())}"));
             }
@@ -139,7 +132,7 @@ namespace YoCode
             {
                 for (int i = 1; i < file.Length; i++)
                 {
-                    if(file[i].Contains(keywords[1]) && !file[i-1].ContainsAny(keywords))
+                    if (file[i].Contains(keywords[1]) && !file[i - 1].ContainsAny(keywords))
                     {
                         unfixedTests++;
                     }
@@ -150,7 +143,7 @@ namespace YoCode
 
         private List<string[]> GetFileText()
         {
-            var csUris = dir.GetFilesInDirectory(dir.ModifiedTestDirPath, FileTypes.cs);
+            var csUris = pathManager.GetFilesInDirectory(pathManager.ModifiedTestDirPath, FileTypes.cs);
 
             List<string[]> fileText = new List<string[]>();
 
@@ -159,6 +152,22 @@ namespace YoCode
             return fileText;
         }
 
-        public FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence UnitTestEvidence { get; } = new FeatureEvidence();
+
+        public Task<List<FeatureEvidence>> Execute()
+        {
+            return Task.Run(() =>
+            {
+                if (!Directory.Exists(workingDir))
+                {
+                    UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
+                    return new List<FeatureEvidence> {UnitTestEvidence};
+                }
+
+                ExecuteTheCheck();
+
+                return new List<FeatureEvidence> {UnitTestEvidence};
+            });
+        }
     }
 }
