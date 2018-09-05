@@ -30,7 +30,7 @@ namespace YoCode
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
-                elem.FeatureRating = Math.Round(elem.FeatureRating * 100);
+                elem.FeatureRating = Math.Round(elem.FeatureRating,2);
             }
         }
 
@@ -51,6 +51,11 @@ namespace YoCode
                 AssignToEquivalentCheck(
                     list.Find(e => e.Feature == Feature.UnitConverterCheck),
                     list.Find(e => e.Feature == Feature.UIConversionCheck)
+                    );
+
+                AssignToEquivalentCheck(
+                    list.Find(e => e.Feature == Feature.UIFeatureImplemented),
+                    list.Find(e => e.Feature == Feature.UICodeCheck)
                     );
             }
         }

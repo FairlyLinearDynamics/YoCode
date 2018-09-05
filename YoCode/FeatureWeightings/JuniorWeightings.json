@@ -2,7 +2,7 @@
   "TestCountCheck": 1.355,
   "BadInputCheck": 2.39,
   "CodeCoverageCheck": 1.32,
-  "TestDuplicationCheck": 1.69,
+  "TestDuplicationCheck": 0,
   "AppDuplicationCheck": 1.69,
   "UICodeCheck": 1.03,
   "FilesChangedCheck": 0,

@@ -27,18 +27,18 @@ namespace YoCode
         private const double MiToKm = 1.60934;
         private const double YdToMe = 0.9144;
 
-        public List<string> InToCmKeys { get; set; }
-        public List<string> MiToKmKeys { get; set; }
-        public List<string> YdToMeKeys { get; set; }
+        private List<string> InToCmKeys { get; set; }
+        private List<string> MiToKmKeys { get; set; }
+        private List<string> YdToMeKeys { get; set; }
 
         List<bool> BadInputBoolResults;
         List<bool> UnitConverterBoolResults;
         
-        string from = "value=\"";
-        string to = "\"";
+        private string from = "value=\"";
+        private string to = "\"";
 
         private const int TitleColumnFormatter = -30;
-        private const int ValueColumnFormatter = -10;
+        private const int ValueColumnFormatter = -15;
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
         private StringBuilder badInputResultsOutput= new StringBuilder();
@@ -104,7 +104,7 @@ namespace YoCode
             }
         }
 
-        public List<string> GetActionLines(string file)
+        private List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
@@ -160,8 +160,8 @@ namespace YoCode
             var ret = true;
             try
             {
-                unitConverterResultsOutput.AppendLine("\n" + string.Format(
-                    "{0,-24} {1,-10} {2,-10} {3,10} {4,15}", "Action", "Input", "Expected", "Actual", "Are equal\n"));
+                unitConverterResultsOutput.AppendLine(Environment.NewLine + string.Format(
+                    $"{"Action",TitleColumnFormatter} {"Input",ValueColumnFormatter} {"Expected",ValueColumnFormatter} {"Actual",ValueColumnFormatter} {"Are equal\n",ValueColumnFormatter}"));
 
                 unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
                 foreach (var expectation in expected)
@@ -169,7 +169,7 @@ namespace YoCode
                     var expectedOutput = expectation.output;
                     var actualOutput = FindActualResultForExpectation(expectation, actual).output;
 
-                    var x = string.Format("{0,-24} {1,-10} {2,-14} {3,-11} {4} ", expectation.action, expectation.input, expectedOutput, actualOutput, actualOutput.ApproximatelyEquals(expectedOutput));
+                    var x = string.Format($"{expectation.action,TitleColumnFormatter} {expectation.input,ValueColumnFormatter} {expectedOutput,ValueColumnFormatter} {actualOutput,ValueColumnFormatter} {actualOutput.ApproximatelyEquals(expectedOutput),ValueColumnFormatter} ");
                     unitConverterResultsOutput.AppendLine(x);
 
                     UnitConverterBoolResults.Add(actualOutput.ApproximatelyEquals(expectedOutput));
@@ -210,12 +210,12 @@ namespace YoCode
             return ret;
         }
 
-        public double GetBadInputCheckRating()
+        private double GetBadInputCheckRating()
         {
             return HelperMethods.GetRatingFromBoolList(BadInputBoolResults);
         }
 
-        public double GetUnitConverterCheckRating()
+        private double GetUnitConverterCheckRating()
         {
             return HelperMethods.GetRatingFromBoolList(UnitConverterBoolResults);
         }
@@ -254,22 +254,22 @@ namespace YoCode
 
                     if (OutputsAreEqual())
                     {
-                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All conversions matched expectations."));
+                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
                     else
                     {
-                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one conversion did not match expectations."));
+                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
                     }
 
                     UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
 
                     if (BadInputsAreFixed(badInputResults))
                     {
-                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All bad inputs have been handled."));
+                        BadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
                     else
                     {
-                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one bad input has not been handled."));
+                        BadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(badInputResultsOutput.ToString()));
                     }
 
                     BadInputCheckEvidence.FeatureRating = GetBadInputCheckRating();
