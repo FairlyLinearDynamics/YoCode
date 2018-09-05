@@ -155,13 +155,13 @@ namespace YoCode
             return (evidence, codebaseCost, duplicateCost);
         }
 
-
         private string StructuredOutput()
         {
             resultsOutput.AppendLine(String.Format($"{"Version",TitleColumnFormatter}{"Codebase Cost",ValueColumnFormatter}{"Duplicate Cost",ValueColumnFormatter}"));
             resultsOutput.AppendLine(messages.ParagraphDivider);
             resultsOutput.AppendLine(String.Format($"{"Original",TitleColumnFormatter}{OrigCodeBaseCost,ValueColumnFormatter}{OrigDuplicateCost,ValueColumnFormatter}"));
             resultsOutput.AppendLine(String.Format($"{"Modified",TitleColumnFormatter}{ModiCodeBaseCost,ValueColumnFormatter}{ModiDuplicateCost,ValueColumnFormatter}"));
+            resultsOutput.AppendLine();
 
             return resultsOutput.ToString();
         }
