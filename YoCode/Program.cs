@@ -73,7 +73,7 @@ namespace YoCode
             {
                 LoadingAnimation.LoadingFinished = true;
                 workThreads.ForEach(a => a.Join());
-                compositeOutput.PrintFinalResults(evidenceList, 0);
+                compositeOutput.PrintFinalResults(evidenceList, 0, result.JuniorTest);
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace YoCode
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
             compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
-                results.FinalScore);
+                results.FinalScore, result.JuniorTest);
 
             LaunchReport(result, outputPath);
         }

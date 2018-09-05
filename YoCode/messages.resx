@@ -344,7 +344,6 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         margin: 0px;
         counter-reset: line;
         position: relative;
-        height: 275px;
         overflow-y: auto;
         overflow-x: hidden;
       }
@@ -457,15 +456,20 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         border-left: 1px solid var(--console-text);
       }
 
-      #img-UIScreenShot{
+      #js-UIScreenShot{
         padding: 5px;
+      }
+
+      .test-type{
+        padding-left: 5px;
+        float: right;
       }
     &lt;/style&gt;
   &lt;/head&gt;
 
   &lt;body&gt;
     &lt;div class="toolbar"&gt;
-      YoCode
+      YoCode &lt;span class="test-type"&gt;Type: {TEST-TYPE}&lt;/span&gt;
     &lt;/div&gt;
 
     &lt;div class="sections-wrapper"&gt;
@@ -503,6 +507,17 @@ Example: --{0}=&lt;...&gt; --{5}</value>
     &lt;/div&gt;
 
     &lt;script&gt;
+      var panelContentHeight = 275;
+      var panelContents = document.getElementsByClassName("panel-content");
+      for(let i=0; i&lt;panelContents.length; ++i){
+        panelContents[i].style.height = panelContentHeight+"px";
+      }
+
+      var uiScreenShot = document.getElementById("js-UIScreenShot");
+      if(uiScreenShot){
+        uiScreenShot.closest(".panel-content").style.height = null;
+      }
+
       var changedFilesButtons = document.getElementsByClassName("changedFile");
       for(let i=0; i&lt;changedFilesButtons.length; ++i){
         changedFilesButtons[i].addEventListener("click", function(){

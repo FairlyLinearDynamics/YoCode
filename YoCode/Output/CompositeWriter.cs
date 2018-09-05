@@ -53,5 +53,13 @@ namespace YoCode
                 writer.AddFinalScore(score);
             }
         }
+
+        public void AddTestType(bool isJunior)
+        {
+            foreach(var writer in writers)
+            {
+                writer.AddTestType(isJunior);
+            }
+        }
     }
 }

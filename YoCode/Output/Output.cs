@@ -23,9 +23,10 @@ namespace YoCode
             writeTo = outputPath;
         }
 
-        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList,double finalScore)
+        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList,double finalScore, bool isJunior)
         {
             outputWriter.AddFinalScore(finalScore);
+            outputWriter.AddTestType(isJunior);
             foreach (var feature in featureList)
             {
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);

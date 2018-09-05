@@ -25,6 +25,12 @@ namespace YoCode
             consoleReport.AppendLine(messages.Divider);
         }
 
+        public void AddTestType(bool isJunior)
+        {
+            consoleReport.AppendLine($"Test type: { (isJunior ? "Junior" : "Original")}");
+            consoleReport.AppendLine(messages.Divider);
+        }
+
         public void AddFeature(FeatureData data)
         {
             consoleReport.AppendLine(data.title);

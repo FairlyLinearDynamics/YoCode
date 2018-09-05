@@ -7,5 +7,6 @@
         void AddBanner();
         void WriteReport();
         void AddFinalScore(double score);
+        void AddTestType(bool isJunior);
     }
 }
