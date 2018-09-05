@@ -11,7 +11,6 @@ namespace YoCode
         private string ProcessName { get; } = "dotnet";
         private string Arguments { get; } = "build";
         private string Output;
-        private const string projectFolder = "UnitConverterWebApp";
         private bool buildSuccessful;
 
         public ProjectBuilder(string workingDir, FeatureRunner featureRunner)
