@@ -164,7 +164,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
     &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
     &lt;style&gt;
-      :root{
+       :root{
         --console-bg: #222121;
         --console-text: #c0c0c0;
         --green-bg: #3bc511;
@@ -348,6 +348,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         overflow-y: auto;
         overflow-x: hidden;
         height: 275px;
+        transition: height .5s;
       }
 
       .panel-info{
@@ -456,6 +457,8 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         white-space: pre-wrap;
         padding: 10px;
         border-left: 1px solid var(--console-text);
+        transition: opacity .25s;
+        opacity: 0;
       }
 
       #js-UIScreenShot{
@@ -580,20 +583,37 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
       var changedFilesButtons = document.getElementsByClassName("changedFile");
       for(let i=0; i&lt;changedFilesButtons.length; ++i){
-        changedFilesButtons[i].addEventListener("click", function(){
+        changedFilesButtons[i].addEventListener("click", async function(){
           
           this.classList.toggle("fileChangesShowing");
 
           var line = this.closest(".paragraph-block");
           textField = line.nextElementSibling;
+          var panelContent = this.parentElement.parentElement.parentElement.parentElement;
+          
           if(this.classList.contains("fileChangesShowing")){
+            console.debug(textField);
             textField.style.display = "block";
+            textField.style.opacity = 1;
+            maxContentHeight = panelContent.parentElement.style.maxHeight;
+            panelContent.parentElement.style.maxHeight = screen.height * 0.75 +"px";
+            panelContent.style.height = screen.height * 0.75 +"px";
           }
           else{
+            panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
+            panelContent.style.height = null;
+            textField.style.opacity = null;
+            await sleep(230);
             textField.style.display = "none";
           }
         });
       }
+
+
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
 
       var acc = document.getElementsByClassName("accordion");
 
