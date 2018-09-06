@@ -64,7 +64,7 @@ namespace YoCode
         {
             if (oldCheck.Inconclusive)
             {
-                newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
+                newCheck.FeatureWeighting = oldCheck.FeatureWeighting * 2 ;
                 oldCheck.FeatureWeighting = 0;
             }
         }

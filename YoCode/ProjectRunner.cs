@@ -28,7 +28,7 @@ namespace YoCode
         {
             return Task.Run(() =>
             {
-                var projectRunEvidence = new FeatureEvidence {Feature = Feature.ProjectRunner};
+                var projectRunEvidence = new FeatureEvidence();
 
                 if (!Directory.Exists(workingDir))
                 {
