@@ -7,7 +7,6 @@ namespace YoCode
     internal class RunParameterChecker : IRunParameterChecker
     {
         private readonly Output compositeOutput;
-        private readonly IInputResult result;
         private readonly IAppSettingsBuilder appsettingsBuilder;
 
         public List<string> Errs = new List<string>();
@@ -20,14 +19,43 @@ namespace YoCode
         public string AppCodeBaseCost { get; set; }
         public string AppDuplicationCost { get; set; }
 
-        public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
+        public RunParameterChecker(Output compositeOutput, IAppSettingsBuilder appsettingsBuilder)
         {
             this.compositeOutput = compositeOutput;
-            this.result = result;
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid(string outputPath)
+        public bool ParametersAreValid(string outputPath, IInputResult result)
+        {
+            CheckInput(outputPath, result);
+
+            ReadAppsettings();
+
+            CheckIfAppsettingsValuesAreValid();
+
+            return CheckIfToolExecutablesExist();
+        }
+
+        private void CheckIfAppsettingsValuesAreValid()
+        {
+            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
+            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values")
+                && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
+
+            var juniorFileExists = FileExists("JuniorWeightings.json");
+            var originalFileExists = FileExists("OriginalWeightings.json");
+
+            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
+
+            if (anyFilesMissing)
+            {
+                compositeOutput.ShowInputErrors(Errs);
+                Environment.Exit(1);
+            }
+        }
+
+        private void CheckInput(string outputPath, IInputResult result)
         {
             if (result.HelpAsked)
             {
@@ -44,7 +72,10 @@ namespace YoCode
                 compositeOutput.ShowInputErrors(Errs);
                 Environment.Exit(1);
             }
+        }
 
+        private void ReadAppsettings()
+        {
             try
             {
                 appsettingsBuilder.ReadJSONFile();
@@ -63,24 +94,6 @@ namespace YoCode
             {
                 ExitWithErrorMessage("Error reading JSON file");
             }
-
-            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
-            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values")
-                && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
-
-            var juniorFileExists = FileExists("JuniorWeightings.json");
-            var originalFileExists = FileExists("OriginalWeightings.json");
-
-            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
-
-            if (anyFilesMissing)
-            {
-                compositeOutput.ShowInputErrors(Errs);
-                Environment.Exit(1);
-            }
-
-            return CheckIfToolExecutablesExist();
         }
 
         private void ExitWithErrorMessage(string msg)
