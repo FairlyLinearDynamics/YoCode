@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace YoCode
@@ -30,7 +31,15 @@ namespace YoCode
             var files = new List<string>();
             var di = new DirectoryInfo(path);
 
-            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), path);
+            try
+            {
+                FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), path);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine("Test Project in directory with restricted access");
+                Environment.Exit(1);
+            }
             return files;
         }
     }
