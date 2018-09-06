@@ -24,6 +24,7 @@ namespace YoCode
         {
             this.port = port;
             InitializeDataStructures();
+            Execute();
         }
 
         private void InitializeDataStructures()
