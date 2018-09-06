@@ -285,7 +285,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         width: 100%;
         display: grid;
         position: relative;
-        grid-template-columns: 50px 75px auto 25px;
+        grid-template-columns: 50px 85px auto 25px;
         background-color: var(--panel-bg);
         color: var(--panel-text);
         cursor: pointer;

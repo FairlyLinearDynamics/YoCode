@@ -72,21 +72,31 @@ namespace YoCode
 
             var projectRunner = await checkManager.PassGatewayChecksAsync(evidenceList);
 
+            evidenceList = await checkManager.PerformChecks(projectRunner);
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
+
             if (projectRunner == null)
             {
                 StopLoadingAnimation(workThreads);
-                compositeOutput.PrintFinalResults(evidenceList, result.JuniorTest, 0, 0);
+                compositeOutput.PrintFinalResults(new FinalResultsData()
+                {
+                    featureList = evidenceList,
+                    isJunior = result.JuniorTest,
+                    finalScore = 0,
+                    finalScorePercentage = 0,
+                });
                 return;
             }
 
-            evidenceList = await checkManager.PerformChecks(projectRunner);
-
             StopLoadingAnimation(workThreads);
 
-            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
-
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
-                result.JuniorTest, results.FinalScore, results.FinalScorePercentage);
+            compositeOutput.PrintFinalResults(new FinalResultsData()
+            {
+                featureList = evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
+                isJunior = result.JuniorTest,
+                finalScore = results.FinalScore,
+                finalScorePercentage = results.FinalScorePercentage,
+            });
 
             LaunchReport(result, outputPath);
 

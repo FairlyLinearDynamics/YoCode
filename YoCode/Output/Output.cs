@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,16 +24,16 @@ namespace YoCode
             writeTo = outputPath;
         }
 
-        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList, bool isJunior, double finalScore, double finalScorePercentage)
+        public void PrintFinalResults(FinalResultsData data)
         {
-            outputWriter.AddFinalScore(finalScorePercentage);
-            outputWriter.AddTestType(isJunior);
-            foreach (var feature in featureList)
+            outputWriter.AddFinalScore(data.finalScorePercentage);
+            outputWriter.AddTestType(data.isJunior);
+            foreach (var feature in data.featureList)
             {
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
                 featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
-                featData.score = finalScore == 0 ? 0 : (int)(feature.WeightedRating * 100 / finalScore);
+                featData.score = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating * 100 / data.finalScore, 1);
                 var result = feature.Inconclusive
                     ? "Could not perform check"
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
