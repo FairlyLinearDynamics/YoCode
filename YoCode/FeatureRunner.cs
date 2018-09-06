@@ -4,7 +4,7 @@
     {
         private ProcessRunner pr;
 
-        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill =true)
+        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
             pr.ExecuteTheCheck(waitForMessage, kill);
