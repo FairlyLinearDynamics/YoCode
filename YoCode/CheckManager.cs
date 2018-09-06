@@ -61,7 +61,8 @@ namespace YoCode
                 new GitCheck(checkConfig),
                 new TestCountCheck(checkConfig),
                 new UICheck(projectRunner.GetPort()),
-                new UnitConverterCheck(projectRunner.GetPort())
+                new UnitConverterCheck(projectRunner.GetPort()),
+                new BadInputCheck(projectRunner.GetPort())
             };
 
             var featureTasks = checks.Select(c => c.Execute()).ToArray();

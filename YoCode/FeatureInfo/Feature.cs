@@ -1,4 +1,5 @@
-﻿namespace YoCode
+﻿
+namespace YoCode
 {
     public enum Feature
     {
@@ -10,8 +11,6 @@
         UICodeCheck,
         FilesChangedCheck,
         GitCheck,
-        ProjectBuilder,
-        ProjectRunner,
         UnitConverterCheck,
         UIFeatureImplemented,
         UIBadInputCheck,
