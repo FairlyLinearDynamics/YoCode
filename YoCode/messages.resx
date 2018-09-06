@@ -179,6 +179,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         --toolbar-bg: #8B2C87;
         --toolbar-text: #e2d7d7;
         --element-underlining: #c1b8c9;
+        --focus-bg: #222121e0;
       }
 
       body {
@@ -464,6 +465,54 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         padding-left: 5px;
         float: right;
       }
+      
+      .weight{
+        font-size: 20px;
+        border-radius: 5%;
+        float: right;
+        font-style: italic;
+      }
+
+      #js-UIScreenShot{
+        width: 250px;
+        height: auto;
+        padding: 6px;
+        margin: 10px;
+        border: .5px solid var(--console-text);
+        border-radius: 10px;
+        transition: background-color .5s;
+      }
+
+      #js-UIScreenShot:hover{
+        background-color: #c0c0c041;
+        cursor: pointer;
+      }
+
+      #js-screenshot-holder{
+        position: fixed; 
+        left: 0px; 
+        top: 0px; 
+        right: 0px; 
+        bottom: 0px; 
+        background: var(--focus-bg) none repeat scroll 0% 0%; 
+        z-index: 1000;
+      }
+
+      #screenshot-wrapper{
+        position: absolute; 
+        left: 50%; 
+        top: 50%; 
+        transform: translate(-50%, -50%); 
+        overflow: auto; 
+        width: 90%;
+      }
+
+      #js-screenshot{
+        max-width: 100%; 
+        height: auto; 
+        display: block; 
+        margin: 0 auto;
+      }
     &lt;/style&gt;
   &lt;/head&gt;
 
@@ -506,7 +555,28 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       {FEATURE}
     &lt;/div&gt;
 
+    &lt;div onclick="toggleScreenshot()" id="js-screenshot-holder" style="display: none"&gt;
+      &lt;div id="screenshot-wrapper"&gt;
+        &lt;img alr="UI Screenshot" id="js-screenshot"&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
     &lt;script&gt;
+      var screenShotHolder = document.getElementById("js-screenshot");
+
+
+      function toggleScreenshot() {
+        var hidden = document.getElementById('js-screenshot-holder').style.display === "none";
+        document.getElementById('js-screenshot-holder').style.display = hidden ? "block" : "none";
+      }
+
+
+      function screenshotClicked(elem){
+        screenShotHolder.setAttribute("src",elem.getAttribute("src"));
+        toggleScreenshot();
+      }
+
+
       var panelContentHeight = 275;
       var panelContents = document.getElementsByClassName("panel-content");
       for(let i=0; i&lt;panelContents.length; ++i){
@@ -758,7 +828,8 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;/span&gt;
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
-  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
+  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;span class="weight"&gt;raw score: {4}, weighting: {5}&lt;/span&gt;&lt;/span&gt;
+  </value>
   </data>
   <data name="WrongWritePermission" xml:space="preserve">
     <value>HTML report could not be written to "{0}" directory.{1}If you would like to specify different directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>
