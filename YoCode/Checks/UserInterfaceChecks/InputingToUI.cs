@@ -33,9 +33,16 @@ namespace YoCode
                 {
                     var selectors = form.FindElements(By.CssSelector("select"));
 
-                    IWebElement elementToClick = !foundTagsInfo.SeparateTags
-                        ? form.FindElement(By.XPath($"//*[@type=\"submit\" and @value=\"{foundTagsInfo.mileTagValue}\"]"))
-                        :form.FindElement(By.XPath("//*[@type=\"submit\"]"));
+                    IWebElement elementToClick;
+
+                    try
+                    {
+                        elementToClick = form.FindElement(By.XPath($"//*[@type=\"submit\" and @value=\"{foundTagsInfo.mileTagValue}\"]"));
+                    }
+                    catch
+                    {
+                        elementToClick = form.FindElement(By.XPath("//*[@type=\"submit\"]"));
+                    }
 
                     // Assume that there are two dropdown menues with conversion options
                     if (selectors.Count == 2)

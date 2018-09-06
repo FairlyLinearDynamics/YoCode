@@ -40,7 +40,7 @@ namespace YoCode
                 }
                 catch (NoSuchElementException)
                 {
-                    uiConversionResultsOutput.AppendLine("Values were converted incorrectly");
+                    UIConversionEvidence.SetFailed(new SimpleEvidenceBuilder("Values were converted incorrectly"));
                     UIConversionEvidence.FeatureRating = 0;
                     browser.Navigate().Back();
                     return;
