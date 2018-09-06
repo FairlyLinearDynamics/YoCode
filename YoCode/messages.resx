@@ -347,6 +347,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         position: relative;
         overflow-y: auto;
         overflow-x: hidden;
+        height: 275px;
       }
 
       .panel-info{
@@ -480,7 +481,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         margin: 10px;
         border: .5px solid var(--console-text);
         border-radius: 10px;
-        transition: background-color .5s;
+        transition: background-color .25s;
       }
 
       #js-UIScreenShot:hover{
@@ -576,17 +577,6 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         toggleScreenshot();
       }
 
-
-      var panelContentHeight = 275;
-      var panelContents = document.getElementsByClassName("panel-content");
-      for(let i=0; i&lt;panelContents.length; ++i){
-        panelContents[i].style.height = panelContentHeight+"px";
-      }
-
-      var uiScreenShot = document.getElementById("js-UIScreenShot");
-      if(uiScreenShot){
-        uiScreenShot.closest(".panel-content").style.height = null;
-      }
 
       var changedFilesButtons = document.getElementsByClassName("changedFile");
       for(let i=0; i&lt;changedFilesButtons.length; ++i){
