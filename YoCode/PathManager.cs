@@ -35,9 +35,9 @@ namespace YoCode
             {
                 FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), path);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
-                Console.WriteLine("Test Project in directory with restricted access");
+                Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
             return files;

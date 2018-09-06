@@ -27,16 +27,22 @@ namespace YoCode
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid()
+        public bool ParametersAreValid(string outputPath)
         {
             if (result.HelpAsked)
             {
-                return false;
+                compositeOutput.ShowHelp();
+                if (result.CreateHtmlReport && result.OpenHtmlReport)
+                {
+                    WebWriter.LaunchReport(result, outputPath);
+                }
+                Environment.Exit(0);
             }
             if (result.HasErrors)
             {
                 Errs.AddRange(result.Errors);
-                return false;
+                compositeOutput.ShowInputErrors(Errs);
+                Environment.Exit(1);
             }
 
             try
@@ -51,16 +57,17 @@ namespace YoCode
             }
             catch (FileNotFoundException)
             {
-                return SetError("Did not find appsettings file");
+                ExitWithErrorMessage("Did not find appsettings file");
             }
             catch (FormatException)
             {
-                return SetError("Error reading JSON file");
+                ExitWithErrorMessage("Error reading JSON file");
             }
 
             var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
             var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values")
+                && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
 
             var juniorFileExists = FileExists("JuniorWeightings.json");
             var originalFileExists = FileExists("OriginalWeightings.json");
@@ -69,10 +76,18 @@ namespace YoCode
 
             if (anyFilesMissing)
             {
-                return false;
+                compositeOutput.ShowInputErrors(Errs);
+                Environment.Exit(1);
             }
 
             return CheckIfToolExecutablesExist();
+        }
+
+        private void ExitWithErrorMessage(string msg)
+        {
+            Errs.Add(msg);
+            compositeOutput.ShowInputErrors(Errs);
+            Environment.Exit(1);
         }
 
         private bool FileExists(string fileName)
@@ -94,11 +109,11 @@ namespace YoCode
         {
             if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
             {
-                return SetError("dupfinder.exe not found in specified directory");
+                ExitWithErrorMessage("dupfinder.exe not found in specified directory");
             }
             if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
             {
-                return SetError("dotCover.exe not found in specified directory");
+                ExitWithErrorMessage("dotCover.exe not found in specified directory");
             }
             return true;
         }
@@ -120,7 +135,7 @@ namespace YoCode
         {
             if (String.IsNullOrEmpty(cost1) || String.IsNullOrEmpty(cost2))
             {
-                return SetError($"{checkName} cannot be empty");
+                return SetError($"{checkName} missing");
             }
             return true;
         }
