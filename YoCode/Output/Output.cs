@@ -23,16 +23,16 @@ namespace YoCode
             writeTo = outputPath;
         }
 
-        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList,double finalScore, bool isJunior, Results res)
+        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList, bool isJunior, double finalScore, double finalScorePercentage)
         {
-            outputWriter.AddFinalScore(finalScore);
+            outputWriter.AddFinalScore(finalScorePercentage);
             outputWriter.AddTestType(isJunior);
             foreach (var feature in featureList)
             {
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
                 featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
-                featData.score = (int)( feature.WeightedRating * 100 / res.FinalScore);
+                featData.score = finalScore == 0 ? 0 : (int)(feature.WeightedRating * 100 / finalScore);
                 var result = feature.Inconclusive
                     ? "Could not perform check"
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
