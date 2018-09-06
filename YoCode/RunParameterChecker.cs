@@ -96,6 +96,19 @@ namespace YoCode
             }
         }
 
+        private bool CheckIfToolExecutablesExist()
+        {
+            if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
+            {
+                ExitWithErrorMessage("dupfinder.exe not found in specified directory");
+            }
+            if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
+            {
+                ExitWithErrorMessage("dotCover.exe not found in specified directory");
+            }
+            return true;
+        }
+
         private void ExitWithErrorMessage(string msg)
         {
             Errs.Add(msg);
@@ -116,19 +129,6 @@ namespace YoCode
         {
             Errs.Add(errorMessage);
             return false;
-        }
-
-        private bool CheckIfToolExecutablesExist()
-        {
-            if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
-            {
-                ExitWithErrorMessage("dupfinder.exe not found in specified directory");
-            }
-            if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
-            {
-                ExitWithErrorMessage("dotCover.exe not found in specified directory");
-            }
-            return true;
         }
 
         private bool CheckToolDirectory(string path, string checkName)
