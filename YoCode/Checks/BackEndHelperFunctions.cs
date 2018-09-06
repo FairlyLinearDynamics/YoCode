@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YoCode
 {
-    internal class BackEndStringHandling
+    internal class BackEndHelperFunctions
     {     
         public List<string> GetActionLines(string file)
         {

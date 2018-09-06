@@ -37,7 +37,7 @@ namespace YoCode
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
 
-        BackEndStringHandling handler;
+        BackEndHelperFunctions handler;
 
         private string from = "value=\"";
         private string to = "\"";
@@ -153,7 +153,7 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
-                    handler = new BackEndStringHandling();
+                    handler = new BackEndHelperFunctions();
 
                     var htmlCode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures(htmlCode);

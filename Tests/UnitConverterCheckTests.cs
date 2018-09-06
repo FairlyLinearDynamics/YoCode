@@ -7,7 +7,7 @@ namespace YoCode_XUnit
 {
     public class UnitConverterCheckTests
     {
-        internal BackEndStringHandling test;
+        internal BackEndHelperFunctions test;
 
         public List<double> expectedConversionResults;
         public List<double> expectedConversionInputs;
@@ -16,11 +16,11 @@ namespace YoCode_XUnit
         private readonly List<string> expectedActionLines;
         private readonly List<string> expectedActionLinesResult;
 
-        internal BackEndStringHandling Test { get => test; set => test = value; }
+        internal BackEndHelperFunctions Test { get => test; set => test = value; }
 
         public UnitConverterCheckTests()
         {
-            Test = new BackEndStringHandling();
+            Test = new BackEndHelperFunctions();
 
             expectedActionLines = new List<string>
             {

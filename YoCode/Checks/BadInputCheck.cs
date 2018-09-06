@@ -31,7 +31,7 @@ namespace YoCode
             var fetcher = new HTMLFetcher(port);
             var htmlCode = fetcher.GetHTMLCodeAsString();
 
-            var handler = new BackEndStringHandling();
+            var handler = new BackEndHelperFunctions();
 
             actions = handler.GetListOfActions(htmlCode, "value=\"", "\"");
 
