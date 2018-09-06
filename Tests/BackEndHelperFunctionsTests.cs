@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace YoCode_XUnit
 {
-    public class UnitConverterCheckTests
+    public class BackEndHelperFunctionsTests
     {
         internal BackEndHelperFunctions test;
 
@@ -18,7 +18,7 @@ namespace YoCode_XUnit
 
         internal BackEndHelperFunctions Test { get => test; set => test = value; }
 
-        public UnitConverterCheckTests()
+        public BackEndHelperFunctionsTests()
         {
             Test = new BackEndHelperFunctions();
 
