@@ -13,7 +13,7 @@ namespace YoCode
 
         List<bool> BadInputBoolResults;
 
-        private readonly List<string> actions;
+        private List<string> actions;
         
         private const int TitleColumnFormatter = -30;
         private const int ValueColumnFormatter = -15;
@@ -24,11 +24,17 @@ namespace YoCode
         {
             this.port = port;
             InitializeDataStructures();
-            Execute();
         }
 
         private void InitializeDataStructures()
         {
+            var fetcher = new HTMLFetcher(port);
+            var htmlCode = fetcher.GetHTMLCodeAsString();
+
+            var handler = new BackEndStringHandling();
+
+            actions = handler.GetListOfActions(htmlCode, "value=\"", "\"");
+
             badInputs = new Dictionary<string, string>
             {
                 { "Empty input", " " },

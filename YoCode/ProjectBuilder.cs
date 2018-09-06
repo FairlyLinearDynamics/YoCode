@@ -19,7 +19,6 @@ namespace YoCode
         {
             this.workingDir = workingDir;
             this.featureRunner = featureRunner;
-            ProjectBuilderEvidence.Feature = Feature.ProjectBuilder;
         }
 
         public static string GetErrorOutput(string output)
