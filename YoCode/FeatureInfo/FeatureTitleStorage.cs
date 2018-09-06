@@ -16,6 +16,7 @@ namespace YoCode
         {
             var map = new Dictionary<Feature, string>();
 
+            map.Add(Feature.SolutionFileExists, "Solution File Exists");
             map.Add(Feature.AppDuplicationCheck, "Duplication improvement: UnitConverterWebApp");
             map.Add(Feature.TestDuplicationCheck, "Duplication improvement: UnitConverterTests");
             map.Add(Feature.FilesChangedCheck, "Files changed");

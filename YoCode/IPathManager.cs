@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace YoCode
 {
@@ -6,6 +7,6 @@ namespace YoCode
     {
         string ModifiedTestDirPath { get; }
 
-        IEnumerable<string> GetFilesInDirectory(string path, FileTypes type);
+        IEnumerable<string> GetFilesInDirectory(string path, FileTypes type, SearchOption option = SearchOption.AllDirectories);
     }
 }

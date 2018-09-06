@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace YoCode
+﻿namespace YoCode
 {
     public enum Feature
     {
@@ -20,6 +16,7 @@ namespace YoCode
         UIFeatureImplemented,
         UIBadInputCheck,
         UIConversionCheck,
+        SolutionFileExists
     }
 
 }

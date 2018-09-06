@@ -4,6 +4,7 @@ using Xunit;
 using FluentAssertions;
 using Moq;
 using YoCode;
+using System.IO;
 
 namespace YoCode_XUnit
 {
@@ -16,7 +17,7 @@ namespace YoCode_XUnit
         public UICheckTests()
         {
             var pathManager = new Mock<IPathManager>();
-            pathManager.Setup(m => m.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<FileTypes>())).Returns(new []{fakeFilePath});
+            pathManager.Setup(m => m.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<FileTypes>(), It.IsAny<SearchOption>())).Returns(new []{fakeFilePath});
 
             checkConfig = new Mock<ICheckConfig>();
             checkConfig.Setup(m => m.PathManager).Returns(pathManager.Object);
