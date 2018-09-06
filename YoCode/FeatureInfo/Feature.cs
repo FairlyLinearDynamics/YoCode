@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace YoCode
 {
     public enum Feature
@@ -14,8 +11,6 @@ namespace YoCode
         UICodeCheck,
         FilesChangedCheck,
         GitCheck,
-        ProjectBuilder,
-        ProjectRunner,
         UnitConverterCheck,
         UIFeatureImplemented,
         UIBadInputCheck,
