@@ -36,15 +36,13 @@ namespace YoCode_XUnit
             expectedConversionInputs = new List<double> { 1, 2, 5, 10, 20, 50 };
             mult = 2.54;
 
-            expectedConversionResults.Should().BeEquivalentTo(BackEndHelperFunctions.MakeConversion(expectedConversionInputs, mult));
+            BackEndHelperFunctions.MakeConversion(expectedConversionInputs, mult).Should().BeEquivalentTo(expectedConversionResults);
         }
 
         [Fact]
         public void Test_ExtractActionsFromList()
         {
-            expectedActionLinesResult.Should().BeEquivalentTo(BackEndHelperFunctions.ExtractActionsFromList(expectedActionLines,"value=\"","\""));
-            BackEndHelperFunctions.ExtractActionsFromList(expectedActionLines,"value=\"","\"").Should().BeEquivalentTo(expectedActionLinesResult);
-
+            BackEndHelperFunctions.ExtractActionsFromList(expectedActionLines, "value=\"", "\"").Should().BeEquivalentTo(expectedActionLinesResult);
         }
 
         [Fact]
