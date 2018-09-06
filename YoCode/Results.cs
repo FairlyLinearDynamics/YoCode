@@ -14,7 +14,7 @@ namespace YoCode
         {
             AssignWeightings(list, FeatureWeightingsReader.ReadFromJSON(jsonFilePath));
             CalculateWeightedRatings(list);
-            //CalculateFinalScore();
+            CalculateFinalScoreInPerc();
         }
 
         private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
