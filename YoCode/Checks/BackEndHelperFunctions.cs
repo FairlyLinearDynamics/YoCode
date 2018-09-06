@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 namespace YoCode
 {
-    internal class BackEndHelperFunctions
+    internal static class BackEndHelperFunctions
     {     
-        public List<string> GetActionLines(string file)
+        public static List<string> GetActionLines(string file)
         {
             return file.GetMultipleLinesWithAllKeywords(GetActionKeywords());
         }
 
-        public List<string> GetListOfActions(string HTMLfile,string from,string to)
+        public static List<string> GetListOfActions(string HTMLfile,string from,string to)
         {
             var actionlines = GetActionLines(HTMLfile);
             return ExtractActionsFromList(actionlines,from,to);
         }
 
-        public List<string> ExtractActionsFromList(List<string> actionLines,string from,string to)
+        public static List<string> ExtractActionsFromList(List<string> actionLines,string from,string to)
         {
             var list = new List<string>();
 
@@ -28,7 +28,7 @@ namespace YoCode
             return list;
         }
 
-        public List<double> MakeConversion(List<double> inputs, double mult)
+        public static List<double> MakeConversion(List<double> inputs, double mult)
         {
             var list = new List<double>();
             foreach (var x in inputs)
@@ -38,12 +38,12 @@ namespace YoCode
             return list;
         }
 
-        public List<string> GetActionKeywords()
+        public static List<string> GetActionKeywords()
         {
             return new List<string> { "action", "value" };
         }
 
-        public List<double> CheckActions(string action,Dictionary<List<string>, List<double>> KeywordMap)
+        public static List<double> CheckActions(string action,Dictionary<List<string>, List<double>> KeywordMap)
         {
             foreach (var keywords in KeywordMap)
             {

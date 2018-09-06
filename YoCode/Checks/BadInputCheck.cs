@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,9 +30,7 @@ namespace YoCode
             var fetcher = new HTMLFetcher(port);
             var htmlCode = fetcher.GetHTMLCodeAsString();
 
-            var handler = new BackEndHelperFunctions();
-
-            actions = handler.GetListOfActions(htmlCode, "value=\"", "\"");
+            actions = BackEndHelperFunctions.GetListOfActions(htmlCode, "value=\"", "\"");
 
             badInputs = new Dictionary<string, string>
             {

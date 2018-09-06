@@ -37,7 +37,6 @@ namespace YoCode
 
         private StringBuilder unitConverterResultsOutput = new StringBuilder();
 
-        BackEndHelperFunctions handler;
 
         private string from = "value=\"";
         private string to = "\"";
@@ -56,15 +55,15 @@ namespace YoCode
 
             texts = new List<double> { 5, 25, 125 };
 
-            InchesToCentimetres = handler.MakeConversion(texts, InToCm);
-            MilesToKilometres = handler.MakeConversion(texts, MiToKm);
-            YardsToMeters = handler.MakeConversion(texts, YdToMe);
+            InchesToCentimetres = BackEndHelperFunctions.MakeConversion(texts, InToCm);
+            MilesToKilometres = BackEndHelperFunctions.MakeConversion(texts, MiToKm);
+            YardsToMeters = BackEndHelperFunctions.MakeConversion(texts, YdToMe);
 
             InToCmKeys = new List<string> { "inc", "in", "inch", "inches", "cm", "centimetres", "centimetre" };
             MiToKmKeys = new List<string> { "miles", "mi", "mile", "kilo", "kilometres", "kilometre" };
             YdToMeKeys = new List<string> { "yards", "yard", "yardstometers", "tometers" };
 
-            actions = handler.GetListOfActions(htmlCode,from,to);
+            actions = BackEndHelperFunctions.GetListOfActions(htmlCode,from,to);
 
             KeywordMap.Add(InToCmKeys, InchesToCentimetres);
             KeywordMap.Add(MiToKmKeys, MilesToKilometres);
@@ -82,7 +81,7 @@ namespace YoCode
             {
                 for (var y = 0; y < actions.Count; y++)
                 {
-                    var OutputsForThisAction = handler.CheckActions(actions[y],KeywordMap);
+                    var OutputsForThisAction = BackEndHelperFunctions.CheckActions(actions[y],KeywordMap);
 
                     ToBeAdded.input = texts[x];
                     ToBeAdded.action = actions[y];
@@ -153,7 +152,6 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
-                    handler = new BackEndHelperFunctions();
 
                     var htmlCode = fetcher.GetHTMLCodeAsString();
                     InitializeDataStructures(htmlCode);
