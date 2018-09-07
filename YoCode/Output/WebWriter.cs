@@ -126,5 +126,13 @@ namespace YoCode
         {
             this.isJunior = isJunior;
         }
+
+        public static void LaunchReport(IInputResult result, string outputPath)
+        {
+            if (result.CreateHtmlReport && result.OpenHtmlReport)
+            {
+                HtmlReportLauncher.LaunchReport(outputPath);
+            }
+        }
     }
 }

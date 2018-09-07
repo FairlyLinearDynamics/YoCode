@@ -69,7 +69,7 @@ namespace YoCode
             pr.ExecuteTheCheck();
         }
 
-        private FeatureEvidence ProjectBuilderEvidence { get; } = new FeatureEvidence();
+        private FeatureEvidence ProjectBuilderEvidence { get; } = new FeatureEvidence {Feature = Feature.ProjectBuilder};
 
         public Task<List<FeatureEvidence>> Execute()
         {

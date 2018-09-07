@@ -27,7 +27,7 @@ namespace YoCode
 
                 if (!GitCheck.LastCommitWasByNonEmployee(repo.Commits) && !UncommitedFiles.Any())
                 {
-                    FileChangeEvidence.SetFailed(new SimpleEvidenceBuilder("Git Repository Not Found"));
+                    FileChangeEvidence.SetFailed(new SimpleEvidenceBuilder("Last Commit By Waters Employee"));
                     return;
                 }
 
@@ -61,8 +61,7 @@ namespace YoCode
         private static bool FileIsNotCommited(StatusEntry item)
         {
             /*NewInIndex = staged but not commited, NewInWorkdir = untracked*/
-            return item.State == FileStatus.NewInIndex || item.State == FileStatus.NewInWorkdir || 
-                item.State == FileStatus.ModifiedInWorkdir || item.State == FileStatus.ModifiedInIndex;
+            return item.State == FileStatus.NewInIndex || item.State == FileStatus.NewInWorkdir || item.State == FileStatus.ModifiedInIndex;
         }
 
         private Patch GetFileDifferences(Repository Repo)

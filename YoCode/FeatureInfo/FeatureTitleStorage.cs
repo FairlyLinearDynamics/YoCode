@@ -16,6 +16,7 @@ namespace YoCode
         {
             var map = new Dictionary<Feature, string>();
 
+            map.Add(Feature.SolutionFileExists, "Solution File Exists");
             map.Add(Feature.AppDuplicationCheck, "Duplication improvement: UnitConverterWebApp");
             map.Add(Feature.TestDuplicationCheck, "Duplication improvement: UnitConverterTests");
             map.Add(Feature.FilesChangedCheck, "Files changed");
@@ -28,6 +29,8 @@ namespace YoCode
             map.Add(Feature.UIConversionCheck, "Units were converted successfully using UI");
             map.Add(Feature.UnitConverterCheck, "Units were converted successfully");
             map.Add(Feature.BadInputCheck, "Bad input crashes have been fixed");
+            map.Add(Feature.ProjectBuilder, "Does the project build?");
+            map.Add(Feature.ProjectRunner, "Does the project run?");
             return map;
 
         }
