@@ -160,7 +160,7 @@ namespace YoCode
 
                     if (actions.Count == 0)
                     {
-                        UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
+                        UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Couldn't execute the unit conversion because of UI changes"));
                     }
 
                     else
