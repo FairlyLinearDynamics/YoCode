@@ -4,12 +4,6 @@
     {
         private ProcessRunner pr;
 
-        internal struct ProcessOutput
-        {
-            public string Output { get; set; }
-            public string ErrorOutput { get; set; }
-        }
-
         public ProcessOutput Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);

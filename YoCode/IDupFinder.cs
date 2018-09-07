@@ -1,6 +1,4 @@
-﻿using static YoCode.FeatureRunner;
-
-namespace YoCode
+﻿namespace YoCode
 {
     internal interface IDupFinder
     {
