@@ -73,9 +73,6 @@ namespace YoCode
 
             var projectRunner = await checkManager.PassGatewayChecksAsync(evidenceList);
 
-            evidenceList = await checkManager.PerformChecks(projectRunner);
-            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
-
             if (projectRunner == null)
             {
                 StopLoadingAnimation(workThreads);
@@ -88,6 +85,9 @@ namespace YoCode
                 });
                 return;
             }
+
+            evidenceList = await checkManager.PerformChecks(projectRunner);
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
             StopLoadingAnimation(workThreads);
 
