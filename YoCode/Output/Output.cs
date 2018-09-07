@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,11 +24,11 @@ namespace YoCode
             writeTo = outputPath;
         }
 
-        public void PrintFinalResults(IEnumerable<FeatureEvidence> featureList,double finalScore, bool isJunior)
+        public void PrintFinalResults(FinalResultsData data)
         {
-            outputWriter.AddFinalScore(finalScore);
-            outputWriter.AddTestType(isJunior);
-            foreach (var feature in featureList)
+            outputWriter.AddFinalScore(data.finalScorePercentage);
+            outputWriter.AddTestType(data.isJunior);
+            foreach (var feature in data.featureList)
             {
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
                 featData.featureEvidence = feature.Evidence;
@@ -38,6 +39,8 @@ namespace YoCode
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
+                featData.weighting = feature.FeatureWeighting;
+                featData.rawScore = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating / data.finalScore * data.finalScorePercentage, 2);
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

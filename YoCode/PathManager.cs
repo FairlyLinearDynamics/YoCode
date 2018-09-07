@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace YoCode
@@ -25,12 +26,20 @@ namespace YoCode
         }
 
         //Will return a list of files from a directory given a pattern
-        public IEnumerable<string> GetFilesInDirectory(string path, FileTypes type)
+        public IEnumerable<string> GetFilesInDirectory(string path, FileTypes type, SearchOption option = SearchOption.AllDirectories)
         {
             var files = new List<string>();
             var di = new DirectoryInfo(path);
 
-            FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], SearchOption.AllDirectories), path);
+            try
+            {
+                FileImport.AddFileInfoToList(files, di.GetFiles(fileExtensions[type], option), path);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e.Message);
+                return files;
+            }
             return files;
         }
     }

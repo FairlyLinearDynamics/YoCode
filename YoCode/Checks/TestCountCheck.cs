@@ -28,7 +28,7 @@ namespace YoCode
         public TestCountCheck(ICheckConfig checkConfig)
         {
             workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
-            this.pathManager = checkConfig.PathManager;
+            pathManager = checkConfig.PathManager;
 
             UnitTestEvidence.Feature = Feature.TestCountCheck;
             UnitTestEvidence.HelperMessage = messages.TestCountCheck;

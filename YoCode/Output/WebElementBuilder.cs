@@ -31,11 +31,11 @@ namespace YoCode
         private const string SPAN_OPEN = "<span>";
         private const string SPAN_CLOSE = "</span>";
 
-        private const string ESCAPE_AND = "&amp";
-        private const string ESCAPE_LESS = "&lt";
-        private const string ESCAPE_GREATER = "&gt";
-        private const string ESCAPE_QUOT = "&quot";
-        private const string ESCAPE_APOS = "&apos";
+        private const string ESCAPE_AND = "&amp;";
+        private const string ESCAPE_LESS = "&lt;";
+        private const string ESCAPE_GREATER = "&gt;";
+        private const string ESCAPE_QUOT = "&quot;";
+        private const string ESCAPE_APOS = "&apos;";
 
         private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
         private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
@@ -48,7 +48,7 @@ namespace YoCode
 
         public static string FormatImageElement(string src)
         {
-            return $"<img src=\"{src}\" alr=\"UI Screenshot\" id=\"js-UIScreenShot\">";
+            return $"<img onClick=\"screenshotClicked(this)\" src=\"{src}\" alr=\"UI Screenshot\" id=\"js-UIScreenShot\">";
         }
 
         public static string FormatFileDiff(List<string> file)
@@ -122,28 +122,33 @@ namespace YoCode
             return result.ToString();
         }
 
-        public static string FormatPassedFeatureTitle(string title, string score)
+        public static string FormatPassedFeatureTitle(WebTitleElements info)
         {
             const string passIcon = "accordion-icon-pass";
             const string passIconStyle = "fa-check-circle-o";
 
-            return string.Format(messages.HtmlTitleTemplate, passIcon, passIconStyle, score, title);
+            return FormatFeatureTitle(info, passIcon, passIconStyle);
         }
 
-        public static string FormatFailedFeatureTitle(string title, string score)
+        public static string FormatFailedFeatureTitle(WebTitleElements info)
         {
             const string failIcon = "accordion-icon-fail";
             const string failIconStyle = "fa-times-circle-o";
-            
-            return string.Format(messages.HtmlTitleTemplate, failIcon, failIconStyle, score, title);
+
+            return FormatFeatureTitle(info, failIcon, failIconStyle);
         }
 
-        public static string FormatInconclusiveFeatureTitle(string title, string score)
+        public static string FormatInconclusiveFeatureTitle(WebTitleElements info)
         {
             const string undefinedIcon = "accordion-icon-undefinded";
             const string undefinedStyle = "fa-question-circle-o";
 
-            return string.Format(messages.HtmlTitleTemplate, undefinedIcon, undefinedStyle, score, title);
+            return FormatFeatureTitle(info, undefinedIcon, undefinedStyle);
+        }
+
+        private static string FormatFeatureTitle(WebTitleElements info, string icon, string iconStyle)
+        {
+            return string.Format(messages.HtmlTitleTemplate, icon, iconStyle, info.score, info.title, info.rawScore, info.weighting);
         }
 
         public static string FormatLink(string url, string title)

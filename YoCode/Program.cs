@@ -33,6 +33,7 @@ namespace YoCode
             var compositeOutput = new Output(new CompositeWriter(outputs), outputPath, (IErrorReporter)outputs.Find(a => a is ConsoleWriter));
 
             var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
+
             var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);
 
             if (!parameters.ParametersAreValid())
@@ -44,7 +45,7 @@ namespace YoCode
                 else
                 {
                     compositeOutput.ShowHelp();
-                    LaunchReport(result, outputPath);
+                    WebWriter.LaunchReport(result, outputPath);
                 }
                 return;
             }
@@ -75,20 +76,30 @@ namespace YoCode
             if (projectRunner == null)
             {
                 StopLoadingAnimation(workThreads);
-                compositeOutput.PrintFinalResults(evidenceList, 0, result.JuniorTest);
+                compositeOutput.PrintFinalResults(new FinalResultsData()
+                {
+                    featureList = evidenceList,
+                    isJunior = result.JuniorTest,
+                    finalScore = 0,
+                    finalScorePercentage = 0,
+                });
                 return;
             }
 
             evidenceList = await checkManager.PerformChecks(projectRunner);
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
             StopLoadingAnimation(workThreads);
 
-            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
+            compositeOutput.PrintFinalResults(new FinalResultsData()
+            {
+                featureList = evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
+                isJunior = result.JuniorTest,
+                finalScore = results.FinalScore,
+                finalScorePercentage = results.FinalScorePercentage,
+            });
 
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
-                results.FinalScore, result.JuniorTest);
-
-            LaunchReport(result, outputPath);
+            WebWriter.LaunchReport(result, outputPath);
 
             Console.WriteLine($"YoCode run time: {stopwatch.Elapsed}");
         }
@@ -97,14 +108,6 @@ namespace YoCode
         {
             LoadingAnimation.LoadingFinished = true;
             workThreads.ForEach(a => a.Join());
-        }
-
-        private static void LaunchReport(InputResult result, string outputPath)
-        {
-            if (result.CreateHtmlReport && result.OpenHtmlReport)
-            {
-                HtmlReportLauncher.LaunchReport(outputPath);
-            }
         }
     }
 }

@@ -326,12 +326,12 @@ namespace YoCode {
         ///
         ///    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
         ///    &lt;style&gt;
-        ///      :root{
+        ///       :root{
         ///        --console-bg: #222121;
         ///        --console-text: #c0c0c0;
         ///        --green-bg: #3bc511;
         ///        --red-bg: #eb4b4b;
-        ///   [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string HtmlTemplate {
             get {
@@ -374,7 +374,8 @@ namespace YoCode {
         ///  &lt;/span&gt;
         ///  &lt;span class=&quot;accordion-score-holder&quot;&gt;
         ///    &lt;span class=&quot;accordion-score&quot;&gt;{2}&lt;/span&gt;
-        ///  &lt;/span&gt;&lt;span class=&quot;accordion-title&quot;&gt;{3}&lt;/span&gt;.
+        ///  &lt;/span&gt;&lt;span class=&quot;accordion-title&quot;&gt;{3}&lt;span class=&quot;weight&quot;&gt;raw score: {4}, weighting: {5}&lt;/span&gt;&lt;/span&gt;
+        ///  .
         /// </summary>
         public static string HtmlTitleTemplate {
             get {
