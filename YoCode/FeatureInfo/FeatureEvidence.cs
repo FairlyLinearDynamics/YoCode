@@ -9,8 +9,6 @@ namespace YoCode
         public bool Failed => featureImplemented.HasValue && !featureImplemented.Value;
         public bool Passed => featureImplemented.HasValue && featureImplemented.Value;
         public bool Inconclusive => !featureImplemented.HasValue;
-        public string Output { get; set; }
-        public string ErrorOutput { get; set; }
 
         public double FeatureRating { get; set; }
         public double FeatureWeighting { get; set; }
