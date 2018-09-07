@@ -8,12 +8,13 @@ namespace YoCode
     {
         public double FinalScore { get; set; }
         public double MaximumScore { get; set; }
+        public double FinalScorePercentage { get; set; }
 
         public Results(List<FeatureEvidence> list, string jsonFilePath)
         {
             AssignWeightings(list, FeatureWeightingsReader.ReadFromJSON(jsonFilePath));
             CalculateWeightedRatings(list);
-            CalculateFinalScore();
+            CalculateFinalScoreInPerc();
         }
 
         private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
@@ -34,9 +35,9 @@ namespace YoCode
             }
         }
 
-        public void CalculateFinalScore()
+        public void CalculateFinalScoreInPerc()
         {
-            FinalScore = Math.Round((FinalScore / MaximumScore) * 100);
+            FinalScorePercentage = Math.Round((FinalScore * 100 ) / MaximumScore);
         }
 
         public void ApplySpecialCases(List<FeatureEvidence> list)

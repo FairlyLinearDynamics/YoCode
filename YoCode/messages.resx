@@ -164,7 +164,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
     &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
     &lt;style&gt;
-      :root{
+        :root{
         --console-bg: #222121;
         --console-text: #c0c0c0;
         --green-bg: #3bc511;
@@ -179,6 +179,10 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         --toolbar-bg: #8B2C87;
         --toolbar-text: #e2d7d7;
         --element-underlining: #c1b8c9;
+        --focus-bg: #222121e0;
+        --info-icon-hover: #c0c0c077;
+        --info-icon-solid: #c0c0c0;
+
       }
 
       body {
@@ -284,7 +288,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         width: 100%;
         display: grid;
         position: relative;
-        grid-template-columns: 50px 75px auto 25px;
+        grid-template-columns: 50px 95px auto 25px;
         background-color: var(--panel-bg);
         color: var(--panel-text);
         cursor: pointer;
@@ -346,15 +350,18 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         position: relative;
         overflow-y: auto;
         overflow-x: hidden;
+        height: 275px;
+        transition: height .5s;
       }
 
       .panel-info{
         grid-column: 2;
         position: sticky;
         left: 98.5%;
-        top: 245px;
+        top: 90%;
         z-index: 10;
         width: 18px;
+        height: 0px;
       }
 
       .panel-content ul {
@@ -433,6 +440,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       .fa-info-circle{
         color: var(--info-icon-solid);
         font-size: 20px;
+        transition: color .25s;
       }
 
       .fa-info-circle:hover{
@@ -442,6 +450,11 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       .panel-info-text{
         display: none;
         opacity: 0;
+        padding: 10px;
+      }
+
+      .panel-check-text{
+        padding: 10px;
       }
       
       .changedFile:hover{
@@ -454,6 +467,8 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         white-space: pre-wrap;
         padding: 10px;
         border-left: 1px solid var(--console-text);
+        transition: opacity .25s;
+        opacity: 0;
       }
 
       #js-UIScreenShot{
@@ -463,6 +478,54 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       .test-type{
         padding-left: 5px;
         float: right;
+      }
+      
+      .weight{
+        font-size: 15px;
+        border-radius: 5%;
+        float: right;
+        font-style: italic;
+      }
+
+      #js-UIScreenShot{
+        width: 250px;
+        height: auto;
+        padding: 6px;
+        margin: 10px;
+        border: .5px solid var(--console-text);
+        border-radius: 10px;
+        transition: background-color .25s;
+      }
+
+      #js-UIScreenShot:hover{
+        background-color: #c0c0c041;
+        cursor: pointer;
+      }
+
+      #js-screenshot-holder{
+        position: fixed; 
+        left: 0px; 
+        top: 0px; 
+        right: 0px; 
+        bottom: 0px; 
+        background: var(--focus-bg) none repeat scroll 0% 0%; 
+        z-index: 1000;
+      }
+
+      #screenshot-wrapper{
+        position: absolute; 
+        left: 50%; 
+        top: 50%; 
+        transform: translate(-50%, -50%); 
+        overflow: auto; 
+        width: 90%;
+      }
+
+      #js-screenshot{
+        max-width: 100%; 
+        height: auto; 
+        display: block; 
+        margin: 0 auto;
       }
     &lt;/style&gt;
   &lt;/head&gt;
@@ -506,34 +569,70 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       {FEATURE}
     &lt;/div&gt;
 
+    &lt;div onclick="toggleScreenshot()" id="js-screenshot-holder" style="display: none"&gt;
+      &lt;div id="screenshot-wrapper"&gt;
+        &lt;img alr="UI Screenshot" id="js-screenshot"&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
     &lt;script&gt;
-      var panelContentHeight = 275;
-      var panelContents = document.getElementsByClassName("panel-content");
-      for(let i=0; i&lt;panelContents.length; ++i){
-        panelContents[i].style.height = panelContentHeight+"px";
+      var screenShotHolder = document.getElementById("js-screenshot");
+
+
+      function toggleScreenshot() {
+        var hidden = document.getElementById('js-screenshot-holder').style.display === "none";
+        document.getElementById('js-screenshot-holder').style.display = hidden ? "block" : "none";
       }
 
-      var uiScreenShot = document.getElementById("js-UIScreenShot");
-      if(uiScreenShot){
-        uiScreenShot.closest(".panel-content").style.height = null;
+
+      function screenshotClicked(elem){
+        screenShotHolder.setAttribute("src",elem.getAttribute("src"));
+        toggleScreenshot();
       }
+
 
       var changedFilesButtons = document.getElementsByClassName("changedFile");
       for(let i=0; i&lt;changedFilesButtons.length; ++i){
-        changedFilesButtons[i].addEventListener("click", function(){
-          
-          this.classList.toggle("fileChangesShowing");
+        changedFilesButtons[i].addEventListener("click", async function(){
+          var paragraphParent = this.parentElement.parentElement;
+          var panelContent = paragraphParent.parentElement;
+          paragraphParent.classList.toggle("fileChangesShowing");
 
           var line = this.closest(".paragraph-block");
           textField = line.nextElementSibling;
-          if(this.classList.contains("fileChangesShowing")){
+          var panelContent = this.parentElement.parentElement.parentElement.parentElement;
+
+          
+
+          if(paragraphParent.classList.contains("fileChangesShowing")){
             textField.style.display = "block";
+            textField.style.opacity = 1;
+            maxContentHeight = panelContent.parentElement.style.maxHeight;
+            panelContent.parentElement.style.maxHeight = screen.height * 0.80 +"px";
+            panelContent.style.height = screen.height * 0.75 +"px";
           }
           else{
-            textField.style.display = "none";
+            if(panelContent.getElementsByClassName("fileChangesShowing").length&lt;1){
+              panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
+              panelContent.style.height = null;
+              textField.style.opacity = null;
+              await sleep(230);
+              textField.style.display = "none";
+            }
+            else{
+              textField.style.opacity = null;
+              await sleep(230);
+              textField.style.display = "none";
+            }
           }
         });
       }
+
+
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
 
       var acc = document.getElementsByClassName("accordion");
 
@@ -572,16 +671,26 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       var animRunning = false;
       var infoButtons = document.getElementsByClassName("panel-info");
       for(let i=0; i&lt;infoButtons.length; ++i){
-        infoButtons[i].addEventListener("click",function(){
+        infoButtons[i].addEventListener("click", async function(){
           if(!animRunning){
             this.classList.toggle("info");
 
             var panelCheckText = this.parentElement.getElementsByClassName("panel-check-text");
             var panelInfoText = this.parentElement.getElementsByClassName("panel-info-text");
+            var panelContent = this.parentElement;
 
-            
+            var paragraphBlock = panelCheckText[0].getElementsByClassName("fileChangesShowing");
+            for(let i=0; i&lt;paragraphBlock.length; ++i){
+              var diffBlock = paragraphBlock[i].nextElementSibling;
 
-            console.debug(animRunning);
+              panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
+              panelContent.style.height = null;
+              diffBlock.style.opacity = null;
+              await sleep(230);
+              diffBlock.style.display = "none";
+              paragraphBlock[i].classList.remove("fileChangesShowing");
+            }
+
             if(this.classList.contains("info")){
                 animRunning = true;
                 fadeIn(panelCheckText[0],panelInfoText[0]);
@@ -758,7 +867,8 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;/span&gt;
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
-  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;/span&gt;</value>
+  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;span class="weight"&gt;Total score contribution: {4}; Weighting: {5}&lt;/span&gt;&lt;/span&gt;
+  </value>
   </data>
   <data name="WrongWritePermission" xml:space="preserve">
     <value>HTML report could not be written to "{0}" directory.{1}If you would like to specify different directory,{2}please append "--output=&lt;path-where-to-write&gt;" command</value>

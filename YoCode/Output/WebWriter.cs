@@ -45,16 +45,34 @@ namespace YoCode
             switch (data.featurePass)
             {
                 case true:
-                    featureTitle = WebElementBuilder.FormatPassedFeatureTitle(data.title, data.score + "%");
+                    featureTitle = WebElementBuilder.FormatPassedFeatureTitle(new WebTitleElements()
+                    {
+                        score = data.score + "%",
+                        rawScore = data.rawScore + "%",
+                        weighting = data.weighting.ToString(),
+                        title = data.title,
+                    });
                     break;
 
                 case false:
-                    featureTitle = WebElementBuilder.FormatFailedFeatureTitle(data.title, data.score + "%");
+                    featureTitle = WebElementBuilder.FormatFailedFeatureTitle(new WebTitleElements()
+                    {
+                        score = data.score + "%",
+                        rawScore = data.rawScore + "%",
+                        weighting = data.weighting.ToString(),
+                        title = data.title,
+                    });
                     break;
 
                 default:
                     const char dash = (char)0x2013;
-                    featureTitle = WebElementBuilder.FormatInconclusiveFeatureTitle(data.title, dash.ToString());
+                    featureTitle = WebElementBuilder.FormatInconclusiveFeatureTitle(new WebTitleElements()
+                    {
+                        score = dash.ToString(),
+                        rawScore = dash.ToString(),
+                        weighting = dash.ToString(),
+                        title = data.title,
+                    });
                     break;
             }
 

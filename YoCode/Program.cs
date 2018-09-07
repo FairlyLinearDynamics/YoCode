@@ -76,18 +76,28 @@ namespace YoCode
             if (projectRunner == null)
             {
                 StopLoadingAnimation(workThreads);
-                compositeOutput.PrintFinalResults(evidenceList, 0, result.JuniorTest);
+                compositeOutput.PrintFinalResults(new FinalResultsData()
+                {
+                    featureList = evidenceList,
+                    isJunior = result.JuniorTest,
+                    finalScore = 0,
+                    finalScorePercentage = 0,
+                });
                 return;
             }
 
             evidenceList = await checkManager.PerformChecks(projectRunner);
+            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
             StopLoadingAnimation(workThreads);
 
-            var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
-
-            compositeOutput.PrintFinalResults(evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
-                results.FinalScore, result.JuniorTest);
+            compositeOutput.PrintFinalResults(new FinalResultsData()
+            {
+                featureList = evidenceList.OrderBy(a => FeatureTitleStorage.GetFeatureTitle(a.Feature)),
+                isJunior = result.JuniorTest,
+                finalScore = results.FinalScore,
+                finalScorePercentage = results.FinalScorePercentage,
+            });
 
             WebWriter.LaunchReport(result, outputPath);
 

@@ -8,5 +8,7 @@
         public double score;
         public string featureResult;
         public string featureHelperMessage;
+        public double weighting;
+        public double rawScore;
     }
 }
