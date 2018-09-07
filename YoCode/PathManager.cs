@@ -38,7 +38,7 @@ namespace YoCode
             catch (UnauthorizedAccessException e)
             {
                 Console.WriteLine(e.Message);
-                Environment.Exit(1);
+                return files;
             }
             return files;
         }
