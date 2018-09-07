@@ -33,7 +33,7 @@ namespace YoCode
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
                 featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
-                featData.score = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating * 100 / data.finalScore, 1);
+                featData.score = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating / data.finalScore * data.finalScorePercentage,2);
                 var result = feature.Inconclusive
                     ? "Could not perform check"
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";

@@ -285,7 +285,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         width: 100%;
         display: grid;
         position: relative;
-        grid-template-columns: 50px 85px auto 25px;
+        grid-template-columns: 50px 95px auto 25px;
         background-color: var(--panel-bg);
         color: var(--panel-text);
         cursor: pointer;
@@ -584,15 +584,17 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       var changedFilesButtons = document.getElementsByClassName("changedFile");
       for(let i=0; i&lt;changedFilesButtons.length; ++i){
         changedFilesButtons[i].addEventListener("click", async function(){
-          
-          this.classList.toggle("fileChangesShowing");
+          var paragraphParent = this.parentElement.parentElement;
+          var panelContent = paragraphParent.parentElement;
+          paragraphParent.classList.toggle("fileChangesShowing");
 
           var line = this.closest(".paragraph-block");
           textField = line.nextElementSibling;
           var panelContent = this.parentElement.parentElement.parentElement.parentElement;
+
           
-          if(this.classList.contains("fileChangesShowing")){
-            console.debug(textField);
+
+          if(paragraphParent.classList.contains("fileChangesShowing")){
             textField.style.display = "block";
             textField.style.opacity = 1;
             maxContentHeight = panelContent.parentElement.style.maxHeight;
@@ -600,11 +602,18 @@ Example: --{0}=&lt;...&gt; --{5}</value>
             panelContent.style.height = screen.height * 0.75 +"px";
           }
           else{
-            panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
-            panelContent.style.height = null;
-            textField.style.opacity = null;
-            await sleep(230);
-            textField.style.display = "none";
+            if(panelContent.getElementsByClassName("fileChangesShowing").length&lt;1){
+              panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
+              panelContent.style.height = null;
+              textField.style.opacity = null;
+              await sleep(230);
+              textField.style.display = "none";
+            }
+            else{
+              textField.style.opacity = null;
+              await sleep(230);
+              textField.style.display = "none";
+            }
           }
         });
       }

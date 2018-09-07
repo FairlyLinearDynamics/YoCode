@@ -31,11 +31,11 @@ namespace YoCode
         private const string SPAN_OPEN = "<span>";
         private const string SPAN_CLOSE = "</span>";
 
-        private const string ESCAPE_AND = "&amp";
-        private const string ESCAPE_LESS = "&lt";
-        private const string ESCAPE_GREATER = "&gt";
-        private const string ESCAPE_QUOT = "&quot";
-        private const string ESCAPE_APOS = "&apos";
+        private const string ESCAPE_AND = "&amp;";
+        private const string ESCAPE_LESS = "&lt;";
+        private const string ESCAPE_GREATER = "&gt;";
+        private const string ESCAPE_QUOT = "&quot;";
+        private const string ESCAPE_APOS = "&apos;";
 
         private static readonly Regex urlPattern = new Regex(@"(http|ftp|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?");
         private static readonly Regex urlTitlePattern = new Regex(@"(http|www|https)(:\/\/)?([\w+?\.\w+])+(\.)+([\w+?\.\w+])+([a-zA-Z0-9])?");
