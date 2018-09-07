@@ -39,16 +39,17 @@ namespace YoCode
         private void ExecuteTheCheck()
         {
             var pr = new ProcessDetails(processName, workingDir, arguments);
-            var evidence = new FeatureRunner().Execute(pr);
+            var processOutput = new FeatureRunner().Execute(pr);
+            
 
-            if (evidence.Inconclusive)
+            if (processOutput.Output == null)
             {
-                UnitTestEvidence.SetInconclusive(evidence.Evidence);
+                UnitTestEvidence.SetInconclusive(UnitTestEvidence.Evidence);
                 return;
             }
 
-            Output = evidence.Output;
-            ErrorOutput = evidence.ErrorOutput;
+            Output = processOutput.Output;
+            ErrorOutput = processOutput.ErrorOutput;
             StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
             tempStats = StatLine.GetNumbersInALine();
             StoreCalculations(tempStats);

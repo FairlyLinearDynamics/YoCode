@@ -165,7 +165,6 @@ namespace YoCode
 
                     else
                     {
-
                         if (OutputsAreEqual())
                         {
                             UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));

@@ -17,7 +17,7 @@ namespace YoCode
             workingDir = cmdToolsDir;
         }
 
-        public FeatureEvidence Execute(string featureTitle, string solutionPath)
+        public ProcessOutput Execute(string solutionPath)
         {
             try
             {
@@ -26,20 +26,18 @@ namespace YoCode
                 try
                 {
                     var proc = new ProcessDetails(processName, workingDir, solutionPath + arguments + outputFilePath);
-                    var evidence = new FeatureRunner().Execute(proc);
-                    evidence.Output = File.ReadAllText(outputFilePath);
-                    return evidence;
+                    var processOutput = new FeatureRunner().Execute(proc);
+                    processOutput.Output = File.ReadAllText(outputFilePath);
+                    return processOutput;
                 }
                 finally
                 {
                     File.Delete(outputFilePath);
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                var featureEvidence = new FeatureEvidence();
-                featureEvidence.SetInconclusive(new SimpleEvidenceBuilder(e.Message));
-                return featureEvidence;
+                return default;
             }
         }
     }

@@ -4,12 +4,12 @@
     {
         private ProcessRunner pr;
 
-        public FeatureEvidence Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
+        public ProcessOutput Execute(ProcessDetails processDetails, string waitForMessage = null, bool kill = true)
         {
             pr = new ProcessRunner(processDetails.ProcessName, processDetails.WorkingDir, processDetails.Arguments);
             pr.ExecuteTheCheck(waitForMessage, kill);
             var a = pr.procinfo;
-            var evidence = new FeatureEvidence
+            var evidence = new ProcessOutput
             {
                 Output = pr.Output,
                 ErrorOutput = pr.ErrorOutput
@@ -17,10 +17,8 @@
 
             if (pr.TimedOut)
             {
-                evidence.SetInconclusive(new SimpleEvidenceBuilder("Timed out"));
-                return evidence;
+                return default(ProcessOutput);
             }
-            evidence.SetPassed(new SimpleEvidenceBuilder("???"));
             return evidence;
         }
 

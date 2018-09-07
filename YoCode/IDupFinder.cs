@@ -2,6 +2,6 @@
 {
     internal interface IDupFinder
     {
-        FeatureEvidence Execute(string solutionTitle, string solutionPath);
+        ProcessOutput Execute(string solutionPath);
     }
 }
