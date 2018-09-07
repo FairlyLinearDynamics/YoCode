@@ -31,8 +31,6 @@ namespace YoCode
                     return;
                 }
 
-                GetFileDifferences(repo);
-
                 FillInEvidence(repo);
             }
         }
@@ -61,7 +59,8 @@ namespace YoCode
         private static bool FileIsNotCommited(StatusEntry item)
         {
             /*NewInIndex = staged but not commited, NewInWorkdir = untracked*/
-            return item.State == FileStatus.NewInIndex || item.State == FileStatus.NewInWorkdir || item.State == FileStatus.ModifiedInIndex;
+            return item.State == FileStatus.NewInIndex || item.State == FileStatus.NewInWorkdir
+                || item.State == FileStatus.ModifiedInIndex || item.State == FileStatus.ModifiedInWorkdir;
         }
 
         private Patch GetFileDifferences(Repository Repo)
