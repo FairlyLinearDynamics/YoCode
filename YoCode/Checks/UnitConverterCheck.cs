@@ -101,6 +101,7 @@ namespace YoCode
                     $"{"Action",TitleColumnFormatter} {"Input",ValueColumnFormatter} {"Expected",ValueColumnFormatter} {"Actual",ValueColumnFormatter} {"Are equal\n",ValueColumnFormatter}"));
 
                 unitConverterResultsOutput.AppendLine(messages.ParagraphDivider);
+
                 foreach (var expectation in expected)
                 {
                     var expectedOutput = expectation.output;
@@ -157,17 +158,24 @@ namespace YoCode
                     InitializeDataStructures(htmlCode);
                     actual = fetcher.GetActualValues(texts, actions);
 
-                    if (OutputsAreEqual())
+                    if (actions.Count == 0)
                     {
-                        UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
-                    }
-                    else
-                    {
-                        UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
+                        UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Couldn't execute the unit conversion because of UI changes"));
                     }
 
-                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();
-                
+                    else
+                    {
+
+                        if (OutputsAreEqual())
+                        {
+                            UnitConverterCheckEvidence.SetPassed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
+                        }
+                        else
+                        {
+                            UnitConverterCheckEvidence.SetFailed(new SimpleEvidenceBuilder(unitConverterResultsOutput.ToString()));
+                        }
+                    } 
+                    UnitConverterCheckEvidence.FeatureRating = GetUnitConverterCheckRating();               
                 }
                 catch (Exception)
                 {

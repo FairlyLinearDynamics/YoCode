@@ -29,6 +29,8 @@ namespace YoCode
             map.Add(Feature.UIConversionCheck, "Units were converted successfully using UI");
             map.Add(Feature.UnitConverterCheck, "Units were converted successfully");
             map.Add(Feature.BadInputCheck, "Bad input crashes have been fixed");
+            map.Add(Feature.ProjectBuilder, "Does the project build?");
+            map.Add(Feature.ProjectRunner, "Does the project run?");
             return map;
 
         }
