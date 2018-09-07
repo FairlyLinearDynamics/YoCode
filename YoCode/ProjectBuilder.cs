@@ -81,7 +81,7 @@ namespace YoCode
 
                 var processOutput = featureRunner.Execute(processDetails);
 
-                if (processOutput.Output != null)
+                if (processOutput.Output == null)
                 {
                     ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder("No outputs were found in the process"));
                     return null;

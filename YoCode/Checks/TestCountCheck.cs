@@ -42,7 +42,7 @@ namespace YoCode
             var processOutput = new FeatureRunner().Execute(pr);
             
 
-            if (processOutput.Output != null)
+            if (processOutput.Output == null)
             {
                 UnitTestEvidence.SetInconclusive(UnitTestEvidence.Evidence);
                 return;

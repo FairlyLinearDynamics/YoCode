@@ -41,10 +41,5 @@ namespace YoCode
                 return default;
             }
         }
-
-        FeatureEvidence IDupFinder.Execute(string solutionTitle, string solutionPath)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

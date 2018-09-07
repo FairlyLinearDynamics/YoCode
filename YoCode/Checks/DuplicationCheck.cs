@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using static YoCode.FeatureRunner;
 
 namespace YoCode
 {
@@ -72,7 +73,7 @@ namespace YoCode
         {
             var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath);
 
-            if (modEvidence.Inconclusive)
+            if (modEvidence.Output == null)
             {
                 DuplicationEvidence.SetInconclusive(new SimpleEvidenceBuilder("No evidence found."));
                 return;
@@ -144,15 +145,15 @@ namespace YoCode
             return elements.Count(element => element.Value.Contains(valueToCheckAgainst));
         }
 
-        private (FeatureEvidence, int, int) RunAndGatherEvidence(string solutionPath)
+        private (ProcessOutput, int, int) RunAndGatherEvidence(string solutionPath)
         {
-            var evidence = RunOneCheck(solutionPath);
-            var codebaseCostText = evidence.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
-            var duplicateCostText = evidence.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
+            var processOutput = RunOneCheck(solutionPath);
+            var codebaseCostText = processOutput.Output.GetLineWithAllKeywords(GetCodeBaseCostKeyword());
+            var duplicateCostText = processOutput.Output.GetLineWithAllKeywords(GetTotalDuplicatesCostKeywords());
             var codebaseCost = codebaseCostText.GetNumbersInALine()[0];
             var duplicateCost = duplicateCostText.GetNumbersInALine()[0];
 
-            return (evidence, codebaseCost, duplicateCost);
+            return (processOutput, codebaseCost, duplicateCost);
         }
 
         private string StructuredOutput()
@@ -166,9 +167,9 @@ namespace YoCode
             return resultsOutput.ToString();
         }
 
-        private FeatureEvidence RunOneCheck(string solutionPath)
+        private ProcessOutput RunOneCheck(string solutionPath)
         {
-            return dupFinder.Execute("Dup check", solutionPath);
+            return dupFinder.Execute(solutionPath);
         }
 
         private List<String> GetCodeBaseCostKeyword()

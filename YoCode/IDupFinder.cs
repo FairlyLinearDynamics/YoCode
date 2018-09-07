@@ -1,7 +1,9 @@
-﻿namespace YoCode
+﻿using static YoCode.FeatureRunner;
+
+namespace YoCode
 {
     internal interface IDupFinder
     {
-        FeatureEvidence Execute(string solutionTitle, string solutionPath);
+        ProcessOutput Execute(string solutionPath);
     }
 }
