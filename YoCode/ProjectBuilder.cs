@@ -79,15 +79,22 @@ namespace YoCode
 
                 var processDetails = new ProcessDetails(ProcessName, workingDir, Arguments);
 
-                var evidence = featureRunner.Execute(processDetails);
-                Output = evidence.Output;
+                var processOutput = featureRunner.Execute(processDetails);
 
-                var errs = evidence.ErrorOutput;
+                if (processOutput.Output != null)
+                {
+                    ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder("No outputs were found in the process"));
+                    return null;
+                }
+
+                Output = processOutput.Output;
+
+                var errs = processOutput.ErrorOutput;
                 CheckBuildSuccess();
 
                 var errorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-                if (evidence.Inconclusive || errorGettingErrorsOrWarnings)
+                if (ProjectBuilderEvidence.Inconclusive || errorGettingErrorsOrWarnings)
                 {
                     ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} "));
                     return new List<FeatureEvidence> { ProjectBuilderEvidence };
