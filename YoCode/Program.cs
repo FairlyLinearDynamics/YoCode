@@ -34,9 +34,21 @@ namespace YoCode
 
             var appSettingsBuilder = new AppSettingsBuilder(result.JuniorTest);
 
-            var parameters = new RunParameterChecker(compositeOutput, appSettingsBuilder);
+            var parameters = new RunParameterChecker(compositeOutput, result, appSettingsBuilder);
 
-            parameters.ParametersAreValid(outputPath, result);
+            if (!parameters.ParametersAreValid())
+            {
+                if (!result.HelpAsked)
+                {
+                    compositeOutput.ShowInputErrors(parameters.Errs);
+                }
+                else
+                {
+                    compositeOutput.ShowHelp();
+                    WebWriter.LaunchReport(result, outputPath);
+                }
+                return;
+            }
 
             var modifiedTestDirPath = result.InputFilePath;
 

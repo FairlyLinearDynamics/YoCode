@@ -37,11 +37,10 @@ namespace YoCode_XUnit
         public void TestIfHelpAsked()
         {
             result = SetupMockInputResult("--help");
-            result.CreateHtmlReport = false;
 
-            var rpc = new RunParameterChecker(fakeOutput, appsb);
+            var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid("asdasd", result).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Count.Should().Be(0);
         }
 
@@ -56,9 +55,9 @@ namespace YoCode_XUnit
 
             result = SetupMockInputResult("--privet druzja");
 
-            var rpc = new RunParameterChecker(fakeOutput, appsb);
+            var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid("asdasd", result).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo(errorList);
         }
 
@@ -71,9 +70,9 @@ namespace YoCode_XUnit
 
             readMock.Setup(x => x.ReadJSONFile()).Throws(new FileNotFoundException());
 
-            var rpc = new RunParameterChecker(fakeOutput, appsb);
+            var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid("asdasd", result).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo("Did not find appsettings file");
         }
 
@@ -86,9 +85,9 @@ namespace YoCode_XUnit
 
             readMock.Setup(x => x.ReadJSONFile()).Throws(new FormatException());
 
-            var rpc = new RunParameterChecker(fakeOutput, appsb);
+            var rpc = new RunParameterChecker(fakeOutput, result, appsb);
 
-            rpc.ParametersAreValid("asdasdas", result).Should().BeFalse();
+            rpc.ParametersAreValid().Should().BeFalse();
             rpc.Errs.Should().BeEquivalentTo("Error reading JSON file");
         }
     }

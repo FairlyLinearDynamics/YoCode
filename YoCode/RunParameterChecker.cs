@@ -7,6 +7,7 @@ namespace YoCode
     internal class RunParameterChecker : IRunParameterChecker
     {
         private readonly Output compositeOutput;
+        private readonly IInputResult result;
         private readonly IAppSettingsBuilder appsettingsBuilder;
 
         public List<string> Errs = new List<string>();
@@ -19,101 +20,69 @@ namespace YoCode
         public string AppCodeBaseCost { get; set; }
         public string AppDuplicationCost { get; set; }
 
-        public RunParameterChecker(Output compositeOutput, IAppSettingsBuilder appsettingsBuilder)
+        public RunParameterChecker(Output compositeOutput, IInputResult result, IAppSettingsBuilder appsettingsBuilder)
         {
             this.compositeOutput = compositeOutput;
+            this.result = result;
             this.appsettingsBuilder = appsettingsBuilder;
         }
 
-        public bool ParametersAreValid(string outputPath, IInputResult result)
-        {
-            CheckInput(outputPath, result);
-
-            ReadAppsettings();
-
-            CheckIfAppsettingsValuesAreValid();
-
-            return CheckIfToolExecutablesExist();
-        }
-
-        private void CheckIfAppsettingsValuesAreValid()
-        {
-            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
-            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values")
-                && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
-
-            var juniorFileExists = FileExists("JuniorWeightings.json");
-            var originalFileExists = FileExists("OriginalWeightings.json");
-
-            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
-
-            if (anyFilesMissing)
-            {
-                compositeOutput.ShowInputErrors(Errs);
-                Environment.Exit(1);
-            }
-        }
-
-        private void CheckInput(string outputPath, IInputResult result)
+        public bool ParametersAreValid()
         {
             if (result.HelpAsked)
             {
-                compositeOutput.ShowHelp();
-                if (result.CreateHtmlReport && result.OpenHtmlReport)
-                {
-                    WebWriter.LaunchReport(result, outputPath);
-                }
-                Environment.Exit(0);
+                return false;
             }
             if (result.HasErrors)
             {
                 Errs.AddRange(result.Errors);
-                compositeOutput.ShowInputErrors(Errs);
-                Environment.Exit(1);
+                return false;
             }
+
+            try
+            {
+                ReadAppsettings();
+            }
+            catch (FileNotFoundException)
+            {
+                return SetError("Did not find appsettings file");
+            }
+            catch (FormatException)
+            {
+                return SetError("Error reading JSON file");
+            }
+
+            bool anyFilesMissing = CheckAppsettingPathsAreValid();
+
+            if (anyFilesMissing)
+            {
+                return false;
+            }
+
+            return CheckIfToolExecutablesExist();
+        }
+
+        private bool CheckAppsettingPathsAreValid()
+        {
+            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
+            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
+
+            var juniorFileExists = FileExists("JuniorWeightings.json");
+            var originalFileExists = FileExists("OriginalWeightings.json");
+
+            return !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
         }
 
         private void ReadAppsettings()
         {
-            try
-            {
-                appsettingsBuilder.ReadJSONFile();
+            appsettingsBuilder.ReadJSONFile();
 
-                CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
-                DotCoverDir = appsettingsBuilder.GetDotCoverDir();
+            CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
+            DotCoverDir = appsettingsBuilder.GetDotCoverDir();
 
-                (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
-                (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
-            }
-            catch (FileNotFoundException)
-            {
-                ExitWithErrorMessage("Did not find appsettings file");
-            }
-            catch (FormatException)
-            {
-                ExitWithErrorMessage("Error reading JSON file");
-            }
-        }
-
-        private bool CheckIfToolExecutablesExist()
-        {
-            if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
-            {
-                ExitWithErrorMessage("dupfinder.exe not found in specified directory");
-            }
-            if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
-            {
-                ExitWithErrorMessage("dotCover.exe not found in specified directory");
-            }
-            return true;
-        }
-
-        private void ExitWithErrorMessage(string msg)
-        {
-            Errs.Add(msg);
-            compositeOutput.ShowInputErrors(Errs);
-            Environment.Exit(1);
+            (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
+            (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
         }
 
         private bool FileExists(string fileName)
@@ -129,6 +98,19 @@ namespace YoCode
         {
             Errs.Add(errorMessage);
             return false;
+        }
+
+        private bool CheckIfToolExecutablesExist()
+        {
+            if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
+            {
+                return SetError("dupfinder.exe not found in specified directory");
+            }
+            if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
+            {
+                return SetError("dotCover.exe not found in specified directory");
+            }
+            return true;
         }
 
         private bool CheckToolDirectory(string path, string checkName)
@@ -148,7 +130,7 @@ namespace YoCode
         {
             if (String.IsNullOrEmpty(cost1) || String.IsNullOrEmpty(cost2))
             {
-                return SetError($"{checkName} missing");
+                return SetError($"{checkName} cannot be empty");
             }
             return true;
         }
