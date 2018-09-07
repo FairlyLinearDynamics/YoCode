@@ -33,14 +33,14 @@ namespace YoCode
                 featData.title = FeatureTitleStorage.GetFeatureTitle(feature.Feature);
                 featData.featureEvidence = feature.Evidence;
                 featData.featurePass = feature.Inconclusive ? (bool?)null : feature.Passed;
-                featData.score = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating / data.finalScore * data.finalScorePercentage,2);
+                featData.score = feature.FeatureRating * 100;
                 var result = feature.Inconclusive
                     ? "Could not perform check"
                     : $"Feature implemented: {(feature.Passed ? "Yes" : "No")}";
                 featData.featureResult = result;
                 featData.featureHelperMessage = feature.HelperMessage;
                 featData.weighting = feature.FeatureWeighting;
-                featData.rawScore = feature.FeatureRating * 100;
+                featData.rawScore = data.finalScore == 0 ? 0 : Math.Round(feature.WeightedRating / data.finalScore * data.finalScorePercentage, 2);
                 outputWriter.AddFeature(featData);
             }
             outputWriter.WriteReport();

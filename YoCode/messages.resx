@@ -164,7 +164,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
 
     &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"&gt;
     &lt;style&gt;
-       :root{
+        :root{
         --console-bg: #222121;
         --console-text: #c0c0c0;
         --green-bg: #3bc511;
@@ -180,6 +180,9 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         --toolbar-text: #e2d7d7;
         --element-underlining: #c1b8c9;
         --focus-bg: #222121e0;
+        --info-icon-hover: #c0c0c077;
+        --info-icon-solid: #c0c0c0;
+
       }
 
       body {
@@ -355,9 +358,10 @@ Example: --{0}=&lt;...&gt; --{5}</value>
         grid-column: 2;
         position: sticky;
         left: 98.5%;
-        top: 245px;
+        top: 90%;
         z-index: 10;
         width: 18px;
+        height: 0px;
       }
 
       .panel-content ul {
@@ -436,6 +440,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       .fa-info-circle{
         color: var(--info-icon-solid);
         font-size: 20px;
+        transition: color .25s;
       }
 
       .fa-info-circle:hover{
@@ -445,6 +450,11 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       .panel-info-text{
         display: none;
         opacity: 0;
+        padding: 10px;
+      }
+
+      .panel-check-text{
+        padding: 10px;
       }
       
       .changedFile:hover{
@@ -471,7 +481,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       }
       
       .weight{
-        font-size: 20px;
+        font-size: 15px;
         border-radius: 5%;
         float: right;
         font-style: italic;
@@ -598,7 +608,7 @@ Example: --{0}=&lt;...&gt; --{5}</value>
             textField.style.display = "block";
             textField.style.opacity = 1;
             maxContentHeight = panelContent.parentElement.style.maxHeight;
-            panelContent.parentElement.style.maxHeight = screen.height * 0.75 +"px";
+            panelContent.parentElement.style.maxHeight = screen.height * 0.80 +"px";
             panelContent.style.height = screen.height * 0.75 +"px";
           }
           else{
@@ -661,16 +671,26 @@ Example: --{0}=&lt;...&gt; --{5}</value>
       var animRunning = false;
       var infoButtons = document.getElementsByClassName("panel-info");
       for(let i=0; i&lt;infoButtons.length; ++i){
-        infoButtons[i].addEventListener("click",function(){
+        infoButtons[i].addEventListener("click", async function(){
           if(!animRunning){
             this.classList.toggle("info");
 
             var panelCheckText = this.parentElement.getElementsByClassName("panel-check-text");
             var panelInfoText = this.parentElement.getElementsByClassName("panel-info-text");
+            var panelContent = this.parentElement;
 
-            
+            var paragraphBlock = panelCheckText[0].getElementsByClassName("fileChangesShowing");
+            for(let i=0; i&lt;paragraphBlock.length; ++i){
+              var diffBlock = paragraphBlock[i].nextElementSibling;
 
-            console.debug(animRunning);
+              panelContent.parentElement.style.maxHeight = maxContentHeight+"px";
+              panelContent.style.height = null;
+              diffBlock.style.opacity = null;
+              await sleep(230);
+              diffBlock.style.display = "none";
+              paragraphBlock[i].classList.remove("fileChangesShowing");
+            }
+
             if(this.classList.contains("info")){
                 animRunning = true;
                 fadeIn(panelCheckText[0],panelInfoText[0]);
@@ -847,7 +867,7 @@ After you downloaded it please specify its location in appsettings.json file, wh
   &lt;/span&gt;
   &lt;span class="accordion-score-holder"&gt;
     &lt;span class="accordion-score"&gt;{2}&lt;/span&gt;
-  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;span class="weight"&gt;raw score: {4}, weighting: {5}&lt;/span&gt;&lt;/span&gt;
+  &lt;/span&gt;&lt;span class="accordion-title"&gt;{3}&lt;span class="weight"&gt;Total score contribution: {4}; Weighting: {5}&lt;/span&gt;&lt;/span&gt;
   </value>
   </data>
   <data name="WrongWritePermission" xml:space="preserve">
