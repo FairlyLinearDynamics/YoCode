@@ -15,6 +15,14 @@ namespace YoCode
 
         public async Task<ProjectRunner> PassGatewayChecksAsync(List<FeatureEvidence> evidenceList)
         {
+            var solutionCheck = new SolutionFileExistsCheck(checkConfig);
+            var solutionEvidence = (await solutionCheck.Execute()).ToArray();
+            if (solutionEvidence.Any(e => e.Failed))
+            {
+                evidenceList.AddRange(solutionEvidence);
+                return null;
+            }
+
             var fileCheck = new FileChangeFinder(checkConfig);
             var fileChangeEvidence = (await fileCheck.Execute()).ToArray();
             if (fileChangeEvidence.Any(e => e.Failed))

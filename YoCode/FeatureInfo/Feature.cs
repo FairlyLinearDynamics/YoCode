@@ -16,7 +16,8 @@ namespace YoCode
         UIBadInputCheck,
         UIConversionCheck,
         ProjectBuilder,
-        ProjectRunner
+        ProjectRunner,
+        SolutionFileExists
     }
 
 }

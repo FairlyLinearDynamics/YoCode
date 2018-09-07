@@ -41,13 +41,7 @@ namespace YoCode
 
             try
             {
-                appsettingsBuilder.ReadJSONFile();
-
-                CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
-                DotCoverDir = appsettingsBuilder.GetDotCoverDir();
-
-                (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
-                (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
+                ReadAppsettings();
             }
             catch (FileNotFoundException)
             {
@@ -58,14 +52,7 @@ namespace YoCode
                 return SetError("Error reading JSON file");
             }
 
-            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
-            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
-            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
-
-            var juniorFileExists = FileExists("JuniorWeightings.json");
-            var originalFileExists = FileExists("OriginalWeightings.json");
-
-            bool anyFilesMissing = !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
+            bool anyFilesMissing = CheckAppsettingPathsAreValid();
 
             if (anyFilesMissing)
             {
@@ -73,6 +60,29 @@ namespace YoCode
             }
 
             return CheckIfToolExecutablesExist();
+        }
+
+        private bool CheckAppsettingPathsAreValid()
+        {
+            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
+            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
+
+            var juniorFileExists = FileExists("JuniorWeightings.json");
+            var originalFileExists = FileExists("OriginalWeightings.json");
+
+            return !CMDPathExists || !dotCoverPathExists || !juniorFileExists || !originalFileExists || !costValuesProvided;
+        }
+
+        private void ReadAppsettings()
+        {
+            appsettingsBuilder.ReadJSONFile();
+
+            CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
+            DotCoverDir = appsettingsBuilder.GetDotCoverDir();
+
+            (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
+            (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
         }
 
         private bool FileExists(string fileName)
