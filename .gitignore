@@ -263,3 +263,6 @@ paket-files/
 __pycache__/
 *.pyc
 *.pubxml
+
+#Images folder
+/Images
