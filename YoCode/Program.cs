@@ -54,17 +54,15 @@ namespace YoCode
 
             var dir = new PathManager(modifiedTestDirPath);
 
-            var workThreads = new List<Thread>();
+            CancellationTokenSource source = new CancellationTokenSource();
 
             if (!result.NoLoadingScreen)
             {
-                var loadingThread = new Thread(LoadingAnimation.RunLoading)
+                var t = Task.Run(() =>
                 {
-                    IsBackground = true
-                };
-                loadingThread.Name = "loadingThread";
-                workThreads.Add(loadingThread);
-                loadingThread.Start();
+                   LoadingAnimation.RunLoading(source.Token);
+               },source.Token);
+
             }
 
             var checkManager = new CheckManager(new CheckConfig(dir, parameters));
@@ -72,7 +70,7 @@ namespace YoCode
             var evidenceList = await checkManager.PerformChecks();
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
-            StopLoadingAnimation(workThreads);
+            StopLoadingAnimation(source);
 
             compositeOutput.PrintFinalResults(new FinalResultsData()
             {
@@ -87,10 +85,10 @@ namespace YoCode
             Console.WriteLine($"YoCode run time: {stopwatch.Elapsed}");
         }
 
-        private static void StopLoadingAnimation(List<Thread> workThreads)
+        public static void StopLoadingAnimation(CancellationTokenSource source)
         {
             LoadingAnimation.LoadingFinished = true;
-            workThreads.ForEach(a => a.Join());
+            source.Cancel();
         }
     }
 }
