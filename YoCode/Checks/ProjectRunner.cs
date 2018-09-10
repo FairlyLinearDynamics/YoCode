@@ -15,20 +15,29 @@ namespace YoCode
         private string ErrorOutput { get; set; }
         private const string projectFolder = @"\UnitConverterWebApp";
         private readonly FeatureRunner featureRunner;
+        private readonly Task<List<FeatureEvidence>> projectBuilderTask;
         private readonly string workingDir;
+        private readonly TaskCompletionSource<string> portCompletionSource = new TaskCompletionSource<string>();
 
-        public ProjectRunner(string workingDir, FeatureRunner featureRunner)
+        public ProjectRunner(string workingDir, FeatureRunner featureRunner, Task<List<FeatureEvidence>> projectBuilderTask)
         {
             this.featureRunner = featureRunner;
+            this.projectBuilderTask = projectBuilderTask;
 
             this.workingDir = workingDir + projectFolder;
         }
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() =>
+            return projectBuilderTask.ContinueWith(buildTask =>
             {
-                var projectRunEvidence = new FeatureEvidence{Feature = Feature.ProjectRunner};
+                var projectRunEvidence = new FeatureEvidence { Feature = Feature.ProjectRunner };
+
+                if (!buildTask.Result.All(buildEvidence => buildEvidence.Passed))
+                {
+                    projectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project build failed, unable to perform check."));
+                    return new List<FeatureEvidence> { projectRunEvidence };
+                }
 
                 if (!Directory.Exists(workingDir))
                 {
@@ -55,11 +64,13 @@ namespace YoCode
                     return new List<FeatureEvidence> {projectRunEvidence};
                 }
 
+                portCompletionSource.SetResult(port);
+
                 var applicationStarted = ApplicationStarted();
 
                 if (applicationStarted)
                 {
-                    projectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
+                    projectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort().Result}"));
                     projectRunEvidence.FeatureRating = 1;
                 }
                 else
@@ -69,7 +80,7 @@ namespace YoCode
                 }
 
                 return new List<FeatureEvidence> {projectRunEvidence};
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private string CreateArgument(string workingDir)
@@ -84,12 +95,9 @@ namespace YoCode
             return Output.GetLineWithOneKeyword("Application started.")?.Length != 0;
         }
 
-        public string GetPort()
+        public Task<string> GetPort()
         {
-            const string portKeyword = "Now listening on: ";
-            var line = Output.GetLineWithOneKeyword(portKeyword);
-            var splitLine = line.Split(portKeyword, StringSplitOptions.None);
-            return splitLine.Length > 1 ? splitLine[1] : "";
+            return portCompletionSource.Task;
         }
 
         public void KillProject()

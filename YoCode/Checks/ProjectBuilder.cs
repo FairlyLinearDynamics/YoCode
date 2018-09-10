@@ -94,7 +94,7 @@ namespace YoCode
 
                 var errorGettingErrorsOrWarnings = GetNumberOfErrors() == -1 || GetNumberOfWarnings() == -1;
 
-                if (ProjectBuilderEvidence.Inconclusive || errorGettingErrorsOrWarnings)
+                if (errorGettingErrorsOrWarnings)
                 {
                     ProjectBuilderEvidence.SetInconclusive(new SimpleEvidenceBuilder($"Could not find output from build process confirming success or failure.\nBuild process error output:\n{errs} "));
                     return new List<FeatureEvidence> { ProjectBuilderEvidence };

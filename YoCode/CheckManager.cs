@@ -13,59 +13,30 @@ namespace YoCode
             this.checkConfig = checkConfig;
         }
 
-        public async Task<ProjectRunner> PassGatewayChecksAsync(List<FeatureEvidence> evidenceList)
+        public async Task<List<FeatureEvidence>> PerformChecks()
         {
-            var solutionCheck = new SolutionFileExistsCheck(checkConfig);
-            var solutionEvidence = (await solutionCheck.Execute()).ToArray();
-            if (solutionEvidence.Any(e => e.Failed))
-            {
-                evidenceList.AddRange(solutionEvidence);
-                return null;
-            }
-
-            var fileCheck = new FileChangeFinder(checkConfig);
-            var fileChangeEvidence = (await fileCheck.Execute()).ToArray();
-            if (fileChangeEvidence.Any(e => e.Failed))
-            {
-                evidenceList.AddRange(fileChangeEvidence);
-                return null;
-            }
-
             var projectBuilder = new ProjectBuilder(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
-            var projectBuilderEvidence = (await projectBuilder.Execute()).ToArray();
-            if (projectBuilderEvidence.Any(e => e.Failed))
-            {
-                evidenceList.AddRange(projectBuilderEvidence);
-                return null;
-            }
+            var projectBuilderTask = projectBuilder.Execute();
 
-            var projectRunner = new ProjectRunner(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner());
-            ConsoleCloseHandler.StartHandler(projectRunner);
-            var projectRunnerEvidence = (await projectRunner.Execute()).ToArray();
-            if(projectRunnerEvidence.Any(e => e.Failed))
-            {
-                evidenceList.AddRange(projectRunnerEvidence);
-                return null;
-            }
-            return projectRunner;
-        }
+            var projectRunner = new ProjectRunner(checkConfig.PathManager.ModifiedTestDirPath, new FeatureRunner(), projectBuilderTask);
+            var projectRunnerTask = projectRunner.Execute();
+            var portTask = projectRunner.GetPort();
 
-        public async Task<List<FeatureEvidence>> PerformChecks(ProjectRunner projectRunner)
-        {
             var checks = new ICheck[]
             {
-                new CodeCoverageCheck(checkConfig),
+                new CodeCoverageCheck(checkConfig, projectBuilderTask),
                 new DuplicationCheckRunner(checkConfig),
                 new FileChangeFinder(checkConfig),
                 new UICodeCheck(UIKeywords.MILE_KEYWORDS, checkConfig),
                 new GitCheck(checkConfig),
-                new TestCountCheck(checkConfig),
-                new UICheck(projectRunner.GetPort()),
-                new UnitConverterCheck(projectRunner.GetPort()),
-                new BadInputCheck(projectRunner.GetPort())
+                new TestCountCheck(checkConfig, projectBuilderTask),
+                new UICheck(portTask, projectRunnerTask),
+                new UnitConverterCheck(portTask, projectRunnerTask),
+                new BadInputCheck(portTask, projectRunnerTask)
             };
 
-            var featureTasks = checks.Select(c => c.Execute()).ToArray();
+            var featureTasks = new[] { projectBuilderTask, projectRunnerTask }.Concat(checks.Select(c => c.Execute()).ToArray());
+
             var featureEvidences = await Task.WhenAll(featureTasks);
 
             projectRunner.KillProject();

@@ -8,7 +8,8 @@ namespace YoCode
 {
     internal class UnitConverterCheck : ICheck
     {
-        private readonly string port;
+        private readonly Task<string> portTask;
+        private readonly Task<List<FeatureEvidence>> projectRunnerTask;
         private Dictionary<List<string>, List<double>> KeywordMap;
 
         private List<UnitConverterResults> actual;
@@ -41,9 +42,10 @@ namespace YoCode
         private string from = "value=\"";
         private string to = "\"";
 
-        public UnitConverterCheck(string port)
+        public UnitConverterCheck(Task<string> portTask, Task<List<FeatureEvidence>> projectRunnerTask)
         {
-            this.port = port;
+            this.portTask = portTask;
+            this.projectRunnerTask = projectRunnerTask;
         }
 
         private void InitializeDataStructures(string htmlCode)
@@ -138,11 +140,18 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() =>
+            return projectRunnerTask.ContinueWith(task =>
             {
                 UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
                 UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
 
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project failed to run, unable to perform check."));
+                    return new List<FeatureEvidence> { UnitConverterCheckEvidence };
+                }
+
+                var port = this.portTask.Result;
 
                 if (string.IsNullOrEmpty(port))
                 {
@@ -182,7 +191,7 @@ namespace YoCode
                 }
 
                 return new List<FeatureEvidence> {UnitConverterCheckEvidence};
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private FeatureEvidence UnitConverterCheckEvidence { get; } = new FeatureEvidence();
