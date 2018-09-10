@@ -31,6 +31,7 @@ namespace YoCode
             map.Add(Feature.BadInputCheck, "Bad Input Crash Fix: Back End");
             map.Add(Feature.ProjectBuilder, "Does the project build?");
             map.Add(Feature.ProjectRunner, "Does the project run?");
+
             return map;
         }
 
