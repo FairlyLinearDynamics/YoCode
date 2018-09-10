@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace YoCode
@@ -7,14 +8,16 @@ namespace YoCode
     internal class CodeCoverageCheck : ICheck
     {
         private readonly CheckConfig checkConfig;
+        private readonly Task<List<FeatureEvidence>> parentCheck;
         private const string processName = "dotCover.exe";
         private const string reportName = "report.json";
         private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
-        public CodeCoverageCheck(CheckConfig checkConfig)
+        public CodeCoverageCheck(CheckConfig checkConfig, Task<List<FeatureEvidence>> parentCheck)
         {
             this.checkConfig = checkConfig;
+            this.parentCheck = parentCheck;
         }
 
         private static string CreateArgument(string dotnetDir, string targetWorkingDir)
@@ -54,10 +57,15 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() => {
+            return parentCheck.ContinueWith(task => {
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    return task.Result;
+                }
+
                 var codeCoverageEvidence = RunCodeCoverage(checkConfig);
                 return new List<FeatureEvidence> { codeCoverageEvidence };
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private static FeatureEvidence RunCodeCoverage(CheckConfig checkConfig)

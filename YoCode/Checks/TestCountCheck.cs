@@ -9,6 +9,7 @@ namespace YoCode
 {
     internal class TestCountCheck : ICheck
     {
+        private readonly Task<List<FeatureEvidence>> parentCheck;
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
@@ -25,8 +26,9 @@ namespace YoCode
 
         private const int TitleColumnFormatter = -25;
 
-        public TestCountCheck(ICheckConfig checkConfig)
+        public TestCountCheck(ICheckConfig checkConfig, Task<List<FeatureEvidence>> parentCheck)
         {
+            this.parentCheck = parentCheck;
             workingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, "UnitConverterTests");
             pathManager = checkConfig.PathManager;
 
@@ -157,8 +159,13 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() =>
+            return parentCheck.ContinueWith(task =>
             {
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    return task.Result;
+                }
+
                 if (!Directory.Exists(workingDir))
                 {
                     UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder($"{workingDir} not found"));
@@ -168,7 +175,7 @@ namespace YoCode
                 ExecuteTheCheck();
 
                 return new List<FeatureEvidence> {UnitTestEvidence};
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
     }
 }

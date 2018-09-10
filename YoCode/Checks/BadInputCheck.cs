@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,7 +8,8 @@ namespace YoCode
 {
     internal class BadInputCheck : ICheck
     {
-        private readonly string port;
+        private readonly Task<string> portTask;
+        private readonly Task<List<FeatureEvidence>> projectRunnerTask;
         private Dictionary<string, string> badInputs;
 
         List<bool> BadInputBoolResults;
@@ -19,41 +21,22 @@ namespace YoCode
 
         private StringBuilder badInputResultsOutput= new StringBuilder();
 
-        public BadInputCheck(string port)
+        public BadInputCheck(Task<string> portTask, Task<List<FeatureEvidence>> projectRunnerTask)
         {
-            this.port = port;
-            InitializeDataStructures();
+            this.portTask = portTask;
+            this.projectRunnerTask = projectRunnerTask;
         }
 
-        private void InitializeDataStructures()
+        private bool BadInputsAreFixed(List<string> badInputResults)
         {
-            var fetcher = new HTMLFetcher(port);
-            var htmlCode = fetcher.GetHTMLCodeAsString();
-
-            actions = BackEndHelperFunctions.GetListOfActions(htmlCode, "value=\"", "\"");
-
-            badInputs = new Dictionary<string, string>
-            {
-                { "Empty input", " " },
-                { "Blank lines at the start", "\n10" },
-                { "Blank lines at the middle", "10 \n\n 10" },
-                { "Blank lines at the end", "10 \n\n" },
-                { "Not numbers", "Y..@" }
-            };
-
-            BadInputBoolResults = new List<bool>();
-        }        
-
-        public bool BadInputsAreFixed(List<string> badInputResults)
-        {
-            bool ret = true;
+            var ret = true;
 
             badInputResultsOutput.AppendLine(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
             badInputResultsOutput.AppendLine(messages.ParagraphDivider);
 
             foreach (var a in badInputs)
             {
-                bool isFixed = !badInputResults.Contains(a.Key);
+                var isFixed = !badInputResults.Contains(a.Key);
                 BadInputBoolResults.Add(isFixed);
 
                 if (!isFixed)
@@ -73,10 +56,17 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() =>
+            return projectRunnerTask.ContinueWith(task =>
             {
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    return task.Result;
+                }
+
                 BadInputCheckEvidence.Feature = Feature.BadInputCheck;
                 BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
+
+                var port = portTask.Result;
 
                 if (string.IsNullOrEmpty(port))
                 {
@@ -87,9 +77,20 @@ namespace YoCode
                 try
                 {
                     var fetcher = new HTMLFetcher(port);
-
                     var htmlCode = fetcher.GetHTMLCodeAsString();
-                    InitializeDataStructures();
+
+                    actions = BackEndHelperFunctions.GetListOfActions(htmlCode, "value=\"", "\"");
+
+                    badInputs = new Dictionary<string, string>
+                    {
+                        { "Empty input", " " },
+                        { "Blank lines at the start", "\n10" },
+                        { "Blank lines at the middle", "10 \n\n 10" },
+                        { "Blank lines at the end", "10 \n\n" },
+                        { "Not numbers", "Y..@" }
+                    };
+
+                    BadInputBoolResults = new List<bool>();
 
                     var badInputResults = fetcher.GetBadInputs(badInputs, actions[0]);
 
@@ -110,7 +111,7 @@ namespace YoCode
                 }
 
                 return new List<FeatureEvidence> { BadInputCheckEvidence};
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private FeatureEvidence BadInputCheckEvidence { get; } = new FeatureEvidence();
