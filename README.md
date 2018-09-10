@@ -18,9 +18,9 @@ YoCode is a .NET Core application that is designed to work on a specific kind of
 * Uses Selenium to look for places to input values and tries to input numbers, then tries to find buttons with keywords and click on it, checks if the output is correct.
 * Takes a screenshot of the web apps UI (if there is one).
 
-![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/new-gif-features.gif)
+![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/YoCode-HTML-Output.png)
 
-![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/new-gif-fileschanged.gif)
+![](https://github.com/FairlyLinearDynamics/YoCode/blob/i204-ReadmeUpdate/Images/new-gif.gif)
 
 ## To Set Up YoCode:
 
