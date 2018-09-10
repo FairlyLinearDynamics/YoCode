@@ -19,7 +19,11 @@ namespace YoCode
 
         private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
         {
-            list.ForEach(e => e.FeatureWeighting = xTestDetails[e.Feature]);
+            foreach (var x in xTestDetails)
+            {
+                list.Find(e => e.Feature == x.Key).FeatureWeighting = x.Value;
+            }
+
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
@@ -27,7 +31,7 @@ namespace YoCode
             ApplySpecialCases(list);
 
             foreach (var elem in list)
-            {                
+            {
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
                 MaximumScore += elem.FeatureWeighting;
                 FinalScore += elem.WeightedRating;
@@ -63,13 +67,13 @@ namespace YoCode
 
         public void AssignToEquivalentCheck(FeatureEvidence oldCheck,FeatureEvidence newCheck)
         {
+            newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
+
             if (oldCheck.Inconclusive)
             {
                 newCheck.FeatureWeighting = oldCheck.FeatureWeighting * 2 ;
                 oldCheck.FeatureWeighting = 0;
             }
         }
-
-
     }
 }
