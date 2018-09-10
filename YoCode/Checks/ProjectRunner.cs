@@ -31,12 +31,13 @@ namespace YoCode
         {
             return projectBuilderTask.ContinueWith(buildTask =>
             {
+                var projectRunEvidence = new FeatureEvidence { Feature = Feature.ProjectRunner };
+
                 if (!buildTask.Result.All(buildEvidence => buildEvidence.Passed))
                 {
-                    return buildTask.Result;
+                    projectRunEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project build failed, unable to perform check."));
+                    return new List<FeatureEvidence> { projectRunEvidence };
                 }
-
-                var projectRunEvidence = new FeatureEvidence{Feature = Feature.ProjectRunner};
 
                 if (!Directory.Exists(workingDir))
                 {

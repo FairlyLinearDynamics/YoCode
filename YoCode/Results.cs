@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace YoCode
@@ -17,19 +18,17 @@ namespace YoCode
             CalculateFinalScoreInPerc();
         }
 
-        private static void AssignWeightings(List<FeatureEvidence> list, IReadOnlyDictionary<Feature, double> xTestDetails)
+        private static void AssignWeightings(IReadOnlyCollection<FeatureEvidence> evidenceToBeWeighted, IReadOnlyDictionary<Feature, double> weightingsFromFile)
         {
-            foreach (var x in xTestDetails)
+            foreach (var evidence in evidenceToBeWeighted)
             {
-                list.Find(e => e.Feature == x.Key).FeatureWeighting = x.Value;
+                evidence.FeatureWeighting = weightingsFromFile.ContainsKey(evidence.Feature) ? weightingsFromFile[evidence.Feature] : 0;
             }
-
         }
 
         public void CalculateWeightedRatings(List<FeatureEvidence> list)
         {
             ApplySpecialCases(list);
-
             foreach (var elem in list)
             {
                 elem.WeightedRating = Math.Round(elem.FeatureRating * elem.FeatureWeighting, 2);
@@ -39,34 +38,28 @@ namespace YoCode
             }
         }
 
-        public void CalculateFinalScoreInPerc()
+        private void CalculateFinalScoreInPerc()
         {
             FinalScorePercentage = Math.Round((FinalScore * 100 ) / MaximumScore);
         }
 
-        public void ApplySpecialCases(List<FeatureEvidence> list)
+        private static void ApplySpecialCases(List<FeatureEvidence> list)
         {
-           if (list.Count > 1)
-            {
-                AssignToEquivalentCheck(
-                    list.Find(e => e.Feature == Feature.BadInputCheck),
-                    list.Find(e => e.Feature == Feature.UIBadInputCheck)
-                    );
-
-                AssignToEquivalentCheck(
-                    list.Find(e => e.Feature == Feature.UnitConverterCheck),
-                    list.Find(e => e.Feature == Feature.UIConversionCheck)
-                    );
-
-                AssignToEquivalentCheck(
-                    list.Find(e => e.Feature == Feature.UIFeatureImplemented),
-                    list.Find(e => e.Feature == Feature.UICodeCheck)
-                    );
-            }
+            AssignToEquivalentCheck(list, Feature.BadInputCheck, Feature.UIBadInputCheck);
+            AssignToEquivalentCheck(list, Feature.UnitConverterCheck, Feature.UIConversionCheck);
+            AssignToEquivalentCheck(list, Feature.UIFeatureImplemented, Feature.UICodeCheck);
         }
 
-        public void AssignToEquivalentCheck(FeatureEvidence oldCheck,FeatureEvidence newCheck)
+        private static void AssignToEquivalentCheck(List<FeatureEvidence> list, Feature oldCheckFeature, Feature newCheckFeature)
         {
+            if (!list.Any(e => e.Feature == oldCheckFeature) || !list.Any(e => e.Feature == newCheckFeature))
+            {
+                return;
+            }
+
+            var newCheck = list.Find(e => e.Feature == newCheckFeature);
+            var oldCheck = list.Find(e => e.Feature == oldCheckFeature);
+
             newCheck.FeatureWeighting = oldCheck.FeatureWeighting;
 
             if (oldCheck.Inconclusive)

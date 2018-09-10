@@ -58,13 +58,14 @@ namespace YoCode
         {
             return projectRunnerTask.ContinueWith(task =>
             {
-                if (!task.Result.All(evidence => evidence.Passed))
-                {
-                    return task.Result;
-                }
-
                 BadInputCheckEvidence.Feature = Feature.BadInputCheck;
                 BadInputCheckEvidence.HelperMessage = messages.BadInputCheck;
+
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    BadInputCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project failed to run, unable to perform check."));
+                    return new List<FeatureEvidence> { BadInputCheckEvidence };
+                }
 
                 var port = portTask.Result;
 

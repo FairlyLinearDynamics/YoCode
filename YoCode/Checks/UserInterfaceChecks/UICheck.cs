@@ -149,7 +149,9 @@ namespace YoCode
             {
                 if (!task.Result.All(evidence => evidence.Passed))
                 {
-                    return task.Result;
+                    var dependencyFailedEvidence = new FeatureEvidence {Feature = Feature.UIFeatureImplemented, HelperMessage = messages.UIFeatureImplemented};
+                    dependencyFailedEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project failed to run, unable to perform check."));
+                    return new List<FeatureEvidence> { dependencyFailedEvidence };
                 }
 
                 var port = portTask.Result;

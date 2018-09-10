@@ -35,7 +35,8 @@ namespace YoCode
                 new BadInputCheck(portTask, projectRunnerTask)
             };
 
-            var featureTasks = checks.Select(c => c.Execute()).ToArray();
+            var featureTasks = new[] { projectBuilderTask, projectRunnerTask }.Concat(checks.Select(c => c.Execute()).ToArray());
+
             var featureEvidences = await Task.WhenAll(featureTasks);
 
             projectRunner.KillProject();

@@ -142,13 +142,14 @@ namespace YoCode
         {
             return projectRunnerTask.ContinueWith(task =>
             {
-                if (!task.Result.All(evidence => evidence.Passed))
-                {
-                    return task.Result;
-                }
-
                 UnitConverterCheckEvidence.Feature = Feature.UnitConverterCheck;
                 UnitConverterCheckEvidence.HelperMessage = messages.UnitConverterCheck;
+
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    UnitConverterCheckEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project failed to run, unable to perform check."));
+                    return new List<FeatureEvidence> { UnitConverterCheckEvidence };
+                }
 
                 var port = this.portTask.Result;
 
