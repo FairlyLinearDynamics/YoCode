@@ -10,7 +10,6 @@ namespace YoCode
         private readonly CheckConfig checkConfig;
         private readonly Task<List<FeatureEvidence>> projectBuildTask;
         private const string processName = "dotCover.exe";
-        private const string reportName = "report.json";
         private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
@@ -20,12 +19,12 @@ namespace YoCode
             this.projectBuildTask = projectBuildTask;
         }
 
-        private static string CreateArgument(string dotnetDir, string targetWorkingDir)
+        private static string CreateArgument(string dotnetDir, string targetWorkingDir, string outputFilePath)
         {
             var dotnetExecutablePath = Path.Combine(dotnetDir, "dotnet.exe");
 
             return $"analyse /TargetExecutable=\"{dotnetExecutablePath}\" /TargetArguments=\"test --no-build\" /TargetWorkingDir=\"{targetWorkingDir}\"" +
-                $" /ReportType=\"JSON\" /Output=\"{reportName}\"";
+                $" /ReportType=\"JSON\" /Output=\"{outputFilePath}\"";
         }
 
         private static ProcessDetails CreateProcessDetails(string arguments, string processName, string dotCoverDir)
@@ -75,7 +74,7 @@ namespace YoCode
             var codeCoverageEvidence = new FeatureEvidence {Feature = Feature.CodeCoverageCheck, HelperMessage = messages.CodeCoverageCheck};
 
             var dotCoverDir = checkConfig.RunParameters.DotCoverDir;
-            var fullReportPath = Path.Combine(dotCoverDir, reportName);
+            var fullReportPath = Path.GetTempFileName();
 
             var targetWorkingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, testFolder);
 
@@ -85,7 +84,7 @@ namespace YoCode
                 return codeCoverageEvidence;
             }
 
-            var argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir);
+            var argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir, fullReportPath);
 
             new FeatureRunner().Execute(CreateProcessDetails(argument, processName, dotCoverDir));
 
