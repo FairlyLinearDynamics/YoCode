@@ -10,7 +10,7 @@ namespace YoCode
         private static string dots;
         static int cursorStartPos;
         static int cursorStopPos;
-       
+
         public static void RunLoading(CancellationToken token)
         {
             PrintIntro();
@@ -92,7 +92,6 @@ namespace YoCode
             intro.Append(messages.Welcome);
             intro.Append(messages.Divider);
             Console.Write(intro);
-
         }
 
         public static bool LoadingFinished { get; set; } = false;
