@@ -61,7 +61,7 @@ namespace YoCode
                 var t = Task.Run(() =>
                 {
                    LoadingAnimation.RunLoading(source.Token);
-               });
+               },source.Token);
 
             }
 
