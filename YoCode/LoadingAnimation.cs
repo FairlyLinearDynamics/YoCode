@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace YoCode
 {
@@ -9,10 +10,8 @@ namespace YoCode
         private static string dots;
         static int cursorStartPos;
         static int cursorStopPos;
-
-        
-
-        public static void RunLoading()
+       
+        public static void RunLoading(CancellationToken token)
         {
             PrintIntro();
             cursorStartPos = Console.CursorTop;
@@ -25,7 +24,7 @@ namespace YoCode
             var fireplaceInd = 0;
             var tick = 0;
 
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 Console.CursorTop = cursorStartPos;
                 Console.WriteLine(fireplaceFrames[fireplaceInd]);

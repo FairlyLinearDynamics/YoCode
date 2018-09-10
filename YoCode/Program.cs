@@ -58,13 +58,13 @@ namespace YoCode
 
             if (!result.NoLoadingScreen)
             {
-                var loadingThread = new Thread(LoadingAnimation.RunLoading)
+                var source = new CancellationTokenSource();
+
+                var t = Task.Run(() =>
                 {
-                    IsBackground = true
-                };
-                loadingThread.Name = "loadingThread";
-                workThreads.Add(loadingThread);
-                loadingThread.Start();
+                   LoadingAnimation.RunLoading(source.Token);
+               });
+
             }
 
             var evidenceList = new List<FeatureEvidence>();
