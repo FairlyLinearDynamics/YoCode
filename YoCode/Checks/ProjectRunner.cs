@@ -70,7 +70,7 @@ namespace YoCode
 
                 if (applicationStarted)
                 {
-                    projectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort()}"));
+                    projectRunEvidence.SetPassed(new SimpleEvidenceBuilder($"Port: {GetPort().Result}"));
                     projectRunEvidence.FeatureRating = 1;
                 }
                 else
