@@ -14,16 +14,18 @@ namespace YoCode
 {
     class UICheck : ICheck
     {
-        private readonly string port;
+        private readonly Task<string> portTask;
+        private readonly Task<List<FeatureEvidence>> projectRunnerTask;
         private static IWebDriver browser;
         private const string CHROME = "Google Chrome";
         private const string FIREFOX = "Firefox";
 
         public static bool Running { get; private set; }
 
-        public UICheck(string port)
+        public UICheck(Task<string> portTask, Task<List<FeatureEvidence>> projectRunnerTask)
         {
-            this.port = port;
+            this.portTask = portTask;
+            this.projectRunnerTask = projectRunnerTask;
         }
 
         private static List<FeatureEvidence> ExecuteChecks(string port)
@@ -143,7 +145,19 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() => ExecuteChecks(port));
+            return projectRunnerTask.ContinueWith(task =>
+            {
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    var dependencyFailedEvidence = new FeatureEvidence {Feature = Feature.UIFeatureImplemented, HelperMessage = messages.UIFeatureImplemented};
+                    dependencyFailedEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project failed to run, unable to perform check."));
+                    return new List<FeatureEvidence> { dependencyFailedEvidence };
+                }
+
+                var port = portTask.Result;
+
+                return ExecuteChecks(port);
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
     }
 }

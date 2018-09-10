@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace YoCode
 {
@@ -17,7 +18,7 @@ namespace YoCode
         public string HelperMessage { get; set; }
 
         private bool? featureImplemented;
-        public IEvidence Evidence { get; set; } = new SimpleEvidenceBuilder("");
+        public IEvidence Evidence { get; private set; } = new SimpleEvidenceBuilder("");
 
         private void GiveEvidence(IEvidence reason)
         {

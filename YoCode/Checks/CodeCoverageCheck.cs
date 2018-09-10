@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace YoCode
@@ -7,14 +8,16 @@ namespace YoCode
     internal class CodeCoverageCheck : ICheck
     {
         private readonly CheckConfig checkConfig;
+        private readonly Task<List<FeatureEvidence>> projectBuildTask;
         private const string processName = "dotCover.exe";
         private const string reportName = "report.json";
         private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
-        public CodeCoverageCheck(CheckConfig checkConfig)
+        public CodeCoverageCheck(CheckConfig checkConfig, Task<List<FeatureEvidence>> projectBuildTask)
         {
             this.checkConfig = checkConfig;
+            this.projectBuildTask = projectBuildTask;
         }
 
         private static string CreateArgument(string dotnetDir, string targetWorkingDir)
@@ -54,10 +57,17 @@ namespace YoCode
 
         public Task<List<FeatureEvidence>> Execute()
         {
-            return Task.Run(() => {
+            return projectBuildTask.ContinueWith(task => {
+                if (!task.Result.All(evidence => evidence.Passed))
+                {
+                    var dependencyFailedEvidence = new FeatureEvidence { Feature = Feature.CodeCoverageCheck, HelperMessage = messages.CodeCoverageCheck };
+                    dependencyFailedEvidence.SetInconclusive(new SimpleEvidenceBuilder("Project build failed, unable to perform check."));
+                    return new List<FeatureEvidence> { dependencyFailedEvidence };
+                }
+
                 var codeCoverageEvidence = RunCodeCoverage(checkConfig);
                 return new List<FeatureEvidence> { codeCoverageEvidence };
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private static FeatureEvidence RunCodeCoverage(CheckConfig checkConfig)

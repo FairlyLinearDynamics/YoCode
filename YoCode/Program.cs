@@ -65,26 +65,9 @@ namespace YoCode
 
             }
 
-            var evidenceList = new List<FeatureEvidence>();
-
             var checkManager = new CheckManager(new CheckConfig(dir, parameters));
 
-            var projectRunner = await checkManager.PassGatewayChecksAsync(evidenceList);
-
-            if (projectRunner == null)
-            {
-                StopLoadingAnimation(source);
-                compositeOutput.PrintFinalResults(new FinalResultsData()
-                {
-                    featureList = evidenceList,
-                    isJunior = result.JuniorTest,
-                    finalScore = 0,
-                    finalScorePercentage = 0,
-                });
-                return;
-            }
-
-            evidenceList = await checkManager.PerformChecks(projectRunner);
+            var evidenceList = await checkManager.PerformChecks();
             var results = new Results(evidenceList, appSettingsBuilder.GetWeightingsPath());
 
             StopLoadingAnimation(source);
