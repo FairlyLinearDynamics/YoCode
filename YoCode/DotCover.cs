@@ -39,6 +39,7 @@ namespace YoCode
             var filteredTypesInWebApp = allTypesInWebapp.Where(t => t.Name != "Program" && t.Name != "Startup").ToList();
             var totalRelevantStatements = filteredTypesInWebApp.Sum(t => t.TotalStatements);
             var coveredRelevantStatements = filteredTypesInWebApp.Sum(t => t.CoveredStatements);
+
             return (int)(coveredRelevantStatements * 100.0 / totalRelevantStatements);
         }
     }
