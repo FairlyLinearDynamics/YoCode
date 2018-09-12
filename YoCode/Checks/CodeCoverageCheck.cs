@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -91,19 +92,11 @@ namespace YoCode
             var report = ReadReport(fullReportPath);
             File.Delete(fullReportPath);
 
-            var coverage = GetCodeCoverage(report);
+            try
+            {
 
-            if (coverage == 0)
-            {
-                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
-            }
-            else if (coverage == -1)
-            {
-                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder("Code Coverage Not Found"));
-            }
-            else
-            {
-                codeCoverageEvidence.FeatureRating = ((double)GetCodeCoverage(report)) / 100;
+                var coverage = GetCodeCoverage(report);
+                codeCoverageEvidence.FeatureRating = coverage / 100.0;
                 var featureImplemented = coverage >= passPercentage;
                 var evidence = $"Code Coverage: {coverage}%";
                 if (featureImplemented)
@@ -114,6 +107,11 @@ namespace YoCode
                 {
                     codeCoverageEvidence.SetFailed(new SimpleEvidenceBuilder(evidence));
                 }
+            
+            }
+            catch(Exception e)
+            {
+                codeCoverageEvidence.SetInconclusive(new SimpleEvidenceBuilder(e.ToString()));
             }
 
             return codeCoverageEvidence;
