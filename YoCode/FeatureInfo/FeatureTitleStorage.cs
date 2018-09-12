@@ -20,19 +20,19 @@ namespace YoCode
             map.Add(Feature.AppDuplicationCheck, "Duplication improvement: UnitConverterWebApp");
             map.Add(Feature.TestDuplicationCheck, "Duplication improvement: UnitConverterTests");
             map.Add(Feature.FilesChangedCheck, "Files changed");
-            map.Add(Feature.UICodeCheck, "Found feature keyword in UI implementation");
+            map.Add(Feature.UICodeCheck, "New Feature Found: Back End");
             map.Add(Feature.GitCheck, "Git was used");
-            map.Add(Feature.CodeCoverageCheck, "Check Code Coverage");
-            map.Add(Feature.TestCountCheck, "All unit tests have passed");
-            map.Add(Feature.UIFeatureImplemented, "Found feature evidence in user interface");
-            map.Add(Feature.UIBadInputCheck, "Bad input crashes have been fixed in the UI");
-            map.Add(Feature.UIConversionCheck, "Units were converted successfully using UI");
-            map.Add(Feature.UnitConverterCheck, "Units were converted successfully");
-            map.Add(Feature.BadInputCheck, "Bad input crashes have been fixed");
+            map.Add(Feature.CodeCoverageCheck, "Code Coverage");
+            map.Add(Feature.TestCountCheck, "Unit Tests Passed");
+            map.Add(Feature.UIFeatureImplemented, "New Feature Found: Front End");
+            map.Add(Feature.UIBadInputCheck, "Bad Input Crash Fix: Front End");
+            map.Add(Feature.UIConversionCheck, "Unit Conversion: Front End");
+            map.Add(Feature.UnitConverterCheck, "Unit Conversion: Back End");
+            map.Add(Feature.BadInputCheck, "Bad Input Crash Fix: Back End");
             map.Add(Feature.ProjectBuilder, "Does the project build?");
             map.Add(Feature.ProjectRunner, "Does the project run?");
-            return map;
 
+            return map;
         }
 
         public static string GetFeatureTitle(Feature lookup)
