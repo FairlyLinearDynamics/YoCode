@@ -25,6 +25,9 @@ namespace YoCode
 
             var uiInputhandler = new InputingToUI(browser, foundKeyWord);
 
+            resultsOutput.AppendLine(string.Format($"\n{"Input name",TitleColumnFormatter} {"FIXED",ValueColumnFormatter}"));
+            resultsOutput.AppendLine(messages.ParagraphDivider);
+
             foreach (var key in UIKeywords.GARBAGE_INPUT)
             {
                 var errs = uiInputhandler.InputData(key);
@@ -41,11 +44,11 @@ namespace YoCode
             var featureImplemented = !ratingsList.Contains(false) && ratingsList.Any();
             if (featureImplemented)
             {
-                UIBadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder("All exceptions were handled."));
+                UIBadInputCheckEvidence.SetPassed(new SimpleEvidenceBuilder(resultsOutput.ToString()));
             }
             else
             {
-                UIBadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder("At least one exception was not handled."));
+                UIBadInputCheckEvidence.SetFailed(new SimpleEvidenceBuilder(resultsOutput.ToString()));
             }
         }
 
@@ -63,6 +66,7 @@ namespace YoCode
         {
             var exception = browser.FindElements(By.XPath("//*[contains(text(), 'An unhandled exception occurred')]"));
             var x = $"\"{testData.Replace(Environment.NewLine, "(New line here)")}\"";
+
             if (exception.Any())
             {
                 resultsOutput.AppendLine(string.Format($"{x,TitleColumnFormatter} {false,ValueColumnFormatter}"));
