@@ -19,20 +19,20 @@ namespace YoCodeAutomatedTests
         {
             var helper = new TestHelperMethods();
 
-            File.Delete(helper.YoCodeReportPath);
+            File.Delete(helper.DefaultYoCodeReportPath);
 
             const string argument = "YoCode.dll --help --silent";
 
             helper.OutputTestDebugInfo(xunitOutput, argument);
 
-            helper.RunProcessAndGatherOutput("dotnet", helper.DllPath, argument, xunitOutput);
+            TestHelperMethods.RunProcessAndGatherOutput("dotnet", helper.DllPath, argument, xunitOutput);
 
             var actualPath = Path.Combine(helper.TestPath, "ActualOutputs\\helpMessage.html");
             var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs\\helpMessage.html");
 
-            File.Copy(helper.YoCodeReportPath, actualPath, true);
+            File.Copy(helper.DefaultYoCodeReportPath, actualPath, true);
 
-            helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
+            TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
         }
     }
 }

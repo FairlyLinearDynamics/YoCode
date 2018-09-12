@@ -26,20 +26,23 @@ namespace YoCodeAutomatedTests
         {
             var helper = new TestHelperMethods();
 
-            string argument = $"YoCode.dll --input={helper.TestPath}\\TestProjects{project} --noloading --silent";
+            var actualDir = Path.Combine(helper.TestPath, "ActualOutputs");
+            var actualPath = Path.Combine(actualDir, helper.OutputFilename);
+
+            string argument = $"YoCode.dll --input={helper.TestPath}\\TestProjects{project} --noloading --silent --output={actualDir}";
 
             helper.OutputTestDebugInfo(xunitOutput, argument);
 
-            File.Delete(helper.YoCodeReportPath);
+            File.Delete(actualPath);
 
-            helper.RunProcessAndGatherOutput("dotnet", helper.DllPath, argument, xunitOutput);
+            TestHelperMethods.RunProcessAndGatherOutput("dotnet", helper.DllPath, argument, xunitOutput);
 
-            var actualPath = Path.Combine(helper.TestPath, "ActualOutputs", outputFile);
+            var actualWantedPath = Path.Combine(actualDir, outputFile);
             var expectedPath = Path.Combine(helper.TestPath, "ExpectedOutputs", outputFile);
 
-            File.Copy(helper.YoCodeReportPath, actualPath, true);
+            File.Copy(actualPath, actualWantedPath, true);
 
-            helper.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
+            TestHelperMethods.FilesAreDifferent(actualPath, expectedPath).Should().BeFalse($"{actualPath} was different to {expectedPath}");
         }
     }
 }
