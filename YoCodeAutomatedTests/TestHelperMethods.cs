@@ -9,38 +9,39 @@ namespace YoCodeAutomatedTests
 {
     public class TestHelperMethods
     {
-        private IConfiguration Configuration;
-        public string TestPath { get; set; }
-        public string DllPath { get; set; }
-        public string YoCodeReportPath { get; set; }
+        public string OutputFilename { get; } = "YoCodeReport.html";
+        private IConfiguration configuration;
+        public string TestPath { get; private set; }
+        public string DllPath { get; private set; }
+        public string DefaultYoCodeReportPath { get; }
 
         public TestHelperMethods()
         {
             Setup();
-            YoCodeReportPath = Path.Combine(DllPath, "YoCodeReport.html");
+            DefaultYoCodeReportPath = Path.Combine(DllPath, "YoCodeReport.html");
         }
 
-        public void Setup()
+        private void Setup()
         {
             var builder1 = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("testappsettings.json");
-            Configuration = builder1.Build();
+            configuration = builder1.Build();
 
-            TestPath = Configuration["AutomatedTesting:TestDataPath"];
-            DllPath = Configuration["YoCodeLocation:DLLFolderPath"];
+            TestPath = configuration["AutomatedTesting:TestDataPath"];
+            DllPath = configuration["YoCodeLocation:DLLFolderPath"];
         }
 
-        public bool FilesAreDifferent(string path1, string path2)
+        public static bool FilesAreDifferent(string path1, string path2)
         {
-            using (FileStream f1 = File.OpenRead(path1))
-            using (FileStream f2 = File.OpenRead(path2))
+            using (var f1 = File.OpenRead(path1))
+            using (var f2 = File.OpenRead(path2))
             {
                 return f1.FileIsModified(f2);
             }
         }
 
-        public void RunProcessAndGatherOutput(string processName, string workingDir, string arguments, ITestOutputHelper testOutputHelper)
+        public static void RunProcessAndGatherOutput(string processName, string workingDir, string arguments, ITestOutputHelper testOutputHelper)
         {
-            ProcessRunner pr = new ProcessRunner(processName, workingDir, arguments);
+            var pr = new ProcessRunner(processName, workingDir, arguments);
             pr.ExecuteTheCheck("Units were converted successfully");
 
             testOutputHelper.WriteLine("Error Output: ");
