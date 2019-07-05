@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace YoCode
 {
     internal class TestCountCheck : ICheck
     {
+        public TestStats Stats { get; set; }
+
         private readonly Task<List<FeatureEvidence>> projectBuildTask;
         private readonly string processName;
         private readonly string workingDir;
         private readonly string arguments;
 
-        public string StatLine { get; set; }
-        public string Output { get; set; }
-        public string ErrorOutput { get; set; }
+        private string Output { get; set; }
 
         private const int TestCountThreshold = 10;
 
-        private TestStats stats;
-        private List<int> tempStats;
         private readonly IPathManager pathManager;
 
         private const int TitleColumnFormatter = -25;
@@ -51,23 +51,36 @@ namespace YoCode
             }
 
             Output = processOutput.Output;
-            ErrorOutput = processOutput.ErrorOutput;
-            StatLine = Output.GetLineWithAllKeywords(GetTestKeyWords());
-            tempStats = StatLine.GetNumbersInALine();
+
+            ProcessResult(Output);
+        }
+
+        public void ProcessResult(string output)
+        {
+            var tempStats = new List<MatchCollection>();
+            foreach (var outputLine in output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            {
+                tempStats.AddRange(GetTestKeyWordPatterns().Select(r => r.Matches(outputLine)).Where(m => m.Any()));
+            }
+
             StoreCalculations(tempStats);
         }
 
-        public void StoreCalculations(List<int> tempStats)
+        private void StoreCalculations(List<MatchCollection> tempStats)
         {
-            if(tempStats.Count == 4)
+            try
             {
-                stats.totalTests = tempStats[0];
-                stats.testsPassed = tempStats[1];
-                stats.testsFailed = tempStats[2];
-                stats.testsSkipped = tempStats[3];
+                Stats = new TestStats
+                {
+                    totalTests = GetValueForMatch(tempStats, "Total tests:"),
+                    testsPassed = GetValueForMatch(tempStats, "Passed:"),
+                    testsFailed = GetValueForMatch(tempStats, "Failed:"),
+                    testsSkipped = GetValueForMatch(tempStats, "Skipped:")
+                };
+
                 UnitTestEvidence.FeatureRating = GetTestCountCheckRating();
 
-                var featureImplemented = stats.PercentagePassed >= 100 && stats.totalTests > TestCountThreshold;
+                var featureImplemented = Stats.PercentagePassed >= 100 && Stats.totalTests > TestCountThreshold;
                 if (featureImplemented)
                 {
                     UnitTestEvidence.SetPassed(new SimpleEvidenceBuilder(StructuredOutput()));
@@ -77,26 +90,39 @@ namespace YoCode
                     UnitTestEvidence.SetFailed(new SimpleEvidenceBuilder(StructuredOutput()));
                 }
             }
-            else
+            catch
             {
                 UnitTestEvidence.SetInconclusive(new SimpleEvidenceBuilder("Error while getting tests from applicant's project"));
             }
         }
 
-        public static List<string> GetTestKeyWords()
+        private int GetValueForMatch(List<MatchCollection> matches, string keyword)
         {
-            return new List<string> { "Total tests:" };
+            foreach (var match in matches)
+            {
+                if (match[0].Groups[1].Value == keyword)
+                {
+                    return int.Parse(match[0].Groups[2].Value);
+                }
+            }
+
+            return 0;
         }
 
-        public double GetTestCountCheckRating()
+        private static IEnumerable<Regex> GetTestKeyWordPatterns()
         {
-            double rating = Convert.ToDouble(stats.testsPassed) / stats.totalTests;
+            return new[] { @"(Total tests:) (\d+)", @"(Passed:) (\d+)", @"(Failed:) (\d+)", @"(Skipped:) (\d+)" }.Select(s => new Regex(s));
+        }
 
-            if(stats.totalTests >= TestCountThreshold)
+        private double GetTestCountCheckRating()
+        {
+            double rating = Convert.ToDouble(Stats.testsPassed) / Stats.totalTests;
+
+            if(Stats.totalTests >= TestCountThreshold)
             {
                 return rating;
             }
-            double deduction = (TestCountThreshold - stats.totalTests) * (1 / Convert.ToDouble(TestCountThreshold));
+            double deduction = (TestCountThreshold - Stats.totalTests) * (1 / Convert.ToDouble(TestCountThreshold));
             return rating - deduction;
         }
 
@@ -105,11 +131,11 @@ namespace YoCode
             var builder = new StringBuilder();
 
             builder.AppendLine(messages.ParagraphDivider);
-            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{stats.totalTests}"));
-            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{stats.testsPassed}"));
-            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{stats.testsFailed}"));
-            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{stats.testsSkipped}"));
-            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{stats.PercentagePassed}"));
+            builder.AppendLine(String.Format($"{"Total tests: ",TitleColumnFormatter}{Stats.totalTests}"));
+            builder.AppendLine(String.Format($"{"Passed:",TitleColumnFormatter}{Stats.testsPassed}"));
+            builder.AppendLine(String.Format($"{"Failed:",TitleColumnFormatter}{Stats.testsFailed}"));
+            builder.AppendLine(String.Format($"{"Skipped:",TitleColumnFormatter}{Stats.testsSkipped}"));
+            builder.AppendLine(String.Format($"{"Percentage:",TitleColumnFormatter}{Stats.PercentagePassed}"));
             builder.AppendLine(messages.ParagraphDivider);
             builder.AppendLine(String.Format($"{"Minimum test count:",TitleColumnFormatter}{TestCountThreshold}"));
 
@@ -121,7 +147,7 @@ namespace YoCode
             return builder.ToString();
         }
 
-        public static int NumberOfUnfixedTests(List<string[]> files)
+        private static int NumberOfUnfixedTests(List<string[]> files)
         {
             var unfixedTests = 0;
 

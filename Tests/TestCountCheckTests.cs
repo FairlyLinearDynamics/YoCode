@@ -1,69 +1,82 @@
 ﻿using Xunit;
 using FluentAssertions;
 using YoCode;
-using System.Collections.Generic;
+using NSubstitute;
 
 namespace YoCode_XUnit
 {
     public class TestCountCheckTests
     {
-        private readonly string testStatLine;
-        private readonly string testTestOutput;
+        private readonly TestCountCheck testCountCheck;
 
         public TestCountCheckTests()
         {
-            testTestOutput = "Build started, please wait...\n" +
-            "Build started, please wait...\n" +
-            "Build completed.\n" +
-            "Test run for)\n" +
+            var checkConfig = Substitute.For<ICheckConfig>();
+
+            testCountCheck = new TestCountCheck(checkConfig, null);
+        }
+
+        [Fact]
+        public void TestSingleLineOutput()
+        {
+            var testTestOutput = "Test run for \n" +
             "Microsoft(R) Test Execution Command Line Tool Version 15.7.0\n" +
             "Copyright(c) Microsoft Corporation.All rights reserved.\n" +
             "Starting test execution, please wait...\n" +
-            "Build completed.\n" +
-            "Test run for \n" +
-            "Microsoft(R) Test Execution Command Line Tool Version 15.7.0\n" +
-            "Copyright(c) Microsoft Corporation.All rights reserved.\n" +
-            "Starting test execution, please wait...\n" +
-            "Total tests: 22.Passed: 22.Failed: 0.Skipped: 0.\n" +
+            "Total tests: 22. Passed: 19. Failed: 2. Skipped: 1.\n" +
             "Test Run Successful.\n" +
             "Test execution time: 1.6349 Seconds\n";
-            testStatLine = "Total tests: 22.Passed: 22.Failed: 0.Skipped: 0.";
+
+            testCountCheck.ProcessResult(testTestOutput);
+
+            testCountCheck.Stats.testsPassed.Should().Be(19);
+            testCountCheck.Stats.testsFailed.Should().Be(2);
+            testCountCheck.Stats.testsSkipped.Should().Be(1);
+            testCountCheck.Stats.totalTests.Should().Be(22);
+            testCountCheck.Stats.PercentagePassed.Should().BeApproximately(86.37, 0.01);
         }
 
         [Fact]
-        public void Test_GetLineWithAllKeywords()
+        public void TestMultiLineOutput()
         {
-            string testResult = testTestOutput.GetLineWithAllKeywords(TestCountCheck.GetTestKeyWords());
+            var testTestOutput = "Test run for \n" +
+                                 "Microsoft(R) Test Execution Command Line Tool Version 15.7.0\n" +
+                                 "Copyright(c) Microsoft Corporation.All rights reserved.\n" +
+                                 "Starting test execution, please wait...\n" +
+                                 "Total tests: 22.\n" +
+                                 "Passed: 19.\n" +
+                                 "Failed: 2.\n" +
+                                 "Skipped: 1.\n" +
+                                 "Test Run Successful.\n" +
+                                 "Test execution time: 1.6349 Seconds\n";
 
-            testStatLine.Should().BeEquivalentTo(testResult);
+            testCountCheck.ProcessResult(testTestOutput);
+
+            testCountCheck.Stats.testsPassed.Should().Be(19);
+            testCountCheck.Stats.testsFailed.Should().Be(2);
+            testCountCheck.Stats.testsSkipped.Should().Be(1);
+            testCountCheck.Stats.totalTests.Should().Be(22);
+            testCountCheck.Stats.PercentagePassed.Should().BeApproximately(86.37, 0.01);
         }
 
         [Fact]
-        public void Test_CountNumberOfTests()
+        public void MissingValuesShouldBeTreatedAsZero()
         {
-            const string actual = "ffff125fff 1x4 adasdas29 aassss11";
-            var expected = new List<int>
-            {
-                125,
-                1,
-                4,
-                29,
-                11
-            };
-            expected.Should().BeEquivalentTo(actual.GetNumbersInALine());
+            var testTestOutput = "Test run for \n" +
+                                 "Microsoft(R) Test Execution Command Line Tool Version 15.7.0\n" +
+                                 "Copyright(c) Microsoft Corporation.All rights reserved.\n" +
+                                 "Starting test execution, please wait...\n" +
+                                 "Total tests: 22. Failed: 2.\n" +
+                                 "Test Run Successful.\n" +
+                                 "Test execution time: 1.6349 Seconds\n";
+
+            testCountCheck.ProcessResult(testTestOutput);
+
+            testCountCheck.Stats.testsPassed.Should().Be(0);
+            testCountCheck.Stats.testsSkipped.Should().Be(0);
+            testCountCheck.Stats.PercentagePassed.Should().Be(0);
         }
 
-        [Fact]
-        public void Test_NumberOfUnfixedTests()
-        {
-            var fakefiles = new List<string[]>
-            {
-                new string[] { "asfasf", "asfafs" },
-                new string[] { "", "", "InlineData" },
-                new string[] { "", "", "InlineData", "[InlineData()]", "[InlineData()]", "[InlineData()]" },
-                new string[] { "", "", "InlineData", "[Theory]", "[InlineData()]", "[InlineData()]", "[InlineData()]" }
-            };
-            TestCountCheck.NumberOfUnfixedTests(fakefiles).Should().Be(1);
-        }
+
     }
 }

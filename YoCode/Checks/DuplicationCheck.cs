@@ -70,7 +70,7 @@ namespace YoCode
 
         private void ExecuteTheCheck()
         {
-            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence(modifiedSolutionPath);
+            var (modEvidence, modCodeBaseCost, modDuplicateCost) = RunAndGatherEvidence($"\"{modifiedSolutionPath}\"");
 
             if (modEvidence.Output == null)
             {
