@@ -24,12 +24,12 @@
 
         public void EndProcess()
         {
-            pr.KillCurrentProcessWithChildren();
+            pr?.KillCurrentProcessWithChildren();
         }
 
         public void FindLeftOverProcess()
         {
-            pr.FindLeftOverProcess();
+            pr?.FindLeftOverProcess();
         }
     }
 }
