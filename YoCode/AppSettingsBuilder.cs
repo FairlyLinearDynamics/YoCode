@@ -16,7 +16,7 @@ namespace YoCode
 
         public IConfiguration ReadJSONFile()
         {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder().SetBasePath(ToolPath.AssemblyDirectory).AddJsonFile("appsettings.json");
             configuration = builder.Build();
             return configuration;
         }
@@ -33,7 +33,7 @@ namespace YoCode
 
         public string GetWeightingsPath()
         {
-            return juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"];
+            return ToolPath.CreateWeightingsPath(juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"]).FullPath;
         }
 
         public (string,string) GetWebAppCosts()

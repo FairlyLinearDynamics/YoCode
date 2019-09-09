@@ -48,7 +48,7 @@ namespace YoCode
             return new ToolPath(dir, dotCover);
         }
 
-        private static string AssemblyDirectory
+        internal static string AssemblyDirectory
         {
             get
             {
@@ -57,6 +57,13 @@ namespace YoCode
                 var path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
             }
+        }
+
+        public static ToolPath CreateWeightingsPath(string jsonPath)
+        {
+            var dir = Path.GetDirectoryName(jsonPath);
+            var fileName = Path.GetFileName(jsonPath);
+            return new ToolPath(dir, fileName);
         }
     }
 }
