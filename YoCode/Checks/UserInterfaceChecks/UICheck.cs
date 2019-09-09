@@ -77,7 +77,7 @@ namespace YoCode
             {
                 try
                 {
-                    service = FirefoxDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    service = FirefoxDriverService.CreateDefaultService(ToolPath.AssemblyDirectory);
                     service.HideCommandPromptWindow = true;
                     var options = new FirefoxOptions();
                     options.AddArgument("--headless");
@@ -94,7 +94,7 @@ namespace YoCode
             {
                 try
                 {
-                    service = ChromeDriverService.CreateDefaultService(Directory.GetCurrentDirectory());
+                    service = ChromeDriverService.CreateDefaultService(ToolPath.AssemblyDirectory);
                     service.HideCommandPromptWindow = true;
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArgument("--headless");
