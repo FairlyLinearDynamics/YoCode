@@ -56,14 +56,10 @@ namespace YoCode
 
             CancellationTokenSource source = new CancellationTokenSource();
 
-            if (!result.NoLoadingScreen)
+            var _ = Task.Run(() =>
             {
-                var t = Task.Run(() =>
-                {
-                   LoadingAnimation.RunLoading(source.Token);
-               },source.Token);
-
-            }
+               LoadingAnimation.RunLoading(source.Token, result.NoLoadingScreen);
+            },source.Token);
 
             var checkManager = new CheckManager(new CheckConfig(dir, parameters));
 
@@ -85,7 +81,7 @@ namespace YoCode
             Console.WriteLine($"YoCode run time: {stopwatch.Elapsed}");
         }
 
-        public static void StopLoadingAnimation(CancellationTokenSource source)
+        private static void StopLoadingAnimation(CancellationTokenSource source)
         {
             LoadingAnimation.LoadingFinished = true;
             source.Cancel();

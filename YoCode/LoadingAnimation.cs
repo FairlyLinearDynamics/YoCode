@@ -11,9 +11,16 @@ namespace YoCode
         static int cursorStartPos;
         static int cursorStopPos;
 
-        public static void RunLoading(CancellationToken token)
+        public static void RunLoading(CancellationToken token, bool noLoadingScreen)
         {
             PrintIntro();
+
+            if (noLoadingScreen)
+            {
+                SimplifiedProgressOutput(token);
+                return;
+            }
+
             cursorStartPos = Console.CursorTop;
 
             var loadingBanner = new StringBuilder();
@@ -63,6 +70,18 @@ namespace YoCode
                 }
                 Thread.Sleep(125);
             }
+        }
+
+        private static void SimplifiedProgressOutput(CancellationToken token)
+        {
+            Console.WriteLine();
+            Console.Write("Analysing...");
+            while (!token.IsCancellationRequested)
+            {
+                Console.Write(".");
+                Thread.Sleep(500);
+            }
+            Console.WriteLine("Done!");
         }
 
         private static void LoadingDotsFire()
