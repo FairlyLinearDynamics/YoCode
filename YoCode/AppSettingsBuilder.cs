@@ -21,14 +21,14 @@ namespace YoCode
             return configuration;
         }
 
-        public string GetCMDToolsPath()
+        public ToolPath GetDupFinderPath()
         {
-            return configuration["duplicationCheckSetup:CMDtoolsDir"];
+            return ToolPath.CreateDupFinderPath(configuration["duplicationCheckSetup:CMDtoolsDir"]);
         }
 
-        public string GetDotCoverDir()
+        public ToolPath GetDotCoverPath()
         {
-            return configuration["codeCoverageCheckSetup:dotCoverDir"];
+            return ToolPath.CreateDotCoverPath(configuration["codeCoverageCheckSetup:dotCoverDir"]);
         }
 
         public string GetWeightingsPath()

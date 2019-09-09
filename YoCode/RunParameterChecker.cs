@@ -11,8 +11,8 @@ namespace YoCode
         private readonly IAppSettingsBuilder appsettingsBuilder;
 
         public List<string> Errs = new List<string>();
-        public string CMDToolsPath { get; set; }
-        public string DotCoverDir { get; set; }
+        public ToolPath DupFinderPath { get; set; }
+        public ToolPath DotCoverPath { get; set; }
 
         public string TestCodeBaseCost { get; set; }
         public string TestDuplicationCost { get; set; }
@@ -64,8 +64,8 @@ namespace YoCode
 
         private bool CheckAppsettingPathsAreValid()
         {
-            var CMDPathExists = CheckToolDirectory(CMDToolsPath, "CMDtoolsDir");
-            var dotCoverPathExists = CheckToolDirectory(DotCoverDir, "dotCoverDir");
+            var CMDPathExists = CheckToolDirectory(DupFinderPath, "CMDtoolsDir");
+            var dotCoverPathExists = CheckToolDirectory(DotCoverPath, "dotCoverDir");
             var costValuesProvided = CheckIfCostsProvided(TestCodeBaseCost, TestDuplicationCost, "Test cost values") && CheckIfCostsProvided(AppCodeBaseCost, AppDuplicationCost, "App cost values");
 
             var juniorFileExists = FileExists("JuniorWeightings.json");
@@ -78,8 +78,8 @@ namespace YoCode
         {
             appsettingsBuilder.ReadJSONFile();
 
-            CMDToolsPath = appsettingsBuilder.GetCMDToolsPath();
-            DotCoverDir = appsettingsBuilder.GetDotCoverDir();
+            DupFinderPath = appsettingsBuilder.GetDupFinderPath();
+            DotCoverPath = appsettingsBuilder.GetDotCoverPath();
 
             (AppCodeBaseCost, AppDuplicationCost) = appsettingsBuilder.GetWebAppCosts();
             (TestCodeBaseCost, TestDuplicationCost) = appsettingsBuilder.GetTestsCosts();
@@ -102,28 +102,25 @@ namespace YoCode
 
         private bool CheckIfToolExecutablesExist()
         {
-            if (!File.Exists(Path.Combine(CMDToolsPath, "dupfinder.exe")))
+            if (!File.Exists(DupFinderPath.FullPath))
             {
                 return SetError("dupfinder.exe not found in specified directory");
             }
-            if (!File.Exists(Path.Combine(DotCoverDir, "dotCover.exe")))
+            if (!File.Exists(DotCoverPath.FullPath))
             {
                 return SetError("dotCover.exe not found in specified directory");
             }
             return true;
         }
 
-        private bool CheckToolDirectory(string path, string checkName)
+        private bool CheckToolDirectory(ToolPath toolPath, string checkName)
         {
-            if (String.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(toolPath.Dir))
             {
                 return SetError($"{checkName} cannot be empty");
             }
-            else if (!Directory.Exists(path))
-            {
-                return SetError($"invalid directory provided for {checkName}");
-            }
-            return true;
+
+            return toolPath.Exists() || SetError($"invalid directory provided for {checkName}");
         }
 
         private bool CheckIfCostsProvided(string cost1, string cost2, string checkName)

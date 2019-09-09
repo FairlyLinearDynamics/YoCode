@@ -6,8 +6,8 @@ namespace YoCode
     {
         IConfiguration ReadJSONFile();
 
-        string GetCMDToolsPath();
-        string GetDotCoverDir();
+        ToolPath GetDupFinderPath();
+        ToolPath GetDotCoverPath();
         string GetWeightingsPath();
         (string, string) GetWebAppCosts();
         (string, string) GetTestsCosts();

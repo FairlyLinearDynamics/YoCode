@@ -10,7 +10,6 @@ namespace YoCode
     {
         private readonly CheckConfig checkConfig;
         private readonly Task<List<FeatureEvidence>> projectBuildTask;
-        private const string processName = "dotCover.exe";
         private const int passPercentage = 45;
         private const string testFolder = "UnitConverterTests";
 
@@ -74,7 +73,6 @@ namespace YoCode
         {
             var codeCoverageEvidence = new FeatureEvidence {Feature = Feature.CodeCoverageCheck, HelperMessage = messages.CodeCoverageCheck};
 
-            var dotCoverDir = checkConfig.RunParameters.DotCoverDir;
             var fullReportPath = Path.GetTempFileName();
 
             var targetWorkingDir = Path.Combine(checkConfig.PathManager.ModifiedTestDirPath, testFolder);
@@ -87,7 +85,8 @@ namespace YoCode
 
             var argument = CreateArgument("C:\\Program Files\\dotnet", targetWorkingDir, fullReportPath);
 
-            new FeatureRunner().Execute(CreateProcessDetails(argument, processName, dotCoverDir));
+            var processDetails = new ProcessDetails(checkConfig.RunParameters.DotCoverPath.FullPath, Path.GetTempPath(), argument);
+            new FeatureRunner().Execute(processDetails);
 
             var report = ReadReport(fullReportPath);
             File.Delete(fullReportPath);

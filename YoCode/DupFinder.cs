@@ -5,16 +5,12 @@ namespace YoCode
 {
     internal class DupFinder : IDupFinder
     {
-        private const string cmdToolFileName = "dupfinder.exe";
+        private readonly ToolPath toolPath;
         private const string arguments = " --discard-cost=5 -o=\"";
-        private readonly string processName;
-        private readonly string workingDir;
 
-        public DupFinder(string cmdToolsDirConfig)
+        public DupFinder(ToolPath toolPath)
         {
-            var cmdToolsDir = cmdToolsDirConfig;
-            processName = Path.Combine(cmdToolsDir, cmdToolFileName);
-            workingDir = cmdToolsDir;
+            this.toolPath = toolPath;
         }
 
         public ProcessOutput Execute(string solutionPath)
@@ -25,7 +21,7 @@ namespace YoCode
 
                 try
                 {
-                    var proc = new ProcessDetails(processName, workingDir, solutionPath + arguments + outputFilePath);
+                    var proc = new ProcessDetails(toolPath.FullPath, Path.GetTempPath(), solutionPath + arguments + outputFilePath);
                     var processOutput = new FeatureRunner().Execute(proc);
                     processOutput.Output = File.ReadAllText(outputFilePath);
                     return processOutput;
