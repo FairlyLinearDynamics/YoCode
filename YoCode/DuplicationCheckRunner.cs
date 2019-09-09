@@ -28,7 +28,7 @@ namespace YoCode
 
         private static FeatureEvidence RunDuplicationCheck(CheckConfig checkConfig, string file, int origCodeBaseCost, int origDuplicateCost)
         {
-            var dupFinder = new DupFinder(checkConfig.RunParameters.CMDToolsPath);
+            var dupFinder = new DupFinder(checkConfig.RunParameters.DupFinderPath);
 
             var dupCheck = new DuplicationCheck(checkConfig.PathManager, dupFinder, file)
             {

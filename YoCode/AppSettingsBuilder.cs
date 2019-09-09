@@ -16,24 +16,24 @@ namespace YoCode
 
         public IConfiguration ReadJSONFile()
         {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder().SetBasePath(ToolPath.AssemblyDirectory).AddJsonFile("appsettings.json");
             configuration = builder.Build();
             return configuration;
         }
 
-        public string GetCMDToolsPath()
+        public ToolPath GetDupFinderPath()
         {
-            return configuration["duplicationCheckSetup:CMDtoolsDir"];
+            return ToolPath.CreateDupFinderPath(configuration["duplicationCheckSetup:CMDtoolsDir"]);
         }
 
-        public string GetDotCoverDir()
+        public ToolPath GetDotCoverPath()
         {
-            return configuration["codeCoverageCheckSetup:dotCoverDir"];
+            return ToolPath.CreateDotCoverPath(configuration["codeCoverageCheckSetup:dotCoverDir"]);
         }
 
         public string GetWeightingsPath()
         {
-            return juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"];
+            return ToolPath.CreateWeightingsPath(juniorTest ? configuration["featureWeightings:Junior"] : configuration["featureWeightings:Original"]).FullPath;
         }
 
         public (string,string) GetWebAppCosts()
